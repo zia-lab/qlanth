@@ -1,6 +1,6 @@
 (* -----------------------------------------------------------------
 This  code was authored by Chris Dodson and turned into a package by
-David in 2022.
+David Lizarazo in 2022.
 +------------------------------------------------------------------+
 |                                                                  |
 |                      __                     __     __            |
@@ -19,7 +19,7 @@ ions in crystals.
 REFERENCES:
 1. Velkov, Multi-Electron Coefficients of Fractional Parentage for the p, d, and f Shells.
 2. Nielson and Koster, Spectroscopic Coefficients for the Pn, Dn, and Fn Configurations.
-3. 
+3. Wybourne and Smentek, Optical Spectroscopy of Lanthanides.
 4. 
 ----------------------------------------------------------------- *)
 
@@ -357,7 +357,7 @@ LoadGuillotParameters[Ln_]:=Module[{},
       \[Zeta] = 647.3; \[Alpha] = 0; \[Beta] = 0; \[Gamma] = 0;
       T2 = 0; T3 = 0; T4 = 0; T6 = 0; T7 = 0; T8 = 0;
       M0 = 0; P2 = 0;
-      eOrbitalRad = 1/4.8 bohrRadius;
+      eOrbitalRad = 1/4.8;
       Get[FileNameJoin[{moduleDir, "params", Ln, "CeLaF3_CFParameters.txt"}]];
       ),
 
@@ -367,7 +367,7 @@ LoadGuillotParameters[Ln_]:=Module[{},
       \[Zeta] = 751.7; \[Alpha] =16.23; \[Beta] = -566.6; \[Gamma] = 1371;
       T2 = 0; T3 = 0; T4 = 0; T6 = 0; T7 = 0; T8 = 0;
       M0 = 2.08; P2 = -88.6;
-      eOrbitalRad=1/5.5 bohrRadius;
+      eOrbitalRad = 1/5.5;
       ),
 
     Ln=="Nd" || Ln==3,
@@ -376,7 +376,7 @@ LoadGuillotParameters[Ln_]:=Module[{},
       \[Zeta] = 885.3; \[Alpha] = 21.34; \[Beta] = -593.0; \[Gamma] = 1445;
       T2 = 298; T3 = 35; T4 = 59; T6 = -285; T7 = 332; T8 = 305;
       M0 = 2.11; P2 = 192;
-      eOrbitalRad = 1/6.2 bohrRadius;
+      eOrbitalRad = 1/6.2;
       ),
 
     Ln=="Pm" || Ln==4,
@@ -385,7 +385,7 @@ LoadGuillotParameters[Ln_]:=Module[{},
       \[Zeta] = 1025; \[Alpha] = 20.50; \[Beta] = -560; \[Gamma] = 1475;
       T2 = 300; T3 = 35; T4 = 58; T6 = -310; T7 = 350; T8 = 320;
       M0 = 2.4; P2 = 275;
-      eOrbitalRad = 1/6.9 bohrRadius;
+      eOrbitalRad = 1/6.9;
       ),
 
     Ln=="Sm" || Ln==5,
@@ -394,7 +394,7 @@ LoadGuillotParameters[Ln_]:=Module[{},
       \[Zeta] = 1176; \[Alpha] = 20.16; \[Beta] = -566.9; \[Gamma] = 1500;
       T2 = 300; T3 = 36; T4 = 56; T6 = -347; T7 = 373; T8 = 348;
       M0 = 2.60; P2 = 357; 
-      eOrbitalRad = 1/7.5 bohrRadius;
+      eOrbitalRad = 1/7.5;
       ),
 
     Ln=="Eu" || Ln==6,
@@ -403,7 +403,7 @@ LoadGuillotParameters[Ln_]:=Module[{},
       \[Zeta] = 1338; \[Alpha] = 20.16; \[Beta] = -566.9; \[Gamma] = 1500;
       T2 = 300; T3 = 40; T4 = 60; T6 = -300; T7 = 370; T8 = 320;
       M0 = 2.1; P2 = 360;
-      eOrbitalRad = 1/8.4 bohrRadius;
+      eOrbitalRad = 1/8.4;
       ),
 
     Ln=="Gd" || Ln==7,
@@ -412,7 +412,7 @@ LoadGuillotParameters[Ln_]:=Module[{},
       \[Zeta] = 1508; \[Alpha] = 18.92; \[Beta] = -600; \[Gamma] = 1575;
       T2 = 300; T3 = 42; T4 = 62; T6 = -295; T7 = 350; T8 = 310;
       M0 = 3.22; P2 = 676;
-      eOrbitalRad = 1/9.2 bohrRadius;
+      eOrbitalRad = 1/9.2;
       ),
 
     Ln=="Tb" || Ln==8,
@@ -421,7 +421,7 @@ LoadGuillotParameters[Ln_]:=Module[{},
       \[Zeta] = 1707; \[Alpha] = 18.40; \[Beta] = -590.9; \[Gamma] = 1650;
       T2 = 320; T3 = 40; T4 = 50; T6 = -395; T7 = 303; T8 = 317;
       M0 = 2.39; P2 = 373;
-      eOrbitalRad = 1/10.0 bohrRadius;
+      eOrbitalRad = 1/10.0;
       ),
 
     Ln=="Dy" || Ln==9,
@@ -430,7 +430,7 @@ LoadGuillotParameters[Ln_]:=Module[{},
       \[Zeta] = 1913; \[Alpha] = 18.02; \[Beta] = -633.4; \[Gamma] = 1790;
       T2 = 329; T3 = 36; T4 = 127; T6 = -314; T7 = 404; T8 = 315;
       M0 = 3.39; P2 = 719;
-      eOrbitalRad = 1/10.9 bohrRadius;
+      eOrbitalRad = 1/10.9;
       Get[FileNameJoin[{moduleDir, "params", "FreeIon_CFParameters.txt"}]];
       ),
 
@@ -440,7 +440,7 @@ LoadGuillotParameters[Ln_]:=Module[{},
       \[Zeta] = 2145; \[Alpha] = 17.15; \[Beta] = -607.9; \[Gamma] = 1800;
       T2 = 400; T3 = 37; T4 = 107; T6 = -264; T7 = 316; T8 = 336;
       M0 = 2.54; P2 = 605;
-      eOrbitalRad = 1/11.8 bohrRadius;
+      eOrbitalRad = 1/11.8;
       Get[FileNameJoin[{moduleDir, "params", "FreeIon_CFParameters.txt"}]];
       ),
 
@@ -450,7 +450,7 @@ LoadGuillotParameters[Ln_]:=Module[{},
       \[Zeta] = 2376; \[Alpha] = 17.79; \[Beta] = -582.1; \[Gamma] = 1800;
       T2 = 400; T3 = 43; T4 = 73; T6 = -271; T7 = 308; T8 = 299;
       M0 = 3.86; P2 = 594; 
-      eOrbitalRad = 1/12.7 bohrRadius;
+      eOrbitalRad = 1/12.7;
       Get[FileNameJoin[{moduleDir, "params", Ln, "ErYVO4_Parameters.txt"}]];
       ),
 
@@ -460,7 +460,7 @@ LoadGuillotParameters[Ln_]:=Module[{},
       \[Zeta] = 2619.7; \[Alpha] = 17.06; \[Beta] = -658; \[Gamma] = 0;
       T2 = 0; T3 = 0; T4 = 0; T6 = 0; T7 = 0; T8 = 0;
       M0 = 0; P2 = 0;
-      eOrbitalRad = 1/13.6 bohrRadius;
+      eOrbitalRad = 1/13.6;
       Get[FileNameJoin[{moduleDir, "params", Ln, "TmYAG_GuillotNoelParameters.txt"}]];
       ),
 
