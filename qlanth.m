@@ -77,6 +77,101 @@ ShiftedLevels[originalLevels] takes a list of levels of the form
 and returns the same input except that now to every energy the minimum of all of them has been subtracted.";
 LoadGuillotParameters::usage = "";
 
+CFP::usage = "CFP[{n, NKSL}] provides a list whose first element echoes NKSL and whose other elements are lists with two elements the first one being the symbol of a parent term and the second being the corresponding coefficient of fractional parentage. n must satisfy 1 <= n <=7"
+
+(* ############################################################################################## *)
+(* ############################################ Data ############################################ *)
+
+Print["Loading coefficients of fractional parentage ..."]
+CFPfname = FileNameJoin[{moduleDir,"data","CFPs.m"}]
+CFP = Import[CFPfname]
+CFP::usage = "";
+
+Print["Loading reduced matrix elements for unit tensor operators ..."]
+ReducedUktablefname = FileNameJoin[{moduleDir,"data","ReducedUktables.m"}]
+ReducedUktable = Import[ReducedUktablefname]
+ReducedUktable::usage="";
+
+Print["Loading matrix elements for the electrostatic interaction ..."]
+ElectrostaticMatrixTablefname = FileNameJoin[{moduleDir,"data","ElectrostaticMatrixTable.m"}]
+ElectrostaticMatrixTable = Import[ElectrostaticMatrixTablefname]
+ElectrostaticMatrix::usage="";
+
+(* ############################################ Data ############################################ *)
+(* ############################################################################################## *)
+
+(* ############################################################################################## *)
+(* ################################### Racah Algebra Goodies #################################### *)
+
+ReducedUk::usage="ReducedUk[n, l, SL, SpLp,k] gives the reduced matrix element of the spherical tensor U^(k).";
+ReducedUk[n_,l_,SL_,SpLp_,k_]:=Module[
+  {Uk,S,L,Sp,Lp,Sb,Lb,parentSL,cfpSL,cfpSpLp},
+  {S,L}=findSL[SL];
+  {Sp,Lp}=findSL[SpLp];
+  cfpSL=CFP[{n,SL}];
+  cfpSpLp=CFP[{n,SpLp}];
+  Uk=0;
+  If[S==Sp,
+    For[nn=2,nn<=Length[cfpSL],nn++,
+      parentSL=Part[cfpSL,nn,1];
+      {Sb,Lb}=findSL[parentSL];
+      fun=If[
+        #[[1]]!=parentSL,
+        0,
+        ((-1)^(Lb+L+l+k)
+        * #[[2]]
+        * cfpSL[[nn,2]]
+        * SixJSymbol[{L,Lp,k},{l,l,Lb}])]&;
+      summands=Map[fun,cfpSpLp[[2;;]]];
+      Uk=Uk+Total[summands];
+    ];
+    n * Sqrt[(2L+1) (2Lp+1)] * Uk,
+  0]
+]
+
+Ck::usage="Diagonal reduced matrix element <l||C^(k)\[VerticalSeparator]\[VerticalSeparator]l> where the Subscript[C, q]^(k) are reduced spherical harmonics.";
+Ck[l_,k_]:=(-1)^l *(2 l+1) * ThreeJSymbol[{l,0},{l,0},{k,0}]
+
+fk::usage="Slater integral. See Wybourne (1965) eqn. 2-93.";
+fk[n_,l_,NKSL_,NKSLp_,k_]:=Module[
+  {S,L,PossibleStates,Sb,Lb},
+  {S,L}=findSL[NKSL];
+  PossibleStates=StringCases[AllowedNKSLterms[n],ToString[2 S+1]~~__];
+  PossibleStates=DeleteCases[PossibleStates,{}];
+  PossibleStates=Flatten[PossibleStates];
+  PossibleStates=
+  If[{S,L} == findSL[NKSLp],
+    (1/2 ( Abs[Ck[l,k]])^2 * (1/(2L+1) Sum[(ReducedUktable[{n,l,x,NKSL,k}]*ReducedUktable[{n,l,x,NKSLp,k}]),{x,PossibleStates}]
+     - KroneckerDelta[NKSL,NKSLp] (n (4 l+2-n))/((2 l+1) (4 l+1)))),
+  0]
+]
+
+fK::usage="Non-reduced Slater integral f^k = Subscript[f, k] * Subscript[D, k]";
+fK[n_,l_,NKSL_,NKSLp_,k_]:= Dk[k] * fk[n,l,NKSL,NKSLp,k]
+
+Dk::usage="Ratio between the reduced and non-reduced Slater direct (Subscript[F, k] and F^k) and exchange(Subscript[G, k]and G^k) integrals. Subscript[D, k]:= (Subscript[G, k](ff))/(G^k (ff))=(Subscript[F, k](ff))/(F^k (ff)). k must be even. See table 6-3 in Cowan (1981), and also section 2-7 of Wybourne (1965).";
+Dk[k_]:={1,225,1089,184041/25}[[k/2+1]]
+
+ElectrostaticMatrix::usage="See Wybourne (1965) section 2-9 'Electrostatic Interactions in f^n Configurations'"
+ElectrostaticMatrix[n_,NKSL_,NKSLp_]:=Module[{f0,f2,f4,f6,e0,e1,e2,e3,eevals,EMatrix,l},
+  l=3;
+  Ek={E0,E1,E2,E3};
+  f0=fK[n,l,NKSL,NKSLp,0];
+  f2=fK[n,l,NKSL,NKSLp,2];
+  f4=fK[n,l,NKSL,NKSLp,4];
+  f6=fK[n,l,NKSL,NKSLp,6];
+  e0=f0;
+  e1=9/7 f0+1/42 f2+1/77 f4+1/462 f6;
+  e2=143/42 f2-130/77 f4+35/462 f6;
+  e3=11/42 f2+4/77 f4-7/462 f6;
+  eevals={e0,e1,e2,e3};
+  EMatrix=e0 E0+e1 E1+e2 E2+e3 E3
+]
+
+(* ################################### Racah Algebra Goodies #################################### *)
+(* ############################################################################################## *)
+
+
 (* ############################################################################################## *)
 (* ########################################## Printers ########################################## *)
 
