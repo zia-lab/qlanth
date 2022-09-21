@@ -82,20 +82,36 @@ CFP::usage = "CFP[{n, NKSL}] provides a list whose first element echoes NKSL and
 (* ############################################################################################## *)
 (* ############################################ Data ############################################ *)
 
-Print["Loading coefficients of fractional parentage ..."]
+Print["Loading table with coefficients of fractional parentage ..."]
 CFPfname = FileNameJoin[{moduleDir,"data","CFPs.m"}]
-CFP = Import[CFPfname]
-CFP::usage = "";
+If[!FileExistsQ[CFPfname],
+  (Print["CFPs.m not found, generating ..."];
+    CFP = GenerateCFP[];
+  ),
+  CFP = Import[CFPfname];
+]
+CFP::usage = "CFP[n, termSymbol] provides the coefficients of fractional parentage for the given term termSymbol and number of electrons n.";
 
-Print["Loading reduced matrix elements for unit tensor operators ..."]
+Print["Loading table of reduced matrix elements for unit tensor operators ..."]
 ReducedUktablefname = FileNameJoin[{moduleDir,"data","ReducedUktables.m"}]
-ReducedUktable = Import[ReducedUktablefname]
-ReducedUktable::usage="";
+If[!FileExistsQ[ReducedUktablefname],
+  (Print["ReducedUktables.m not found, generating ..."];
+    ReducedUktable = GenerateReducedUktable[];
+  ),
+  ReducedUktable = Import[ReducedUktablefname];
+]
+ReducedUktable::usage="ReducedUktable[{n, l=3, SL, SpLp, k}] provides reduced matrix elements of the spherical tensor operator Uk.";
 
-Print["Loading matrix elements for the electrostatic interaction ..."]
+Print["Loading table of matrix elements for the electrostatic interaction ..."]
 ElectrostaticMatrixTablefname = FileNameJoin[{moduleDir,"data","ElectrostaticMatrixTable.m"}]
+If[!FileExistsQ[ElectrostaticMatrixTablefname],
+  (Print["ElectrostaticMatrixTable.m not found, generating ..."];
+    ElectrostaticMatrixTable = GenerateElectrostaticMatrixTable[];
+  ),
+  ElectrostaticMatrixTable = Import[ElectrostaticMatrixTablefname];
+]
 ElectrostaticMatrixTable = Import[ElectrostaticMatrixTablefname]
-ElectrostaticMatrix::usage="";
+ElectrostaticMatrixTable::usage="ElectrostaticMatrixTable[{n, SL, SpLp}] provides the calculated result of ElectrostaticMatrix[n, SL, SpLp]."; 
 
 (* ############################################ Data ############################################ *)
 (* ############################################################################################## *)
@@ -171,6 +187,58 @@ ElectrostaticMatrix[n_,NKSL_,NKSLp_]:=Module[{f0,f2,f4,f6,e0,e1,e2,e3,eevals,EMa
 (* ################################### Racah Algebra Goodies #################################### *)
 (* ############################################################################################## *)
 
+(* ############################################################################################## *)
+(* ####################################### Table Generation Functions ########################### *)
+
+GenerateCFP[export_ : True]:=(
+  CFP=Table[
+    {n, NKSL} -> First[CFPterms[n, NKSL]],
+    {n, 1, 7},
+    {NKSL, AllowedNKSLterms[n]}];
+  CFP=Association[CFP];
+  If[export,
+    Export[FileNameJoin[{moduleDir, "data", "CFPs.m"}], CFP];
+  ];
+  Return[CFP];
+)
+GenerateCFP::usage="Generates the tables for the coefficients of fractional parentage. Results are exported to the file CFP.m";
+
+GenerateElectrostaticMatrixTable[export_ : True]:=(
+  ElectrostaticMatrixTable=Table[
+    {n, SL, SpLp} -> Simplify[ElectrostaticMatrix[n, SL, SpLp]], 
+    {n, 1, 7},
+    {SL,AllowedNKSLterms[n]}, 
+    {SpLp, AllowedNKSLterms[n]}
+  ];
+  ElectrostaticMatrixTable=Association[Flatten[ElectrostaticMatrixTable]];
+  If[export,
+    Export[FileNameJoin[{NotebookDirectory[],"data", "ElectrostaticMatrixTable.m"}], ElectrostaticMatrixTable];
+  ];
+  Return[ElectrostaticMatrixTable];
+)
+GenerateElectrostaticMatrixTable::usage="GenerateElectrostaticMatrixTable[] can be used to generate the table for the electrostatic interaction. Results are exported to the file ElectrostaticMatrixTable.m.";
+
+GenerateReducedUktable[export_ : True]:=(
+  Off[SixJSymbol::tri];
+  ReducedUktable=Table[
+    {n, 3, SL, SpLp, k} -> Simplify[ReducedUk[n, 3, SL, SpLp, k]],
+    {n, 1, 7},
+    {SL, AllowedNKSLterms[n]}, 
+    {SpLp, AllowedNKSLterms[n]}, 
+    {k, {0, 2, 4, 6}}
+  ];
+  ReducedUktable=Association[Flatten[ReducedUktable]];
+  ReducedUktablefname=FileNameJoin[{moduleDir,"data","ReducedUktables.m"}];
+  If[export,
+    Export[ReducedUktablefname, ReducedUktable];
+  ];
+  On[SixJSymbol::tri];
+  Return[ReducedUktable];
+)
+GenerateReducedUktable::usage="GenerateReducedUktable[] can be used to generate the table of reduced matrix elements for the unit tensor operators Uk. Results are exported to the file ReducedUktables.m.";
+
+(* ####################################### Table Generation Functions ########################### *)
+(* ############################################################################################## *)
 
 (* ############################################################################################## *)
 (* ########################################## Printers ########################################## *)
