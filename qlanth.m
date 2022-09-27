@@ -25,6 +25,10 @@ REFERENCES:
 
 BeginPackage["qlanth`"]
 
+On[Assert];
+
+Off[SixJSymbol::tri];
+
 (* Physical Constants*)
 bohrRadius = 5.29177210903 10^-9;
 ee = 1.602176634 * 10^-9;
@@ -79,39 +83,58 @@ LoadGuillotParameters::usage = "";
 
 CFP::usage = "CFP[{n, NKSL}] provides a list whose first element echoes NKSL and whose other elements are lists with two elements the first one being the symbol of a parent term and the second being the corresponding coefficient of fractional parentage. n must satisfy 1 <= n <=7"
 
+
 (* ############################################################################################## *)
 (* ############################################ Data ############################################ *)
 
-Print["Loading table with coefficients of fractional parentage ..."]
+PrintTemporary["Loading table with coefficients of fractional parentage ..."]
 CFPfname = FileNameJoin[{moduleDir,"data","CFPs.m"}]
 If[!FileExistsQ[CFPfname],
-  (Print["CFPs.m not found, generating ..."];
+  (PrintTemporary[">> CFPs.m not found, generating ..."];
     CFP = GenerateCFP[];
   ),
   CFP = Import[CFPfname];
 ]
 CFP::usage = "CFP[n, termSymbol] provides the coefficients of fractional parentage for the given term termSymbol and number of electrons n.";
 
-Print["Loading table of reduced matrix elements for unit tensor operators ..."]
-ReducedUktablefname = FileNameJoin[{moduleDir,"data","ReducedUktables.m"}]
-If[!FileExistsQ[ReducedUktablefname],
-  (Print["ReducedUktables.m not found, generating ..."];
-    ReducedUktable = GenerateReducedUktable[];
+PrintTemporary["Loading table of reduced matrix elements for unit tensor operators ..."]
+ReducedUkTableFname = FileNameJoin[{moduleDir,"data","ReducedUkTable.m"}]
+If[!FileExistsQ[ReducedUkTableFname],
+  (PrintTemporary[">> ReducedUkTable.m not found, generating ..."];
+    ReducedUkTable = GenerateReducedUkTable[];
   ),
-  ReducedUktable = Import[ReducedUktablefname];
+  ReducedUkTable = Import[ReducedUkTableFname];
 ]
-ReducedUktable::usage="ReducedUktable[{n, l=3, SL, SpLp, k}] provides reduced matrix elements of the spherical tensor operator Uk.";
+ReducedUkTable::usage="ReducedUkTable[{n, l=3, SL, SpLp, k}] provides reduced matrix elements of the spherical tensor operator Uk. See Cowan (1981) section 11-9 \"Unit Tensor Operators\".";
 
-Print["Loading table of matrix elements for the electrostatic interaction ..."]
+PrintTemporary["Loading table of matrix elements for the electrostatic interaction ..."]
 ElectrostaticMatrixTablefname = FileNameJoin[{moduleDir,"data","ElectrostaticMatrixTable.m"}]
 If[!FileExistsQ[ElectrostaticMatrixTablefname],
-  (Print["ElectrostaticMatrixTable.m not found, generating ..."];
+  (PrintTemporary[">> ElectrostaticMatrixTable.m not found, generating ..."];
     ElectrostaticMatrixTable = GenerateElectrostaticMatrixTable[];
   ),
   ElectrostaticMatrixTable = Import[ElectrostaticMatrixTablefname];
 ]
-ElectrostaticMatrixTable = Import[ElectrostaticMatrixTablefname]
+
 ElectrostaticMatrixTable::usage="ElectrostaticMatrixTable[{n, SL, SpLp}] provides the calculated result of ElectrostaticMatrix[n, SL, SpLp]."; 
+
+PrintTemporary["Loading table of matrix elements for Vk1 ..."]
+ReducedVk1TableFname = FileNameJoin[{moduleDir,"data","ReducedVk1Table.m"}];
+If[!FileExistsQ[ReducedVk1TableFname],
+  (PrintTemporary[">> ReducedVk1Table.m not found, generating ..."];
+    ReducedVk1Table = GenerateVk1Table[7,True];
+  ),
+  ReducedVk1Table = Import[ReducedVk1TableFname];
+]
+
+PrintTemporary["Loading table of matrix elements for spin-orbit ..."]
+SpinOrbitTableFname = FileNameJoin[{moduleDir,"data","SpinOrbitTable.m"}];
+If[!FileExistsQ[SpinOrbitTableFname],
+  (PrintTemporary[">> SpinOrbitTable.m not found, generating ..."];
+    SpinOrbitTable = GenerateSpinOrbitTable[7,True];
+  ),
+  SpinOrbitTable = Import[SpinOrbitTableFname];
+]
 
 (* ############################################ Data ############################################ *)
 (* ############################################################################################## *)
@@ -134,14 +157,14 @@ ReducedUk[n_,l_,SL_,SpLp_,k_]:=Module[
       fun=If[
         #[[1]]!=parentSL,
         0,
-        ((-1)^(Lb+L+l+k)
+        (MinusOneTo[Lb,L,l,k]
         * #[[2]]
         * cfpSL[[nn,2]]
-        * SixJSymbol[{L,Lp,k},{l,l,Lb}])]&;
+        * SixJay[{L,Lp,k},{l,l,Lb}])]&;
       summands=Map[fun,cfpSpLp[[2;;]]];
       Uk=Uk+Total[summands];
     ];
-    n * Sqrt[(2L+1) (2Lp+1)] * Uk,
+    n * Sqrt[(2L+1) * (2Lp+1)] * Uk,
   0]
 ]
 
@@ -157,7 +180,7 @@ fk[n_,l_,NKSL_,NKSLp_,k_]:=Module[
   PossibleStates=Flatten[PossibleStates];
   PossibleStates=
   If[{S,L} == findSL[NKSLp],
-    (1/2 ( Abs[Ck[l,k]])^2 * (1/(2L+1) Sum[(ReducedUktable[{n,l,x,NKSL,k}]*ReducedUktable[{n,l,x,NKSLp,k}]),{x,PossibleStates}]
+    (1/2 ( Abs[Ck[l,k]])^2 * (1/(2L+1) Sum[(ReducedUkTable[{n,l,x,NKSL,k}]*ReducedUkTable[{n,l,x,NKSLp,k}]),{x,PossibleStates}]
      - KroneckerDelta[NKSL,NKSLp] (n (4 l+2-n))/((2 l+1) (4 l+1)))),
   0]
 ]
@@ -218,24 +241,114 @@ GenerateElectrostaticMatrixTable[export_ : True]:=(
 )
 GenerateElectrostaticMatrixTable::usage="GenerateElectrostaticMatrixTable[] can be used to generate the table for the electrostatic interaction. Results are exported to the file ElectrostaticMatrixTable.m.";
 
-GenerateReducedUktable[export_ : True]:=(
+GenerateReducedUkTable::usage="GenerateReducedUkTable[] can be used to generate the table of reduced matrix elements for the unit tensor operators Uk. Results are exported to the file ReducedUkTable.m.";
+GenerateReducedUkTable[export_ : True]:=(
   Off[SixJSymbol::tri];
-  ReducedUktable=Table[
+  ReducedUkTable=Table[
     {n, 3, SL, SpLp, k} -> Simplify[ReducedUk[n, 3, SL, SpLp, k]],
     {n, 1, 7},
     {SL, AllowedNKSLterms[n]}, 
     {SpLp, AllowedNKSLterms[n]}, 
     {k, {0, 2, 4, 6}}
   ];
-  ReducedUktable=Association[Flatten[ReducedUktable]];
-  ReducedUktablefname=FileNameJoin[{moduleDir,"data","ReducedUktables.m"}];
+  ReducedUkTable=Association[Flatten[ReducedUkTable]];
+  ReducedUkTableFname=FileNameJoin[{moduleDir,"data","ReducedUkTable.m"}];
   If[export,
-    Export[ReducedUktablefname, ReducedUktable];
+    Export[ReducedUkTableFname, ReducedUkTable];
   ];
   On[SixJSymbol::tri];
-  Return[ReducedUktable];
+  Return[ReducedUkTable];
 )
-GenerateReducedUktable::usage="GenerateReducedUktable[] can be used to generate the table of reduced matrix elements for the unit tensor operators Uk. Results are exported to the file ReducedUktables.m.";
+
+SixJay::usage="SixJay[{j1,j2,j3},{j4,j5,j6}] provides the value for SixJSymbol[{j1,j2,j3},{j4,j5,j6}] with the addition that it remembers values it has already computed.";
+SixJay[{j1_,j2_,j3_},{j4_,j5_,j6_}]:=(
+  SixJay[{j1,j2,j3},{j4,j5,j6}]=SixJSymbol[{j1,j2,j3},{j4,j5,j6}]
+)
+
+ReducedVk1::usage="ReducedVk1";
+ReducedVk1[n_,SL_,SpLp_,k_]:=Module[{Vk1,S,L,Sp,Lp,Sb,Lb,parentSL,s,l,cfpSL,cfpSpLp,prefact,sign},
+  {s,l}={1/2,3};
+  {S,L}=findSL[SL];
+  {Sp,Lp}=findSL[SpLp];
+  cfpSL=CFP[{n,SL}];
+  cfpSpLp=CFP[{n,SpLp}];
+  Vk1=0;
+  For[nn=2,nn<=Length[cfpSL],nn++,
+    parentSL=Part[cfpSL,nn,1];
+    {Sb,Lb}=findSL[parentSL];
+    Vk1fun=(If[Part[#,1]!=parentSL,
+      0,
+      (#[[2]] * cfpSL[[nn,2]]
+      * SixJay[{S,Sp,1},{s,s,Sb}]
+      * SixJay[{L,Lp,k},{l,l,Lb}]
+      * MinusOneTo[Sb,Lb,S,L,l,k,-s])]&
+    );
+    Vk1adds=Map[Vk1fun,cfpSpLp[[2;;]]];
+    Vk1=Vk1+Total[Vk1adds];
+  ];
+  prefact=n Sqrt[s(s+1)(2s+1)(2S+1)(2L+1)(2Sp+1)(2Lp+1)];
+  Return[prefact*Vk1];
+]
+
+GenerateVk1Table::usage="GenerateVk1Table[nmax, export calculates values for Vk1 and returns an Association where the keys are lists of the form {n, SL, SpLp, 1}. If export is set to True, then the result is exported to the data subfolder for the folder in which this package is in."
+GenerateVk1Table[nmax_:7,export_:False]:=(
+  Off[SixJSymbol::tri];
+  numValues=Total[Length[AllowedNKSLterms[#]]*Length[AllowedNKSLterms[#]]&/@Range[1,nmax]];
+  Print["Calculating "<>ToString[numValues]<>" values for Vk1."];
+
+  counter=1;
+  Monitor[
+    ReducedVk1Table=Table[
+      (counter=counter+1;
+      {n, SL, SpLp, 1} -> Simplify[ReducedVk1[n, SL, SpLp, 1]]
+      ),
+      {n, 1,nmax},
+      {SL, AllowedNKSLterms[n]}, 
+      {SpLp, AllowedNKSLterms[n]}
+    ],
+    Row[{ProgressIndicator[counter,{0,numValues}]," ",counter}]
+  ];
+
+  ReducedVk1Table=Association[ReducedVk1Table];
+
+  exportFname=FileNameJoin[{moduleDir,"data","ReducedVk1Table.m"}];
+  If[export,
+  (Print["Exporting to file "<>ToString[exportFname]];
+  Export[exportFname,ReducedVk1Table];
+  )
+  ];
+  Return[ReducedVk1Table];
+)
+
+SpinOrbit::usage="SpinOrbit[n, SL, SpLp, J] returns the matrix element ζ <SL,J|L⋅S|SpLp,J> within an f^n configuration. These are given as a function of ζ. This function requires that the Association ReducedVk1Table be defined.";
+SpinOrbit[n_,SL_,SpLp_,J_]:=Module[{S,L,Sp,Lp,l,sign,prefact},
+  l=3;
+  {S,L}=findSL[SL];
+  {Sp,Lp}=findSL[SpLp];
+  prefact=Sqrt[l*(l+1)*(2l+1)]*SixJay[{L,Lp,1},{Sp,S,J}];
+  sign=MinusOneTo[J,L,Sp];
+  Return[sign*prefact*\[Zeta]*ReducedVk1Table[{n,SL,SpLp,1}]];
+]
+
+GenerateSpinOrbitTable::usage="GenerateSpinOrbitTable[nmax,export] computes the matrix values for the spin-orbit interaction for f^n configurations up to n=nmax. The function returns an Association whose keys are lists of the form {n, SL, SpLp, J}. If export is set to True, then the result is exported to the data subfolder for the folder in which this package is in. It requires ReducedVk1Table to be defined.";
+GenerateSpinOrbitTable[nmax_:7,export_:False]:=(
+  SpinOrbitTable=Table[
+    {n, SL, SpLp, J} -> SpinOrbit[n, SL, SpLp, J], 
+    {n, 1,nmax},
+    {J, minJ[n], maxJ[n]},
+    {SL, Map[First, AllowedNKSLforJterms[n, J]]},
+    {SpLp, Map[First, AllowedNKSLforJterms[n, J]]}
+  ];
+  SpinOrbitTable=Association[SpinOrbitTable];
+
+  exportFname=FileNameJoin[{moduleDir,"data","SpinOrbitTable.m"}];
+  If[export,
+  (Print["Exporting to file "<>ToString[exportFname]];
+  Export[exportFname, SpinOrbitTable];
+  )
+  ];
+  Return[SpinOrbitTable];
+)
 
 (* ####################################### Table Generation Functions ########################### *)
 (* ############################################################################################## *)
@@ -735,6 +848,17 @@ SolveStates[nf_, IiN_] := Module[
 (* ############################################################################################## *)
 (* ###############################               MISC              ############################## *)
 
+MinusOneTo::usage="MinusOneTo[a1,a2,...,an] returns -1 if Total[{a1,a2,...,an}] is odd, 1 if even, and Null if not an integer.";
+MinusOneTo[values__]:=(
+  exponent=Total[List[values]];
+  Assert[IntegerQ[exponent]];
+  If[!IntegerQ[exponent],
+  Return[Null]];
+  If[EvenQ[exponent],
+    Return[1],
+    Return[-1]
+  ]
+)
 
 EnergyLevelDiagram::usage = "EnergyLevelDiagram[states] takes states and produces a visualization of its energy spectrum.
 The resultant visualization can be navigated by clicking and dragging to zoom in on a region, or by clicking and dragging horizontally while pressing Ctrl. Double-click to reset the view."
