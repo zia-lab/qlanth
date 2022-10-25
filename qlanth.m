@@ -30,7 +30,7 @@ On[Assert];
 Off[SixJSymbol::tri];
 
 (* Physical Constants*)
-bohrRadius = 5.29177210903 10^-9;
+bohrRadius = 5.29177210903 * 10^-9;
 ee = 1.602176634 * 10^-9;
 
 specAlphabet = "SPDFGHIKLMNOQRTUV";
@@ -350,6 +350,77 @@ GenerateSpinOrbitTable[nmax_:7,export_:False]:=(
   Return[SpinOrbitTable];
 )
 
+(* ######################################################################### *)
+(* ########### Configuration-Interaction via Casimir Operators ############# *)
+
+GG2U::usage="GG2U is an Association whose keys are labels for the irreducible representations of group G2 and whose values are the eigenvalues (multiplied by \[Beta]/12) of the corresponding Casimir operator.
+Reference: Wybourne, \"Spectroscopic Properties of Rare Earths\", table 2-6.";
+GG2U = Association[{
+    "00" -> 0,
+    "10" -> \[Beta]/12*6 ,
+    "11" -> \[Beta]/12*12,
+    "20" -> \[Beta]/12*14,
+    "21" -> \[Beta]/12*21,
+    "22" -> \[Beta]/12*30,
+    "30" -> \[Beta]/12*24,
+    "31" -> \[Beta]/12*32,
+    "40" -> \[Beta]/12*36}
+   ];
+
+GR7W::usage="GR7W is an Association whose keys are labels for the irreducible representations of group R7 and whose values are the eigenvalues (multiplied by \[Gamma] / 5) of the corresponding Casimir operator.
+Reference: Wybourne, \"Spectroscopic Properties of Rare Earths\", table 2-7.";
+GR7W := Association[
+   {"000" -> 0,
+    "100" -> \[Gamma]/5*3,
+    "110" -> \[Gamma]/5*5,
+    "111" -> \[Gamma]/5*6,
+    "200" -> \[Gamma]/5*7,
+    "210" -> \[Gamma]/5*9,
+    "211" -> \[Gamma]/5*10,
+    "220" -> \[Gamma]/5*12,
+    "221" -> \[Gamma]/5*13,
+    "222" -> \[Gamma]/5*15}
+   ];
+
+AlphaL::usage="AlphaL[SL, SpLp] returns the matrix element for the Trees operator for the two given terms SL and SpLp."
+AlphaL[SL_, SpLp_] := Module[{S, L},
+  (
+    {S, L} = findSL[SL];
+    If[L == findSL[SpLp][[2]], 
+      \[Alpha] L (L + 1),
+      0]
+  )
+  ]
+
+GG2NKSL::usage="GG2NKSL[SL, SpLp] returns the matrix element of the configuration interaction term corresponding to the Casimir operator G2, for the two given terms SL and SpLp.";
+GG2NKSL[SL_, SpLp_] := (
+ If[SL == SpLp,
+ GG2U[findNKLSterm[SL][[1]][[4]]],
+ 0]
+)
+
+GR7NKSL::usage="GR7NKSL[SL, SpLp] returns the matrix element of the configuration interaction term corresponding to the Casimir operator R7, for the two given terms SL and SpLp.";
+GR7NKSL[SL_, SpLp_] := (
+ If[SL == SpLp,
+ GR7W[findNKLSterm[SL][[1]][[3]]],
+ 0]
+)
+
+TwoBodyNKSL::usage="TwoBodyNKSL[SL, SpLp] returns the matrix element for configuration interaction as approximated by the Cassimir operators of the groups SO(3), G2, and R7. SL and SpLp are strings that represent terms under LS coupling.";
+TwoBodyNKSL[SL_, SpLp_] := Module[{S, L},
+  {S, L} = findSL[SL];
+  (If[L == findSL[SpLp][[2]],
+    \[Alpha] L (L + 1), 
+    0] + 
+   If[SL == SpLp, 
+    GR7W[Part[First[findNKLSterm[SL]], 3]] + 
+    GG2U[Part[First[findNKLSterm[SL]], 4]],
+    0])
+  ]
+
+(* ########### Configuration-Interaction via Casimir Operators ############# *)
+(* ######################################################################### *)
+
 Options[EnergyMatrix]={"Sparse"->True}
 EnergyMatrix::usage="EnergyMatrix[n,J,J',I,I'] provides the matrix element <J,I|H|J',I'> within the f^n configuration, it does this by adding the following interactions: Coulomb, spin-orbit.";
 EnergyMatrix[n_,J_,Jp_,Ii_,Ip_,OptionsPattern[]]:=(
@@ -374,6 +445,7 @@ If[OptionValue["Sparse"],
  eMatrix=SparseArray[eMatrix]];
 Return[eMatrix]
 )
+
 EnergyStates[n_,J_,Ii_]:=AllowedNKSLJMIMforJIterms[n,J,Ii];
 
 Options[TabulateEnergyMatrixTable]={"Sparse"->True}
@@ -394,13 +466,16 @@ TabulateEnergyMatrixTable[n_,Ii_,OptionsPattern[]]:=(
 )
 
 Options[TabulateManyEnergyMatrixTables]={"Overwrite"->False,"Sparse"->True};
-TabulateManyEnergyMatrixTables::usage="TabulateManyEnergyMatrixTables[{n1,n2,...},{I1,I2,...}] calculates the tables of matrix elements for the requested f^n_i configurations together with the given nuclear spin I_i. The function returns the an Association whose keys are list of form {n,I} and whose values are the filenames where the output of TabulateEnergyMatrixTable was saved to. When these files are loaded with Get, the following symbols are defined: EnergyMatrixTable, EnergyStatesTable,AllowedM. EnergyMatrixTable is an association whose keys are of the form {n, J, Jp, Ii, Ii} and whose values are matrix elements."
+TabulateManyEnergyMatrixTables::usage="TabulateManyEnergyMatrixTables[{n1,n2,...}, {I1,I2,...}] calculates the tables of matrix elements for the requested f^n_i configurations with the given nuclear spin I_i. The function returns an Association whose keys are lists of the form {n,I} and whose values are the filenames where the output of TabulateEnergyMatrixTable was saved to. When these files are loaded with Get, the following three symbols are thus defined: EnergyMatrixTable, EnergyStatesTable, and AllowedM.
+EnergyMatrixTable is an association whose keys are of the form {n, J, Jp, Ii, Ii} and whose values are matrix elements."
 TabulateManyEnergyMatrixTables[ns_,Iis_,OptionsPattern[]]:=(
   overwrite=OptionValue["Overwrite"];
   fNames=<||>;
   Do[(
     PrintTemporary["#------- n=",n," | I=",Ii," -------#"];
-    exportFname=FileNameJoin[{NotebookDirectory[],StringJoin[{"f",ToString[n],"_I_",ToString[2*Ii+1],"_EnergyMatrixTable.m"}]}];
+    exportFname=FileNameJoin[{NotebookDirectory[],
+            StringJoin[{"f",ToString[n],"_I_",ToString[2*Ii+1],"_EnergyMatrixTable.m"}]
+            }];
     fNames[{n,Ii}]=exportFname;
     If[FileExistsQ[exportFname]&&Not[overwrite],
       Continue[]];
