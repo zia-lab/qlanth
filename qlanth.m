@@ -38,40 +38,39 @@ moduleDir = DirectoryName[$InputFileName];
 
 theLanthanides = {"Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb"};
 
-printL::usage="printL[L] give the string representation of a given angular momentum."
-findSL::usage = "findSL[LS] gives the spin and orbital angular momentum that corresponds to the provided string LS."
-findSL\[Gamma]::usage = "findSL\[Gamma][LS] gives the spin and orbital angular momentum that corresponds to the provided string LS. The provided lists contains terms that belong to one of the f^n configurations. The last element of this list provides a digit that differentiates between different possibly degenerate terms."
-printSLJ::usage = "Given a list with three elements {S,L,J} this function returns a symbol where the spin multiplicity is presented as a superscript, the orbital angular momentum as its corresponding spectroscopic letter, and J as a subscript. Function does not check to see if the given J is compatible with the given S and L."
-printSLJM::usage = "Given a list with four elements {S,L,J,MJ} this function returns a symbol where the spin multiplicity is presented as a superscript, the orbital angular momentum as its corresponding spectroscopic letter, and {J, MJ} as a subscript. No attempt is made to guarantee that the given input is consistent."
+printL::usage="printL[L] give the string representation of a given angular momentum.";
+findSL::usage = "findSL[LS] gives the spin and orbital angular momentum that corresponds to the provided string LS.";
+findSL\[Gamma]::usage = "findSL\[Gamma][LS] gives the spin and orbital angular momentum that corresponds to the provided string LS. The provided lists contains terms that belong to one of the f^n configurations. The last element of this list provides a digit that differentiates between different possibly degenerate terms.";
+printSLJ::usage = "Given a list with three elements {S,L,J} this function returns a symbol where the spin multiplicity is presented as a superscript, the orbital angular momentum as its corresponding spectroscopic letter, and J as a subscript. Function does not check to see if the given J is compatible with the given S and L.";
+printSLJM::usage = "Given a list with four elements {S,L,J,MJ} this function returns a symbol where the spin multiplicity is presented as a superscript, the orbital angular momentum as its corresponding spectroscopic letter, and {J, MJ} as a subscript. No attempt is made to guarantee that the given input is consistent.";
 
-fnTerms::usage = "This list contains the labels of f^n configurations. Each element of the list has four elements {LS, seniority, RacahW, RacahU}."
-NKLSterms::usage = "NKLSterms[n, L, S] give all the terms that correspond to the given number of electrons n, with total orbital angular momentum L, and total spin angular momentum S."
-findNKLSterm::usage = "findNKLSterm[SL] for a given string SL that only represent the LS part of a spectroscopic term, this function returns all the terms that are compatible with it. This is only for f^n configurations. The provided terms might belong to more than one configuration."
-AA::usage = "Given a list with the parts corresponding to the quasi-rational representation of a number, this function parses the result into a regular number."
+fnTerms::usage = "This list contains the labels of f^n configurations. Each element of the list has four elements {LS, seniority, RacahW, RacahU}.";
+NKLSterms::usage = "NKLSterms[n, L, S] give all the terms that correspond to the given number of electrons n, with total orbital angular momentum L, and total spin angular momentum S.";
+findNKLSterm::usage = "findNKLSterm[SL] for a given string SL that only represent the LS part of a spectroscopic term, this function returns all the terms that are compatible with it. This is only for f^n configurations. The provided terms might belong to more than one configuration.";
+AA::usage = "Given a list with the parts corresponding to the quasi-rational representation of a number, this function parses the result into a regular number.";
 CFPterms::usage = "CFPterms[n] gives all the daughter and parent terms, together with the corresponding coefficients of fractional parentage, that correspond to the the f^n configuration. 
 CFPterms[n, SL] gives all the daughter and parent terms, together with the corresponding coefficients of fractional parentage, that are compatible with the given string SL in the f^n configuration 
 CFPterms[n, L, S] gives all the daughter and parent terms, together with the corresponding coefficients of fractional parentage, that correspond to the given total orbital angular momentum L and total spin S n the f^n configuration. L being an integer, and S being integer or half-integer.
 In all cases the output is in the shape of a list with enclosed lists having the format {daughter_term, {parent_term_1, CFP_1}, {parent_term_2, CFP_2}, ...}.
 Only the one-body coefficients for f-electrons are provided.
 In all cases it must be that 1 <= n <= 7.
-Data for these was parsed from Velkov, \"Multi-electron coefficients of fractional parentage for the p, d, and f shells\".
-"
+Data for these was parsed from Velkov, \"Multi-electron coefficients of fractional parentage for the p, d, and f shells\".";
 
-AllowedSLterms::usage = "AllowedSLterms[n] returns a list with the allowed terms in the f^n configuration, the terms are given as lists in the format {S,L}. This list may have redundancies which are compatible with the degeneracies that might correspond to the given case."
-AllowedNKSLterms::usage = "AllowedNKSLterms[n] returns a list with the allowed terms in the f^n configuration, the terms are given as strings in spectroscopic notation. An integer as the last is used to distinguish cases with degenaracy."
-maxJ::usage = "maxJ[n] gives the maximum J=S+L that corresponds to the configuration f^n."
-minJ::usage = "minJ[n] gives the minimum J=S+L that corresponds to the configuration f^n."
-AllowedSLJterms::usage = "AllowedSLJterms[n] returns a list with the allowed {S,L,J} terms in the f^n configuration, the terms are given as lists in the format {S,L,J}. This list may have redundancies which are compatible with the degeneracies that might correspond to the given case."
+AllowedSLterms::usage = "AllowedSLterms[n] returns a list with the allowed terms in the f^n configuration, the terms are given as lists in the format {S,L}. This list may have redundancies which are compatible with the degeneracies that might correspond to the given case.";
+AllowedNKSLterms::usage = "AllowedNKSLterms[n] returns a list with the allowed terms in the f^n configuration, the terms are given as strings in spectroscopic notation. An integer as the last is used to distinguish cases with degenaracy.";
+maxJ::usage = "maxJ[n] gives the maximum J=S+L that corresponds to the configuration f^n.";
+minJ::usage = "minJ[n] gives the minimum J=S+L that corresponds to the configuration f^n.";
+AllowedSLJterms::usage = "AllowedSLJterms[n] returns a list with the allowed {S,L,J} terms in the f^n configuration, the terms are given as lists in the format {S,L,J}. This list may have redundancies which are compatible with the degeneracies that might correspond to the given case.";
 
-AllowedNKSLJterms::usage = "AllowedNKSLJterms[n] returns a list with the allowed {SL,J} terms in the f^n configuration, the terms are given as lists in the format {SL,J} where SL is a string in spectroscopic notation."
-AllowedNKSLforJterms::usage = "AllowedNKSLforJterms[n, J] gives the terms that correspond to the given total angular momentum J in the f^n configuration. The result is a list whose elements are lists of length 2, the first element being the SL term in spectroscopic notation, and the second element being J."
-AllowedMforJ::usage = "AllowedMforJ[j] is shorthand for Range[-j,j,1]."
-AllowedNKSLJMIMforJIterms::usage = "AllowedNKSLJMIMforJIterms[n, J, I] returns the states that belong to the f^n configuration with a total angular momentun L+S equal to J and with a nuclear angular momentum I. The returned list has elements of the form {{{SL (string in spectroscopic notation), J}, MJ}, MI}."
-AllowedJ::usage = "AllowedJ[n] returns the total angular momenta J that appear in the f^n configuration."
+AllowedNKSLJterms::usage = "AllowedNKSLJterms[n] returns a list with the allowed {SL,J} terms in the f^n configuration, the terms are given as lists in the format {SL,J} where SL is a string in spectroscopic notation.";
+AllowedNKSLforJterms::usage = "AllowedNKSLforJterms[n, J] gives the terms that correspond to the given total angular momentum J in the f^n configuration. The result is a list whose elements are lists of length 2, the first element being the SL term in spectroscopic notation, and the second element being J.";
+AllowedMforJ::usage = "AllowedMforJ[j] is shorthand for Range[-j,j,1].";
+AllowedNKSLJMIMforJIterms::usage = "AllowedNKSLJMIMforJIterms[n, J, I] returns the states that belong to the f^n configuration with a total angular momentun L+S equal to J and with a nuclear angular momentum I. The returned list has elements of the form {{{SL (string in spectroscopic notation), J}, MJ}, MI}.";
+AllowedJ::usage = "AllowedJ[n] returns the total angular momenta J that appear in the f^n configuration.";
 
-AllowedSLJMterms::usage = "AllowedSLJMterms[n] returns a list with all the states that correspond to the configuration f^n. A list is returned whose elements are lists of the form {S, L, J, MJ}."
-AllowedNKSLJMforJMterms::usage = "AllowedNKSLJMforJMterms[n, J, MJ] returns a list with all the terms that contain states of the f^n configuration that have a total angular momentum J, and a projection along the z-axis MJ. The returned list has elements of the form {SL (string in spectroscopic notation), J, MJ}."
-AllowedNKSLJMforJterms::usage = "AllowedNKSLJMforJterms[n, J] returns a list with all the states that have a total angular momentum J. The returned list has elements of the form {{SL (string in spectroscopic notation), J}, MJ}."
+AllowedSLJMterms::usage = "AllowedSLJMterms[n] returns a list with all the states that correspond to the configuration f^n. A list is returned whose elements are lists of the form {S, L, J, MJ}.";
+AllowedNKSLJMforJMterms::usage = "AllowedNKSLJMforJMterms[n, J, MJ] returns a list with all the terms that contain states of the f^n configuration that have a total angular momentum J, and a projection along the z-axis MJ. The returned list has elements of the form {SL (string in spectroscopic notation), J, MJ}.";
+AllowedNKSLJMforJterms::usage = "AllowedNKSLJMforJterms[n, J] returns a list with all the states that have a total angular momentum J. The returned list has elements of the form {{SL (string in spectroscopic notation), J}, MJ}.";
 
 ShiftedLevels::usage = "
 ShiftedLevels[originalLevels] takes a list of levels of the form
@@ -81,7 +80,7 @@ ShiftedLevels[originalLevels] takes a list of levels of the form
 and returns the same input except that now to every energy the minimum of all of them has been subtracted.";
 LoadGuillotParameters::usage = "";
 
-CFP::usage = "CFP[{n, NKSL}] provides a list whose first element echoes NKSL and whose other elements are lists with two elements the first one being the symbol of a parent term and the second being the corresponding coefficient of fractional parentage. n must satisfy 1 <= n <=7"
+CFP::usage = "CFP[{n, NKSL}] provides a list whose first element echoes NKSL and whose other elements are lists with two elements the first one being the symbol of a parent term and the second being the corresponding coefficient of fractional parentage. n must satisfy 1 <= n <=7";
 
 
 (* ############################################################################################## *)
@@ -191,7 +190,7 @@ fK[n_,l_,NKSL_,NKSLp_,k_]:= Dk[k] * fk[n,l,NKSL,NKSLp,k]
 Dk::usage="Ratio between the reduced and non-reduced Slater direct (Subscript[F, k] and F^k) and exchange(Subscript[G, k]and G^k) integrals. Subscript[D, k]:= (Subscript[G, k](ff))/(G^k (ff))=(Subscript[F, k](ff))/(F^k (ff)). k must be even. See table 6-3 in Cowan (1981), and also section 2-7 of Wybourne (1965).";
 Dk[k_]:={1,225,1089,184041/25}[[k/2+1]]
 
-ElectrostaticMatrix::usage="See Wybourne (1965) section 2-9 'Electrostatic Interactions in f^n Configurations'"
+ElectrostaticMatrix::usage="See Wybourne (1965) section 2-9 'Electrostatic Interactions in f^n Configurations'";
 ElectrostaticMatrix[n_,NKSL_,NKSLp_]:=Module[{f0,f2,f4,f6,e0,e1,e2,e3,eevals,EMatrix,l},
   l=3;
   Ek={E0,E1,E2,E3};
@@ -320,6 +319,9 @@ GenerateVk1Table[nmax_:7,export_:False]:=(
   Return[ReducedVk1Table];
 )
 
+(* ######################################################################### *)
+(* ############################# Spin Orbit ################################ *)
+
 SpinOrbit::usage="SpinOrbit[n, SL, SpLp, J] returns the matrix element ζ <SL,J|L⋅S|SpLp,J> within an f^n configuration. These are given as a function of ζ. This function requires that the Association ReducedVk1Table be defined.";
 SpinOrbit[n_,SL_,SpLp_,J_]:=Module[{S,L,Sp,Lp,l,sign,prefact},
   l=3;
@@ -349,6 +351,162 @@ GenerateSpinOrbitTable[nmax_:7,export_:False]:=(
   ];
   Return[SpinOrbitTable];
 )
+
+(* ############################# Spin Orbit ################################ *)
+(* ######################################################################### *)
+
+(* ######################################################################### *)
+(* ############################ Crystal Field ############################## *)
+
+ThreeJSymbolMem::usage = "ThreeJSymbolMem[{j1,m1},{j2,m2},{j3,m3}] gives the value of the Wigner 3j-symbol and memorizes previously computed values.";
+ThreeJSymbolMem[{j1_, m1_}, {j2_, m2_}, {j3_, m3_}] := (
+   ThreeJSymbolMem[{j1, m1}, {j2, m2}, {j3, m3}] = ThreeJSymbol[{j1, m1}, {j2, m2}, {j3, m3}]
+   );
+
+SixJSymbolMem::usage = "SixJSymbolMem[{j1,j2,j3},{j4,j5,j6}] gives the value of the Racah 6j-symbol and memorizes previously computed values.";
+SixJSymbolMem[{L_, J_, S_}, {Jp_, Lp_, k_}] := (
+  SixJSymbolMem[{L, J, S}, {Jp, Lp, k}] = SixJSymbol[{L, J, S}, {Jp, Lp, k}]
+  )
+
+Cqk::usage="Cqk[nf, q, k, NKSL, J, M, NKSLp, Jp, Mp].";
+Cqk[nf_, q_, k_, NKSL_, J_, M_, NKSLp_, Jp_, Mp_] := Module[
+  {S, Sp, L, Lp, l, val},
+  l = 3;
+  {S, L} = findSL[NKSL];
+  {Sp, Lp} = findSL[NKSLp];
+  f1 = ThreeJSymbolMem[{J, -M}, {k, q}, {Jp, Mp}];
+  val = If[f1 == 0,
+    0,
+    (f2 = SixJSymbolMem[{L, J, S}, {Jp, Lp, k}] ;
+     If[f2 == 0,
+      0,
+      (
+       f3 = ReducedUkTable[{nf, l, NKSL, NKSLp, k}];
+       If[f3 == 0,
+        0,
+        (
+         ( (-1)^(J - M + S + Lp + J + k)
+           * Sqrt[(2 J + 1)*(2 Jp + 1)]
+           * f1
+           * f2  
+           * f3
+           * Ck[l, k]
+         )
+         )]
+       )]
+     )
+    ];
+  Cqk[nf, q, k, NKSL, J, M, NKSLp, Jp, Mp] = val
+  ]
+
+Bqk::usage="";
+Bqk[q_, 2] := {B02, B12, B22}[[q + 1]];
+Bqk[q_, 4] := {B04, B14, B24, B34, B44}[[q + 1]];
+Bqk[q_, 6] := {B06, B16, B26, B36, B46, B56, B66}[[q + 1]];
+
+Sqk::usage="";
+Sqk[q_, 2] := {Sm22, Sm12, S02,  S12,  S22}[[q + 3]];
+Sqk[q_, 4] := {Sm44, Sm34, Sm24, Sm14, S04,  S14,  S24, S34, S44}[[q + 5]];
+Sqk[q_, 6] := {Sm66, Sm56, Sm46, Sm36, Sm26, Sm16, S06, S16, S26, S36, S46, S56, S66}[[q + 7]];
+
+CrystalField::usage="CrystalField[n, NKSL, J, M, NKSLp, Jp, Mp] gives the general expression for the matrix element of the crystal field Hamiltonian parametrized with Bqk and Sqk coefficients as a sum over spherical harmonics Cqk.";
+CrystalField[n_, NKSL_, J_, M_, NKSLp_, Jp_, Mp_] := (
+  Sum[(Bqk[q, k] * (Cqk[n, q, k, NKSL, J, M, NKSLp, Jp, Mp] 
+                 + (-1)^q * Cqk[n, -q, k, NKSL, J, M, NKSLp, Jp, Mp]) 
+    +I*Sqk[q, k] * (Cqk[n, q, k, NKSL, J, M, NKSLp, Jp, Mp] 
+                 - (-1)^q * Cqk[n, -q, k, NKSL, J, M, NKSLp, Jp, Mp])
+      ),
+   {k, {2, 4, 6}},
+   {q, 0, k}
+     ]
+  )
+
+TotalCFIters::usage = 
+  "TotalIters[i,j] returns total number of function evaluations for calculating all the matrix elements for the \!\(\*SuperscriptBox[\(f\), \(i\)]\) to the \!\(\*SuperscriptBox[\(f\), \(j\)]\) configurations.";
+TotalCFIters[i_, j_] := (
+  numIters = {196, 8281, 132496, 1002001, 4008004, 9018009, 11778624};
+  Return[Total[numIters[[i ;; j]]]];
+  )
+
+GenerateCrystalFieldTable::usage="GenerateCrystalFieldTable[nmax,export] computes the matrix values for the crystal field interaction for f^n configurations up to n=nmax. The function returns an Association whose keys are lists of the form {n, NKSL, J, M, NKSLp, Jp, Mp}. If export is set to True, then the result is exported to the data subfolder for the folder in which this package is in.";
+GenerateCrystalFieldTable[nmax_:7, export_:False, progressIndicator_:True, exportCompressed_:True]:=(
+  Off[ClebschGordan::phy];
+  Off[ClebschGordan::tri];
+  Off[SixJSymbol::phy];
+  Off[SixJSymbol::tri];
+  CrystalFieldTables = <||>;
+  ExportFun=If[exportCompressed,
+    ExportMZip,
+    Export
+    ];
+  numiter = 1;
+  template1 = StringTemplate["Iteration `numiter` of `totaliter`"];
+  template2 = StringTemplate["`remtime` min remaining"];
+  template3 = StringTemplate["Iteration speed = `speed` ms/it"];
+  template4 = StringTemplate["Time elapsed = `runtime` min"];
+  totalIter = TotalCFIters[1, nmax];
+  freebies = 0;
+  startTime = Now;
+  If[progressIndicator,
+  PrintTemporary[
+    Dynamic[
+      Pane[
+      Grid[{{Superscript["f", n]},
+        {template1[<|"numiter" -> numiter, "totaliter" -> totalIter|>]},
+        {template4[<|
+            "runtime" -> Round[QuantityMagnitude[UnitConvert[(Now - startTime), "min"]], 0.1]|>]},
+        {template2[<|
+            "remtime" -> Round[QuantityMagnitude[UnitConvert[(Now - startTime)/(numiter - freebies) * (totalIter - numiter), "min"]],0.1]|>]},
+        {template3[<|
+            "speed"   -> Round[QuantityMagnitude[Now - startTime, "ms"]/(numiter-freebies),0.01]|>]},
+        {ProgressIndicator[Dynamic[numiter], {1, totalIter}]}
+        },
+        Frame -> All
+        ],
+        Full,
+        Alignment -> Center
+    ]
+    ]
+    ];
+  ];
+  Do[
+    (
+    exportFname = FileNameJoin[{moduleDir,"data","CrystalFieldTable_f"<>ToString[n]<>".m"}];
+    If[FileExistsQ[exportFname],
+      CrystalFieldTable = Import[exportFname];
+      CrystalFieldTables[n] = CrystalFieldTable;
+      Print["File exists, skipping calculation and importing file ..."];
+      numiter+=TotalCFIters[n,n];
+      freebies+=TotalCFIters[n,n];
+      Continue[];
+    ];
+    CrystalFieldTable = Table[
+      (numiter+=1;
+      {n, NKSL, J, M, NKSLp, Jp, Mp} -> CrystalField[n, NKSL, J, M, NKSLp, Jp, Mp]
+      ),
+      {J, minJ[n], maxJ[n]},
+      {M, AllowedMforJ[J]},
+      {Jp, minJ[n], maxJ[n]},
+      {NKSL , First /@ AllowedNKSLforJterms[n, J]},
+      {NKSLp, First /@ AllowedNKSLforJterms[n, Jp]},
+      {Mp, AllowedMforJ[Jp]}
+      ];
+    CrystalFieldTable = Association[CrystalFieldTable];
+
+    If[export,(
+      Print["Exporting to file "<>ToString[exportFname]];
+      ExportFun[exportFname, CrystalFieldTable];
+      )
+      ];
+    CrystalFieldTables[n] = CrystalFieldTable;
+    ),
+  {n, 1, nmax}
+  ];
+  Return[CrystalFieldTables];
+)
+
+(* ############################ Crystal Field ############################## *)
+(* ######################################################################### *)
 
 (* ######################################################################### *)
 (* ########### Configuration-Interaction via Casimir Operators ############# *)
@@ -382,7 +540,7 @@ GR7W := Association[
     "222" -> \[Gamma]/5*15}
    ];
 
-AlphaL::usage="AlphaL[SL, SpLp] returns the matrix element for the Trees operator for the two given terms SL and SpLp."
+AlphaL::usage="AlphaL[SL, SpLp] returns the matrix element for the Trees operator for the two given terms SL and SpLp.";
 AlphaL[SL_, SpLp_] := Module[{S, L},
   (
     {S, L} = findSL[SL];
@@ -449,14 +607,14 @@ Return[eMatrix]
 EnergyStates[n_,J_,Ii_]:=AllowedNKSLJMIMforJIterms[n,J,Ii];
 
 Options[TabulateEnergyMatrixTable]={"Sparse"->True}
-TabulateEnergyMatrixTable::usage="TabulateEnergyMatrixTable[n,I] returns a list with three elements {EnergyMatrixTable,EnergyStatesTable,AllowedM}. Where EnergyMatrixTable is an Association with keys equal to lists of the form {n, J, Jp, Ii, Ii}. EnergyStatesTable an association with keys equal to lists of the form {n, J, Ii}. And AllowedM is a list with keys equal to lists of the form {n,J} and values equal to lists equal to the corresponding values of MJ."
+TabulateEnergyMatrixTable::usage="TabulateEnergyMatrixTable[n,I] returns a list with three elements {EnergyMatrixTable,EnergyStatesTable,AllowedM}. Where EnergyMatrixTable is an Association with keys equal to lists of the form {n, J, Jp, Ii, Ii}. EnergyStatesTable an association with keys equal to lists of the form {n, J, Ii}. And AllowedM is a list with keys equal to lists of the form {n,J} and values equal to lists equal to the corresponding values of MJ.";
 TabulateEnergyMatrixTable[n_,Ii_,OptionsPattern[]]:=(
   EnergyMatrixTable=<||>;
   EnergyStatesTable=<||>;
   AllowedM=<||>;
   Do[
     (EnergyMatrixTable[{n,J,Jp,Ii,Ii}] = EnergyMatrix[n,J,Jp,Ii,Ii,"Sparse"->OptionValue["Sparse"]];
-     EnergyStatesTable[{n,J,Ii}]=EnergyStates[n,J,Ii];
+     EnergyStatesTable[{n,J,Ii}] = EnergyStates[n,J,Ii];
      AllowedM[{n,J}]=Table[M,{J,minJ[n],maxJ[n]},{M,-J,J}];
     ),
     {Jp,AllowedJ[n]},
@@ -467,7 +625,7 @@ TabulateEnergyMatrixTable[n_,Ii_,OptionsPattern[]]:=(
 
 Options[TabulateManyEnergyMatrixTables]={"Overwrite"->False,"Sparse"->True};
 TabulateManyEnergyMatrixTables::usage="TabulateManyEnergyMatrixTables[{n1,n2,...}, {I1,I2,...}] calculates the tables of matrix elements for the requested f^n_i configurations with the given nuclear spin I_i. The function returns an Association whose keys are lists of the form {n,I} and whose values are the filenames where the output of TabulateEnergyMatrixTable was saved to. When these files are loaded with Get, the following three symbols are thus defined: EnergyMatrixTable, EnergyStatesTable, and AllowedM.
-EnergyMatrixTable is an association whose keys are of the form {n, J, Jp, Ii, Ii} and whose values are matrix elements."
+EnergyMatrixTable is an association whose keys are of the form {n, J, Jp, Ii, Ii} and whose values are matrix elements.";
 TabulateManyEnergyMatrixTables[ns_,Iis_,OptionsPattern[]]:=(
   overwrite=OptionValue["Overwrite"];
   fNames=<||>;
@@ -1000,8 +1158,45 @@ MinusOneTo[values__]:=(
   ]
 )
 
+ExportMZip::usage = 
+  "ExportMZip[filename, object] exports the given object and compresses it. It first exports in .m format, it then compresses that file in to a zip file, and finally the .m file is deleted. The filename must be a full path, and end with .m.";
+ExportMZip[filename_, object_] := (
+   zipTemplate = 
+    StringTemplate[
+     "cd \"`sourceDir`\"; zip \"`dest`\" \"`source`\""];
+   delTemplate = StringTemplate["rm \"`rmFname`\""];
+   Export[filename, object];
+   zipFilename = StringReplace[filename, ".m" -> ".zip"];
+   splitName = FileNameSplit[zipFilename];
+   zipFilename = splitName[[-1]];
+   sourceDir = FileNameJoin[splitName[[1 ;; -2]]];
+   zipCmd = 
+    zipTemplate[<|"sourceDir" -> sourceDir, "dest" -> zipFilename, 
+      "source" -> FileNameSplit[filename][[-1]]|>];
+   delCmd = delTemplate[<|"rmFname" -> filename|>];
+   Run[zipCmd];
+   Run[delCmd];
+   );
+ImportMZip::usage = 
+  "ImportMZip[filename] decompresses the provided filename, and imports the enclosed .m file that it is assumed to contain. After being imported the uncompressed file is deleted from disk. The provided filename bust be a full path, and end with .zip.";
+ImportMZip[filename_] := (
+  splitName = FileNameSplit[filename];
+  sourceDir = FileNameJoin[splitName[[1 ;; -2]]];
+  delTemplate = StringTemplate["rm \"`rmFname`\""];
+  unzipTemplate = StringTemplate["cd `sourceDir`; unzip \"`source`\""];
+  unzipCmd = 
+   unzipTemplate[<|"sourceDir" -> sourceDir, 
+     "source" -> FileNameSplit[filename][[-1]]|>];
+  Run[unzipCmd];
+  mFilename = StringReplace[filename, ".zip" -> ".m"];
+  imported = Import[mFilename];
+  delCmd = delTemplate[<|"rmFname" -> mFilename|>];
+  Run[delCmd];
+  Return[imported]
+  );
+
 EnergyLevelDiagram::usage = "EnergyLevelDiagram[states] takes states and produces a visualization of its energy spectrum.
-The resultant visualization can be navigated by clicking and dragging to zoom in on a region, or by clicking and dragging horizontally while pressing Ctrl. Double-click to reset the view."
+The resultant visualization can be navigated by clicking and dragging to zoom in on a region, or by clicking and dragging horizontally while pressing Ctrl. Double-click to reset the view.";
 
 Options[EnergyLevelDiagram]={"Title"->"", "ImageSize"->1000, "AspectRatio" -> 1/8};
 
