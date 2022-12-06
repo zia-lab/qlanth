@@ -234,7 +234,7 @@ GenerateElectrostaticMatrixTable[export_ : True]:=(
   ];
   ElectrostaticMatrixTable=Association[Flatten[ElectrostaticMatrixTable]];
   If[export,
-    Export[FileNameJoin[{NotebookDirectory[],"data", "ElectrostaticMatrixTable.m"}], ElectrostaticMatrixTable];
+    Export[FileNameJoin[{moduleDir,"data", "ElectrostaticMatrixTable.m"}], ElectrostaticMatrixTable];
   ];
   Return[ElectrostaticMatrixTable];
 )
@@ -428,7 +428,7 @@ TotalCFIters[i_, j_] := (
   Return[Total[numIters[[i ;; j]]]];
   )
 
-GenerateCrystalFieldTable::usage="GenerateCrystalFieldTable[nmax,export] computes the matrix values for the crystal field interaction for f^n configurations up to n=nmax. The function returns an Association whose keys are lists of the form {n, NKSL, J, M, NKSLp, Jp, Mp}. If export is set to True, then the result is exported to the data subfolder for the folder in which this package is in.";
+GenerateCrystalFieldTable::usage="GenerateCrystalFieldTable[nmax, export, progressIndicator, exportCompressed] computes the matrix values for the crystal field interaction for f^n configurations up to n=nmax. The function returns an Association whose keys are lists of the form {n, NKSL, J, M, NKSLp, Jp, Mp}. If export is set to True, then the result is exported to the data subfolder for the folder in which this package is in. If progressIndicator is set to True then an interactive progress indicator is shown. If exportCompressed is set to true the exported values are compressed.";
 GenerateCrystalFieldTable[nmax_:7, export_:False, progressIndicator_:True, exportCompressed_:True]:=(
   Off[ClebschGordan::phy];
   Off[ClebschGordan::tri];
@@ -579,9 +579,9 @@ TwoBodyNKSL[SL_, SpLp_] := Module[{S, L},
 (* ########### Configuration-Interaction via Casimir Operators ############# *)
 (* ######################################################################### *)
 
-Options[EnergyMatrix]={"Sparse"->True}
-EnergyMatrix::usage="EnergyMatrix[n,J,J',I,I'] provides the matrix element <J,I|H|J',I'> within the f^n configuration, it does this by adding the following interactions: Coulomb, spin-orbit.";
-EnergyMatrix[n_,J_,Jp_,Ii_,Ip_,OptionsPattern[]]:=(
+Options[EnergyMatrix]={"Sparse"->True};
+EnergyMatrix::usage="EnergyMatrix[n,J,J',I,I'] provides the matrix element <J,I|H|J',I'> within the f^n configuration, it does this by adding the following interactions: Coulomb, spin-orbit, and crystal-field.";
+EnergyMatrix[n_,J_,Jp_,Ii_,Ip_,CFTable_,OptionsPattern[]]:=(
   eMatrix=Table[
   subKron=( KroneckerDelta[NKSLJM[[4]], NKSLJMp[[4]]]
           * KroneckerDelta[J, Jp]
@@ -590,14 +590,15 @@ EnergyMatrix[n_,J_,Jp_,Ii_,Ip_,OptionsPattern[]]:=(
     0,
     Simplify[
       (subKron
-      *(ElectrostaticMatrixTable[{n,NKSLJM[[1]],NKSLJMp[[1]]}]
-        +SpinOrbitTable[{n,NKSLJM[[1]],NKSLJMp[[1]],NKSLJM[[2]]}]
+      * ( ElectrostaticMatrixTable[{n, NKSLJM[[1]], NKSLJMp[[1]]}]
+        + SpinOrbitTable[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}]
+        + CFTable[{n, NKSLJM[[1]], NKSLJM[[2]], NKSLJM[[3]], NKSLJMp[[1]], NKSLJMp[[2]], NKSLJMp[[3]]}]
        )
       )
     ]
   ],
-{NKSLJMp,Partition[Flatten[AllowedNKSLJMIMforJIterms[n,Jp,Ip]],4]},
-{NKSLJM,Partition[Flatten[AllowedNKSLJMIMforJIterms[n,J,Ii]],4]}
+{NKSLJMp, Partition[Flatten[AllowedNKSLJMIMforJIterms[n,Jp,Ip]],4]},
+{NKSLJM , Partition[Flatten[AllowedNKSLJMIMforJIterms[n,J,Ii]],4]}
 ];
 If[OptionValue["Sparse"],
  eMatrix=SparseArray[eMatrix]];
@@ -607,42 +608,49 @@ Return[eMatrix]
 EnergyStates[n_,J_,Ii_]:=AllowedNKSLJMIMforJIterms[n,J,Ii];
 
 Options[TabulateEnergyMatrixTable]={"Sparse"->True}
-TabulateEnergyMatrixTable::usage="TabulateEnergyMatrixTable[n,I] returns a list with three elements {EnergyMatrixTable,EnergyStatesTable,AllowedM}. Where EnergyMatrixTable is an Association with keys equal to lists of the form {n, J, Jp, Ii, Ii}. EnergyStatesTable an association with keys equal to lists of the form {n, J, Ii}. And AllowedM is a list with keys equal to lists of the form {n,J} and values equal to lists equal to the corresponding values of MJ.";
-TabulateEnergyMatrixTable[n_,Ii_,OptionsPattern[]]:=(
+TabulateEnergyMatrixTable::usage="TabulateEnergyMatrixTable[n,I] returns a list with three elements {EnergyMatrixTable, EnergyStatesTable, AllowedM}. EnergyMatrixTable is an Association with keys equal to lists of the form {n, J, Jp, Ii, Ii}. EnergyStatesTable is an association with keys equal to lists of the form {n, J, Ii}. AllowedM is a list with keys equal to lists of the form {n,J} and values equal to lists equal to the corresponding values of MJ.";
+TabulateEnergyMatrixTable[n_,Ii_,CFTable_,OptionsPattern[]]:=(
   EnergyMatrixTable=<||>;
   EnergyStatesTable=<||>;
   AllowedM=<||>;
   Do[
-    (EnergyMatrixTable[{n,J,Jp,Ii,Ii}] = EnergyMatrix[n,J,Jp,Ii,Ii,"Sparse"->OptionValue["Sparse"]];
-     EnergyStatesTable[{n,J,Ii}] = EnergyStates[n,J,Ii];
-     AllowedM[{n,J}]=Table[M,{J,minJ[n],maxJ[n]},{M,-J,J}];
+    (EnergyMatrixTable[{n,J,Jp,Ii,Ii}] = EnergyMatrix[n,J,Jp,Ii,Ii,CFTable,"Sparse"->OptionValue["Sparse"]];
+     EnergyStatesTable[{n,J,Ii}]       = EnergyStates[n,J,Ii];
+     AllowedM[{n,J}]                   = Table[M,{J,minJ[n],maxJ[n]},{M,-J,J}];
     ),
     {Jp,AllowedJ[n]},
     {J,AllowedJ[n]}
   ];
-  Return[{EnergyMatrixTable,EnergyStatesTable,AllowedM}]
+  Return[{EnergyMatrixTable,EnergyStatesTable,AllowedM}];
 )
 
 Options[TabulateManyEnergyMatrixTables]={"Overwrite"->False,"Sparse"->True};
-TabulateManyEnergyMatrixTables::usage="TabulateManyEnergyMatrixTables[{n1,n2,...}, {I1,I2,...}] calculates the tables of matrix elements for the requested f^n_i configurations with the given nuclear spin I_i. The function returns an Association whose keys are lists of the form {n,I} and whose values are the filenames where the output of TabulateEnergyMatrixTable was saved to. When these files are loaded with Get, the following three symbols are thus defined: EnergyMatrixTable, EnergyStatesTable, and AllowedM.
-EnergyMatrixTable is an association whose keys are of the form {n, J, Jp, Ii, Ii} and whose values are matrix elements.";
+TabulateManyEnergyMatrixTables::usage="TabulateManyEnergyMatrixTables[{n1,n2,...}, {I1,I2,...}] calculates the tables of matrix elements for the requested f^n_i configurations with the given nuclear spin I_i. The function does not return the matrices themselves. It instead returns an Association whose keys are lists of the form {n,I} and whose values are the filenames where the output of TabulateEnergyMatrixTables was saved to. When these files are loaded with Get, the following three symbols are thus defined: EnergyMatrixTable, EnergyStatesTable, and AllowedM.
+EnergyMatrixTable is an Association whose keys are of the form {n, J, Jp, Ii, Ii} and whose values are matrix elements.";
 TabulateManyEnergyMatrixTables[ns_,Iis_,OptionsPattern[]]:=(
+  EMFileName[n_, Ii_]:= FileNameJoin[{moduleDir,"data",StringJoin[{"f",ToString[n],"_I_",ToString[2*Ii+1],"_EnergyMatrixTable.m"}]}];
   overwrite=OptionValue["Overwrite"];
   fNames=<||>;
-  Do[(
-    PrintTemporary["#------- n=",n," | I=",Ii," -------#"];
-    exportFname=FileNameJoin[{NotebookDirectory[],
-            StringJoin[{"f",ToString[n],"_I_",ToString[2*Ii+1],"_EnergyMatrixTable.m"}]
-            }];
-    fNames[{n,Ii}]=exportFname;
-    If[FileExistsQ[exportFname]&&Not[overwrite],
-      Continue[]];
-    {EnergyMatrixTable,EnergyStatesTable,AllowedM}=TabulateEnergyMatrixTable[n,Ii,"Sparse"->OptionValue["Sparse"]];
-    If[FileExistsQ[exportFname]&&overwrite,
-      DeleteFile[exportFname]];
-    Save[exportFname,{EnergyMatrixTable,EnergyStatesTable,AllowedM}];
-  ),
-  {Ii,Iis},
+  Do[
+    (
+    CFdataFilename = FileNameJoin[{moduleDir,"data","CrystalFieldTable_f"<>ToString[n]<>".zip"}];
+    PrintTemporary["Importing CrystalFieldTable from ",CFdataFilename," ..."];
+    CrystalFieldTable = ImportMZip[CFdataFilename];
+    Do[(
+      PrintTemporary["#------- n=",n," | I=",Ii," -------#"];
+      exportFname=EMFileName[n,Ii];
+      fNames[{n,Ii}]=exportFname;
+      If[FileExistsQ[exportFname] && Not[overwrite],
+        Continue[]];
+      {EnergyMatrixTable,EnergyStatesTable,AllowedM} = TabulateEnergyMatrixTable[n,Ii,CrystalFieldTable,"Sparse"->OptionValue["Sparse"]];
+      If[FileExistsQ[exportFname]&&overwrite,
+        DeleteFile[exportFname]];
+      Save[exportFname,{EnergyMatrixTable,EnergyStatesTable,AllowedM}];
+      ),
+    {Ii,Iis}
+    ];
+    ClearAll[CrystalFieldTable];
+    ),
   {n,ns}
   ];
 Return[fNames];
