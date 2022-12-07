@@ -37,6 +37,41 @@ specAlphabet = "SPDFGHIKLMNOQRTUV";
 moduleDir = DirectoryName[$InputFileName];
 
 theLanthanides = {"Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb"};
+theActinides = {"Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr"};
+paramAtlas = "E0:
+E1:
+E2:
+E3:
+\[Zeta]: spin-orbit strength parameter.
+B02:
+B04:
+B06:
+B12:
+B14:
+B16:
+B22:
+B24:
+B26:
+B34:
+B36:
+B44:
+B46:
+B56:
+B66:
+S12:
+S14:
+S16:
+S22:
+S24:
+S26:
+S34:
+S36:
+S44:
+S46:
+S56:
+S66:";
+paramSymbols = ToExpression[StringSplit[#, ":"][[1]]] & /@ StringSplit[atlas, "\n"];
+Protect /@ paramSymbols;
 
 printL::usage="printL[L] give the string representation of a given angular momentum.";
 findSL::usage = "findSL[LS] gives the spin and orbital angular momentum that corresponds to the provided string LS.";
@@ -86,7 +121,12 @@ CFP::usage = "CFP[{n, NKSL}] provides a list whose first element echoes NKSL and
 (* ############################################################################################## *)
 (* ############################################ Data ############################################ *)
 
-PrintTemporary["Loading table with coefficients of fractional parentage ..."]
+PrintTemporary["Loading data from Carnall ..."];
+carnallFname = FileNameJoin[{moduleDir,"data","Carnall.m"}];
+Carnall = Import[carnallFname];
+Carnall::usage = "Association of data from Carnall et al (1989) with the following keys: {data, annotations,paramSymbols, elementNames, rawData, rawAnnotations, annnotatedData}";
+
+PrintTemporary["Loading table with coefficients of fractional parentage ..."];
 CFPfname = FileNameJoin[{moduleDir,"data","CFPs.m"}]
 If[!FileExistsQ[CFPfname],
   (PrintTemporary[">> CFPs.m not found, generating ..."];
@@ -106,7 +146,7 @@ If[!FileExistsQ[ReducedUkTableFname],
 ]
 ReducedUkTable::usage="ReducedUkTable[{n, l=3, SL, SpLp, k}] provides reduced matrix elements of the spherical tensor operator Uk. See Cowan (1981) section 11-9 \"Unit Tensor Operators\".";
 
-PrintTemporary["Loading table of matrix elements for the electrostatic interaction ..."]
+PrintTemporary["Loading table of matrix elements for the electrostatic interaction ..."];
 ElectrostaticMatrixTablefname = FileNameJoin[{moduleDir,"data","ElectrostaticMatrixTable.m"}]
 If[!FileExistsQ[ElectrostaticMatrixTablefname],
   (PrintTemporary[">> ElectrostaticMatrixTable.m not found, generating ..."];
@@ -117,7 +157,7 @@ If[!FileExistsQ[ElectrostaticMatrixTablefname],
 
 ElectrostaticMatrixTable::usage="ElectrostaticMatrixTable[{n, SL, SpLp}] provides the calculated result of ElectrostaticMatrix[n, SL, SpLp]."; 
 
-PrintTemporary["Loading table of matrix elements for Vk1 ..."]
+PrintTemporary["Loading table of matrix elements for Vk1 ..."];
 ReducedVk1TableFname = FileNameJoin[{moduleDir,"data","ReducedVk1Table.m"}];
 If[!FileExistsQ[ReducedVk1TableFname],
   (PrintTemporary[">> ReducedVk1Table.m not found, generating ..."];
@@ -126,7 +166,7 @@ If[!FileExistsQ[ReducedVk1TableFname],
   ReducedVk1Table = Import[ReducedVk1TableFname];
 ]
 
-PrintTemporary["Loading table of matrix elements for spin-orbit ..."]
+PrintTemporary["Loading table of matrix elements for spin-orbit ..."];
 SpinOrbitTableFname = FileNameJoin[{moduleDir,"data","SpinOrbitTable.m"}];
 If[!FileExistsQ[SpinOrbitTableFname],
   (PrintTemporary[">> SpinOrbitTable.m not found, generating ..."];
@@ -928,11 +968,12 @@ ShiftedLevels[originalLevels_] := Module[{GroundEnergy},
   GroundEnergy = First[First[Sort[originalLevels]]];
   Map[{#[[1]] - GroundEnergy, #[[2]], #[[3]]} &, originalLevels]]
 
-LoadGuillotParameters::usage = "LoadGuillotParameters[Ln] loads into the current session the parameters for \!\(\*SuperscriptBox[\(Ln\), \(\(3\)\(+\)\)]\). The function returns the following list of quantities : {nf, E0, E1 , E2, E3 , \[Zeta], \[Alpha], \[Beta], \[Gamma], T2, T3, T4, T6, T7, T8, M0, M2, M4, P0, P2, P4, P6, B02, B06}";
+LoadGuillotParameters::usage = "LoadGuillotParameters[Ln] loads into the current session the parameters for \!\(\*SuperscriptBox[\(Ln\), \(\(3\)\(+\)\)]\). In addition of defining values inside of the session, the function also returns a list with the following quantities : {nf, E0, E1 , E2, E3 , \[Zeta], \[Alpha], \[Beta], \[Gamma], T2, T3, T4, T6, T7, T8, M0, M2, M4, P0, P2, P4, P6, B02, B06}";
 LoadGuillotParameters::argerr = "Not a lanthanide."
 
 LoadGuillotParameters[Ln_]:=Module[{},
   Which[
+    (* The hard-coded values used here are from Table I, "Spectra of lanthanides", Carnall et al, 1989.*)
     Ln=="Ce" || Ln==1,
       (
       nf = 1; Fsup2 = 0; Fsup4 = 0; Fsup6 = 0;
@@ -1068,8 +1109,8 @@ LoadGuillotParameters[Ln_]:=Module[{},
   eV2Icm = 1/8065.5439;
   \[Beta]BohrMag = 5.7883818012 * 10^-5 / eV2Icm;
   \[Beta]n = 3.1524512550 * 10^-8 / eV2Icm;
-  {nf, E0, E1 , E2, E3 , \[Zeta], \[Alpha], \[Beta], \[Gamma],
-  T2, T3, T4, T6, T7, T8, M0, M2, M4, P0, P2, P4, P6, B02, B06}
+  Return[{nf, E0, E1 , E2, E3 , \[Zeta], \[Alpha], \[Beta], \[Gamma],
+  T2, T3, T4, T6, T7, T8, M0, M2, M4, P0, P2, P4, P6, B02, B06}];
 ]
 
 
@@ -1084,14 +1125,14 @@ References:
 1. Sign inversion for \[Zeta]: Wybourne, Spectroscopic Properties of Rare Earths. 
 2. Sign inversion for {T2, T3, T4, T6, T7, T8}: Hansen and Judd, Matrix Elements of Scalar Three Electron Operators for the Atomic f Shell.";
 
+EnergyMatrixFileName::usage = "EnergyMatrixFileName[nf, IiN] gives the filename for the energy matrix table for an atom with nf electrons and a nucleus of spin IiN.";
 EnergyMatrixFileName[n_, IiN_] := (
   FileNameJoin[{moduleDir, "hams", 
     "f" <> ToString[n] <> "_I_" <> ToString[2*IiN + 1] <> "_Zhang_EnergyMatrixTables"
     }]
-  )
+  );
 
-SolveStates::notNum = "Necessary parameters have not been loaded into the session."
-
+SolveStates::notNum = "Necessary parameters have not been loaded into the session.";
 SolveStates[nf_, IiN_] := Module[
    {n, ii, jj, JMvals},
    (*#####################################*)
@@ -1122,7 +1163,8 @@ SolveStates[nf_, IiN_] := Module[
       EnergyMatrixTable[n, AllowedJ[n][[ii]], AllowedJ[n][[jj]], IiN, 
        IiN];,
     {ii, 1, Length[AllowedJ[n]]},
-    {jj, 1, Length[AllowedJ[n]]}];
+    {jj, 1, Length[AllowedJ[n]]}
+    ];
    EnergyMatrix = ArrayFlatten[EnergyMatrix];
    
    (* Print["The energy matrix has dimensions:", 
@@ -1153,6 +1195,20 @@ SolveStates[nf_, IiN_] := Module[
 
 (* ############################################################################################## *)
 (* ###############################               MISC              ############################## *)
+
+SymbToNum::usage="SymbToNum[expr, numAssociation] takes an expression expr and returns what results after making the replacements defined in the given replacementAssociation. If replacementAssociation doesn't define values for expected keys, they are taken to be zero.";
+SymbToNum[expr_,replacementAssociation_]:=(
+  includedKeys=Keys[replacementAssociation];
+  (*If a key is not defined, make its value zero.*)
+  fullAssociation=Table[(
+    If[MemberQ[includedKeys,key],
+      ToExpression[key]->replacementAssociation[key],
+      ToExpression[key]->0
+    ]
+  ),
+  {key,paramSymbols}];
+  Return[expr/.fullAssociation];
+)
 
 MinusOneTo::usage="MinusOneTo[a1,a2,...,an] returns -1 if Total[{a1,a2,...,an}] is odd, 1 if even, and Null if not an integer.";
 MinusOneTo[values__]:=(
