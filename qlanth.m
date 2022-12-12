@@ -38,11 +38,42 @@ moduleDir = DirectoryName[$InputFileName];
 
 theLanthanides = {"Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb"};
 theActinides = {"Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr"};
-paramAtlas = "E0:
+paramAtlas = "
+E0:
 E1:
 E2:
 E3:
+
 \[Zeta]: spin-orbit strength parameter.
+
+F0:
+F2:
+F4:
+F6:
+
+M0:
+M2:
+M4:
+
+T2:
+T3:
+T4:
+T6:
+T7:
+T8:
+
+P0:
+P2:
+P4:
+P6:
+
+gs: electronic gyromagnetic ratio
+gI: nuclear spin gyromagnetic ratio
+
+\[Alpha]: Trees parameter.
+\[Beta]:
+\[Gamma]:
+
 B02:
 B04:
 B06:
@@ -58,6 +89,7 @@ B44:
 B46:
 B56:
 B66:
+
 S12:
 S14:
 S16:
@@ -70,8 +102,14 @@ S44:
 S46:
 S56:
 S66:";
-paramSymbols = ToExpression[StringSplit[#, ":"][[1]]] & /@ StringSplit[atlas, "\n"];
+paramSymbols = StringSplit[paramAtlas, "\n"];
+paramSymbols = Select[paramSymbols, #!=""& ];
+paramSymbols = ToExpression[StringSplit[#, ":"][[1]]] & /@ paramSymbols;
 Protect /@ paramSymbols;
+
+cfSymbols = {B02, B04, B06, B12, B14, B16, B22, B24, B26, B34, B36, 
+   B44, B46, B56, B66, S12, S14, S16, S22, S24, S26, S34, S36, S44, 
+   S46, S56, S66};
 
 printL::usage="printL[L] give the string representation of a given angular momentum.";
 findSL::usage = "findSL[LS] gives the spin and orbital angular momentum that corresponds to the provided string LS.";
@@ -230,8 +268,20 @@ fK[n_,l_,NKSL_,NKSLp_,k_]:= Dk[k] * fk[n,l,NKSL,NKSLp,k]
 Dk::usage="Ratio between the reduced and non-reduced Slater direct (Subscript[F, k] and F^k) and exchange(Subscript[G, k]and G^k) integrals. Subscript[D, k]:= (Subscript[G, k](ff))/(G^k (ff))=(Subscript[F, k](ff))/(F^k (ff)). k must be even. See table 6-3 in Cowan (1981), and also section 2-7 of Wybourne (1965).";
 Dk[k_]:={1,225,1089,184041/25}[[k/2+1]]
 
+FtoE::usage="FtoE[F0,F2,F4,F6] calculates the corresponding {E0,E1,E2,E3} values.
+See eqn. 2-80 in Wybourne. Note that in that equation the subscripted Slater integrals are used but since this function assumes the the input values are superscripted Slater integrals, it is necessary to convert them using Dk.";
+FtoE[F0_,F2_,F4_,F6_]:=(Module[
+  {E0,E1,E2,E3},
+  E0=(F0-10/Dk[2] F2-33/Dk[4] F4-286/Dk[6] F6);
+  E1=(70/Dk[2] F2+231/Dk[4] F4+2002/Dk[6] F6)/9;
+  E2=(1/Dk[2] F2-3/Dk[4] F4+7/Dk[6] F6)/9;
+  E3=(5/Dk[2] F2+6/Dk[4] F4-91/Dk[6]*F6)/3;
+  Return[{E0,E1,E2,E3}];
+]
+);
+
 ElectrostaticMatrix::usage="See Wybourne (1965) section 2-9 'Electrostatic Interactions in f^n Configurations'";
-ElectrostaticMatrix[n_,NKSL_,NKSLp_]:=Module[{f0,f2,f4,f6,e0,e1,e2,e3,eevals,EMatrix,l},
+ElectrostaticMatrix[n_,NKSL_,NKSLp_]:=Module[{f0,f2,f4,f6,e0,e1,e2,e3,EMatrix,l},
   l=3;
   Ek={E0,E1,E2,E3};
   f0=fK[n,l,NKSL,NKSLp,0];
@@ -242,8 +292,7 @@ ElectrostaticMatrix[n_,NKSL_,NKSLp_]:=Module[{f0,f2,f4,f6,e0,e1,e2,e3,eevals,EMa
   e1=9/7 f0+1/42 f2+1/77 f4+1/462 f6;
   e2=143/42 f2-130/77 f4+35/462 f6;
   e3=11/42 f2+4/77 f4-7/462 f6;
-  eevals={e0,e1,e2,e3};
-  EMatrix=e0 E0+e1 E1+e2 E2+e3 E3
+  EMatrix = e0*E0 + e1*E1 + e2*E2 + e3*E3
 ]
 
 (* ################################### Racah Algebra Goodies #################################### *)
@@ -312,7 +361,9 @@ ReducedVk1[n_,SL_,SpLp_,k_]:=Module[{Vk1,S,L,Sp,Lp,Sb,Lb,parentSL,s,l,cfpSL,cfpS
   cfpSL=CFP[{n,SL}];
   cfpSpLp=CFP[{n,SpLp}];
   Vk1=0;
-  For[nn=2,nn<=Length[cfpSL],nn++,
+  For[nn=2,
+    nn<=Length[cfpSL],
+    nn++,
     parentSL=Part[cfpSL,nn,1];
     {Sb,Lb}=findSL[parentSL];
     Vk1fun=(If[Part[#,1]!=parentSL,
@@ -607,13 +658,15 @@ GR7NKSL[SL_, SpLp_] := (
 TwoBodyNKSL::usage="TwoBodyNKSL[SL, SpLp] returns the matrix element for configuration interaction as approximated by the Cassimir operators of the groups SO(3), G2, and R7. SL and SpLp are strings that represent terms under LS coupling.";
 TwoBodyNKSL[SL_, SpLp_] := Module[{S, L},
   {S, L} = findSL[SL];
-  (If[L == findSL[SpLp][[2]],
-    \[Alpha] L (L + 1), 
+  val = (If[L == findSL[SpLp][[2]],
+    \[Alpha] * L * (L + 1), 
     0] + 
    If[SL == SpLp, 
     GR7W[Part[First[findNKLSterm[SL]], 3]] + 
     GG2U[Part[First[findNKLSterm[SL]], 4]],
-    0])
+    0]);
+  TwoBodyNKSL[S, L] = val;
+  Return[val];
   ]
 
 (* ########### Configuration-Interaction via Casimir Operators ############# *)
@@ -631,6 +684,7 @@ EnergyMatrix[n_,J_,Jp_,Ii_,Ip_,CFTable_,OptionsPattern[]]:=(
     Simplify[
       (subKron
       * ( ElectrostaticMatrixTable[{n, NKSLJM[[1]], NKSLJMp[[1]]}]
+        + TwoBodyNKSL[NKSLJM[[1]], NKSLJMp[[1]]]
         + SpinOrbitTable[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}]
         + CFTable[{n, NKSLJM[[1]], NKSLJM[[2]], NKSLJM[[3]], NKSLJMp[[1]], NKSLJMp[[2]], NKSLJMp[[3]]}]
        )
@@ -649,7 +703,7 @@ EnergyStates[n_,J_,Ii_]:=AllowedNKSLJMIMforJIterms[n,J,Ii];
 
 Options[TabulateEnergyMatrixTable]={"Sparse"->True}
 TabulateEnergyMatrixTable::usage="TabulateEnergyMatrixTable[n,I] returns a list with three elements {EnergyMatrixTable, EnergyStatesTable, AllowedM}. EnergyMatrixTable is an Association with keys equal to lists of the form {n, J, Jp, Ii, Ii}. EnergyStatesTable is an association with keys equal to lists of the form {n, J, Ii}. AllowedM is a list with keys equal to lists of the form {n,J} and values equal to lists equal to the corresponding values of MJ.";
-TabulateEnergyMatrixTable[n_,Ii_,CFTable_,OptionsPattern[]]:=(
+TabulateEnergyMatrixTable[n_, Ii_, CFTable_, OptionsPattern[]]:=(
   EnergyMatrixTable=<||>;
   EnergyStatesTable=<||>;
   AllowedM=<||>;
@@ -668,7 +722,6 @@ Options[TabulateManyEnergyMatrixTables]={"Overwrite"->False,"Sparse"->True};
 TabulateManyEnergyMatrixTables::usage="TabulateManyEnergyMatrixTables[{n1,n2,...}, {I1,I2,...}] calculates the tables of matrix elements for the requested f^n_i configurations with the given nuclear spin I_i. The function does not return the matrices themselves. It instead returns an Association whose keys are lists of the form {n,I} and whose values are the filenames where the output of TabulateEnergyMatrixTables was saved to. When these files are loaded with Get, the following three symbols are thus defined: EnergyMatrixTable, EnergyStatesTable, and AllowedM.
 EnergyMatrixTable is an Association whose keys are of the form {n, J, Jp, Ii, Ii} and whose values are matrix elements.";
 TabulateManyEnergyMatrixTables[ns_,Iis_,OptionsPattern[]]:=(
-  EMFileName[n_, Ii_]:= FileNameJoin[{moduleDir,"data",StringJoin[{"f",ToString[n],"_I_",ToString[2*Ii+1],"_EnergyMatrixTable.m"}]}];
   overwrite=OptionValue["Overwrite"];
   fNames=<||>;
   Do[
@@ -678,7 +731,7 @@ TabulateManyEnergyMatrixTables[ns_,Iis_,OptionsPattern[]]:=(
     CrystalFieldTable = ImportMZip[CFdataFilename];
     Do[(
       PrintTemporary["#------- n=",n," | I=",Ii," -------#"];
-      exportFname=EMFileName[n,Ii];
+      exportFname=EnergyMatrixFileName[n,Ii];
       fNames[{n,Ii}]=exportFname;
       If[FileExistsQ[exportFname] && Not[overwrite],
         Continue[]];
@@ -730,6 +783,49 @@ printSLJM[SLJM_] :=
   RowBox[{SuperscriptBox[" ", 2 SLJM[[1]] + 1], 
      SubscriptBox[printL[SLJM[[2]]], {SLJM[[3]], SLJM[[4]]}]}] // 
    DisplayForm;
+
+RSJnoIlabelPercent::usage="Needs documentation and perhaps some options.";
+RSJnoIlabelPercent[\[CapitalPsi]_]:=Module[
+  {allRS},
+  magFun = DisplayForm[
+            SubscriptBox[
+              StringTake[#[[1,1]][[1]],2],
+              {#[[1,1,2]],#[[1]][[-1]],#[[-1]]}
+              ]
+              ]&;
+  magRS[a_,b_]:={Abs[a]^2, Map[magFun, b]};
+  RSfunc = {Total[#][[1]], Flatten[#[[-1,-1]]]} &;
+  allRS = Map[RSfunc, 
+    GatherBy[
+      Thread[magRS[\[CapitalPsi][[2]], \[CapitalPsi][[3]]]], 
+      #[[2]] &]];
+  allRS = SortBy[allRS, -#[[1]] &];
+  label=If[Part[allRS,1,1]>= 0.5,
+    DisplayForm[RowBox[
+                  {
+                  allRS[[1,2]],
+                  StringJoin["(", ToString[Round[100 * allRS[[1,1]]]],"%)"]
+                  }
+                  ]
+                ],
+    DisplayForm[RowBox[
+                  {
+                  allRS[[1,2]],
+                  StringJoin["(", ToString[Round[100 * allRS[[1,1]]]],"%) + "],
+                  allRS[[2,2]],
+                  StringJoin["(", ToString[Round[100 * allRS[[2,1]]]],"%) + "],
+                  allRS[[3,2]],
+                  StringJoin["(", ToString[Round[100 * allRS[[3,1]]]],"%) + "],
+                  allRS[[4,2]],
+                  StringJoin["(", ToString[Round[100 * allRS[[4,1]]]],"%) + "],
+                  allRS[[5,2]],
+                  StringJoin["(", ToString[Round[100 * allRS[[5,1]]]],"%)"]
+                  }
+                ]
+              ]
+          ];
+  Return[label];
+];
 
 (* ########################################## Printers ########################################## *)
 (* ############################################################################################## *)
@@ -971,7 +1067,7 @@ ShiftedLevels[originalLevels_] := Module[{GroundEnergy},
 LoadGuillotParameters::usage = "LoadGuillotParameters[Ln] loads into the current session the parameters for \!\(\*SuperscriptBox[\(Ln\), \(\(3\)\(+\)\)]\). In addition of defining values inside of the session, the function also returns a list with the following quantities : {nf, E0, E1 , E2, E3 , \[Zeta], \[Alpha], \[Beta], \[Gamma], T2, T3, T4, T6, T7, T8, M0, M2, M4, P0, P2, P4, P6, B02, B06}";
 LoadGuillotParameters::argerr = "Not a lanthanide."
 
-LoadGuillotParameters[Ln_]:=Module[{},
+LoadGuillotParameters[Ln_]:=Module[{paramAssoc},
   Which[
     (* The hard-coded values used here are from Table I, "Spectra of lanthanides", Carnall et al, 1989.*)
     Ln=="Ce" || Ln==1,
@@ -1111,7 +1207,35 @@ LoadGuillotParameters[Ln_]:=Module[{},
   \[Beta]n = 3.1524512550 * 10^-8 / eV2Icm;
   Return[{nf, E0, E1 , E2, E3 , \[Zeta], \[Alpha], \[Beta], \[Gamma],
   T2, T3, T4, T6, T7, T8, M0, M2, M4, P0, P2, P4, P6, B02, B06}];
-]
+];
+
+Options[LoadParameters]={
+    "Source"->"Carnall",
+    "Free Ion"->False,
+    "gs"->2.002319304386,
+    "gI"->0.987};
+LoadParameters[Ln_,OptionsPattern[]]:=(
+  source=OptionValue["Source"];
+  params=Which[source=="Carnall",
+  (Association[Carnall["data"][Ln]])
+  ];
+  (*If a free ion then all the parameters from the crystal field are set to zero*)
+  If[OptionValue["Free Ion"],
+    Do[params[cfSymbol]=0,{cfSymbol,cfSymbols}]
+  ];
+  params[F0]=0;
+  params[M2]=0.56*params[M0];
+  params[M4]=0.31*params[M0];
+  params[P0]=0;
+  params[P4]=0.5*params[P2];
+  params[P6]=0.1*params[P2];
+  params[gs]=OptionValue["gs"];
+  params[gI]=OptionValue["gI"];
+  params[nf]=Round[params[nf]];
+  {params[E0],params[E1],params[E2],params[E3]} = FtoE[params[F0],params[F2],params[F4],params[F6]];
+  params[E0]=0;
+  Return[params];
+);
 
 
 (*nf is number of electrons, and IiN is nuclear spin val*)
@@ -1127,68 +1251,50 @@ References:
 
 EnergyMatrixFileName::usage = "EnergyMatrixFileName[nf, IiN] gives the filename for the energy matrix table for an atom with nf electrons and a nucleus of spin IiN.";
 EnergyMatrixFileName[n_, IiN_] := (
-  FileNameJoin[{moduleDir, "hams", 
-    "f" <> ToString[n] <> "_I_" <> ToString[2*IiN + 1] <> "_Zhang_EnergyMatrixTables"
-    }]
+  fname=FileNameJoin[{moduleDir,
+      "hams",
+      StringJoin[{"f", ToString[n], "_I_", ToString[2*IiN + 1], "_EnergyMatrixTable.m"}]}];
+  Return[fname];
   );
 
-SolveStates::notNum = "Necessary parameters have not been loaded into the session.";
-SolveStates[nf_, IiN_] := Module[
-   {n, ii, jj, JMvals},
-   (*#####################################*)
-   (*hole-particle equivalence enforcement*)
-   n = nf;
-   allLoaded = And@@(NumberQ /@ {\[Zeta], T2, T3, T4, T6, T7, T8});
-   If[Not[allLoaded],
-    Message[SolveStates::notNum];
-    Abort[];
+SolveStates[nf_,IiN_,params_]:=Module[
+  {n, ii, jj, JMvals},
+  (*#####################################*)
+  (*hole-particle equivalence enforcement*)
+  n=nf;
+  (*If[nf>7,(n=14-nf;(*hole-particle equivalence*)
+  {\[Zeta],T2,T3,T4,T6,T7,T8}=-{\[Zeta],T2,T3,T4,T6,T7,T8};
+  )];*)
+  (*hole-particle equivalence enforcement*)
+  (*#####################################*)
+  (*Load symbolic expressions for energy sub-matrices.*)
+  Get[EnergyMatrixFileName[n,IiN]];
+  (*Patch together the entire matrix representation in block-diagonal form.*)
+  EnergyMatrix=ConstantArray[0, {Length[AllowedJ[n]], Length[AllowedJ[n]]}];
+  Do[EnergyMatrix[[jj,ii]]=EnergyMatrixTable[{n,AllowedJ[n][[ii]],AllowedJ[n][[jj]],IiN,IiN}];,
+    {ii,1,Length[AllowedJ[n]]},
+    {jj,1,Length[AllowedJ[n]]}
     ];
-   If[nf > 7,
-    (n = 14 - nf;(*hole-particle equivalence*)
-     {\[Zeta], T2, T3, T4, T6, T7, T8} = -{\[Zeta], T2, T3, T4, T6, T7, T8};
-     )];
-   (*hole-particle equivalence enforcement*)
-   (*#####################################*)
-
-   (* Load symbolic expressions for energy sub-matrices. *)
-   Get[EnergyMatrixFileName[n, IiN]];
-   (* Get[StringJoin[NotebookDirectory[], 
-     StringJoin["f", ToString[n], "_I_", ToString[2*IiN + 1], 
-      "_Zhang_EnergyMatrixTables"]]]; *)
-   
-   (*Patch together the entire matrix representation in block-diagonal form.*)
-   EnergyMatrix = 
-    ConstantArray[0, {Length[AllowedJ[n]], Length[AllowedJ[n]]}];
-   Do[EnergyMatrix[[jj, ii]] = 
-      EnergyMatrixTable[n, AllowedJ[n][[ii]], AllowedJ[n][[jj]], IiN, 
-       IiN];,
-    {ii, 1, Length[AllowedJ[n]]},
-    {jj, 1, Length[AllowedJ[n]]}
+  EnergyMatrix=ArrayFlatten[EnergyMatrix];
+  SymbolicMatrix=EnergyMatrix;
+  EnergyMatrix=ReplaceInSparseArray[EnergyMatrix,params];
+  Print["The energy matrix has dimensions:", Dimensions[EnergyMatrix]];
+  (*Solve for eigenvalues and eigenvectors.*)
+  EnergyLevels={};
+  {EigenvalueJM,EigenvectorJM}=Eigensystem[EnergyMatrix];
+  EigenvalueJM=Re[EigenvalueJM];
+  (*There might be a very small imaginary part.*)
+  (*Print[{Dimensions@EigenvalueJM,Dimensions@EigenvectorJM}];*)
+  (*Parse the results for the eigenvectors in terms of the ordered basis being used.*)
+  EnergyStates={};
+  Do[EnergyStates=Join[EnergyStates, EnergyStatesTable[{n,AllowedJ[n][[nn]],IiN}]],
+    {nn,1,Length[AllowedJ[n]]}
     ];
-   EnergyMatrix = ArrayFlatten[EnergyMatrix];
-   
-   (* Print["The energy matrix has dimensions:", 
-    Dimensions[EnergyMatrix]]; *)
-   
-   (*Solve for eigenvalues and eigenvectors.*)
-   EnergyLevels = {};
-   {EigenvalueJM, EigenvectorJM} = Eigensystem[EnergyMatrix];
-   EigenvalueJM = Re[EigenvalueJM]; (*There might be a very small imaginary part.*)
-   (* Print[{Dimensions@EigenvalueJM, Dimensions@EigenvectorJM}]; *)
-   
-   (*Parse the results for the eigenvectors in terms of the ordered basis being used.*)
-   EnergyStates = {};
-   Do[EnergyStates = Join[EnergyStates,
-      EnergyStatesTable[n, AllowedJ[n][[nn]], IiN]]
-    , {nn, 1, Length[AllowedJ[n]]}
+  Do[EnergyLevels=Join[EnergyLevels, {{EigenvalueJM[[nn]],EigenvectorJM[[nn]],EnergyStates}}];,
+    {nn,1,Length[EigenvalueJM]}
     ];
-   Do[EnergyLevels = Join[EnergyLevels,
-       {{EigenvalueJM[[nn]], EigenvectorJM[[nn]], EnergyStates}}];
-    , {nn, 1, Length[EigenvalueJM]}];
-   If[nf > 7,
-    ({\[Zeta], T2, T3, T4, T6, T7, T8} = -{\[Zeta], T2, T3, T4, T6, T7, T8};
-     )];
-   EnergyLevels];
+  Return[{SymbolicMatrix,EnergyLevels}];
+];
 
 (* ###############################              SOLVERS            ############################## *)
 (* ############################################################################################## *)
@@ -1241,6 +1347,7 @@ ExportMZip[filename_, object_] := (
    Run[zipCmd];
    Run[delCmd];
    );
+
 ImportMZip::usage = 
   "ImportMZip[filename] decompresses the provided filename, and imports the enclosed .m file that it is assumed to contain. After being imported the uncompressed file is deleted from disk. The provided filename bust be a full path, and end with .zip.";
 ImportMZip[filename_] := (
@@ -1339,6 +1446,16 @@ ExploreGraphics[graph_Graphics, opts : OptionsPattern[]] := With[
          range = {{rx1, rx2}, {ry1, ry2}};
          range[[2]] = {0, 1};
          )}]]];
+
+ReplaceInSparseArray::usage="ReplaceInSparseArray[sparseArray,rules] takes a sparse array that may contain symbolic quantities and returns a sparse array in which the given replacement rules have been used.";
+ReplaceInSparseArray[s_SparseArray,rule_] := (With[{
+    elem = s["NonzeroValues"]/.rule,
+    def  = s["Background"]/.rule
+    },
+    srep = SparseArray[Automatic,s["Dimensions"],def,{1,{s["RowPointers"],s["ColumnIndices"]},elem}];
+  ];
+  Return[srep];
+  );
 
 (* ###############################               MISC              ############################## *)
 (* ############################################################################################## *)
