@@ -51,9 +51,9 @@ F2:
 F4:
 F6:
 
-M0:
-M2:
-M4:
+M0: 0th Marvin integral
+M2: 2nd Marvin integral
+M4: 4th Marvin integral
 
 T2:
 T3:
@@ -62,46 +62,47 @@ T6:
 T7:
 T8:
 
-P0:
-P2:
-P4:
-P6:
+P0: 0th parameter for the two-body electrostatically correlated spin-orbit interaction.
+P2: 2th parameter for the two-body electrostatically correlated spin-orbit interaction.
+P4: 4th parameter for the two-body electrostatically correlated spin-orbit interaction.
+P6: 6th parameter for the two-body electrostatically correlated spin-orbit interaction.
 
 gs: electronic gyromagnetic ratio
 gI: nuclear spin gyromagnetic ratio
 
-\[Alpha]: Trees parameter.
+\[Alpha]: (Trees parameter).
 \[Beta]:
 \[Gamma]:
 
-B02:
-B04:
-B06:
-B12:
-B14:
-B16:
-B22:
-B24:
-B26:
-B34:
-B36:
-B44:
-B46:
-B56:
-B66:
+B02: crystal field parameter B_0^2
+B04: crystal field parameter B_0^4
+B06: crystal field parameter B_0^6
+B12: crystal field parameter B_1^2
+B14: crystal field parameter B_1^4
+B16: crystal field parameter B_1^6
+B22: crystal field parameter B_2^2
+B24: crystal field parameter B_2^4
+B26: crystal field parameter B_2^6
+B34: crystal field parameter B_3^4
+B36: crystal field parameter B_3^6
+B44: crystal field parameter B_4^4
+B46: crystal field parameter B_4^6
+B56: crystal field parameter B_5^6
+B66: crystal field parameter B_6^6
 
-S12:
-S14:
-S16:
-S22:
-S24:
-S26:
-S34:
-S36:
-S44:
-S46:
-S56:
-S66:";
+S12: crystal field parameter S_1^2
+S14: crystal field parameter S_1^4
+S16: crystal field parameter S_1^6
+S22: crystal field parameter S_2^2
+S24: crystal field parameter S_2^4
+S26: crystal field parameter S_2^6
+S34: crystal field parameter S_3^4
+S36: crystal field parameter S_3^6
+S44: crystal field parameter S_4^4
+S46: crystal field parameter S_4^6
+S56: crystal field parameter S_5^6
+S66: crystal field parameter S_6^6
+";
 paramSymbols = StringSplit[paramAtlas, "\n"];
 paramSymbols = Select[paramSymbols, #!=""& ];
 paramSymbols = ToExpression[StringSplit[#, ":"][[1]]] & /@ paramSymbols;
@@ -213,6 +214,36 @@ If[!FileExistsQ[SpinOrbitTableFname],
   SpinOrbitTable = Import[SpinOrbitTableFname];
 ]
 
+Export[FileNameJoin[{moduleDir, "data", "ReducedAiZiTable.m"}], 
+  AiZiTable];
+
+PrintTemporary["Loading table of reduce AiZi matrix elements ..."];
+AiZiTableFname = FileNameJoin[{moduleDir,"data","ReducedAiZiTable.m"}];
+If[!FileExistsQ[SpinOrbitTableFname],
+  (PrintTemporary[">> ReducedAiZiTable.m not found, generating ..."];
+    AiZiTable = GenerateAiZiTable[7, True, True];
+  ),
+  AiZiTable = Import[AiZiTableFname];
+];
+
+PrintTemporary["Loading table of matrix elements for spin-other-orbit and electrostatically-correlated-spin-orbit ..."];
+SOOandECSOTableFname = FileNameJoin[{moduleDir,"data","SOOandECSOTable.m"}];
+If[!FileExistsQ[SpinOrbitTableFname],
+  (PrintTemporary[">> SOOandECSOTable.m not found, generating ..."];
+    SOOandECSOTable = GenerateSOOandECSOTable[7, True];
+  ),
+  SOOandECSOTable = Import[SOOandECSOTableFname];
+]
+
+PrintTemporary["Loading table of matrix elements for spin-spin ..."];
+SpinSpinTableFname = FileNameJoin[{moduleDir,"data","SpinSpinTable.m"}];
+If[!FileExistsQ[SpinSpinTableFname],
+  (PrintTemporary[">> SpinSpinTable.m not found, generating ..."];
+    SpinSpinTable = GenerateSpinSpinTableTable[7];
+  ),
+  SpinSpinTable = Import[SpinSpinTableFname];
+]
+
 (* ############################################ Data ############################################ *)
 (* ############################################################################################## *)
 
@@ -221,44 +252,57 @@ If[!FileExistsQ[SpinOrbitTableFname],
 
 ReducedUk::usage="ReducedUk[n, l, SL, SpLp,k] gives the reduced matrix element of the spherical tensor U^(k).";
 ReducedUk[n_,l_,SL_,SpLp_,k_]:=Module[
-  {Uk,S,L,Sp,Lp,Sb,Lb,parentSL,cfpSL,cfpSpLp},
-  {S,L}=findSL[SL];
-  {Sp,Lp}=findSL[SpLp];
-  cfpSL=CFP[{n,SL}];
-  cfpSpLp=CFP[{n,SpLp}];
-  Uk=0;
+  {Uk,S,L,Sp,Lp,Sb,Lb,parentSL,cfpSL,cfpSpLp,Ukval},
+  {S,L}   = findSL[SL];
+  {Sp,Lp} = findSL[SpLp];
+  cfpSL   = CFP[{n,SL}];
+  cfpSpLp = CFP[{n,SpLp}];
+  Uk      = 0;
   If[S==Sp,
-    For[nn=2,nn<=Length[cfpSL],nn++,
-      parentSL=Part[cfpSL,nn,1];
-      {Sb,Lb}=findSL[parentSL];
-      fun=If[
-        #[[1]]!=parentSL,
-        0,
-        (MinusOneTo[Lb,L,l,k]
-        * #[[2]]
-        * cfpSL[[nn,2]]
-        * SixJay[{L,Lp,k},{l,l,Lb}])]&;
-      summands=Map[fun,cfpSpLp[[2;;]]];
-      Uk=Uk+Total[summands];
+    For[nn = 2,
+        nn <= Length[cfpSL],
+        nn ++,
+        (
+        parentSL = cfpSL[[nn,1]];
+        {Sb,Lb}  = findSL[parentSL];
+        fun = If[
+          #[[1]]!=parentSL,
+          0,
+          (MinusOneTo[Lb,L,l,k]
+          * #[[2]]
+          * cfpSL[[nn,2]]
+          * SixJay[{L,Lp,k},{l,l,Lb}])
+          ]&;
+        summands = Map [fun,cfpSpLp[[2;;]]];
+        Uk      += Total[summands];
+        )
     ];
-    n * Sqrt[(2L+1) * (2Lp+1)] * Uk,
-  0]
+    Ukval = n * Sqrt[(2L+1) * (2Lp+1)] * Uk;
+  ,
+  Ukval = 0;
+  ];
+  Return[Ukval];
 ]
 
 Ck::usage="Diagonal reduced matrix element <l||C^(k)\[VerticalSeparator]\[VerticalSeparator]l> where the Subscript[C, q]^(k) are reduced spherical harmonics.";
-Ck[l_,k_]:=(-1)^l *(2 l+1) * ThreeJSymbol[{l,0},{l,0},{k,0}]
+Ck[l_,k_] := (-1)^l *(2 l+1) * ThreeJay[{l,0},{l,0},{k,0}]
 
 fk::usage="Slater integral. See Wybourne (1965) eqn. 2-93.";
 fk[n_,l_,NKSL_,NKSLp_,k_]:=Module[
   {S,L,PossibleStates,Sb,Lb},
-  {S,L}=findSL[NKSL];
-  PossibleStates=StringCases[AllowedNKSLterms[n],ToString[2 S+1]~~__];
-  PossibleStates=DeleteCases[PossibleStates,{}];
-  PossibleStates=Flatten[PossibleStates];
-  PossibleStates=
-  If[{S,L} == findSL[NKSLp],
-    (1/2 ( Abs[Ck[l,k]])^2 * (1/(2L+1) Sum[(ReducedUkTable[{n,l,x,NKSL,k}]*ReducedUkTable[{n,l,x,NKSLp,k}]),{x,PossibleStates}]
-     - KroneckerDelta[NKSL,NKSLp] (n (4 l+2-n))/((2 l+1) (4 l+1)))),
+  {S,L}          = findSL[NKSL];
+  PossibleStates = StringCases[AllowedNKSLterms[n],ToString[2 S+1]~~__];
+  PossibleStates = DeleteCases[PossibleStates,{}];
+  PossibleStates = Flatten[PossibleStates];
+  PossibleStates = If[
+    {S,L} == findSL[NKSLp],
+    (1/2
+    * ( Abs[Ck[l,k]])^2 
+    * (1/(2L+1) 
+    * Sum[( ReducedUkTable[{n,l,x,NKSL,k}]
+          * ReducedUkTable[{n,l,x,NKSLp,k}]),
+          {x,PossibleStates}]
+    - KroneckerDelta[NKSL,NKSLp] * (n (4 l+2-n))/((2 l+1) (4 l+1)))),
   0]
 ]
 
@@ -350,31 +394,37 @@ GenerateReducedUkTable[export_ : True]:=(
 
 SixJay::usage="SixJay[{j1,j2,j3},{j4,j5,j6}] provides the value for SixJSymbol[{j1,j2,j3},{j4,j5,j6}] with the addition that it remembers values it has already computed.";
 SixJay[{j1_,j2_,j3_},{j4_,j5_,j6_}]:=(
-  SixJay[{j1,j2,j3},{j4,j5,j6}]=SixJSymbol[{j1,j2,j3},{j4,j5,j6}]
-)
+  SixJay[{j1,j2,j3},{j4,j5,j6}] = SixJSymbol[{j1,j2,j3},{j4,j5,j6}]
+);
+
+ThreeJay::usage = "ThreeJay[{j1,m1},{j2,m2},{j3,m3}] gives the value of the Wigner 3j-symbol and memorizes previously computed values.";
+ThreeJay[{j1_, m1_}, {j2_, m2_}, {j3_, m3_}] := (
+   ThreeJay[{j1, m1}, {j2, m2}, {j3, m3}] = ThreeJSymbol[{j1, m1}, {j2, m2}, {j3, m3}]
+);
 
 ReducedVk1::usage="ReducedVk1";
 ReducedVk1[n_,SL_,SpLp_,k_]:=Module[{Vk1,S,L,Sp,Lp,Sb,Lb,parentSL,s,l,cfpSL,cfpSpLp,prefact,sign},
-  {s,l}={1/2,3};
-  {S,L}=findSL[SL];
-  {Sp,Lp}=findSL[SpLp];
-  cfpSL=CFP[{n,SL}];
-  cfpSpLp=CFP[{n,SpLp}];
-  Vk1=0;
+  {s,l}   = {1/2,3};
+  {S,L}   = findSL[SL];
+  {Sp,Lp} = findSL[SpLp];
+  cfpSL   = CFP[{n,SL}];
+  cfpSpLp = CFP[{n,SpLp}];
+  Vk1     = 0;
   For[nn=2,
     nn<=Length[cfpSL],
     nn++,
-    parentSL=Part[cfpSL,nn,1];
-    {Sb,Lb}=findSL[parentSL];
-    Vk1fun=(If[Part[#,1]!=parentSL,
-      0,
-      (#[[2]] * cfpSL[[nn,2]]
-      * SixJay[{S,Sp,1},{s,s,Sb}]
-      * SixJay[{L,Lp,k},{l,l,Lb}]
-      * MinusOneTo[Sb,Lb,S,L,l,k,-s])]&
-    );
-    Vk1adds=Map[Vk1fun,cfpSpLp[[2;;]]];
-    Vk1=Vk1+Total[Vk1adds];
+    parentSL = cfpSL[[n,1]];
+    {Sb,Lb}  = findSL[parentSL];
+    Vk1fun   = (If[Part[#,1] != parentSL,
+                0,
+                (#[[2]] * cfpSL[[nn,2]]
+                * SixJay[{S,Sp,1},{s,s,Sb}]
+                * SixJay[{L,Lp,k},{l,l,Lb}]
+                * MinusOneTo[Sb,Lb,S,L,l,k,-s]
+                )]&
+               );
+    Vk1adds  = Map[Vk1fun,cfpSpLp[[2;;]]];
+    Vk1     += Total[Vk1adds];
   ];
   prefact=n Sqrt[s(s+1)(2s+1)(2S+1)(2L+1)(2Sp+1)(2Lp+1)];
   Return[prefact*Vk1];
@@ -384,7 +434,7 @@ GenerateVk1Table::usage="GenerateVk1Table[nmax, export calculates values for Vk1
 GenerateVk1Table[nmax_:7,export_:False]:=(
   Off[SixJSymbol::tri];
   numValues=Total[Length[AllowedNKSLterms[#]]*Length[AllowedNKSLterms[#]]&/@Range[1,nmax]];
-  Print["Calculating "<>ToString[numValues]<>" values for Vk1."];
+  Print["Calculating " <> ToString[numValues] <> " values for Vk1."];
 
   counter=1;
   Monitor[
@@ -415,12 +465,12 @@ GenerateVk1Table[nmax_:7,export_:False]:=(
 
 SpinOrbit::usage="SpinOrbit[n, SL, SpLp, J] returns the matrix element ζ <SL,J|L⋅S|SpLp,J> within an f^n configuration. These are given as a function of ζ. This function requires that the Association ReducedVk1Table be defined.";
 SpinOrbit[n_,SL_,SpLp_,J_]:=Module[{S,L,Sp,Lp,l,sign,prefact},
-  l=3;
-  {S,L}=findSL[SL];
-  {Sp,Lp}=findSL[SpLp];
-  prefact=Sqrt[l*(l+1)*(2l+1)]*SixJay[{L,Lp,1},{Sp,S,J}];
-  sign=MinusOneTo[J,L,Sp];
-  Return[sign*prefact*\[Zeta]*ReducedVk1Table[{n,SL,SpLp,1}]];
+  l       = 3;
+  {S,L}   = findSL[SL];
+  {Sp,Lp} = findSL[SpLp];
+  prefact = Sqrt[l*(l+1)*(2l+1)] * SixJay[{L,Lp,1},{Sp,S,J}];
+  sign    = MinusOneTo[J,L,Sp];
+  Return[sign * prefact * \[Zeta] * ReducedVk1Table[{n,SL,SpLp,1}]];
 ]
 
 GenerateSpinOrbitTable::usage="GenerateSpinOrbitTable[nmax,export] computes the matrix values for the spin-orbit interaction for f^n configurations up to n=nmax. The function returns an Association whose keys are lists of the form {n, SL, SpLp, J}. If export is set to True, then the result is exported to the data subfolder for the folder in which this package is in. It requires ReducedVk1Table to be defined.";
@@ -447,17 +497,258 @@ GenerateSpinOrbitTable[nmax_:7,export_:False]:=(
 (* ######################################################################### *)
 
 (* ######################################################################### *)
-(* ############################ Crystal Field ############################## *)
+(* ################ Magnetically-Correlated Corrections #################### *)
 
-ThreeJSymbolMem::usage = "ThreeJSymbolMem[{j1,m1},{j2,m2},{j3,m3}] gives the value of the Wigner 3j-symbol and memorizes previously computed values.";
-ThreeJSymbolMem[{j1_, m1_}, {j2_, m2_}, {j3_, m3_}] := (
-   ThreeJSymbolMem[{j1, m1}, {j2, m2}, {j3, m3}] = ThreeJSymbol[{j1, m1}, {j2, m2}, {j3, m3}]
-   );
+T222PsiPsipStates[SL_,SpLp_]:=Module[{jj,PositionofState,\[Alpha],PsiPsipStates,m0,m2,m4,m,Tkk2m},
+  PositionofState=0;
+  jj=1;
+  \[Alpha]==2;
+  PsiPsipStates = {{"3P","3P"},
+                   {"3P","3F"}, {"3F","3P"},
+                   {"3F","3F"}, {"3F","3H"},
+                   {"3H","3F"}, {"3H","3H"}};
+  m0={-12,3 8/Sqrt[3],3 8/Sqrt[3],-(4/3) Sqrt[14],2 8/3 Sqrt[11/2],2 8/3 Sqrt[11/2],4/3 Sqrt[143]};
+  m2={-24,8/Sqrt[3],8/Sqrt[3],8 4/3 Sqrt[14],-(23/11) 8/3 Sqrt[11/2],-(23/11) 8/3 Sqrt[11/2],-(34/11) 4/3 Sqrt[143]};
+  m4={-(300/11),-(100/11) 8/Sqrt[3],-(100/11) 8/Sqrt[3],-(200/11) 4/3 Sqrt[14],-(325/121) 8/3 Sqrt[11/2],-(325/121) 8/3 Sqrt[11/2],-(1325/1573) 4/3 Sqrt[143]};
+  m={m0,m2,m4};
+  While[jj<=Length[PsiPsipStates]&&PositionofState==0,
+    PositionofState=If[PsiPsipStates[[jj,1]]==SL && PsiPsipStates[[jj,2]]==SpLp,
+                      jj,
+                      0];
+    jj++
+  ];
+  Tkk2m=If[PositionofState==0, 
+            0, 
+            (m[[1,PositionofState]] * M0
+            +m[[2,PositionofState]] * M2
+            +m[[3,PositionofState]] * M4)];
+  Return[Tkk2m];
+];
 
-SixJSymbolMem::usage = "SixJSymbolMem[{j1,j2,j3},{j4,j5,j6}] gives the value of the Racah 6j-symbol and memorizes previously computed values.";
-SixJSymbolMem[{L_, J_, S_}, {Jp_, Lp_, k_}] := (
-  SixJSymbolMem[{L, J, S}, {Jp, Lp, k}] = SixJSymbol[{L, J, S}, {Jp, Lp, k}]
+T112PsiPsipStates[SL_,SpLp_]:=Module[{jj,PositionofState,\[Alpha],PsiPsipStates,m0,m2,m4,m,Tkk2m},
+  PositionofState=0;
+  jj=1;
+  \[Alpha]==1;
+  PsiPsipStates= {{"1S","3P"},
+                  {"3P","1S"}, {"3P","3P"},
+                  {"3P","1D"}, {"1D","3P"},
+                  {"1D","3F"}, {"3F","1D"},
+                  {"3F","3F"}, {"3F","1G"},
+                  {"1G","3F"}, {"1G","3H"},
+                  {"3H","1G"}, {"3H","3H"},
+                  {"3H","1I"}, {"1I","3H"}};
+  m0={6,6,-36,-Sqrt[(2/15)] 23,-Sqrt[(2/15)] 23,Sqrt[2/5] 23,Sqrt[2/5] 23,-2 Sqrt[14] 15,-Sqrt[11] 6,-Sqrt[11] 6,Sqrt[2/5] 39,Sqrt[2/5] 39,-8 1/Sqrt[55] 132,-5 Sqrt[26],-5 Sqrt[26]};
+  m2={2,2,-72,-Sqrt[(2/15)] 14,-Sqrt[(2/15)] 14,Sqrt[2/5] 6,Sqrt[2/5] 6,-2 Sqrt[14],Sqrt[11] 64/33,Sqrt[11] 64/33,-Sqrt[(2/5)] 728/33,-Sqrt[(2/5)] 728/33,8/Sqrt[55] 23,-(30/11) Sqrt[26],-(30/11) Sqrt[26]};
+  m4={10/11,10/11,-(900/11),-Sqrt[(2/15)] 115/11,-Sqrt[(2/15)] 115/11,-(195/11) Sqrt[2/5],-(195/11) Sqrt[2/5],2 Sqrt[14] 10/11,-Sqrt[11] 1240/363,-Sqrt[11] 1240/363,-(3175/363) Sqrt[2/5],-(3175/363) Sqrt[2/5],8/Sqrt[55] 130/11,-(375/1573) Sqrt[26],-(375/1573) Sqrt[26]};
+
+  m={m0,m2,m4};
+  While[jj<=Length[PsiPsipStates]&&PositionofState==0,
+    PositionofState=If[PsiPsipStates[[jj,1]]==SL && PsiPsipStates[[jj,2]]==SpLp,
+                      jj,
+                      0];
+    jj++
+  ];
+  Tkk2m=If[PositionofState==0, 
+          0, 
+          (m[[1,PositionofState]] M0
+          +m[[2,PositionofState]] M2
+          +m[[3,PositionofState]] M4)
+          ];
+  Return[Tkk2m];
+];
+
+(* ################ Magnetically-Correlated Corrections #################### *)
+(* ######################################################################### *)
+
+(* ######################################################################### *)
+(* ############################ Reduced t^11 ############################### *)
+
+t112PsiPsipStates[SL_,SpLp_]:=Module[{jj,PositionofState,\[Alpha],PsiPsipStates,p0,p2,p4,p6,p,t112p},
+  PositionofState=0;
+  jj=1;
+  \[Alpha]==1;
+  PsiPsipStates={{"1S","3P"},{"3P","1S"},{"3P","3P"},
+                 {"3P","1D"},{"1D","3P"},{"1D","3F"},
+                 {"3F","1D"},{"3F","3F"},{"3F","1G"},
+                 {"1G","3F"},{"1G","3H"},{"3H","1G"},
+                 {"3H","3H"},{"3H","1I"},{"1I","3H"}};
+  p0={-2,-2,-1,Sqrt[15/2],Sqrt[15/2],-Sqrt[10],-Sqrt[10],
+      -Sqrt[14],Sqrt[11],Sqrt[11],-Sqrt[10],-Sqrt[10],
+      -Sqrt[55],Sqrt[13/2],Sqrt[13/2]};
+  p2={-105,-105,-45,Sqrt[15/2] 32,Sqrt[15/2] 32,-Sqrt[10] 9/2,
+      -Sqrt[10] 9/2,Sqrt[14] 10,-Sqrt[11] 20,-Sqrt[11] 20,
+      Sqrt[10] 55/2,Sqrt[10] 55/2,Sqrt[55] 25,-Sqrt[(13/2)] 0,
+      -Sqrt[(13/2)] 0};
+  p4={-231,-231,-33,-Sqrt[(15/2)] 33,-Sqrt[(15/2)] 33,Sqrt[10] 66,
+      Sqrt[10] 66,Sqrt[14] 33,Sqrt[11] 32,Sqrt[11] 32,-Sqrt[10] 23,
+      -Sqrt[10] 23,Sqrt[55] 51,-Sqrt[(13/2)] 21,-Sqrt[(13/2)] 21};
+  p6={-429,-429,1287,Sqrt[15/2] (-286),Sqrt[15/2] (-286),
+      Sqrt[10] (-(429/2)),Sqrt[10] (-(429/2)),Sqrt[14] 286,
+      Sqrt[11] (-104),Sqrt[11] (-104),Sqrt[10] (-(65/2)),
+      Sqrt[10] (-(65/2)),Sqrt[55] 13,Sqrt[13/2] (-6),Sqrt[13/2] (-6)};
+
+  p={p0,p2,p4,p6};
+  While[jj<=Length[PsiPsipStates]&&PositionofState==0,
+        PositionofState=If[PsiPsipStates[[jj,1]]==SL && PsiPsipStates[[jj,2]]==SpLp,
+                          jj,
+                          0];
+        jj++
+  ];
+  t112p=If[PositionofState==0,
+          0, 
+          (p[[1,PositionofState]] P0
+          +p[[2,PositionofState]] P2
+          +p[[3,PositionofState]] P4
+          +p[[4,PositionofState]] P6)];
+  Return[t112p];
+]
+
+(* ############################ Reduced t^11 ############################### *)
+(* ######################################################################### *)
+
+(* ######################################################################### *)
+(* ############################ Reduced AiZi ############################### *)
+
+AiZi2PsiPsipStates[SL_,SpLp_]:=Module[{PositionofState,kk,PsiPsipStates,a13,z13,aizi2p},
+  PositionofState=0;
+  kk=1;
+  PsiPsipStates={{"1S","3P"},{"3P","1S"},{"3P","3P"},
+                 {"3P","1D"},{"1D","3P"},{"1D","3F"},
+                 {"3F","1D"},{"3F","3F"},{"3F","1G"},
+                 {"1G","3F"},{"1G","3H"},{"3H","1G"},
+                 {"3H","3H"},{"3H","1I"},{"1I","3H"}};
+  a13=-33 M0+3 M2+15/11 M4-6 P0+3/2 (35 P2+77 P4+143 P6);
+  z13={2,2,1,1/Sqrt[1080] (-90),1/Sqrt[1080] (-90),Sqrt[2/405] 45,Sqrt[2/405] 45,Sqrt[14] 1,1/Sqrt[891] (-99 ),1/Sqrt[891] (-99 ),990/Sqrt[98010],990/Sqrt[98010],55/Sqrt[55],-2574/Sqrt[1019304],-2574/Sqrt[1019304]};
+  While[kk<=Length[PsiPsipStates]&&PositionofState==0,
+    PositionofState=If[PsiPsipStates[[kk,1]]==SL && PsiPsipStates[[kk,2]]==SpLp,
+                      kk,
+                      0];
+    kk++
+  ];
+  aizi2p=If[PositionofState==0, 
+            0,
+            Simplify[(
+              T112PsiPsipStates[SL,SpLp]
+              +t112PsiPsipStates[SL,SpLp]
+              -a13/6 z13[[PositionofState]]
+            )
+            ]
+  ];
+  Return[aizi2p];
+];
+
+aizi[n_,SL_,SpLp_]:=Module[{s,l,nn,S,L,Sp,Lp,cfpSL,cfpSpLp,parentSL,Sb,Lb,parentSpLp,aizival},
+  {s,l}={1/2,3};
+  {S,L}=findSL[SL];
+  {Sp,Lp}=findSL[SpLp];
+  cfpSL=CFP[{n,SL}];
+  cfpSpLp=CFP[{n,SpLp}];
+  For[(
+    aizival=0;nn=2),
+    nn<=Length[cfpSL],
+    nn++,
+    (
+      parentSL=cfpSL[[nn,1]];
+      {Sb,Lb}=findSL[parentSL];
+      dval=Sum[(
+        cfpSpLp[[mm,2]] 
+        *SixJay[{S,1,Sp},{findSL[cfpSpLp[[mm,1]]][[1]],s,Sb}] 
+        *SixJay[{L,1,Lp},{findSL[cfpSpLp[[mm,1]]][[2]],l,Lb}] 
+        *AiZiTable[{n-1,parentSL,Part[cfpSpLp,mm,1]}]
+      ),
+        {mm,2,Length[cfpSpLp]}
+        ];
+      dval=(cfpSL[[nn,2]] * (-1)^(Sb+Lb+s+l+Sp+Lp) * dval);
+      aizival+=dval;
+    )
+  ];
+  Return[n/(n-2) * Sqrt[(2 S+1) (2 Sp+1) (2 L+1) (2Lp+1)] * aizival];
+];
+
+GenerateAiZiTable[nmax_, export_:False, progressIndicator_:False]:=(
+  If[progressIndicator,
+  (
+    numItersai = Association[Table[n->Length[AllowedNKSLterms[n]]^2,{n,1,nmax}]];
+    counters   = Association[Table[n->0,{n,1,nmax}]];
+    totalIters = Total[Values[numItersai[[1;;nmax]]]];
+    template1  = StringTemplate["Iteration `numiter` of `totaliter`"];
+    template2  = StringTemplate["`remtime` min remaining"];template3=StringTemplate["Iteration speed = `speed` ms/it"];
+    template4  = StringTemplate["Time elapsed = `runtime` min"];
+    PrintTemporary[
+      Dynamic[
+        Pane[
+          Grid[{
+                {Superscript["f",n]},
+                {template1[<|"numiter"->numiter,"totaliter"->totalIters|>]},
+                {template4[<|"runtime"->Round[QuantityMagnitude[UnitConvert[(Now-startTime),"min"]],0.1]|>]},
+                {template2[<|"remtime"->Round[QuantityMagnitude[UnitConvert[(Now-startTime)/(numiter)*(totalIters-numiter),"min"]],0.1]|>]},
+                {template3[<|"speed"->Round[QuantityMagnitude[Now-startTime,"ms"]/(numiter),0.01]|>]},{ProgressIndicator[Dynamic[numiter],{1,totalIters}]}
+              },
+              Frame->All],Full,Alignment->Center]]];
   )
+  ];
+  AiZiTable=<||>;
+  numiter=1;
+  startTime=Now;
+  Do[
+    (
+      numiter+=1;
+      AiZiTable[{n,SL,SpLp}]=Which[
+        n==1,
+        0,
+        n==2,
+        AiZi2PsiPsipStates[SL,SpLp],
+        True,
+        Simplify[aizi[n,  SL, SpLp]]
+      ];
+    ),
+    {n,1,nmax},
+    {SL, AllowedNKSLterms[n]}, 
+    {SpLp, AllowedNKSLterms[n]}
+  ];
+  If[export,
+    (fname=FileNameJoin[{moduleDir,"data","ReducedAiZiTable.m"}];
+    Export[fname,AiZiTable];
+    )
+  ];
+  Return[AiZiTable];
+);
+
+(* ############################ Reduced AiZi ############################### *)
+(* ######################################################################### *)
+
+(* ######################################################################### *)
+(* ########################## Spin-Other-Orbit ############################# *)
+
+SOOandECSO[n_,SL_,SpLp_,J_]:=Module[{S,Sp,L,Lp},
+  {S,L}   = findSL[SL];
+  {Sp,Lp} = findSL[SpLp];
+  Return[(-1)^(Sp+L+J) * SixJay[{Sp,Lp,J},{L,S,1}] * AiZiTable[{n,SL,SpLp}]];
+]
+
+GenerateSOOandECSOTable[nmax_,export_:False]:=(
+  SOOandECSOTable=<||>;
+  Do[
+    SOOandECSOTable[{n,SL,SpLp,J}]=(SOOandECSO[n,SL,SpLp,J]/.{P2->P2/225,P4->P4/1089,P6->25 P6/184041});,
+  {n, 1, nmax},
+  {J, minJ[n], maxJ[n]},
+  {SL, Map[First, AllowedNKSLforJterms[n, J]]},
+  {SpLp, Map[First, AllowedNKSLforJterms[n, J]]}
+  ];
+  If[export,
+  (
+    fname=FileNameJoin[{moduleDir,"data","SOOandECSOTable.m"}];
+    Export[fname,SOOandECSOTable];
+  )
+  ];
+  Return[SOOandECSOTable];
+);
+
+(* ########################## Spin-Other-Orbit ############################# *)
+(* ######################################################################### *)
+
+(* ######################################################################### *)
+(* ############################ Crystal Field ############################## *)
 
 Cqk::usage="Cqk[nf, q, k, NKSL, J, M, NKSLp, Jp, Mp].";
 Cqk[nf_, q_, k_, NKSL_, J_, M_, NKSLp_, Jp_, Mp_] := Module[
@@ -465,10 +756,10 @@ Cqk[nf_, q_, k_, NKSL_, J_, M_, NKSLp_, Jp_, Mp_] := Module[
   l = 3;
   {S, L} = findSL[NKSL];
   {Sp, Lp} = findSL[NKSLp];
-  f1 = ThreeJSymbolMem[{J, -M}, {k, q}, {Jp, Mp}];
+  f1 = ThreeJay[{J, -M}, {k, q}, {Jp, Mp}];
   val = If[f1 == 0,
     0,
-    (f2 = SixJSymbolMem[{L, J, S}, {Jp, Lp, k}] ;
+    (f2 = SixJay[{L, J, S}, {Jp, Lp, k}] ;
      If[f2 == 0,
       0,
       (
@@ -673,7 +964,7 @@ TwoBodyNKSL[SL_, SpLp_] := Module[{S, L},
 (* ######################################################################### *)
 
 Options[EnergyMatrix]={"Sparse"->True};
-EnergyMatrix::usage="EnergyMatrix[n,J,J',I,I'] provides the matrix element <J,I|H|J',I'> within the f^n configuration, it does this by adding the following interactions: Coulomb, spin-orbit, and crystal-field.";
+EnergyMatrix::usage="EnergyMatrix[n,J,J',I,I'] provides the matrix element <J,I|H|J',I'> within the f^n configuration, it does this by adding the following interactions: Coulomb, spin-orbit, spin-other-orbit, electrostatically-correlated-spin-orbit, spin-spin, and crystal-field.";
 EnergyMatrix[n_,J_,Jp_,Ii_,Ip_,CFTable_,OptionsPattern[]]:=(
   eMatrix=Table[
   subKron=( KroneckerDelta[NKSLJM[[4]], NKSLJMp[[4]]]
@@ -686,6 +977,8 @@ EnergyMatrix[n_,J_,Jp_,Ii_,Ip_,CFTable_,OptionsPattern[]]:=(
       * ( ElectrostaticMatrixTable[{n, NKSLJM[[1]], NKSLJMp[[1]]}]
         + TwoBodyNKSL[NKSLJM[[1]], NKSLJMp[[1]]]
         + SpinOrbitTable[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}]
+        + SOOandECSOTable[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}]
+        + SpinSpinTable[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}]
         + CFTable[{n, NKSLJM[[1]], NKSLJM[[2]], NKSLJM[[3]], NKSLJMp[[1]], NKSLJMp[[2]], NKSLJMp[[3]]}]
        )
       )
@@ -758,10 +1051,12 @@ Return[fNames];
 printL[L_] := 
  If[StringQ[L], L, StringTake[specAlphabet, {L + 1}]]
 
-findSL[SL_] := 
- If[StringQ[SL], {(ToExpression[StringTake[SL, 1]] - 1)/2, 
-   Part[StringPosition[specAlphabet, StringTake[SL, {2}]], 1, 
-     1] - 1}, SL]
+findSL[SL_]:=(
+  findSL[SL]=If[StringQ[SL],
+    {(ToExpression[StringTake[SL,1]]-1)/2,
+     StringPosition[specAlphabet,StringTake[SL,{2}]][[1,1]]-1},
+    SL]
+    )
 
 findSL\[Gamma][SL_] := 
  If[StringQ[SL], 
@@ -1223,15 +1518,15 @@ LoadParameters[Ln_,OptionsPattern[]]:=(
   If[OptionValue["Free Ion"],
     Do[params[cfSymbol]=0,{cfSymbol,cfSymbols}]
   ];
-  params[F0]=0;
-  params[M2]=0.56*params[M0];
-  params[M4]=0.31*params[M0];
-  params[P0]=0;
-  params[P4]=0.5*params[P2];
-  params[P6]=0.1*params[P2];
-  params[gs]=OptionValue["gs"];
-  params[gI]=OptionValue["gI"];
-  params[nf]=Round[params[nf]];
+  params[F0] = 0;
+  params[M2] = 0.56 * params[M0]; (* See Carnall 1989, Table I, caption*)
+  params[M4] = 0.31 * params[M0]; (* See Carnall 1989, Table I, caption*)
+  params[P0] = 0;
+  params[P4] = 0.5 * params[P2];  (* See Carnall 1989, Table I, caption*)
+  params[P6] = 0.1 * params[P2];  (* See Carnall 1989, Table I, caption*)
+  params[gs] = OptionValue["gs"];
+  params[gI] = OptionValue["gI"];
+  params[nf] = Round[params[nf]];
   {params[E0],params[E1],params[E2],params[E3]} = FtoE[params[F0],params[F2],params[F4],params[F6]];
   params[E0]=0;
   Return[params];
@@ -1369,7 +1664,7 @@ ImportMZip[filename_] := (
 EnergyLevelDiagram::usage = "EnergyLevelDiagram[states] takes states and produces a visualization of its energy spectrum.
 The resultant visualization can be navigated by clicking and dragging to zoom in on a region, or by clicking and dragging horizontally while pressing Ctrl. Double-click to reset the view.";
 
-Options[EnergyLevelDiagram]={"Title"->"", "ImageSize"->1000, "AspectRatio" -> 1/8};
+Options[EnergyLevelDiagram]={"Title"->"", "ImageSize"->1000, "AspectRatio" -> 1/8, "Background"->"Automatic"};
 
 EnergyLevelDiagram[states_,OptionsPattern[]]:=(
 energies = First/@states;
@@ -1383,6 +1678,7 @@ ExploreGraphics@ListPlot[Tooltip[{{#,0},{#,1}}, {Quantity[#/8065.54429,"eV"], Qu
   FrameTicks -> {{None,None},{Automatic,Automatic}},
   FrameStyle -> Directive[15,Dashed,Thin],
   PlotLabel -> Style[OptionValue["Title"],15,Bold],
+  Background -> OptionValue["Background"],
   FrameLabel -> {"\!\(\*FractionBox[\(E\), SuperscriptBox[\(cm\), \(-1\)]]\)"}]
 )
 
