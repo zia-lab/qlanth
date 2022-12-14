@@ -1178,7 +1178,7 @@ EnergyMatrix[n_,J_,Jp_,Ii_,Ip_,CFTable_,OptionsPattern[]]:=(
   subKron=( KroneckerDelta[NKSLJM[[4]], NKSLJMp[[4]]]
           * KroneckerDelta[J, Jp]
           * KroneckerDelta[NKSLJM[[3]], NKSLJMp[[3]]]);
-  If[subKron==0,
+  matValue = If[subKron==0,
     0,
     Simplify[
       (subKron
@@ -1187,11 +1187,13 @@ EnergyMatrix[n_,J_,Jp_,Ii_,Ip_,CFTable_,OptionsPattern[]]:=(
         + SpinOrbitTable[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}]
         + SOOandECSOTable[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}]
         + SpinSpinTable[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}]
-        + CFTable[{n, NKSLJM[[1]], NKSLJM[[2]], NKSLJM[[3]], NKSLJMp[[1]], NKSLJMp[[2]], NKSLJMp[[3]]}]
        )
       )
     ]
-  ],
+  ];
+  matValue += CFTable[{n, NKSLJM[[1]], NKSLJM[[2]], NKSLJM[[3]], NKSLJMp[[1]], NKSLJMp[[2]], NKSLJMp[[3]]}];
+  matValue
+  ,
 {NKSLJMp, Partition[Flatten[AllowedNKSLJMIMforJIterms[n,Jp,Ip]],4]},
 {NKSLJM , Partition[Flatten[AllowedNKSLJMIMforJIterms[n,J,Ii]],4]}
 ];
@@ -1831,8 +1833,11 @@ MinusOneTo[values__]:=(
   ]
 )
 
+SimpleConjugate::usage = "SimpleConjugate[expr] takes an expression and applies a simplified version of the conjugate in that all it does is that it replaces the imaginary unit I with -I. It assumes that every other symbol is real so that it remains the same under complex conjugation. Among other expressions it is valid for any rational or polynomial expression with complex coefficients and real variables.";
+SimpleConjugate[expr_] := expr /. Complex[a_, b_] :> a - I b;
+
 ExportMZip::usage = 
-  "ExportMZip[filename, object] exports the given object and compresses it. It first exports in .m format, it then compresses that file in to a zip file, and finally the .m file is deleted. The filename must be a full path, and end with .m.";
+  "ExportMZip[filename, object] exports the given object and compresses it. It first exports in .m format, it then compresses that file in to a zip file, and finally the .m file is deleted. The filename must be a full path, and end with .m. This probably won't work on a PC.";
 ExportMZip[filename_, object_] := (
    zipTemplate = 
     StringTemplate[
@@ -1852,7 +1857,7 @@ ExportMZip[filename_, object_] := (
    );
 
 ImportMZip::usage = 
-  "ImportMZip[filename] decompresses the provided filename, and imports the enclosed .m file that it is assumed to contain. After being imported the uncompressed file is deleted from disk. The provided filename bust be a full path, and end with .zip.";
+  "ImportMZip[filename] decompresses the provided filename, and imports the enclosed .m file that it is assumed to contain. After being imported the uncompressed file is deleted from disk. The provided filename bust be a full path, and end with .zip. This probably won't work on a PC.";
 ImportMZip[filename_] := (
   splitName = FileNameSplit[filename];
   sourceDir = FileNameJoin[splitName[[1 ;; -2]]];
