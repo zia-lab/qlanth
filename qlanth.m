@@ -163,7 +163,7 @@ CFP::usage = "CFP[{n, NKSL}] provides a list whose first element echoes NKSL and
 PrintTemporary["Loading data from Carnall ..."];
 carnallFname = FileNameJoin[{moduleDir,"data","Carnall.m"}];
 Carnall = Import[carnallFname];
-Carnall::usage = "Association of data from Carnall et al (1989) with the following keys: {data, annotations,paramSymbols, elementNames, rawData, rawAnnotations, annnotatedData}";
+Carnall::usage = "Association of data from Carnall et al (1989) with the following keys: {data, annotations,paramSymbols, elementNames, rawData, rawAnnotations, annnotatedData, appendix:Pr:Association, appendix:Pr:Calculated, appendix:Pr:RawTable, appendix:Headings}";
 
 PrintTemporary["Loading table with coefficients of fractional parentage ..."];
 CFPfname = FileNameJoin[{moduleDir,"data","CFPs.m"}]
