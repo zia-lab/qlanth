@@ -235,11 +235,20 @@ If[!FileExistsQ[SpinOrbitTableFname],
   SOOandECSOTable = Import[SOOandECSOTableFname];
 ]
 
+PrintTemporary["Loading table of reduce T22 matrix elements ..."];
+T22TableFname = FileNameJoin[{moduleDir,"data","ReducedT22Table.m"}];
+If[!FileExistsQ[T22TableFname],
+  (PrintTemporary[">> ReducedT22Table.m not found, generating ..."];
+    T22Table = GenerateT22Table[7, True, True];
+  ),
+  T22Table = Import[T22TableFname];
+]
+
 PrintTemporary["Loading table of matrix elements for spin-spin ..."];
 SpinSpinTableFname = FileNameJoin[{moduleDir,"data","SpinSpinTable.m"}];
 If[!FileExistsQ[SpinSpinTableFname],
   (PrintTemporary[">> SpinSpinTable.m not found, generating ..."];
-    SpinSpinTable = GenerateSpinSpinTableTable[7];
+    SpinSpinTable = GenerateSpinSpinTable[7, True];
   ),
   SpinSpinTable = Import[SpinSpinTableFname];
 ]
@@ -716,6 +725,205 @@ GenerateAiZiTable[nmax_, export_:False, progressIndicator_:False]:=(
 
 (* ############################ Reduced AiZi ############################### *)
 (* ######################################################################### *)
+
+(* ######################################################################### *)
+(* ############################# T11 and T22 ############################### *)
+
+T11n[n_,SL_,SpLp_]:=Module[{s,l,nn,S,L,Sp,Lp,cfpSL,cfpSpLp,parentSL,Sb,Lb,parentSpLp,Tnkk,dval},
+  s=1/2;
+  l=3;
+  {S,L}=findSL[SL];
+  {Sp,Lp}=findSL[SpLp];
+  cfpSL=CFP[{n,SL}];
+  cfpSpLp=CFP[{n,SpLp}];
+  For[(Tnkk=0;nn=2;),
+  nn<=Length[cfpSL],
+  nn++,
+  parentSL=cfpSL[[nn,1]];
+  {Sb,Lb}=findSL[parentSL];
+  dval=Sum[(
+    cfpSpLp[[mm,2]] 
+    *SixJay[{S,1,Sp},{findSL[cfpSpLp[[mm,1]]][[1]],s,Sb}]
+    *SixJay[{L,1,Lp},{findSL[cfpSpLp[[mm,1]]][[2]],l,Lb}] 
+    *T11Table[{n-1,parentSL,Part[cfpSpLp,mm,1]}]
+    ),
+  {mm,2,Length[cfpSpLp]}];
+  dval=(cfpSL[[nn,2]]
+    * (-1)^(Sb+Lb+s+l+Sp+Lp)
+    * dval);
+  Tnkk+=dval;
+  ];
+  Tnkk = n/(n-2) * Sqrt[(2 S+1) (2 Sp+1) (2 L+1) (2Lp+1)] *Tnkk;
+  Return[Tnkk];
+];
+
+T22n[n_,SL_,SpLp_]:=Module[{s,l,nn,S,L,Sp,Lp,cfpSL,cfpSpLp,parentSL,Sb,Lb,parentSpLp,Tnkk,dval},
+  s=1/2;
+  l=3;
+  {S,L}=findSL[SL];
+  {Sp,Lp}=findSL[SpLp];
+  cfpSL=CFP[{n,SL}];
+  cfpSpLp=CFP[{n,SpLp}];
+  For[(Tnkk=0;nn=2),
+  nn<=Length[cfpSL],
+  nn++,
+  parentSL=Part[cfpSL,nn,1];
+  {Sb,Lb}=findSL[parentSL];
+  dval=Sum[(cfpSpLp[[mm,2]] 
+            * SixJay[{S,2,Sp},{findSL[Part[cfpSpLp,mm,1]][[1]],s,Sb}] 
+            * SixJay[{L,2,Lp},{findSL[Part[cfpSpLp,mm,1]][[2]],l,Lb}] 
+            * T22Table[{n-1,parentSL,Part[cfpSpLp,mm,1]}]
+  ),
+  {mm,2,Length[cfpSpLp]}
+  ];
+  dval=(dval
+      *cfpSL[[nn,2]]
+      *(-1)^(Sb+Lb+s+l+Sp+Lp));
+  Tnkk+=dval;
+  ];
+  Tnkk = n/(n-2) * Sqrt[(2 S+1) (2 Sp+1) (2 L+1) (2Lp+1)] *Tnkk;
+  Return[Tnkk];
+];
+
+GenerateT11Table[nmax_,export_,progressIndicator_]:=(
+  If[progressIndicator,(
+    numItersai=Association[Table[n->Length[AllowedNKSLterms[n]]^2,{n,1,nmax}]];
+    counters=Association[Table[n->0,{n,1,nmax}]];
+    totalIters=Total[Values[numItersai[[1;;nmax]]]];
+    template1=StringTemplate["Iteration `numiter` of `totaliter`"];
+    template2=StringTemplate["`remtime` min remaining"];template3=StringTemplate["Iteration speed = `speed` ms/it"];
+    template4=StringTemplate["Time elapsed = `runtime` min"];
+    PrintTemporary[
+      Dynamic[
+        Pane[
+          Grid[{{Superscript["f",n]},
+          {template1[<|"numiter"->numiter,"totaliter"->totalIters|>]},
+          {template4[<|"runtime"->Round[QuantityMagnitude[UnitConvert[(Now-startTime),"min"]],0.1]|>]},
+          {template2[<|"remtime"->Round[QuantityMagnitude[UnitConvert[(Now-startTime)/(numiter)*(totalIters-numiter),"min"]],0.1]|>]},
+          {template3[<|"speed"->Round[QuantityMagnitude[Now-startTime,"ms"]/(numiter),0.01]|>]},
+          {ProgressIndicator[Dynamic[numiter],{1,totalIters}]}
+          },
+          Frame->All],
+          Full,
+          Alignment->Center]
+        ]
+      ];
+  )
+  ];
+  T11Table=<||>;
+  numiter=1;
+  startTime=Now;
+  Do[
+    (
+    numiter+=1;
+    T11Table[{n,SL,SpLp}]=Which[
+    n==1,
+    0,
+    n==2,
+    Simplify[T112PsiPsipStates[SL,SpLp]],
+    True,
+    Simplify[T11n[n,  SL, SpLp]]
+    ];
+    ),
+    {n,1,nmax},
+    {SL, AllowedNKSLterms[n]},
+    {SpLp, AllowedNKSLterms[n]}
+  ];
+  If[export,
+    (
+    fname=FileNameJoin[{moduleDir,"data","ReducedT11Table.m"}];
+    Export[fname,T11Table];
+    )
+  ];
+  Return[T11Table];
+);
+
+GenerateT22Table[nmax_,export_,progressIndicator_]:=(
+  If[progressIndicator,
+  (
+    numItersai=Association[Table[n->Length[AllowedNKSLterms[n]]^2,{n,1,nmax}]];
+    counters=Association[Table[n->0,{n,1,nmax}]];
+    totalIters=Total[Values[numItersai[[1;;nmax]]]];
+    template1=StringTemplate["Iteration `numiter` of `totaliter`"];
+    template2=StringTemplate["`remtime` min remaining"];template3=StringTemplate["Iteration speed = `speed` ms/it"];
+    template4=StringTemplate["Time elapsed = `runtime` min"];
+    PrintTemporary[
+      Dynamic[
+        Pane[
+          Grid[{{Superscript["f",n]},
+                {template1[<|"numiter"->numiter,"totaliter"->totalIters|>]},
+                {template4[<|"runtime"->Round[QuantityMagnitude[UnitConvert[(Now-startTime),"min"]],0.1]|>]},
+                {template2[<|"remtime"->Round[QuantityMagnitude[UnitConvert[(Now-startTime)/(numiter)*(totalIters-numiter),"min"]],0.1]|>]},
+                {template3[<|"speed"->Round[QuantityMagnitude[Now-startTime,"ms"]/(numiter),0.01]|>]},
+                {ProgressIndicator[Dynamic[numiter],{1,totalIters}]}},
+                Frame->All],
+                Full,
+                Alignment->Center]
+              ]
+            ];
+  )
+  ];
+  T22Table=<||>;
+  startTime=Now;
+  numiter=1;
+  Do[
+    (numiter+=1;
+    T22Table[{n,SL,SpLp}]=Which[
+    n==1,
+    0,
+    n==2,
+    Simplify[T222PsiPsipStates[SL,SpLp]],
+    True,
+    Simplify[T22n[n,  SL, SpLp]]
+    ];),
+    {n,1,nmax},
+    {SL, AllowedNKSLterms[n]}, 
+    {SpLp, AllowedNKSLterms[n]}
+  ];
+  If[export,
+  (
+    fname=FileNameJoin[{moduleDir,"data","ReducedT22Table.m"}];
+    Export[fname,T22Table];
+  )
+  ];
+  Return[T22Table];
+);
+
+(* ############################# T11 and T22 ############################### *)
+(* ######################################################################### *)
+
+(* ######################################################################### *)
+(* ############################# Spin-Spin ################################# *)
+
+SpinSpin[n_, SL_, SpLp_, J_] := Module[{S, L, Sp, Lp, \[Alpha]},
+   \[Alpha] = 2;
+   {S, L} = findSL[SL];
+   {Sp, Lp} = findSL[SpLp];
+   (-1)^(Sp + L + J) SixJay[{Sp, Lp, J}, {L, S, \[Alpha]}]* 
+    T22Table[{n, SL, SpLp}]];
+
+GenerateSpinSpinTable[nmax_, export_] :=
+ (
+  SpinSpinTable = <||>;
+  PrintTemporary[Dynamic[n]];
+  Do[
+   SpinSpinTable[{n, SL, SpLp, J}] = (SpinSpin[n, SL, SpLp, J]);,
+   {n, 1, nmax},
+   {J, minJ[n], maxJ[n]},
+   {SL, Map[First, AllowedNKSLforJterms[n, J]]}, {SpLp, 
+    Map[First, AllowedNKSLforJterms[n, J]]}
+   ];
+  If[export,
+   (fname = FileNameJoin[{moduleDir, "data", "SpinSpinTable.m"}];
+    Export[fname, SpinSpinTable];
+    )
+   ];
+  Return[SpinSpinTable];
+  );
+
+(* ############################# Spin-Spin ################################# *)
+(* ######################################################################### *)
+
 
 (* ######################################################################### *)
 (* ########################## Spin-Other-Orbit ############################# *)
