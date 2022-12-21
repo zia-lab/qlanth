@@ -7,7 +7,7 @@ David Lizarazo in 2022.
 |            ____ _   / /  ____ _   ____     / /_   / /_           |
 |           / __ `/  / /  / __ `/  / __ \   / __/  / __ \          |
 |          / /_/ /  / /  / /_/ /  / / / /  / /_   / / / /          |
-|          \__, /  /_/   \__,_/  /_/ /_/   \__/  /_/ /_/           |
+|          \__, /  /_/   \__, _/  /_/ /_/   \__/  /_/ /_/           |
 |            /_/                                                   |
 |                                                                  |
 |                                                                  |
@@ -104,7 +104,7 @@ S56: crystal field parameter S_5^6
 S66: crystal field parameter S_6^6
 ";
 paramSymbols = StringSplit[paramAtlas, "\n"];
-paramSymbols = Select[paramSymbols, #!=""& ];
+paramSymbols = Select[paramSymbols, # != ""& ];
 paramSymbols = ToExpression[StringSplit[#, ":"][[1]]] & /@ paramSymbols;
 Protect /@ paramSymbols;
 
@@ -112,11 +112,11 @@ cfSymbols = {B02, B04, B06, B12, B14, B16, B22, B24, B26, B34, B36,
    B44, B46, B56, B66, S12, S14, S16, S22, S24, S26, S34, S36, S44, 
    S46, S56, S66};
 
-printL::usage="printL[L] give the string representation of a given angular momentum.";
+printL::usage = "printL[L] give the string representation of a given angular momentum.";
 findSL::usage = "findSL[LS] gives the spin and orbital angular momentum that corresponds to the provided string LS.";
 findSL\[Gamma]::usage = "findSL\[Gamma][LS] gives the spin and orbital angular momentum that corresponds to the provided string LS. The provided lists contains terms that belong to one of the f^n configurations. The last element of this list provides a digit that differentiates between different possibly degenerate terms.";
-printSLJ::usage = "Given a list with three elements {S,L,J} this function returns a symbol where the spin multiplicity is presented as a superscript, the orbital angular momentum as its corresponding spectroscopic letter, and J as a subscript. Function does not check to see if the given J is compatible with the given S and L.";
-printSLJM::usage = "Given a list with four elements {S,L,J,MJ} this function returns a symbol where the spin multiplicity is presented as a superscript, the orbital angular momentum as its corresponding spectroscopic letter, and {J, MJ} as a subscript. No attempt is made to guarantee that the given input is consistent.";
+printSLJ::usage = "Given a list with three elements {S, L, J} this function returns a symbol where the spin multiplicity is presented as a superscript, the orbital angular momentum as its corresponding spectroscopic letter, and J as a subscript. Function does not check to see if the given J is compatible with the given S and L.";
+printSLJM::usage = "Given a list with four elements {S, L, J, MJ} this function returns a symbol where the spin multiplicity is presented as a superscript, the orbital angular momentum as its corresponding spectroscopic letter, and {J, MJ} as a subscript. No attempt is made to guarantee that the given input is consistent.";
 
 fnTerms::usage = "This list contains the labels of f^n configurations. Each element of the list has four elements {LS, seniority, RacahW, RacahU}.";
 NKLSterms::usage = "NKLSterms[n, L, S] give all the terms that correspond to the given number of electrons n, with total orbital angular momentum L, and total spin angular momentum S.";
@@ -130,15 +130,15 @@ Only the one-body coefficients for f-electrons are provided.
 In all cases it must be that 1 <= n <= 7.
 Data for these was parsed from Velkov, \"Multi-electron coefficients of fractional parentage for the p, d, and f shells\".";
 
-AllowedSLterms::usage = "AllowedSLterms[n] returns a list with the allowed terms in the f^n configuration, the terms are given as lists in the format {S,L}. This list may have redundancies which are compatible with the degeneracies that might correspond to the given case.";
+AllowedSLterms::usage = "AllowedSLterms[n] returns a list with the allowed terms in the f^n configuration, the terms are given as lists in the format {S, L}. This list may have redundancies which are compatible with the degeneracies that might correspond to the given case.";
 AllowedNKSLterms::usage = "AllowedNKSLterms[n] returns a list with the allowed terms in the f^n configuration, the terms are given as strings in spectroscopic notation. An integer as the last is used to distinguish cases with degenaracy.";
-maxJ::usage = "maxJ[n] gives the maximum J=S+L that corresponds to the configuration f^n.";
-minJ::usage = "minJ[n] gives the minimum J=S+L that corresponds to the configuration f^n.";
-AllowedSLJterms::usage = "AllowedSLJterms[n] returns a list with the allowed {S,L,J} terms in the f^n configuration, the terms are given as lists in the format {S,L,J}. This list may have redundancies which are compatible with the degeneracies that might correspond to the given case.";
+maxJ::usage = "maxJ[n] gives the maximum J = S+L that corresponds to the configuration f^n.";
+minJ::usage = "minJ[n] gives the minimum J = S+L that corresponds to the configuration f^n.";
+AllowedSLJterms::usage = "AllowedSLJterms[n] returns a list with the allowed {S, L, J} terms in the f^n configuration, the terms are given as lists in the format {S, L, J}. This list may have redundancies which are compatible with the degeneracies that might correspond to the given case.";
 
-AllowedNKSLJterms::usage = "AllowedNKSLJterms[n] returns a list with the allowed {SL,J} terms in the f^n configuration, the terms are given as lists in the format {SL,J} where SL is a string in spectroscopic notation.";
+AllowedNKSLJterms::usage = "AllowedNKSLJterms[n] returns a list with the allowed {SL, J} terms in the f^n configuration, the terms are given as lists in the format {SL, J} where SL is a string in spectroscopic notation.";
 AllowedNKSLforJterms::usage = "AllowedNKSLforJterms[n, J] gives the terms that correspond to the given total angular momentum J in the f^n configuration. The result is a list whose elements are lists of length 2, the first element being the SL term in spectroscopic notation, and the second element being J.";
-AllowedMforJ::usage = "AllowedMforJ[j] is shorthand for Range[-j,j,1].";
+AllowedMforJ::usage = "AllowedMforJ[j] is shorthand for Range[-j, j, 1].";
 AllowedNKSLJMIMforJIterms::usage = "AllowedNKSLJMIMforJIterms[n, J, I] returns the states that belong to the f^n configuration with a total angular momentun L+S equal to J and with a nuclear angular momentum I. The returned list has elements of the form {{{SL (string in spectroscopic notation), J}, MJ}, MI}.";
 AllowedJ::usage = "AllowedJ[n] returns the total angular momenta J that appear in the f^n configuration.";
 
@@ -154,19 +154,19 @@ ShiftedLevels[originalLevels] takes a list of levels of the form
 and returns the same input except that now to every energy the minimum of all of them has been subtracted.";
 LoadGuillotParameters::usage = "";
 
-CFP::usage = "CFP[{n, NKSL}] provides a list whose first element echoes NKSL and whose other elements are lists with two elements the first one being the symbol of a parent term and the second being the corresponding coefficient of fractional parentage. n must satisfy 1 <= n <=7";
+CFP::usage = "CFP[{n, NKSL}] provides a list whose first element echoes NKSL and whose other elements are lists with two elements the first one being the symbol of a parent term and the second being the corresponding coefficient of fractional parentage. n must satisfy 1 <= n <= 7";
 
 
 (* ############################################################################################## *)
 (* ############################################ Data ############################################ *)
 
 PrintTemporary["Loading data from Carnall ..."];
-carnallFname = FileNameJoin[{moduleDir,"data","Carnall.m"}];
+carnallFname = FileNameJoin[{moduleDir, "data", "Carnall.m"}];
 Carnall = Import[carnallFname];
-Carnall::usage = "Association of data from Carnall et al (1989) with the following keys: {data, annotations,paramSymbols, elementNames, rawData, rawAnnotations, annnotatedData, appendix:Pr:Association, appendix:Pr:Calculated, appendix:Pr:RawTable, appendix:Headings}";
+Carnall::usage = "Association of data from Carnall et al (1989) with the following keys: {data, annotations, paramSymbols, elementNames, rawData, rawAnnotations, annnotatedData, appendix:Pr:Association, appendix:Pr:Calculated, appendix:Pr:RawTable, appendix:Headings}";
 
 PrintTemporary["Loading table with coefficients of fractional parentage ..."];
-CFPfname = FileNameJoin[{moduleDir,"data","CFPs.m"}]
+CFPfname = FileNameJoin[{moduleDir, "data", "CFPs.m"}]
 If[!FileExistsQ[CFPfname],
   (PrintTemporary[">> CFPs.m not found, generating ..."];
     CFP = GenerateCFP[];
@@ -176,17 +176,17 @@ If[!FileExistsQ[CFPfname],
 CFP::usage = "CFP[n, termSymbol] provides the coefficients of fractional parentage for the given term termSymbol and number of electrons n.";
 
 PrintTemporary["Loading table of reduced matrix elements for unit tensor operators ..."]
-ReducedUkTableFname = FileNameJoin[{moduleDir,"data","ReducedUkTable.m"}]
+ReducedUkTableFname = FileNameJoin[{moduleDir, "data", "ReducedUkTable.m"}]
 If[!FileExistsQ[ReducedUkTableFname],
   (PrintTemporary[">> ReducedUkTable.m not found, generating ..."];
     ReducedUkTable = GenerateReducedUkTable[];
   ),
   ReducedUkTable = Import[ReducedUkTableFname];
 ]
-ReducedUkTable::usage="ReducedUkTable[{n, l=3, SL, SpLp, k}] provides reduced matrix elements of the spherical tensor operator Uk. See Cowan (1981) section 11-9 \"Unit Tensor Operators\".";
+ReducedUkTable::usage = "ReducedUkTable[{n, l = 3, SL, SpLp, k}] provides reduced matrix elements of the spherical tensor operator Uk. See Cowan (1981) section 11-9 \"Unit Tensor Operators\".";
 
 PrintTemporary["Loading table of matrix elements for the electrostatic interaction ..."];
-ElectrostaticMatrixTablefname = FileNameJoin[{moduleDir,"data","ElectrostaticMatrixTable.m"}]
+ElectrostaticMatrixTablefname = FileNameJoin[{moduleDir, "data", "ElectrostaticMatrixTable.m"}]
 If[!FileExistsQ[ElectrostaticMatrixTablefname],
   (PrintTemporary[">> ElectrostaticMatrixTable.m not found, generating ..."];
     ElectrostaticMatrixTable = GenerateElectrostaticMatrixTable[];
@@ -194,22 +194,22 @@ If[!FileExistsQ[ElectrostaticMatrixTablefname],
   ElectrostaticMatrixTable = Import[ElectrostaticMatrixTablefname];
 ]
 
-ElectrostaticMatrixTable::usage="ElectrostaticMatrixTable[{n, SL, SpLp}] provides the calculated result of ElectrostaticMatrix[n, SL, SpLp]."; 
+ElectrostaticMatrixTable::usage = "ElectrostaticMatrixTable[{n, SL, SpLp}] provides the calculated result of ElectrostaticMatrix[n, SL, SpLp]."; 
 
 PrintTemporary["Loading table of matrix elements for Vk1 ..."];
-ReducedVk1TableFname = FileNameJoin[{moduleDir,"data","ReducedVk1Table.m"}];
+ReducedVk1TableFname = FileNameJoin[{moduleDir, "data", "ReducedVk1Table.m"}];
 If[!FileExistsQ[ReducedVk1TableFname],
   (PrintTemporary[">> ReducedVk1Table.m not found, generating ..."];
-    ReducedVk1Table = GenerateVk1Table[7,True];
+    ReducedVk1Table = GenerateVk1Table[7, True];
   ),
   ReducedVk1Table = Import[ReducedVk1TableFname];
 ]
 
 PrintTemporary["Loading table of matrix elements for spin-orbit ..."];
-SpinOrbitTableFname = FileNameJoin[{moduleDir,"data","SpinOrbitTable.m"}];
+SpinOrbitTableFname = FileNameJoin[{moduleDir, "data", "SpinOrbitTable.m"}];
 If[!FileExistsQ[SpinOrbitTableFname],
   (PrintTemporary[">> SpinOrbitTable.m not found, generating ..."];
-    SpinOrbitTable = GenerateSpinOrbitTable[7,True];
+    SpinOrbitTable = GenerateSpinOrbitTable[7, True];
   ),
   SpinOrbitTable = Import[SpinOrbitTableFname];
 ]
@@ -218,8 +218,8 @@ Export[FileNameJoin[{moduleDir, "data", "ReducedAiZiTable.m"}],
   AiZiTable];
 
 PrintTemporary["Loading table of reduce AiZi matrix elements ..."];
-AiZiTableFname = FileNameJoin[{moduleDir,"data","ReducedAiZiTable.m"}];
-If[!FileExistsQ[SpinOrbitTableFname],
+AiZiTableFname = FileNameJoin[{moduleDir, "data", "ReducedAiZiTable.m"}];
+If[!FileExistsQ[AiZiTableFname],
   (PrintTemporary[">> ReducedAiZiTable.m not found, generating ..."];
     AiZiTable = GenerateAiZiTable[7, True, True];
   ),
@@ -227,7 +227,7 @@ If[!FileExistsQ[SpinOrbitTableFname],
 ];
 
 PrintTemporary["Loading table of matrix elements for spin-other-orbit and electrostatically-correlated-spin-orbit ..."];
-SOOandECSOTableFname = FileNameJoin[{moduleDir,"data","SOOandECSOTable.m"}];
+SOOandECSOTableFname = FileNameJoin[{moduleDir, "data", "SOOandECSOTable.m"}];
 If[!FileExistsQ[SpinOrbitTableFname],
   (PrintTemporary[">> SOOandECSOTable.m not found, generating ..."];
     SOOandECSOTable = GenerateSOOandECSOTable[7, True];
@@ -236,7 +236,7 @@ If[!FileExistsQ[SpinOrbitTableFname],
 ]
 
 PrintTemporary["Loading table of reduce T22 matrix elements ..."];
-T22TableFname = FileNameJoin[{moduleDir,"data","ReducedT22Table.m"}];
+T22TableFname = FileNameJoin[{moduleDir, "data", "ReducedT22Table.m"}];
 If[!FileExistsQ[T22TableFname],
   (PrintTemporary[">> ReducedT22Table.m not found, generating ..."];
     T22Table = GenerateT22Table[7, True, True];
@@ -245,7 +245,7 @@ If[!FileExistsQ[T22TableFname],
 ]
 
 PrintTemporary["Loading table of matrix elements for spin-spin ..."];
-SpinSpinTableFname = FileNameJoin[{moduleDir,"data","SpinSpinTable.m"}];
+SpinSpinTableFname = FileNameJoin[{moduleDir, "data", "SpinSpinTable.m"}];
 If[!FileExistsQ[SpinSpinTableFname],
   (PrintTemporary[">> SpinSpinTable.m not found, generating ..."];
     SpinSpinTable = GenerateSpinSpinTable[7, True];
@@ -259,30 +259,30 @@ If[!FileExistsQ[SpinSpinTableFname],
 (* ############################################################################################## *)
 (* ################################### Racah Algebra Goodies #################################### *)
 
-ReducedUk::usage="ReducedUk[n, l, SL, SpLp,k] gives the reduced matrix element of the spherical tensor U^(k).";
-ReducedUk[n_,l_,SL_,SpLp_,k_]:=Module[
-  {Uk,S,L,Sp,Lp,Sb,Lb,parentSL,cfpSL,cfpSpLp,Ukval},
-  {S,L}   = findSL[SL];
-  {Sp,Lp} = findSL[SpLp];
-  cfpSL   = CFP[{n,SL}];
-  cfpSpLp = CFP[{n,SpLp}];
+ReducedUk::usage = "ReducedUk[n, l, SL, SpLp, k] gives the reduced matrix element of the spherical tensor U^(k).";
+ReducedUk[n_, l_, SL_, SpLp_, k_]:= Module[
+  {Uk, S, L, Sp, Lp, Sb, Lb, parentSL, cfpSL, cfpSpLp, Ukval},
+  {S, L}   = findSL[SL];
+  {Sp, Lp} = findSL[SpLp];
+  cfpSL   = CFP[{n, SL}];
+  cfpSpLp = CFP[{n, SpLp}];
   Uk      = 0;
   If[S==Sp,
     For[nn = 2,
         nn <= Length[cfpSL],
         nn ++,
         (
-        parentSL = cfpSL[[nn,1]];
-        {Sb,Lb}  = findSL[parentSL];
+        parentSL = cfpSL[[nn, 1]];
+        {Sb, Lb}  = findSL[parentSL];
         fun = If[
-          #[[1]]!=parentSL,
-          0,
-          (MinusOneTo[Lb,L,l,k]
-          * #[[2]]
-          * cfpSL[[nn,2]]
-          * SixJay[{L,Lp,k},{l,l,Lb}])
-          ]&;
-        summands = Map [fun,cfpSpLp[[2;;]]];
+                #[[1]]!= parentSL,
+                0,
+                ((-1)^(Lb + L + l + k)
+                * #[[2]]
+                * cfpSL[[nn, 2]]
+                * SixJay[{L, Lp, k}, {l, l, Lb}])
+                ]&;
+        summands = Map [fun, cfpSpLp[[2;;]]];
         Uk      += Total[summands];
         )
     ];
@@ -293,59 +293,66 @@ ReducedUk[n_,l_,SL_,SpLp_,k_]:=Module[
   Return[Ukval];
 ]
 
-Ck::usage="Diagonal reduced matrix element <l||C^(k)\[VerticalSeparator]\[VerticalSeparator]l> where the Subscript[C, q]^(k) are reduced spherical harmonics.";
-Ck[l_,k_] := (-1)^l *(2 l+1) * ThreeJay[{l,0},{l,0},{k,0}]
+Ck::usage = "Diagonal reduced matrix element <l||C^(k)\[VerticalSeparator]\[VerticalSeparator]l> where the Subscript[C, q]^(k) are reduced spherical harmonics.";
+Ck[l_, k_] := (-1)^l *(2 l+1) * ThreeJay[{l, 0}, {l, 0}, {k, 0}]
 
-fk::usage="Slater integral. See Wybourne (1965) eqn. 2-93.";
-fk[n_,l_,NKSL_,NKSLp_,k_]:=Module[
-  {S,L,PossibleStates,Sb,Lb},
-  {S,L}          = findSL[NKSL];
-  PossibleStates = StringCases[AllowedNKSLterms[n],ToString[2 S+1]~~__];
-  PossibleStates = DeleteCases[PossibleStates,{}];
+fk::usage = "Slater integral. See Wybourne (1965) eqn. 2-93.";
+fk[n_, l_, NKSL_, NKSLp_, k_]:= Module[
+  {S, L, PossibleStates, Sb, Lb},
+  {S, L}         = findSL[NKSL];
+  PossibleStates = StringCases[AllowedNKSLterms[n], ToString[2 S+1]~~__];
+  PossibleStates = DeleteCases[PossibleStates, {}];
   PossibleStates = Flatten[PossibleStates];
-  PossibleStates = If[
-    {S,L} == findSL[NKSLp],
-    (1/2
-    * ( Abs[Ck[l,k]])^2 
-    * (1/(2L+1) 
-    * Sum[( ReducedUkTable[{n,l,x,NKSL,k}]
-          * ReducedUkTable[{n,l,x,NKSLp,k}]),
-          {x,PossibleStates}]
-    - KroneckerDelta[NKSL,NKSLp] * (n (4 l+2-n))/((2 l+1) (4 l+1)))),
-  0]
+  PossibleStates = If[{S, L}==findSL[NKSLp],
+      (1/2
+      * ( Abs[Ck[l, k]])^2 
+      * ( 1/(2L+1) 
+        * Sum[( ReducedUkTable[{n, l, x, NKSL , k}]
+              * ReducedUkTable[{n, l, x, NKSLp, k}]),
+              {x, PossibleStates}]
+        - (KroneckerDelta[NKSL, NKSLp] 
+          * (n (4 l+2-n)) 
+          / (2 l+1)
+          / (4 l+1))
+        )
+      ),
+      0
+    ]
 ]
 
-fK::usage="Non-reduced Slater integral f^k = Subscript[f, k] * Subscript[D, k]";
-fK[n_,l_,NKSL_,NKSLp_,k_]:= Dk[k] * fk[n,l,NKSL,NKSLp,k]
+fK::usage = "Non-reduced Slater integral f^k = Subscript[f, k] * Subscript[D, k]";
+fK[n_, l_, NKSL_, NKSLp_ ,k_]:= (Dk[k] * fk[n, l, NKSL, NKSLp, k])
 
-Dk::usage="Ratio between the reduced and non-reduced Slater direct (Subscript[F, k] and F^k) and exchange(Subscript[G, k]and G^k) integrals. Subscript[D, k]:= (Subscript[G, k](ff))/(G^k (ff))=(Subscript[F, k](ff))/(F^k (ff)). k must be even. See table 6-3 in Cowan (1981), and also section 2-7 of Wybourne (1965).";
-Dk[k_]:={1,225,1089,184041/25}[[k/2+1]]
+Dk::usage = "Ratio between the reduced and non-reduced Slater direct (Subscript[F, k] and F^k) and exchange(Subscript[G, k]and G^k) integrals. Subscript[D, k]:= (Subscript[G, k](ff))/(G^k (ff)) = (Subscript[F, k](ff))/(F^k (ff)). k must be even. See table 6-3 in Cowan (1981), and also section 2-7 of Wybourne (1965).";
+Dk[k_] := {1, 225, 1089, 184041/25}[[k/2+1]]
 
-FtoE::usage="FtoE[F0,F2,F4,F6] calculates the corresponding {E0,E1,E2,E3} values.
+FtoE::usage = "FtoE[F0, F2, F4, F6] calculates the corresponding {E0, E1, E2, E3} values.
 See eqn. 2-80 in Wybourne. Note that in that equation the subscripted Slater integrals are used but since this function assumes the the input values are superscripted Slater integrals, it is necessary to convert them using Dk.";
-FtoE[F0_,F2_,F4_,F6_]:=(Module[
-  {E0,E1,E2,E3},
-  E0=(F0-10/Dk[2] F2-33/Dk[4] F4-286/Dk[6] F6);
-  E1=(70/Dk[2] F2+231/Dk[4] F4+2002/Dk[6] F6)/9;
-  E2=(1/Dk[2] F2-3/Dk[4] F4+7/Dk[6] F6)/9;
-  E3=(5/Dk[2] F2+6/Dk[4] F4-91/Dk[6]*F6)/3;
-  Return[{E0,E1,E2,E3}];
+FtoE[F0_, F2_, F4_, F6_] := (Module[
+  {E0, E1, E2, E3},
+  E0 = (F0 - 10/Dk[2]*F2 - 33/Dk[4]*F4 - 286/Dk[6]*F6);
+  E1 = (70/Dk[2]*F2 + 231/Dk[4]*F4 + 2002/Dk[6]*F6)/9;
+  E2 = (1/Dk[2]*F2 - 3/Dk[4]*F4 + 7/Dk[6]*F6)/9;
+  E3 = (5/Dk[2]*F2 + 6/Dk[4]*F4 - 91/Dk[6]*F6)/3;
+  Return[{E0, E1, E2, E3}];
 ]
 );
 
-ElectrostaticMatrix::usage="See Wybourne (1965) section 2-9 'Electrostatic Interactions in f^n Configurations'";
-ElectrostaticMatrix[n_,NKSL_,NKSLp_]:=Module[{f0,f2,f4,f6,e0,e1,e2,e3,EMatrix,l},
-  l=3;
-  Ek={E0,E1,E2,E3};
-  f0=fK[n,l,NKSL,NKSLp,0];
-  f2=fK[n,l,NKSL,NKSLp,2];
-  f4=fK[n,l,NKSL,NKSLp,4];
-  f6=fK[n,l,NKSL,NKSLp,6];
-  e0=f0;
-  e1=9/7 f0+1/42 f2+1/77 f4+1/462 f6;
-  e2=143/42 f2-130/77 f4+35/462 f6;
-  e3=11/42 f2+4/77 f4-7/462 f6;
-  EMatrix = e0*E0 + e1*E1 + e2*E2 + e3*E3
+ElectrostaticMatrix::usage = "See Wybourne (1965) section 2-9 'Electrostatic Interactions in f^n Configurations'";
+ElectrostaticMatrix[n_, NKSL_, NKSLp_]:= Module[
+  {f0, f2, f4, f6, e0, e1, e2, e3, EMatrix, l},
+  l = 3;
+  Ek = {E0, E1, E2, E3};
+  f0 = fK[n, l, NKSL, NKSLp, 0];
+  f2 = fK[n, l, NKSL, NKSLp, 2];
+  f4 = fK[n, l, NKSL, NKSLp, 4];
+  f6 = fK[n, l, NKSL, NKSLp, 6];
+  e0 = f0;
+  e1 = 9/7*f0 + f2/42 + f4/77 + f6/462;
+  e2 = 143/42*f2 - 130/77*f4 + 35/462*f6;
+  e3 = 11/42*f2 + 4/77*f4 - 7/462*f6;
+  EMatrix = e0*E0 + e1*E1 + e2*E2 + e3*E3;
+  Return[EMatrix];
 ]
 
 (* ################################### Racah Algebra Goodies #################################### *)
@@ -354,46 +361,46 @@ ElectrostaticMatrix[n_,NKSL_,NKSLp_]:=Module[{f0,f2,f4,f6,e0,e1,e2,e3,EMatrix,l}
 (* ############################################################################################## *)
 (* ####################################### Table Generation Functions ########################### *)
 
-GenerateCFP[export_ : True]:=(
-  CFP=Table[
+GenerateCFP[export_:True]:= (
+  CFP = Table[
     {n, NKSL} -> First[CFPterms[n, NKSL]],
     {n, 1, 7},
     {NKSL, AllowedNKSLterms[n]}];
-  CFP=Association[CFP];
+  CFP = Association[CFP];
   If[export,
     Export[FileNameJoin[{moduleDir, "data", "CFPs.m"}], CFP];
   ];
   Return[CFP];
 )
-GenerateCFP::usage="Generates the tables for the coefficients of fractional parentage. Results are exported to the file CFP.m";
+GenerateCFP::usage = "Generates the tables for the coefficients of fractional parentage. Results are exported to the file CFP.m";
 
-GenerateElectrostaticMatrixTable[export_ : True]:=(
-  ElectrostaticMatrixTable=Table[
+GenerateElectrostaticMatrixTable[export_:True]:= (
+  ElectrostaticMatrixTable = Table[
     {n, SL, SpLp} -> Simplify[ElectrostaticMatrix[n, SL, SpLp]], 
     {n, 1, 7},
-    {SL,AllowedNKSLterms[n]}, 
+    {SL, AllowedNKSLterms[n]}, 
     {SpLp, AllowedNKSLterms[n]}
   ];
-  ElectrostaticMatrixTable=Association[Flatten[ElectrostaticMatrixTable]];
+  ElectrostaticMatrixTable = Association[Flatten[ElectrostaticMatrixTable]];
   If[export,
-    Export[FileNameJoin[{moduleDir,"data", "ElectrostaticMatrixTable.m"}], ElectrostaticMatrixTable];
+    Export[FileNameJoin[{moduleDir, "data", "ElectrostaticMatrixTable.m"}], ElectrostaticMatrixTable];
   ];
   Return[ElectrostaticMatrixTable];
 )
-GenerateElectrostaticMatrixTable::usage="GenerateElectrostaticMatrixTable[] can be used to generate the table for the electrostatic interaction. Results are exported to the file ElectrostaticMatrixTable.m.";
+GenerateElectrostaticMatrixTable::usage = "GenerateElectrostaticMatrixTable[] can be used to generate the table for the electrostatic interaction. Results are exported to the file ElectrostaticMatrixTable.m.";
 
-GenerateReducedUkTable::usage="GenerateReducedUkTable[] can be used to generate the table of reduced matrix elements for the unit tensor operators Uk. Results are exported to the file ReducedUkTable.m.";
-GenerateReducedUkTable[export_ : True]:=(
+GenerateReducedUkTable::usage = "GenerateReducedUkTable[] can be used to generate the table of reduced matrix elements for the unit tensor operators Uk. Results are exported to the file ReducedUkTable.m.";
+GenerateReducedUkTable[export_:True]:= (
   Off[SixJSymbol::tri];
-  ReducedUkTable=Table[
+  ReducedUkTable = Table[
     {n, 3, SL, SpLp, k} -> Simplify[ReducedUk[n, 3, SL, SpLp, k]],
     {n, 1, 7},
     {SL, AllowedNKSLterms[n]}, 
     {SpLp, AllowedNKSLterms[n]}, 
     {k, {0, 2, 4, 6}}
   ];
-  ReducedUkTable=Association[Flatten[ReducedUkTable]];
-  ReducedUkTableFname=FileNameJoin[{moduleDir,"data","ReducedUkTable.m"}];
+  ReducedUkTable = Association[Flatten[ReducedUkTable]];
+  ReducedUkTableFname = FileNameJoin[{moduleDir, "data", "ReducedUkTable.m"}];
   If[export,
     Export[ReducedUkTableFname, ReducedUkTable];
   ];
@@ -401,69 +408,70 @@ GenerateReducedUkTable[export_ : True]:=(
   Return[ReducedUkTable];
 )
 
-SixJay::usage="SixJay[{j1,j2,j3},{j4,j5,j6}] provides the value for SixJSymbol[{j1,j2,j3},{j4,j5,j6}] with the addition that it remembers values it has already computed.";
-SixJay[{j1_,j2_,j3_},{j4_,j5_,j6_}]:=(
-  SixJay[{j1,j2,j3},{j4,j5,j6}] = SixJSymbol[{j1,j2,j3},{j4,j5,j6}]
+SixJay::usage = "SixJay[{j1, j2, j3}, {j4, j5, j6}] provides the value for SixJSymbol[{j1, j2, j3}, {j4, j5, j6}] with the addition that it remembers values it has already computed.";
+SixJay[{j1_, j2_, j3_}, {j4_, j5_, j6_}]:= (
+  SixJay[{j1, j2, j3}, {j4, j5, j6}] = SixJSymbol[{j1, j2, j3}, {j4, j5, j6}]
 );
 
-ThreeJay::usage = "ThreeJay[{j1,m1},{j2,m2},{j3,m3}] gives the value of the Wigner 3j-symbol and memorizes previously computed values.";
+ThreeJay::usage = "ThreeJay[{j1, m1}, {j2, m2}, {j3, m3}] gives the value of the Wigner 3j-symbol and memorizes previously computed values.";
 ThreeJay[{j1_, m1_}, {j2_, m2_}, {j3_, m3_}] := (
    ThreeJay[{j1, m1}, {j2, m2}, {j3, m3}] = ThreeJSymbol[{j1, m1}, {j2, m2}, {j3, m3}]
 );
 
-ReducedVk1::usage="ReducedVk1";
-ReducedVk1[n_,SL_,SpLp_,k_]:=Module[{Vk1,S,L,Sp,Lp,Sb,Lb,parentSL,s,l,cfpSL,cfpSpLp,prefact,sign},
-  {s,l}   = {1/2,3};
-  {S,L}   = findSL[SL];
-  {Sp,Lp} = findSL[SpLp];
-  cfpSL   = CFP[{n,SL}];
-  cfpSpLp = CFP[{n,SpLp}];
+ReducedVk1::usage = "ReducedVk1";
+ReducedVk1[n_, SL_, SpLp_, k_]:= Module[
+  {Vk1, S, L, Sp, Lp, Sb, Lb, parentSL, s, l, cfpSL, cfpSpLp, prefact, sign},
+  {s, l}   = {1/2, 3};
+  {S, L}   = findSL[SL];
+  {Sp, Lp} = findSL[SpLp];
+  cfpSL   = CFP[{n, SL}];
+  cfpSpLp = CFP[{n, SpLp}];
   Vk1     = 0;
-  For[nn=2,
-    nn<=Length[cfpSL],
+  For[nn = 2,
+    nn<= Length[cfpSL],
     nn++,
-    parentSL = cfpSL[[n,1]];
-    {Sb,Lb}  = findSL[parentSL];
-    Vk1fun   = (If[Part[#,1] != parentSL,
+    parentSL = cfpSL[[n, 1]];
+    {Sb, Lb}  = findSL[parentSL];
+    Vk1fun   = (If[Part[#, 1] != parentSL,
                 0,
-                (#[[2]] * cfpSL[[nn,2]]
-                * SixJay[{S,Sp,1},{s,s,Sb}]
-                * SixJay[{L,Lp,k},{l,l,Lb}]
-                * MinusOneTo[Sb,Lb,S,L,l,k,-s]
+                (#[[2]] * cfpSL[[nn, 2]]
+                * SixJay[{S, Sp, 1}, {s, s, Sb}]
+                * SixJay[{L, Lp, k}, {l, l, Lb}]
+                * (-1)^(Sb + Lb + S + L + l + k - s)
                 )]&
                );
-    Vk1adds  = Map[Vk1fun,cfpSpLp[[2;;]]];
+    Vk1adds  = Map[Vk1fun, cfpSpLp[[2;;]]];
     Vk1     += Total[Vk1adds];
   ];
-  prefact=n Sqrt[s(s+1)(2s+1)(2S+1)(2L+1)(2Sp+1)(2Lp+1)];
+  prefact = n Sqrt[s(s+1)(2s+1)(2S+1)(2L+1)(2Sp+1)(2Lp+1)];
   Return[prefact*Vk1];
 ]
 
-GenerateVk1Table::usage="GenerateVk1Table[nmax, export calculates values for Vk1 and returns an Association where the keys are lists of the form {n, SL, SpLp, 1}. If export is set to True, then the result is exported to the data subfolder for the folder in which this package is in."
-GenerateVk1Table[nmax_:7,export_:False]:=(
+GenerateVk1Table::usage = "GenerateVk1Table[nmax, export calculates values for Vk1 and returns an Association where the keys are lists of the form {n, SL, SpLp, 1}. If export is set to True, then the result is exported to the data subfolder for the folder in which this package is in."
+GenerateVk1Table[nmax_:7, export_:False]:= (
   Off[SixJSymbol::tri];
-  numValues=Total[Length[AllowedNKSLterms[#]]*Length[AllowedNKSLterms[#]]&/@Range[1,nmax]];
+  numValues = Total[Length[AllowedNKSLterms[#]]*Length[AllowedNKSLterms[#]]&/@Range[1, nmax]];
   Print["Calculating " <> ToString[numValues] <> " values for Vk1."];
 
-  counter=1;
+  counter = 1;
   Monitor[
-    ReducedVk1Table=Table[
-      (counter=counter+1;
+    ReducedVk1Table = Table[
+      (counter = counter+1;
       {n, SL, SpLp, 1} -> Simplify[ReducedVk1[n, SL, SpLp, 1]]
       ),
-      {n, 1,nmax},
+      {n, 1, nmax},
       {SL, AllowedNKSLterms[n]}, 
       {SpLp, AllowedNKSLterms[n]}
     ],
-    Row[{ProgressIndicator[counter,{0,numValues}]," ",counter}]
+    Row[{ProgressIndicator[counter, {0, numValues}], " ", counter}]
   ];
 
-  ReducedVk1Table=Association[ReducedVk1Table];
+  ReducedVk1Table = Association[ReducedVk1Table];
 
-  exportFname=FileNameJoin[{moduleDir,"data","ReducedVk1Table.m"}];
+  exportFname = FileNameJoin[{moduleDir, "data", "ReducedVk1Table.m"}];
   If[export,
   (Print["Exporting to file "<>ToString[exportFname]];
-  Export[exportFname,ReducedVk1Table];
+  Export[exportFname, ReducedVk1Table];
   )
   ];
   Return[ReducedVk1Table];
@@ -472,28 +480,29 @@ GenerateVk1Table[nmax_:7,export_:False]:=(
 (* ######################################################################### *)
 (* ############################# Spin Orbit ################################ *)
 
-SpinOrbit::usage="SpinOrbit[n, SL, SpLp, J] returns the matrix element ζ <SL,J|L⋅S|SpLp,J> within an f^n configuration. These are given as a function of ζ. This function requires that the Association ReducedVk1Table be defined.";
-SpinOrbit[n_,SL_,SpLp_,J_]:=Module[{S,L,Sp,Lp,l,sign,prefact},
+SpinOrbit::usage = "SpinOrbit[n, SL, SpLp, J] returns the matrix element ζ <SL, J|L⋅S|SpLp, J> within an f^n configuration. These are given as a function of ζ. This function requires that the Association ReducedVk1Table be defined.";
+SpinOrbit[n_, SL_, SpLp_, J_]:= Module[
+  {S, L, Sp, Lp, l, sign, prefact},
   l       = 3;
-  {S,L}   = findSL[SL];
-  {Sp,Lp} = findSL[SpLp];
-  prefact = Sqrt[l*(l+1)*(2l+1)] * SixJay[{L,Lp,1},{Sp,S,J}];
-  sign    = MinusOneTo[J,L,Sp];
-  Return[sign * prefact * \[Zeta] * ReducedVk1Table[{n,SL,SpLp,1}]];
+  {S, L}   = findSL[SL];
+  {Sp, Lp} = findSL[SpLp];
+  prefact = Sqrt[l*(l+1)*(2l+1)] * SixJay[{L, Lp, 1}, {Sp, S, J}];
+  sign    = (-1)^(J + L + Sp);
+  Return[sign * prefact * \[Zeta] * ReducedVk1Table[{n, SL, SpLp, 1}]];
 ]
 
-GenerateSpinOrbitTable::usage="GenerateSpinOrbitTable[nmax,export] computes the matrix values for the spin-orbit interaction for f^n configurations up to n=nmax. The function returns an Association whose keys are lists of the form {n, SL, SpLp, J}. If export is set to True, then the result is exported to the data subfolder for the folder in which this package is in. It requires ReducedVk1Table to be defined.";
-GenerateSpinOrbitTable[nmax_:7,export_:False]:=(
-  SpinOrbitTable=Table[
+GenerateSpinOrbitTable::usage = "GenerateSpinOrbitTable[nmax, export] computes the matrix values for the spin-orbit interaction for f^n configurations up to n = nmax. The function returns an Association whose keys are lists of the form {n, SL, SpLp, J}. If export is set to True, then the result is exported to the data subfolder for the folder in which this package is in. It requires ReducedVk1Table to be defined.";
+GenerateSpinOrbitTable[nmax_:7, export_:False]:= (
+  SpinOrbitTable = Table[
     {n, SL, SpLp, J} -> SpinOrbit[n, SL, SpLp, J], 
-    {n, 1,nmax},
+    {n, 1, nmax},
     {J, minJ[n], maxJ[n]},
     {SL, Map[First, AllowedNKSLforJterms[n, J]]},
     {SpLp, Map[First, AllowedNKSLforJterms[n, J]]}
   ];
-  SpinOrbitTable=Association[SpinOrbitTable];
+  SpinOrbitTable = Association[SpinOrbitTable];
 
-  exportFname=FileNameJoin[{moduleDir,"data","SpinOrbitTable.m"}];
+  exportFname = FileNameJoin[{moduleDir, "data", "SpinOrbitTable.m"}];
   If[export,
   (Print["Exporting to file "<>ToString[exportFname]];
   Export[exportFname, SpinOrbitTable];
@@ -508,60 +517,61 @@ GenerateSpinOrbitTable[nmax_:7,export_:False]:=(
 (* ######################################################################### *)
 (* ################ Magnetically-Correlated Corrections #################### *)
 
-T222PsiPsipStates[SL_,SpLp_]:=Module[{jj,PositionofState,\[Alpha],PsiPsipStates,m0,m2,m4,m,Tkk2m},
-  PositionofState=0;
-  jj=1;
+T222PsiPsipStates[SL_, SpLp_]:= Module[{jj, PositionofState, \[Alpha], PsiPsipStates, m0, m2, m4, m, Tkk2m},
+  PositionofState = 0;
+  jj = 1;
   \[Alpha]==2;
-  PsiPsipStates = {{"3P","3P"},
-                   {"3P","3F"}, {"3F","3P"},
-                   {"3F","3F"}, {"3F","3H"},
-                   {"3H","3F"}, {"3H","3H"}};
-  m0={-12,3 8/Sqrt[3],3 8/Sqrt[3],-(4/3) Sqrt[14],2 8/3 Sqrt[11/2],2 8/3 Sqrt[11/2],4/3 Sqrt[143]};
-  m2={-24,8/Sqrt[3],8/Sqrt[3],8 4/3 Sqrt[14],-(23/11) 8/3 Sqrt[11/2],-(23/11) 8/3 Sqrt[11/2],-(34/11) 4/3 Sqrt[143]};
-  m4={-(300/11),-(100/11) 8/Sqrt[3],-(100/11) 8/Sqrt[3],-(200/11) 4/3 Sqrt[14],-(325/121) 8/3 Sqrt[11/2],-(325/121) 8/3 Sqrt[11/2],-(1325/1573) 4/3 Sqrt[143]};
-  m={m0,m2,m4};
-  While[jj<=Length[PsiPsipStates]&&PositionofState==0,
-    PositionofState=If[PsiPsipStates[[jj,1]]==SL && PsiPsipStates[[jj,2]]==SpLp,
+  PsiPsipStates = {{"3P", "3P"},
+                   {"3P", "3F"}, {"3F", "3P"},
+                   {"3F", "3F"}, {"3F", "3H"},
+                   {"3H", "3F"}, {"3H", "3H"}};
+  m0 = {-12, 3 8/Sqrt[3], 3 8/Sqrt[3], -(4/3) Sqrt[14], 2 8/3 Sqrt[11/2], 2 8/3 Sqrt[11/2], 4/3 Sqrt[143]};
+  m2 = {-24, 8/Sqrt[3], 8/Sqrt[3], 8 4/3 Sqrt[14], -(23/11) 8/3 Sqrt[11/2], -(23/11) 8/3 Sqrt[11/2], -(34/11) 4/3 Sqrt[143]};
+  m4 = {-(300/11), -(100/11) 8/Sqrt[3], -(100/11) 8/Sqrt[3], -(200/11) 4/3 Sqrt[14], -(325/121) 8/3 Sqrt[11/2], -(325/121) 8/3 Sqrt[11/2], -(1325/1573) 4/3 Sqrt[143]};
+  m = {m0, m2, m4};
+  While[jj<= Length[PsiPsipStates]&&PositionofState==0,
+    PositionofState = If[PsiPsipStates[[jj, 1]]==SL && PsiPsipStates[[jj, 2]]==SpLp,
                       jj,
                       0];
     jj++
   ];
-  Tkk2m=If[PositionofState==0, 
+  Tkk2m = If[PositionofState==0, 
             0, 
-            (m[[1,PositionofState]] * M0
-            +m[[2,PositionofState]] * M2
-            +m[[3,PositionofState]] * M4)];
+            (m[[1, PositionofState]] * M0
+            +m[[2, PositionofState]] * M2
+            +m[[3, PositionofState]] * M4)];
   Return[Tkk2m];
 ];
 
-T112PsiPsipStates[SL_,SpLp_]:=Module[{jj,PositionofState,\[Alpha],PsiPsipStates,m0,m2,m4,m,Tkk2m},
-  PositionofState=0;
-  jj=1;
+T112PsiPsipStates[SL_, SpLp_]:= Module[
+  {jj, PositionofState, \[Alpha], PsiPsipStates, m0, m2, m4, m, Tkk2m},
+  PositionofState = 0;
+  jj = 1;
   \[Alpha]==1;
-  PsiPsipStates= {{"1S","3P"},
-                  {"3P","1S"}, {"3P","3P"},
-                  {"3P","1D"}, {"1D","3P"},
-                  {"1D","3F"}, {"3F","1D"},
-                  {"3F","3F"}, {"3F","1G"},
-                  {"1G","3F"}, {"1G","3H"},
-                  {"3H","1G"}, {"3H","3H"},
-                  {"3H","1I"}, {"1I","3H"}};
-  m0={6,6,-36,-Sqrt[(2/15)] 23,-Sqrt[(2/15)] 23,Sqrt[2/5] 23,Sqrt[2/5] 23,-2 Sqrt[14] 15,-Sqrt[11] 6,-Sqrt[11] 6,Sqrt[2/5] 39,Sqrt[2/5] 39,-8 1/Sqrt[55] 132,-5 Sqrt[26],-5 Sqrt[26]};
-  m2={2,2,-72,-Sqrt[(2/15)] 14,-Sqrt[(2/15)] 14,Sqrt[2/5] 6,Sqrt[2/5] 6,-2 Sqrt[14],Sqrt[11] 64/33,Sqrt[11] 64/33,-Sqrt[(2/5)] 728/33,-Sqrt[(2/5)] 728/33,8/Sqrt[55] 23,-(30/11) Sqrt[26],-(30/11) Sqrt[26]};
-  m4={10/11,10/11,-(900/11),-Sqrt[(2/15)] 115/11,-Sqrt[(2/15)] 115/11,-(195/11) Sqrt[2/5],-(195/11) Sqrt[2/5],2 Sqrt[14] 10/11,-Sqrt[11] 1240/363,-Sqrt[11] 1240/363,-(3175/363) Sqrt[2/5],-(3175/363) Sqrt[2/5],8/Sqrt[55] 130/11,-(375/1573) Sqrt[26],-(375/1573) Sqrt[26]};
+  PsiPsipStates= {{"1S", "3P"},
+                  {"3P", "1S"}, {"3P", "3P"},
+                  {"3P", "1D"}, {"1D", "3P"},
+                  {"1D", "3F"}, {"3F", "1D"},
+                  {"3F", "3F"}, {"3F", "1G"},
+                  {"1G", "3F"}, {"1G", "3H"},
+                  {"3H", "1G"}, {"3H", "3H"},
+                  {"3H", "1I"}, {"1I", "3H"}};
+  m0 = {6, 6, -36, -Sqrt[(2/15)] 23, -Sqrt[(2/15)] 23, Sqrt[2/5] 23, Sqrt[2/5] 23, -2 Sqrt[14] 15, -Sqrt[11] 6, -Sqrt[11] 6, Sqrt[2/5] 39, Sqrt[2/5] 39, -8 1/Sqrt[55] 132, -5 Sqrt[26], -5 Sqrt[26]};
+  m2 = {2, 2, -72, -Sqrt[(2/15)] 14, -Sqrt[(2/15)] 14, Sqrt[2/5] 6, Sqrt[2/5] 6, -2 Sqrt[14], Sqrt[11] 64/33, Sqrt[11] 64/33, -Sqrt[(2/5)] 728/33, -Sqrt[(2/5)] 728/33, 8/Sqrt[55] 23, -(30/11) Sqrt[26], -(30/11) Sqrt[26]};
+  m4 = {10/11, 10/11, -(900/11), -Sqrt[(2/15)] 115/11, -Sqrt[(2/15)] 115/11, -(195/11) Sqrt[2/5], -(195/11) Sqrt[2/5], 2 Sqrt[14] 10/11, -Sqrt[11] 1240/363, -Sqrt[11] 1240/363, -(3175/363) Sqrt[2/5], -(3175/363) Sqrt[2/5], 8/Sqrt[55] 130/11, -(375/1573) Sqrt[26], -(375/1573) Sqrt[26]};
 
-  m={m0,m2,m4};
-  While[jj<=Length[PsiPsipStates]&&PositionofState==0,
-    PositionofState=If[PsiPsipStates[[jj,1]]==SL && PsiPsipStates[[jj,2]]==SpLp,
+  m = {m0, m2, m4};
+  While[jj<= Length[PsiPsipStates]&&PositionofState==0,
+    PositionofState = If[PsiPsipStates[[jj, 1]]==SL && PsiPsipStates[[jj, 2]]==SpLp,
                       jj,
                       0];
     jj++
   ];
-  Tkk2m=If[PositionofState==0, 
+  Tkk2m = If[PositionofState==0, 
           0, 
-          (m[[1,PositionofState]] M0
-          +m[[2,PositionofState]] M2
-          +m[[3,PositionofState]] M4)
+          (m[[1, PositionofState]] M0
+          +m[[2, PositionofState]] M2
+          +m[[3, PositionofState]] M4)
           ];
   Return[Tkk2m];
 ];
@@ -572,43 +582,44 @@ T112PsiPsipStates[SL_,SpLp_]:=Module[{jj,PositionofState,\[Alpha],PsiPsipStates,
 (* ######################################################################### *)
 (* ############################ Reduced t^11 ############################### *)
 
-t112PsiPsipStates[SL_,SpLp_]:=Module[{jj,PositionofState,\[Alpha],PsiPsipStates,p0,p2,p4,p6,p,t112p},
-  PositionofState=0;
-  jj=1;
+t112PsiPsipStates[SL_, SpLp_]:= Module[
+  {jj, PositionofState, \[Alpha], PsiPsipStates, p0, p2, p4, p6, p, t112p},
+  PositionofState = 0;
+  jj = 1;
   \[Alpha]==1;
-  PsiPsipStates={{"1S","3P"},{"3P","1S"},{"3P","3P"},
-                 {"3P","1D"},{"1D","3P"},{"1D","3F"},
-                 {"3F","1D"},{"3F","3F"},{"3F","1G"},
-                 {"1G","3F"},{"1G","3H"},{"3H","1G"},
-                 {"3H","3H"},{"3H","1I"},{"1I","3H"}};
-  p0={-2,-2,-1,Sqrt[15/2],Sqrt[15/2],-Sqrt[10],-Sqrt[10],
-      -Sqrt[14],Sqrt[11],Sqrt[11],-Sqrt[10],-Sqrt[10],
-      -Sqrt[55],Sqrt[13/2],Sqrt[13/2]};
-  p2={-105,-105,-45,Sqrt[15/2] 32,Sqrt[15/2] 32,-Sqrt[10] 9/2,
-      -Sqrt[10] 9/2,Sqrt[14] 10,-Sqrt[11] 20,-Sqrt[11] 20,
-      Sqrt[10] 55/2,Sqrt[10] 55/2,Sqrt[55] 25,-Sqrt[(13/2)] 0,
+  PsiPsipStates = {{"1S", "3P"}, {"3P", "1S"}, {"3P", "3P"},
+                 {"3P", "1D"}, {"1D", "3P"}, {"1D", "3F"},
+                 {"3F", "1D"}, {"3F", "3F"}, {"3F", "1G"},
+                 {"1G", "3F"}, {"1G", "3H"}, {"3H", "1G"},
+                 {"3H", "3H"}, {"3H", "1I"}, {"1I", "3H"}};
+  p0 = {-2, -2, -1, Sqrt[15/2], Sqrt[15/2], -Sqrt[10], -Sqrt[10],
+      -Sqrt[14], Sqrt[11], Sqrt[11], -Sqrt[10], -Sqrt[10],
+      -Sqrt[55], Sqrt[13/2], Sqrt[13/2]};
+  p2 = {-105, -105, -45, Sqrt[15/2] 32, Sqrt[15/2] 32, -Sqrt[10] 9/2,
+      -Sqrt[10] 9/2, Sqrt[14] 10, -Sqrt[11] 20, -Sqrt[11] 20,
+      Sqrt[10] 55/2, Sqrt[10] 55/2, Sqrt[55] 25, -Sqrt[(13/2)] 0,
       -Sqrt[(13/2)] 0};
-  p4={-231,-231,-33,-Sqrt[(15/2)] 33,-Sqrt[(15/2)] 33,Sqrt[10] 66,
-      Sqrt[10] 66,Sqrt[14] 33,Sqrt[11] 32,Sqrt[11] 32,-Sqrt[10] 23,
-      -Sqrt[10] 23,Sqrt[55] 51,-Sqrt[(13/2)] 21,-Sqrt[(13/2)] 21};
-  p6={-429,-429,1287,Sqrt[15/2] (-286),Sqrt[15/2] (-286),
-      Sqrt[10] (-(429/2)),Sqrt[10] (-(429/2)),Sqrt[14] 286,
-      Sqrt[11] (-104),Sqrt[11] (-104),Sqrt[10] (-(65/2)),
-      Sqrt[10] (-(65/2)),Sqrt[55] 13,Sqrt[13/2] (-6),Sqrt[13/2] (-6)};
+  p4 = {-231, -231, -33, -Sqrt[(15/2)] 33, -Sqrt[(15/2)] 33, Sqrt[10] 66,
+      Sqrt[10] 66, Sqrt[14] 33, Sqrt[11] 32, Sqrt[11] 32, -Sqrt[10] 23,
+      -Sqrt[10] 23, Sqrt[55] 51, -Sqrt[(13/2)] 21, -Sqrt[(13/2)] 21};
+  p6 = {-429, -429, 1287, Sqrt[15/2] (-286), Sqrt[15/2] (-286),
+      Sqrt[10] (-(429/2)), Sqrt[10] (-(429/2)), Sqrt[14] 286,
+      Sqrt[11] (-104), Sqrt[11] (-104), Sqrt[10] (-(65/2)),
+      Sqrt[10] (-(65/2)), Sqrt[55] 13, Sqrt[13/2] (-6), Sqrt[13/2] (-6)};
 
-  p={p0,p2,p4,p6};
-  While[jj<=Length[PsiPsipStates]&&PositionofState==0,
-        PositionofState=If[PsiPsipStates[[jj,1]]==SL && PsiPsipStates[[jj,2]]==SpLp,
+  p = {p0, p2, p4, p6};
+  While[jj<= Length[PsiPsipStates]&&PositionofState==0,
+        PositionofState = If[PsiPsipStates[[jj, 1]]==SL && PsiPsipStates[[jj, 2]]==SpLp,
                           jj,
                           0];
         jj++
   ];
-  t112p=If[PositionofState==0,
+  t112p = If[PositionofState==0,
           0, 
-          (p[[1,PositionofState]] P0
-          +p[[2,PositionofState]] P2
-          +p[[3,PositionofState]] P4
-          +p[[4,PositionofState]] P6)];
+          (p[[1, PositionofState]] P0
+          +p[[2, PositionofState]] P2
+          +p[[3, PositionofState]] P4
+          +p[[4, PositionofState]] P6)];
   Return[t112p];
 ]
 
@@ -618,27 +629,28 @@ t112PsiPsipStates[SL_,SpLp_]:=Module[{jj,PositionofState,\[Alpha],PsiPsipStates,
 (* ######################################################################### *)
 (* ############################ Reduced AiZi ############################### *)
 
-AiZi2PsiPsipStates[SL_,SpLp_]:=Module[{PositionofState,kk,PsiPsipStates,a13,z13,aizi2p},
-  PositionofState=0;
-  kk=1;
-  PsiPsipStates={{"1S","3P"},{"3P","1S"},{"3P","3P"},
-                 {"3P","1D"},{"1D","3P"},{"1D","3F"},
-                 {"3F","1D"},{"3F","3F"},{"3F","1G"},
-                 {"1G","3F"},{"1G","3H"},{"3H","1G"},
-                 {"3H","3H"},{"3H","1I"},{"1I","3H"}};
-  a13=-33 M0+3 M2+15/11 M4-6 P0+3/2 (35 P2+77 P4+143 P6);
-  z13={2,2,1,1/Sqrt[1080] (-90),1/Sqrt[1080] (-90),Sqrt[2/405] 45,Sqrt[2/405] 45,Sqrt[14] 1,1/Sqrt[891] (-99 ),1/Sqrt[891] (-99 ),990/Sqrt[98010],990/Sqrt[98010],55/Sqrt[55],-2574/Sqrt[1019304],-2574/Sqrt[1019304]};
-  While[kk<=Length[PsiPsipStates]&&PositionofState==0,
-    PositionofState=If[PsiPsipStates[[kk,1]]==SL && PsiPsipStates[[kk,2]]==SpLp,
+AiZi2PsiPsipStates[SL_, SpLp_]:= Module[
+  {PositionofState, kk, PsiPsipStates, a13, z13, aizi2p},
+  PositionofState = 0;
+  kk = 1;
+  PsiPsipStates = {{"1S", "3P"}, {"3P", "1S"}, {"3P", "3P"},
+                 {"3P", "1D"}, {"1D", "3P"}, {"1D", "3F"},
+                 {"3F", "1D"}, {"3F", "3F"}, {"3F", "1G"},
+                 {"1G", "3F"}, {"1G", "3H"}, {"3H", "1G"},
+                 {"3H", "3H"}, {"3H", "1I"}, {"1I", "3H"}};
+  a13 = -33 M0+3 M2+15/11 M4-6 P0+3/2 (35 P2+77 P4+143 P6);
+  z13 = {2, 2, 1, 1/Sqrt[1080] (-90), 1/Sqrt[1080] (-90), Sqrt[2/405] 45, Sqrt[2/405] 45, Sqrt[14] 1, 1/Sqrt[891] (-99 ), 1/Sqrt[891] (-99 ), 990/Sqrt[98010], 990/Sqrt[98010], 55/Sqrt[55], -2574/Sqrt[1019304], -2574/Sqrt[1019304]};
+  While[kk<= Length[PsiPsipStates]&&PositionofState==0,
+    PositionofState = If[PsiPsipStates[[kk, 1]]==SL && PsiPsipStates[[kk, 2]]==SpLp,
                       kk,
                       0];
     kk++
   ];
-  aizi2p=If[PositionofState==0, 
+  aizi2p = If[PositionofState==0, 
             0,
             Simplify[(
-              T112PsiPsipStates[SL,SpLp]
-              +t112PsiPsipStates[SL,SpLp]
+              T112PsiPsipStates[SL, SpLp]
+              +t112PsiPsipStates[SL, SpLp]
               -a13/6 z13[[PositionofState]]
             )
             ]
@@ -646,78 +658,79 @@ AiZi2PsiPsipStates[SL_,SpLp_]:=Module[{PositionofState,kk,PsiPsipStates,a13,z13,
   Return[aizi2p];
 ];
 
-aizi[n_,SL_,SpLp_]:=Module[{s,l,nn,S,L,Sp,Lp,cfpSL,cfpSpLp,parentSL,Sb,Lb,parentSpLp,aizival},
-  {s,l}={1/2,3};
-  {S,L}=findSL[SL];
-  {Sp,Lp}=findSL[SpLp];
-  cfpSL=CFP[{n,SL}];
-  cfpSpLp=CFP[{n,SpLp}];
+aizi[n_, SL_, SpLp_]:= Module[
+  {s, l, nn, S, L, Sp, Lp, cfpSL, cfpSpLp, parentSL, Sb, Lb, parentSpLp, aizival},
+  {s, l} = {1/2, 3};
+  {S, L} = findSL[SL];
+  {Sp, Lp} = findSL[SpLp];
+  cfpSL = CFP[{n, SL}];
+  cfpSpLp = CFP[{n, SpLp}];
   For[(
-    aizival=0;nn=2),
-    nn<=Length[cfpSL],
+    aizival = 0;nn = 2),
+    nn<= Length[cfpSL],
     nn++,
     (
-      parentSL=cfpSL[[nn,1]];
-      {Sb,Lb}=findSL[parentSL];
-      dval=Sum[(
-        cfpSpLp[[mm,2]] 
-        *SixJay[{S,1,Sp},{findSL[cfpSpLp[[mm,1]]][[1]],s,Sb}] 
-        *SixJay[{L,1,Lp},{findSL[cfpSpLp[[mm,1]]][[2]],l,Lb}] 
-        *AiZiTable[{n-1,parentSL,Part[cfpSpLp,mm,1]}]
+      parentSL = cfpSL[[nn, 1]];
+      {Sb, Lb} = findSL[parentSL];
+      dval = Sum[(
+        cfpSpLp[[mm, 2]] 
+        *SixJay[{S, 1, Sp}, {findSL[cfpSpLp[[mm, 1]]][[1]], s, Sb}] 
+        *SixJay[{L, 1, Lp}, {findSL[cfpSpLp[[mm, 1]]][[2]], l, Lb}] 
+        *AiZiTable[{n-1, parentSL, Part[cfpSpLp, mm, 1]}]
       ),
-        {mm,2,Length[cfpSpLp]}
+        {mm, 2, Length[cfpSpLp]}
         ];
-      dval=(cfpSL[[nn,2]] * (-1)^(Sb+Lb+s+l+Sp+Lp) * dval);
-      aizival+=dval;
+      dval = (cfpSL[[nn, 2]] * (-1)^(Sb+Lb+s+l+Sp+Lp) * dval);
+      aizival+= dval;
     )
   ];
   Return[n/(n-2) * Sqrt[(2 S+1) (2 Sp+1) (2 L+1) (2Lp+1)] * aizival];
 ];
 
-GenerateAiZiTable[nmax_, export_:False, progressIndicator_:False]:=(
+GenerateAiZiTable[nmax_, export_:False, progressIndicator_:False]:= (
   If[progressIndicator,
   (
-    numItersai = Association[Table[n->Length[AllowedNKSLterms[n]]^2,{n,1,nmax}]];
-    counters   = Association[Table[n->0,{n,1,nmax}]];
+    numItersai = Association[Table[n->Length[AllowedNKSLterms[n]]^2, {n, 1, nmax}]];
+    counters   = Association[Table[n->0, {n, 1, nmax}]];
     totalIters = Total[Values[numItersai[[1;;nmax]]]];
     template1  = StringTemplate["Iteration `numiter` of `totaliter`"];
-    template2  = StringTemplate["`remtime` min remaining"];template3=StringTemplate["Iteration speed = `speed` ms/it"];
+    template2  = StringTemplate["`remtime` min remaining"];template3 = StringTemplate["Iteration speed = `speed` ms/it"];
     template4  = StringTemplate["Time elapsed = `runtime` min"];
     PrintTemporary[
       Dynamic[
         Pane[
           Grid[{
-                {Superscript["f",n]},
-                {template1[<|"numiter"->numiter,"totaliter"->totalIters|>]},
-                {template4[<|"runtime"->Round[QuantityMagnitude[UnitConvert[(Now-startTime),"min"]],0.1]|>]},
-                {template2[<|"remtime"->Round[QuantityMagnitude[UnitConvert[(Now-startTime)/(numiter)*(totalIters-numiter),"min"]],0.1]|>]},
-                {template3[<|"speed"->Round[QuantityMagnitude[Now-startTime,"ms"]/(numiter),0.01]|>]},{ProgressIndicator[Dynamic[numiter],{1,totalIters}]}
+                {Superscript["f", n]},
+                {template1[<|"numiter"->numiter, "totaliter"->totalIters|>]},
+                {template4[<|"runtime"->Round[QuantityMagnitude[UnitConvert[(Now-startTime), "min"]], 0.1]|>]},
+                {template2[<|"remtime"->Round[QuantityMagnitude[UnitConvert[(Now-startTime)/(numiter)*(totalIters-numiter), "min"]], 0.1]|>]},
+                {template3[<|"speed"->Round[QuantityMagnitude[Now-startTime, "ms"]/(numiter), 0.01]|>]}, {ProgressIndicator[Dynamic[numiter], {1, totalIters}]}
               },
-              Frame->All],Full,Alignment->Center]]];
+              Frame->All], Full, Alignment->Center]]];
   )
   ];
-  AiZiTable=<||>;
-  numiter=1;
-  startTime=Now;
+  AiZiTable = <||>;
+  numiter = 1;
+  startTime = Now;
   Do[
     (
-      numiter+=1;
-      AiZiTable[{n,SL,SpLp}]=Which[
+      numiter+= 1;
+      AiZiTable[{n, SL, SpLp}] = Which[
         n==1,
         0,
         n==2,
-        AiZi2PsiPsipStates[SL,SpLp],
+        AiZi2PsiPsipStates[SL, SpLp],
         True,
         Simplify[aizi[n,  SL, SpLp]]
       ];
     ),
-    {n,1,nmax},
+    {n, 1, nmax},
     {SL, AllowedNKSLterms[n]}, 
     {SpLp, AllowedNKSLterms[n]}
   ];
   If[export,
-    (fname=FileNameJoin[{moduleDir,"data","ReducedAiZiTable.m"}];
-    Export[fname,AiZiTable];
+    (fname = FileNameJoin[{moduleDir, "data", "ReducedAiZiTable.m"}];
+    Export[fname, AiZiTable];
     )
   ];
   Return[AiZiTable];
@@ -729,79 +742,81 @@ GenerateAiZiTable[nmax_, export_:False, progressIndicator_:False]:=(
 (* ######################################################################### *)
 (* ############################# T11 and T22 ############################### *)
 
-T11n[n_,SL_,SpLp_]:=Module[{s,l,nn,S,L,Sp,Lp,cfpSL,cfpSpLp,parentSL,Sb,Lb,parentSpLp,Tnkk,dval},
-  s=1/2;
-  l=3;
-  {S,L}=findSL[SL];
-  {Sp,Lp}=findSL[SpLp];
-  cfpSL=CFP[{n,SL}];
-  cfpSpLp=CFP[{n,SpLp}];
-  For[(Tnkk=0;nn=2;),
-  nn<=Length[cfpSL],
+T11n[n_, SL_, SpLp_]:= Module[
+  {s, l, nn, S, L, Sp, Lp, cfpSL, cfpSpLp, parentSL, Sb, Lb, parentSpLp, Tnkk, dval},
+  s = 1/2;
+  l = 3;
+  {S, L} = findSL[SL];
+  {Sp, Lp} = findSL[SpLp];
+  cfpSL = CFP[{n, SL}];
+  cfpSpLp = CFP[{n, SpLp}];
+  For[(Tnkk=0; nn=2;),
+  nn<= Length[cfpSL],
   nn++,
-  parentSL=cfpSL[[nn,1]];
-  {Sb,Lb}=findSL[parentSL];
-  dval=Sum[(
-    cfpSpLp[[mm,2]] 
-    *SixJay[{S,1,Sp},{findSL[cfpSpLp[[mm,1]]][[1]],s,Sb}]
-    *SixJay[{L,1,Lp},{findSL[cfpSpLp[[mm,1]]][[2]],l,Lb}] 
-    *T11Table[{n-1,parentSL,Part[cfpSpLp,mm,1]}]
+  parentSL = cfpSL[[nn, 1]];
+  {Sb, Lb} = findSL[parentSL];
+  dval = Sum[(
+    cfpSpLp[[mm, 2]] 
+    * SixJay[{S, 1, Sp}, {findSL[cfpSpLp[[mm, 1]]][[1]], s, Sb}]
+    * SixJay[{L, 1, Lp}, {findSL[cfpSpLp[[mm, 1]]][[2]], l, Lb}] 
+    * T11Table[{n-1, parentSL, Part[cfpSpLp, mm, 1]}]
     ),
-  {mm,2,Length[cfpSpLp]}];
-  dval=(cfpSL[[nn,2]]
-    * (-1)^(Sb+Lb+s+l+Sp+Lp)
-    * dval);
-  Tnkk+=dval;
+    {mm, 2, Length[cfpSpLp]}];
+  dval = (cfpSL[[nn, 2]]
+        * (-1)^(Sb+Lb+s+l+Sp+Lp)
+        * dval);
+  Tnkk+= dval;
   ];
   Tnkk = n/(n-2) * Sqrt[(2 S+1) (2 Sp+1) (2 L+1) (2Lp+1)] *Tnkk;
   Return[Tnkk];
 ];
 
-T22n[n_,SL_,SpLp_]:=Module[{s,l,nn,S,L,Sp,Lp,cfpSL,cfpSpLp,parentSL,Sb,Lb,parentSpLp,Tnkk,dval},
-  s=1/2;
-  l=3;
-  {S,L}=findSL[SL];
-  {Sp,Lp}=findSL[SpLp];
-  cfpSL=CFP[{n,SL}];
-  cfpSpLp=CFP[{n,SpLp}];
-  For[(Tnkk=0;nn=2),
-  nn<=Length[cfpSL],
+T22n[n_, SL_, SpLp_]:= Module[
+  {s, l, nn, S, L, Sp, Lp, cfpSL, cfpSpLp, parentSL, Sb, Lb, parentSpLp, Tnkk, dval},
+  s = 1/2;
+  l = 3;
+  {S, L} = findSL[SL];
+  {Sp, Lp} = findSL[SpLp];
+  cfpSL = CFP[{n, SL}];
+  cfpSpLp = CFP[{n, SpLp}];
+  For[(Tnkk = 0;nn = 2),
+  nn<= Length[cfpSL],
   nn++,
-  parentSL=Part[cfpSL,nn,1];
-  {Sb,Lb}=findSL[parentSL];
-  dval=Sum[(cfpSpLp[[mm,2]] 
-            * SixJay[{S,2,Sp},{findSL[Part[cfpSpLp,mm,1]][[1]],s,Sb}] 
-            * SixJay[{L,2,Lp},{findSL[Part[cfpSpLp,mm,1]][[2]],l,Lb}] 
-            * T22Table[{n-1,parentSL,Part[cfpSpLp,mm,1]}]
+  parentSL = Part[cfpSL, nn, 1];
+  {Sb, Lb} = findSL[parentSL];
+  dval = Sum[(cfpSpLp[[mm, 2]] 
+            * SixJay[{S, 2, Sp}, {findSL[Part[cfpSpLp, mm, 1]][[1]], s, Sb}] 
+            * SixJay[{L, 2, Lp}, {findSL[Part[cfpSpLp, mm, 1]][[2]], l, Lb}] 
+            * T22Table[{n-1, parentSL, Part[cfpSpLp, mm, 1]}]
   ),
-  {mm,2,Length[cfpSpLp]}
+  {mm, 2, Length[cfpSpLp]}
   ];
-  dval=(dval
-      *cfpSL[[nn,2]]
+  dval = (dval
+      *cfpSL[[nn, 2]]
       *(-1)^(Sb+Lb+s+l+Sp+Lp));
-  Tnkk+=dval;
+  Tnkk+= dval;
   ];
   Tnkk = n/(n-2) * Sqrt[(2 S+1) (2 Sp+1) (2 L+1) (2Lp+1)] *Tnkk;
   Return[Tnkk];
 ];
 
-GenerateT11Table[nmax_,export_,progressIndicator_]:=(
-  If[progressIndicator,(
-    numItersai=Association[Table[n->Length[AllowedNKSLterms[n]]^2,{n,1,nmax}]];
-    counters=Association[Table[n->0,{n,1,nmax}]];
-    totalIters=Total[Values[numItersai[[1;;nmax]]]];
-    template1=StringTemplate["Iteration `numiter` of `totaliter`"];
-    template2=StringTemplate["`remtime` min remaining"];template3=StringTemplate["Iteration speed = `speed` ms/it"];
-    template4=StringTemplate["Time elapsed = `runtime` min"];
+GenerateT11Table[nmax_, export_, progressIndicator_]:= (
+  If[progressIndicator, (
+    numItersai = Association[Table[n->Length[AllowedNKSLterms[n]]^2, {n, 1, nmax}]];
+    counters = Association[Table[n->0, {n, 1, nmax}]];
+    totalIters = Total[Values[numItersai[[1;;nmax]]]];
+    template1 = StringTemplate["Iteration `numiter` of `totaliter`"];
+    template2 = StringTemplate["`remtime` min remaining"];template3 = StringTemplate["Iteration speed = `speed` ms/it"];
+    template4 = StringTemplate["Time elapsed = `runtime` min"];
     PrintTemporary[
       Dynamic[
         Pane[
-          Grid[{{Superscript["f",n]},
-          {template1[<|"numiter"->numiter,"totaliter"->totalIters|>]},
-          {template4[<|"runtime"->Round[QuantityMagnitude[UnitConvert[(Now-startTime),"min"]],0.1]|>]},
-          {template2[<|"remtime"->Round[QuantityMagnitude[UnitConvert[(Now-startTime)/(numiter)*(totalIters-numiter),"min"]],0.1]|>]},
-          {template3[<|"speed"->Round[QuantityMagnitude[Now-startTime,"ms"]/(numiter),0.01]|>]},
-          {ProgressIndicator[Dynamic[numiter],{1,totalIters}]}
+          Grid[{{Superscript["f", n]},
+          {template1[<|"numiter"->numiter, "totaliter"->totalIters|>]},
+          {template4[<|"runtime"->Round[QuantityMagnitude[UnitConvert[(Now-startTime), "min"]], 0.1]|>]},
+          {template2[<|"remtime"->Round[QuantityMagnitude[UnitConvert[(Now-startTime)/(numiter)*(totalIters-numiter), "min"]], 0.1]|>]},
+          {template3[<|"speed"->Round[QuantityMagnitude[Now-startTime, "ms"]/(numiter), 0.01]|>]},
+          {ProgressIndicator[Dynamic[numiter], {1, totalIters}]}
           },
           Frame->All],
           Full,
@@ -810,52 +825,52 @@ GenerateT11Table[nmax_,export_,progressIndicator_]:=(
       ];
   )
   ];
-  T11Table=<||>;
-  numiter=1;
-  startTime=Now;
+  T11Table = <||>;
+  numiter = 1;
+  startTime = Now;
   Do[
     (
-    numiter+=1;
-    T11Table[{n,SL,SpLp}]=Which[
+    numiter+= 1;
+    T11Table[{n, SL, SpLp}] = Which[
     n==1,
     0,
     n==2,
-    Simplify[T112PsiPsipStates[SL,SpLp]],
+    Simplify[T112PsiPsipStates[SL, SpLp]],
     True,
     Simplify[T11n[n,  SL, SpLp]]
     ];
     ),
-    {n,1,nmax},
+    {n, 1, nmax},
     {SL, AllowedNKSLterms[n]},
     {SpLp, AllowedNKSLterms[n]}
   ];
   If[export,
     (
-    fname=FileNameJoin[{moduleDir,"data","ReducedT11Table.m"}];
-    Export[fname,T11Table];
+    fname = FileNameJoin[{moduleDir, "data", "ReducedT11Table.m"}];
+    Export[fname, T11Table];
     )
   ];
   Return[T11Table];
 );
 
-GenerateT22Table[nmax_,export_,progressIndicator_]:=(
+GenerateT22Table[nmax_, export_, progressIndicator_]:= (
   If[progressIndicator,
   (
-    numItersai=Association[Table[n->Length[AllowedNKSLterms[n]]^2,{n,1,nmax}]];
-    counters=Association[Table[n->0,{n,1,nmax}]];
-    totalIters=Total[Values[numItersai[[1;;nmax]]]];
-    template1=StringTemplate["Iteration `numiter` of `totaliter`"];
-    template2=StringTemplate["`remtime` min remaining"];template3=StringTemplate["Iteration speed = `speed` ms/it"];
-    template4=StringTemplate["Time elapsed = `runtime` min"];
+    numItersai = Association[Table[n->Length[AllowedNKSLterms[n]]^2, {n, 1, nmax}]];
+    counters = Association[Table[n->0, {n, 1, nmax}]];
+    totalIters = Total[Values[numItersai[[1;;nmax]]]];
+    template1 = StringTemplate["Iteration `numiter` of `totaliter`"];
+    template2 = StringTemplate["`remtime` min remaining"];template3 = StringTemplate["Iteration speed = `speed` ms/it"];
+    template4 = StringTemplate["Time elapsed = `runtime` min"];
     PrintTemporary[
       Dynamic[
         Pane[
-          Grid[{{Superscript["f",n]},
-                {template1[<|"numiter"->numiter,"totaliter"->totalIters|>]},
-                {template4[<|"runtime"->Round[QuantityMagnitude[UnitConvert[(Now-startTime),"min"]],0.1]|>]},
-                {template2[<|"remtime"->Round[QuantityMagnitude[UnitConvert[(Now-startTime)/(numiter)*(totalIters-numiter),"min"]],0.1]|>]},
-                {template3[<|"speed"->Round[QuantityMagnitude[Now-startTime,"ms"]/(numiter),0.01]|>]},
-                {ProgressIndicator[Dynamic[numiter],{1,totalIters}]}},
+          Grid[{{Superscript["f", n]},
+                {template1[<|"numiter"->numiter, "totaliter"->totalIters|>]},
+                {template4[<|"runtime"->Round[QuantityMagnitude[UnitConvert[(Now-startTime), "min"]], 0.1]|>]},
+                {template2[<|"remtime"->Round[QuantityMagnitude[UnitConvert[(Now-startTime)/(numiter)*(totalIters-numiter), "min"]], 0.1]|>]},
+                {template3[<|"speed"->Round[QuantityMagnitude[Now-startTime, "ms"]/(numiter), 0.01]|>]},
+                {ProgressIndicator[Dynamic[numiter], {1, totalIters}]}},
                 Frame->All],
                 Full,
                 Alignment->Center]
@@ -863,27 +878,27 @@ GenerateT22Table[nmax_,export_,progressIndicator_]:=(
             ];
   )
   ];
-  T22Table=<||>;
-  startTime=Now;
-  numiter=1;
+  T22Table = <||>;
+  startTime = Now;
+  numiter = 1;
   Do[
-    (numiter+=1;
-    T22Table[{n,SL,SpLp}]=Which[
+    (numiter+= 1;
+    T22Table[{n, SL, SpLp}] = Which[
     n==1,
     0,
     n==2,
-    Simplify[T222PsiPsipStates[SL,SpLp]],
+    Simplify[T222PsiPsipStates[SL, SpLp]],
     True,
     Simplify[T22n[n,  SL, SpLp]]
     ];),
-    {n,1,nmax},
+    {n, 1, nmax},
     {SL, AllowedNKSLterms[n]}, 
     {SpLp, AllowedNKSLterms[n]}
   ];
   If[export,
   (
-    fname=FileNameJoin[{moduleDir,"data","ReducedT22Table.m"}];
-    Export[fname,T22Table];
+    fname = FileNameJoin[{moduleDir, "data", "ReducedT22Table.m"}];
+    Export[fname, T22Table];
   )
   ];
   Return[T22Table];
@@ -895,7 +910,8 @@ GenerateT22Table[nmax_,export_,progressIndicator_]:=(
 (* ######################################################################### *)
 (* ############################# Spin-Spin ################################# *)
 
-SpinSpin[n_, SL_, SpLp_, J_] := Module[{S, L, Sp, Lp, \[Alpha]},
+SpinSpin[n_, SL_, SpLp_, J_] := Module[
+  {S, L, Sp, Lp, \[Alpha]},
    \[Alpha] = 2;
    {S, L} = findSL[SL];
    {Sp, Lp} = findSL[SpLp];
@@ -928,16 +944,17 @@ GenerateSpinSpinTable[nmax_, export_] :=
 (* ######################################################################### *)
 (* ########################## Spin-Other-Orbit ############################# *)
 
-SOOandECSO[n_,SL_,SpLp_,J_]:=Module[{S,Sp,L,Lp},
-  {S,L}   = findSL[SL];
-  {Sp,Lp} = findSL[SpLp];
-  Return[(-1)^(Sp+L+J) * SixJay[{Sp,Lp,J},{L,S,1}] * AiZiTable[{n,SL,SpLp}]];
+SOOandECSO[n_, SL_, SpLp_, J_]:= Module[
+  {S, Sp, L, Lp},
+  {S, L}   = findSL[SL];
+  {Sp, Lp} = findSL[SpLp];
+  Return[(-1)^(Sp+L+J) * SixJay[{Sp, Lp, J}, {L, S, 1}] * AiZiTable[{n, SL, SpLp}]];
 ]
 
-GenerateSOOandECSOTable[nmax_,export_:False]:=(
-  SOOandECSOTable=<||>;
+GenerateSOOandECSOTable[nmax_, export_:False]:= (
+  SOOandECSOTable = <||>;
   Do[
-    SOOandECSOTable[{n,SL,SpLp,J}]=(SOOandECSO[n,SL,SpLp,J]/.{P2->P2/225,P4->P4/1089,P6->25 P6/184041});,
+    SOOandECSOTable[{n, SL, SpLp, J}] = (SOOandECSO[n, SL, SpLp, J]/.{P2->P2/225, P4->P4/1089, P6->25 P6/184041});,
   {n, 1, nmax},
   {J, minJ[n], maxJ[n]},
   {SL, Map[First, AllowedNKSLforJterms[n, J]]},
@@ -945,8 +962,8 @@ GenerateSOOandECSOTable[nmax_,export_:False]:=(
   ];
   If[export,
   (
-    fname=FileNameJoin[{moduleDir,"data","SOOandECSOTable.m"}];
-    Export[fname,SOOandECSOTable];
+    fname = FileNameJoin[{moduleDir, "data", "SOOandECSOTable.m"}];
+    Export[fname, SOOandECSOTable];
   )
   ];
   Return[SOOandECSOTable];
@@ -958,21 +975,21 @@ GenerateSOOandECSOTable[nmax_,export_:False]:=(
 (* ######################################################################### *)
 (* ############################ Crystal Field ############################## *)
 
-Cqk::usage="Cqk[nf, q, k, NKSL, J, M, NKSLp, Jp, Mp].";
+Cqk::usage = "Cqk[nf, q, k, NKSL, J, M, NKSLp, Jp, Mp].";
 Cqk[nf_, q_, k_, NKSL_, J_, M_, NKSLp_, Jp_, Mp_] := Module[
   {S, Sp, L, Lp, l, val},
   l = 3;
   {S, L} = findSL[NKSL];
   {Sp, Lp} = findSL[NKSLp];
   f1 = ThreeJay[{J, -M}, {k, q}, {Jp, Mp}];
-  val = If[f1 == 0,
+  val = If[f1==0,
     0,
     (f2 = SixJay[{L, J, S}, {Jp, Lp, k}] ;
-     If[f2 == 0,
+     If[f2==0,
       0,
       (
        f3 = ReducedUkTable[{nf, l, NKSL, NKSLp, k}];
-       If[f3 == 0,
+       If[f3==0,
         0,
         (
          ( (-1)^(J - M + S + Lp + J + k)
@@ -989,17 +1006,17 @@ Cqk[nf_, q_, k_, NKSL_, J_, M_, NKSLp_, Jp_, Mp_] := Module[
   Cqk[nf, q, k, NKSL, J, M, NKSLp, Jp, Mp] = val
   ]
 
-Bqk::usage="";
+Bqk::usage = "";
 Bqk[q_, 2] := {B02, B12, B22}[[q + 1]];
 Bqk[q_, 4] := {B04, B14, B24, B34, B44}[[q + 1]];
 Bqk[q_, 6] := {B06, B16, B26, B36, B46, B56, B66}[[q + 1]];
 
-Sqk::usage="";
+Sqk::usage = "";
 Sqk[q_, 2] := {Sm22, Sm12, S02,  S12,  S22}[[q + 3]];
 Sqk[q_, 4] := {Sm44, Sm34, Sm24, Sm14, S04,  S14,  S24, S34, S44}[[q + 5]];
 Sqk[q_, 6] := {Sm66, Sm56, Sm46, Sm36, Sm26, Sm16, S06, S16, S26, S36, S46, S56, S66}[[q + 7]];
 
-CrystalField::usage="CrystalField[n, NKSL, J, M, NKSLp, Jp, Mp] gives the general expression for the matrix element of the crystal field Hamiltonian parametrized with Bqk and Sqk coefficients as a sum over spherical harmonics Cqk.";
+CrystalField::usage = "CrystalField[n, NKSL, J, M, NKSLp, Jp, Mp] gives the general expression for the matrix element of the crystal field Hamiltonian parametrized with Bqk and Sqk coefficients as a sum over spherical harmonics Cqk.";
 CrystalField[n_, NKSL_, J_, M_, NKSLp_, Jp_, Mp_] := (
   Sum[(Bqk[q, k] * (Cqk[n, q, k, NKSL, J, M, NKSLp, Jp, Mp] 
                  + (-1)^q * Cqk[n, -q, k, NKSL, J, M, NKSLp, Jp, Mp]) 
@@ -1012,20 +1029,20 @@ CrystalField[n_, NKSL_, J_, M_, NKSLp_, Jp_, Mp_] := (
   )
 
 TotalCFIters::usage = 
-  "TotalIters[i,j] returns total number of function evaluations for calculating all the matrix elements for the \!\(\*SuperscriptBox[\(f\), \(i\)]\) to the \!\(\*SuperscriptBox[\(f\), \(j\)]\) configurations.";
+  "TotalIters[i, j] returns total number of function evaluations for calculating all the matrix elements for the \!\(\*SuperscriptBox[\(f\), \(i\)]\) to the \!\(\*SuperscriptBox[\(f\), \(j\)]\) configurations.";
 TotalCFIters[i_, j_] := (
   numIters = {196, 8281, 132496, 1002001, 4008004, 9018009, 11778624};
   Return[Total[numIters[[i ;; j]]]];
   )
 
-GenerateCrystalFieldTable::usage="GenerateCrystalFieldTable[nmax, export, progressIndicator, exportCompressed] computes the matrix values for the crystal field interaction for f^n configurations up to n=nmax. The function returns an Association whose keys are lists of the form {n, NKSL, J, M, NKSLp, Jp, Mp}. If export is set to True, then the result is exported to the data subfolder for the folder in which this package is in. If progressIndicator is set to True then an interactive progress indicator is shown. If exportCompressed is set to true the exported values are compressed.";
-GenerateCrystalFieldTable[nmax_:7, export_:False, progressIndicator_:True, exportCompressed_:True]:=(
+GenerateCrystalFieldTable::usage = "GenerateCrystalFieldTable[nmax, export, progressIndicator, exportCompressed] computes the matrix values for the crystal field interaction for f^n configurations up to n = nmax. The function returns an Association whose keys are lists of the form {n, NKSL, J, M, NKSLp, Jp, Mp}. If export is set to True, then the result is exported to the data subfolder for the folder in which this package is in. If progressIndicator is set to True then an interactive progress indicator is shown. If exportCompressed is set to true the exported values are compressed.";
+GenerateCrystalFieldTable[nmax_:7, export_:False, progressIndicator_:True, exportCompressed_:True]:= (
   Off[ClebschGordan::phy];
   Off[ClebschGordan::tri];
   Off[SixJSymbol::phy];
   Off[SixJSymbol::tri];
   CrystalFieldTables = <||>;
-  ExportFun=If[exportCompressed,
+  ExportFun = If[exportCompressed,
     ExportMZip,
     Export
     ];
@@ -1046,9 +1063,9 @@ GenerateCrystalFieldTable[nmax_:7, export_:False, progressIndicator_:True, expor
         {template4[<|
             "runtime" -> Round[QuantityMagnitude[UnitConvert[(Now - startTime), "min"]], 0.1]|>]},
         {template2[<|
-            "remtime" -> Round[QuantityMagnitude[UnitConvert[(Now - startTime)/(numiter - freebies) * (totalIter - numiter), "min"]],0.1]|>]},
+            "remtime" -> Round[QuantityMagnitude[UnitConvert[(Now - startTime)/(numiter - freebies) * (totalIter - numiter), "min"]], 0.1]|>]},
         {template3[<|
-            "speed"   -> Round[QuantityMagnitude[Now - startTime, "ms"]/(numiter-freebies),0.01]|>]},
+            "speed"   -> Round[QuantityMagnitude[Now - startTime, "ms"]/(numiter-freebies), 0.01]|>]},
         {ProgressIndicator[Dynamic[numiter], {1, totalIter}]}
         },
         Frame -> All
@@ -1061,17 +1078,17 @@ GenerateCrystalFieldTable[nmax_:7, export_:False, progressIndicator_:True, expor
   ];
   Do[
     (
-    exportFname = FileNameJoin[{moduleDir,"data","CrystalFieldTable_f"<>ToString[n]<>".m"}];
+    exportFname = FileNameJoin[{moduleDir, "data", "CrystalFieldTable_f"<>ToString[n]<>".m"}];
     If[FileExistsQ[exportFname],
       CrystalFieldTable = Import[exportFname];
       CrystalFieldTables[n] = CrystalFieldTable;
       Print["File exists, skipping calculation and importing file ..."];
-      numiter+=TotalCFIters[n,n];
-      freebies+=TotalCFIters[n,n];
+      numiter+= TotalCFIters[n, n];
+      freebies+= TotalCFIters[n, n];
       Continue[];
     ];
     CrystalFieldTable = Table[
-      (numiter+=1;
+      (numiter+= 1;
       {n, NKSL, J, M, NKSLp, Jp, Mp} -> CrystalField[n, NKSL, J, M, NKSLp, Jp, Mp]
       ),
       {J, minJ[n], maxJ[n]},
@@ -1083,7 +1100,7 @@ GenerateCrystalFieldTable[nmax_:7, export_:False, progressIndicator_:True, expor
       ];
     CrystalFieldTable = Association[CrystalFieldTable];
 
-    If[export,(
+    If[export, (
       Print["Exporting to file "<>ToString[exportFname]];
       ExportFun[exportFname, CrystalFieldTable];
       )
@@ -1101,7 +1118,7 @@ GenerateCrystalFieldTable[nmax_:7, export_:False, progressIndicator_:True, expor
 (* ######################################################################### *)
 (* ########### Configuration-Interaction via Casimir Operators ############# *)
 
-GG2U::usage="GG2U is an Association whose keys are labels for the irreducible representations of group G2 and whose values are the eigenvalues (multiplied by \[Beta]/12) of the corresponding Casimir operator.
+GG2U::usage = "GG2U is an Association whose keys are labels for the irreducible representations of group G2 and whose values are the eigenvalues (multiplied by \[Beta]/12) of the corresponding Casimir operator.
 Reference: Wybourne, \"Spectroscopic Properties of Rare Earths\", table 2-6.";
 GG2U = Association[{
     "00" -> 0,
@@ -1115,7 +1132,7 @@ GG2U = Association[{
     "40" -> \[Beta]/12*36}
    ];
 
-GR7W::usage="GR7W is an Association whose keys are labels for the irreducible representations of group R7 and whose values are the eigenvalues (multiplied by \[Gamma] / 5) of the corresponding Casimir operator.
+GR7W::usage = "GR7W is an Association whose keys are labels for the irreducible representations of group R7 and whose values are the eigenvalues (multiplied by \[Gamma] / 5) of the corresponding Casimir operator.
 Reference: Wybourne, \"Spectroscopic Properties of Rare Earths\", table 2-7.";
 GR7W := Association[
    {"000" -> 0,
@@ -1130,37 +1147,39 @@ GR7W := Association[
     "222" -> \[Gamma]/5*15}
    ];
 
-AlphaL::usage="AlphaL[SL, SpLp] returns the matrix element for the Trees operator for the two given terms SL and SpLp.";
-AlphaL[SL_, SpLp_] := Module[{S, L},
+AlphaL::usage = "AlphaL[SL, SpLp] returns the matrix element for the Trees operator for the two given terms SL and SpLp.";
+AlphaL[SL_, SpLp_] := Module[
+  {S, L},
   (
     {S, L} = findSL[SL];
-    If[L == findSL[SpLp][[2]], 
+    If[L==findSL[SpLp][[2]], 
       \[Alpha] L (L + 1),
       0]
   )
   ]
 
-GG2NKSL::usage="GG2NKSL[SL, SpLp] returns the matrix element of the configuration interaction term corresponding to the Casimir operator G2, for the two given terms SL and SpLp.";
+GG2NKSL::usage = "GG2NKSL[SL, SpLp] returns the matrix element of the configuration interaction term corresponding to the Casimir operator G2, for the two given terms SL and SpLp.";
 GG2NKSL[SL_, SpLp_] := (
- If[SL == SpLp,
+ If[SL==SpLp,
  GG2U[findNKLSterm[SL][[1]][[4]]],
  0]
 )
 
-GR7NKSL::usage="GR7NKSL[SL, SpLp] returns the matrix element of the configuration interaction term corresponding to the Casimir operator R7, for the two given terms SL and SpLp.";
+GR7NKSL::usage = "GR7NKSL[SL, SpLp] returns the matrix element of the configuration interaction term corresponding to the Casimir operator R7, for the two given terms SL and SpLp.";
 GR7NKSL[SL_, SpLp_] := (
- If[SL == SpLp,
+ If[SL==SpLp,
  GR7W[findNKLSterm[SL][[1]][[3]]],
  0]
 )
 
-TwoBodyNKSL::usage="TwoBodyNKSL[SL, SpLp] returns the matrix element for configuration interaction as approximated by the Cassimir operators of the groups SO(3), G2, and R7. SL and SpLp are strings that represent terms under LS coupling.";
-TwoBodyNKSL[SL_, SpLp_] := Module[{S, L},
+TwoBodyNKSL::usage = "TwoBodyNKSL[SL, SpLp] returns the matrix element for configuration interaction as approximated by the Cassimir operators of the groups SO(3), G2, and R7. SL and SpLp are strings that represent terms under LS coupling.";
+TwoBodyNKSL[SL_, SpLp_] := Module[
+  {S, L},
   {S, L} = findSL[SL];
-  val = (If[L == findSL[SpLp][[2]],
+  val = (If[L==findSL[SpLp][[2]],
     \[Alpha] * L * (L + 1), 
     0] + 
-   If[SL == SpLp, 
+   If[SL==SpLp, 
     GR7W[Part[First[findNKLSterm[SL]], 3]] + 
     GG2U[Part[First[findNKLSterm[SL]], 4]],
     0]);
@@ -1171,11 +1190,11 @@ TwoBodyNKSL[SL_, SpLp_] := Module[{S, L},
 (* ########### Configuration-Interaction via Casimir Operators ############# *)
 (* ######################################################################### *)
 
-Options[EnergyMatrix]={"Sparse"->True};
-EnergyMatrix::usage="EnergyMatrix[n,J,J',I,I'] provides the matrix element <J,I|H|J',I'> within the f^n configuration, it does this by adding the following interactions: Coulomb, spin-orbit, spin-other-orbit, electrostatically-correlated-spin-orbit, spin-spin, and crystal-field.";
-EnergyMatrix[n_,J_,Jp_,Ii_,Ip_,CFTable_,OptionsPattern[]]:=(
-  eMatrix=Table[
-  subKron=( KroneckerDelta[NKSLJM[[4]], NKSLJMp[[4]]]
+Options[EnergyMatrix] = {"Sparse"->True};
+EnergyMatrix::usage = "EnergyMatrix[n, J, J', I, I'] provides the matrix element <J, I|H|J', I'> within the f^n configuration, it does this by adding the following interactions: Coulomb, spin-orbit, spin-other-orbit, electrostatically-correlated-spin-orbit, spin-spin, and crystal-field.";
+EnergyMatrix[n_, J_, Jp_, Ii_, Ip_, CFTable_, OptionsPattern[]]:= (
+  eMatrix = Table[
+  subKron = ( KroneckerDelta[NKSLJM[[4]], NKSLJMp[[4]]]
           * KroneckerDelta[J, Jp]
           * KroneckerDelta[NKSLJM[[3]], NKSLJMp[[3]]]);
   matValue = If[subKron==0,
@@ -1194,60 +1213,60 @@ EnergyMatrix[n_,J_,Jp_,Ii_,Ip_,CFTable_,OptionsPattern[]]:=(
   matValue += CFTable[{n, NKSLJM[[1]], NKSLJM[[2]], NKSLJM[[3]], NKSLJMp[[1]], NKSLJMp[[2]], NKSLJMp[[3]]}];
   matValue
   ,
-{NKSLJMp, Partition[Flatten[AllowedNKSLJMIMforJIterms[n,Jp,Ip]],4]},
-{NKSLJM , Partition[Flatten[AllowedNKSLJMIMforJIterms[n,J,Ii]],4]}
+{NKSLJMp, Partition[Flatten[AllowedNKSLJMIMforJIterms[n, Jp, Ip]], 4]},
+{NKSLJM , Partition[Flatten[AllowedNKSLJMIMforJIterms[n, J, Ii]], 4]}
 ];
 If[OptionValue["Sparse"],
- eMatrix=SparseArray[eMatrix]];
+ eMatrix = SparseArray[eMatrix]];
 Return[eMatrix]
 )
 
-EnergyStates[n_,J_,Ii_]:=AllowedNKSLJMIMforJIterms[n,J,Ii];
+EnergyStates[n_, J_, Ii_]:= AllowedNKSLJMIMforJIterms[n, J, Ii];
 
-Options[TabulateEnergyMatrixTable]={"Sparse"->True}
-TabulateEnergyMatrixTable::usage="TabulateEnergyMatrixTable[n,I] returns a list with three elements {EnergyMatrixTable, EnergyStatesTable, AllowedM}. EnergyMatrixTable is an Association with keys equal to lists of the form {n, J, Jp, Ii, Ii}. EnergyStatesTable is an association with keys equal to lists of the form {n, J, Ii}. AllowedM is a list with keys equal to lists of the form {n,J} and values equal to lists equal to the corresponding values of MJ.";
-TabulateEnergyMatrixTable[n_, Ii_, CFTable_, OptionsPattern[]]:=(
-  EnergyMatrixTable=<||>;
-  EnergyStatesTable=<||>;
-  AllowedM=<||>;
+Options[TabulateEnergyMatrixTable] = {"Sparse"->True}
+TabulateEnergyMatrixTable::usage = "TabulateEnergyMatrixTable[n, I] returns a list with three elements {EnergyMatrixTable, EnergyStatesTable, AllowedM}. EnergyMatrixTable is an Association with keys equal to lists of the form {n, J, Jp, Ii, Ii}. EnergyStatesTable is an association with keys equal to lists of the form {n, J, Ii}. AllowedM is a list with keys equal to lists of the form {n, J} and values equal to lists equal to the corresponding values of MJ.";
+TabulateEnergyMatrixTable[n_, Ii_, CFTable_, OptionsPattern[]]:= (
+  EnergyMatrixTable = <||>;
+  EnergyStatesTable = <||>;
+  AllowedM = <||>;
   Do[
-    (EnergyMatrixTable[{n,J,Jp,Ii,Ii}] = EnergyMatrix[n,J,Jp,Ii,Ii,CFTable,"Sparse"->OptionValue["Sparse"]];
-     EnergyStatesTable[{n,J,Ii}]       = EnergyStates[n,J,Ii];
-     AllowedM[{n,J}]                   = Table[M,{J,minJ[n],maxJ[n]},{M,-J,J}];
+    (EnergyMatrixTable[{n, J, Jp, Ii, Ii}] = EnergyMatrix[n, J, Jp, Ii, Ii, CFTable, "Sparse"->OptionValue["Sparse"]];
+     EnergyStatesTable[{n, J, Ii}]       = EnergyStates[n, J, Ii];
+     AllowedM[{n, J}]                   = Table[M, {J, minJ[n], maxJ[n]}, {M, -J, J}];
     ),
-    {Jp,AllowedJ[n]},
-    {J,AllowedJ[n]}
+    {Jp, AllowedJ[n]},
+    {J, AllowedJ[n]}
   ];
-  Return[{EnergyMatrixTable,EnergyStatesTable,AllowedM}];
+  Return[{EnergyMatrixTable, EnergyStatesTable, AllowedM}];
 )
 
-Options[TabulateManyEnergyMatrixTables]={"Overwrite"->False,"Sparse"->True};
-TabulateManyEnergyMatrixTables::usage="TabulateManyEnergyMatrixTables[{n1,n2,...}, {I1,I2,...}] calculates the tables of matrix elements for the requested f^n_i configurations with the given nuclear spin I_i. The function does not return the matrices themselves. It instead returns an Association whose keys are lists of the form {n,I} and whose values are the filenames where the output of TabulateEnergyMatrixTables was saved to. When these files are loaded with Get, the following three symbols are thus defined: EnergyMatrixTable, EnergyStatesTable, and AllowedM.
+Options[TabulateManyEnergyMatrixTables] = {"Overwrite"->False, "Sparse"->True};
+TabulateManyEnergyMatrixTables::usage = "TabulateManyEnergyMatrixTables[{n1, n2, ...}, {I1, I2, ...}] calculates the tables of matrix elements for the requested f^n_i configurations with the given nuclear spin I_i. The function does not return the matrices themselves. It instead returns an Association whose keys are lists of the form {n, I} and whose values are the filenames where the output of TabulateEnergyMatrixTables was saved to. When these files are loaded with Get, the following three symbols are thus defined: EnergyMatrixTable, EnergyStatesTable, and AllowedM.
 EnergyMatrixTable is an Association whose keys are of the form {n, J, Jp, Ii, Ii} and whose values are matrix elements.";
-TabulateManyEnergyMatrixTables[ns_,Iis_,OptionsPattern[]]:=(
-  overwrite=OptionValue["Overwrite"];
-  fNames=<||>;
+TabulateManyEnergyMatrixTables[ns_, Iis_, OptionsPattern[]]:= (
+  overwrite = OptionValue["Overwrite"];
+  fNames = <||>;
   Do[
     (
-    CFdataFilename = FileNameJoin[{moduleDir,"data","CrystalFieldTable_f"<>ToString[n]<>".zip"}];
-    PrintTemporary["Importing CrystalFieldTable from ",CFdataFilename," ..."];
+    CFdataFilename = FileNameJoin[{moduleDir, "data", "CrystalFieldTable_f"<>ToString[n]<>".zip"}];
+    PrintTemporary["Importing CrystalFieldTable from ", CFdataFilename, " ..."];
     CrystalFieldTable = ImportMZip[CFdataFilename];
     Do[(
-      PrintTemporary["#------- n=",n," | I=",Ii," -------#"];
-      exportFname=EnergyMatrixFileName[n,Ii];
-      fNames[{n,Ii}]=exportFname;
+      PrintTemporary["#------- n = ", n, " | I = ", Ii, " -------#"];
+      exportFname = EnergyMatrixFileName[n, Ii];
+      fNames[{n, Ii}] = exportFname;
       If[FileExistsQ[exportFname] && Not[overwrite],
         Continue[]];
-      {EnergyMatrixTable,EnergyStatesTable,AllowedM} = TabulateEnergyMatrixTable[n,Ii,CrystalFieldTable,"Sparse"->OptionValue["Sparse"]];
+      {EnergyMatrixTable, EnergyStatesTable, AllowedM} = TabulateEnergyMatrixTable[n, Ii, CrystalFieldTable, "Sparse"->OptionValue["Sparse"]];
       If[FileExistsQ[exportFname]&&overwrite,
         DeleteFile[exportFname]];
-      Save[exportFname,{EnergyMatrixTable,EnergyStatesTable,AllowedM}];
+      Save[exportFname, {EnergyMatrixTable, EnergyStatesTable, AllowedM}];
       ),
-    {Ii,Iis}
+    {Ii, Iis}
     ];
     ClearAll[CrystalFieldTable];
     ),
-  {n,ns}
+  {n, ns}
   ];
 Return[fNames];
 )
@@ -1261,16 +1280,16 @@ Return[fNames];
 printL[L_] := 
  If[StringQ[L], L, StringTake[specAlphabet, {L + 1}]]
 
-findSL[SL_]:=(
-  findSL[SL]=If[StringQ[SL],
-    {(ToExpression[StringTake[SL,1]]-1)/2,
-     StringPosition[specAlphabet,StringTake[SL,{2}]][[1,1]]-1},
+findSL[SL_]:= (
+  findSL[SL] = If[StringQ[SL],
+    {(ToExpression[StringTake[SL, 1]]-1)/2,
+     StringPosition[specAlphabet, StringTake[SL, {2}]][[1, 1]]-1},
     SL]
     )
 
 findSL\[Gamma][SL_] := 
  If[StringQ[SL], 
-  If[StringLength[SL] == 2, 
+  If[StringLength[SL]==2, 
     {
     (ToExpression[StringTake[SL, 1]] - 1)/2, 
     Part[StringPosition[specAlphabet, StringTake[SL, {2}]], 1, 1] - 1,
@@ -1289,42 +1308,42 @@ printSLJM[SLJM_] :=
      SubscriptBox[printL[SLJM[[2]]], {SLJM[[3]], SLJM[[4]]}]}] // 
    DisplayForm;
 
-RSJnoIlabelPercent::usage="Needs documentation and perhaps some options.";
-RSJnoIlabelPercent[\[CapitalPsi]_]:=Module[
-  {allRS},
+RSJnoIlabelPercent::usage = "Needs documentation and perhaps some options.";
+RSJnoIlabelPercent[\[CapitalPsi]_]:= Module[
+  {magFun, allRS, label},
   magFun = DisplayForm[
             SubscriptBox[
-              StringTake[#[[1,1]][[1]],2],
-              {#[[1,1,2]],#[[1]][[-1]],#[[-1]]}
+              StringTake[#[[1, 1]][[1]], 2],
+              {#[[1, 1, 2]], #[[1]][[-1]], #[[-1]]}
               ]
               ]&;
-  magRS[a_,b_]:={Abs[a]^2, Map[magFun, b]};
-  RSfunc = {Total[#][[1]], Flatten[#[[-1,-1]]]} &;
+  magRS[a_, b_]:= {Abs[a]^2, Map[magFun, b]};
+  RSfunc = {Total[#][[1]], Flatten[#[[-1, -1]]]} &;
   allRS = Map[RSfunc, 
     GatherBy[
       Thread[magRS[\[CapitalPsi][[2]], \[CapitalPsi][[3]]]], 
       #[[2]] &]];
   allRS = SortBy[allRS, -#[[1]] &];
-  label=If[Part[allRS,1,1]>= 0.5,
+  label = If[Part[allRS, 1, 1]>= 0.5,
     DisplayForm[RowBox[
                   {
-                  allRS[[1,2]],
-                  StringJoin["(", ToString[Round[100 * allRS[[1,1]]]],"%)"]
+                  allRS[[1, 2]],
+                  StringJoin["(", ToString[Round[100 * allRS[[1, 1]]]], "%)"]
                   }
                   ]
                 ],
     DisplayForm[RowBox[
                   {
-                  allRS[[1,2]],
-                  StringJoin["(", ToString[Round[100 * allRS[[1,1]]]],"%) + "],
-                  allRS[[2,2]],
-                  StringJoin["(", ToString[Round[100 * allRS[[2,1]]]],"%) + "],
-                  allRS[[3,2]],
-                  StringJoin["(", ToString[Round[100 * allRS[[3,1]]]],"%) + "],
-                  allRS[[4,2]],
-                  StringJoin["(", ToString[Round[100 * allRS[[4,1]]]],"%) + "],
-                  allRS[[5,2]],
-                  StringJoin["(", ToString[Round[100 * allRS[[5,1]]]],"%)"]
+                  allRS[[1, 2]],
+                  StringJoin["(", ToString[Round[100 * allRS[[1, 1]]]], "%) + "],
+                  allRS[[2, 2]],
+                  StringJoin["(", ToString[Round[100 * allRS[[2, 1]]]], "%) + "],
+                  allRS[[3, 2]],
+                  StringJoin["(", ToString[Round[100 * allRS[[3, 1]]]], "%) + "],
+                  allRS[[4, 2]],
+                  StringJoin["(", ToString[Round[100 * allRS[[4, 1]]]], "%) + "],
+                  allRS[[5, 2]],
+                  StringJoin["(", ToString[Round[100 * allRS[[5, 1]]]], "%)"]
                   }
                 ]
               ]
@@ -1361,18 +1380,20 @@ fNterms = Join[TermLabels, Seniority, RacahW, RacahU, 2];
 fNterms = Sort[fNterms];
 Clear[fNtextLabels, TermLabels, Seniority, RacahU, RacahW]
 
-NKLSterms[n_, L_, S_] := Module[{NKterms, SL},
+NKLSterms[n_, L_, S_] := Module[
+  {NKterms, SL},
   SL = StringJoin[ToString[2 S + 1], printL[L]];
   NKterms = {{}};
   Map[If[! StringFreeQ[First[#], SL], 
      If[ToExpression[Part[#, 2]] <= n, 
       NKterms = Join[NKterms, {#}, 1]]] &, fNterms];
   NKterms = DeleteCases[NKterms, {}];
-  If[Length[NKterms] == 1, 
+  If[Length[NKterms]==1, 
    NKterms[[1]][[1]] = StringTake[Part[NKterms, 1, 1], 2]];
   NKterms]
 
-findNKLSterm[SL_] := Module[{NKterms, n},
+findNKLSterm[SL_] := Module[
+  {NKterms, n},
   n = 7;
   NKterms = {{}};
   Map[If[! StringFreeQ[First[#], SL], 
@@ -1440,13 +1461,15 @@ CFPconfig)
 CFPtable = Join[{{{"2F", {"1S", 1}}}}, CFPtable]; (*for f^1*)
 
 CFPterms[n_] := Part[CFPtable, n]
-CFPterms[n_, SL_] := Module[{NKterms, CFPconfig},
+CFPterms[n_, SL_] := Module[
+  {NKterms, CFPconfig},
   NKterms = {{}};
   CFPconfig = Part[CFPtable, n];
   Map[If[StringFreeQ[First[#], SL], Null , 
      NKterms = Join[NKterms, {#}, 1]] &, CFPconfig];
   NKterms = DeleteCases[NKterms, {}]]
-CFPterms[n_, L_, S_] := Module[{NKterms, SL, CFPconfig},
+CFPterms[n_, L_, S_] := Module[
+  {NKterms, SL, CFPconfig},
   SL = StringJoin[ToString[2 S + 1], printL[L]];
   NKterms = {{}};
   CFPconfig = Part[CFPtable, n];
@@ -1469,11 +1492,12 @@ maxJ[n_] := Max[Map[Total, AllowedSLterms[n]]]
 
 minJ[n_] := Min[Map[Abs[Part[#, 1] - Part[#, 2]] &, AllowedSLterms[n]]]
 
-AllowedSLJterms[n_] := Module[{allowedSL, allowedSLJ},
+AllowedSLJterms[n_] := Module[
+  {allowedSL, allowedSLJ},
     allowedSL = AllowedSLterms[n];
     allowedSLJ = {}; 
     For[nn = 1, nn <= Length[allowedSL],
-      termSL = allowedSL[[ nn]];
+      termSL = allowedSL[[nn]];
       termsSLJ = 
     Table[{termSL[[1]], termSL[[2]], J}, {J, 
       Abs[termSL[[1]] - termSL[[2]]], Total[termSL]}];
@@ -1481,7 +1505,8 @@ AllowedSLJterms[n_] := Module[{allowedSL, allowedSLJ},
       nn++];
     SortBy[allowedSLJ, Last]]
 
-AllowedNKSLJterms[n_] := Module[{allowedSL, allowedNKSL, allowedSLJ},
+AllowedNKSLJterms[n_] := Module[
+  {allowedSL, allowedNKSL, allowedSLJ},
     allowedNKSL = AllowedNKSLterms[n];
     allowedSL = AllowedSLterms[n];
     allowedSLJ = {}; 
@@ -1494,63 +1519,79 @@ AllowedNKSLJterms[n_] := Module[{allowedSL, allowedNKSL, allowedSLJ},
         nn++];
     SortBy[allowedSLJ, Last]]
 
-AllowedNKSLforJterms[n_, J_] := 
- Module[{allowedSL, allowedNKSL, allowedSLJ},
+AllowedNKSLforJterms[n_, J_] := Module[
+    {allowedSL, allowedNKSL, allowedSLJ, nn, termSL, termNKSL, termsSLJ},
     allowedNKSL = AllowedNKSLterms[n];
     allowedSL = AllowedSLterms[n];
     allowedSLJ = {}; 
-    For[nn = 1, nn <= Length[allowedSL],
-      termSL = allowedSL[[ nn]];
-      termNKSL = allowedNKSL[[ nn]];
-      termsSLJ = 
-    If[Abs[termSL[[1]] - termSL[[2]]] <= J <= 
-      Total[termSL], {{termNKSL, J}}, {}];
+    For[nn = 1,
+      nn <= Length[allowedSL],
+      termSL = allowedSL[[nn]];
+      termNKSL = allowedNKSL[[nn]];
+      termsSLJ = If[Abs[termSL[[1]] - termSL[[2]]] <= J <= Total[termSL], 
+          {{termNKSL, J}},
+          {}
+          ];
       allowedSLJ = Join[allowedSLJ, termsSLJ];
-      nn++];
-    allowedSLJ]
+      nn++
+      ];
+    Return[allowedSLJ]
+  ];
 
-AllowedSLJMterms[n_] := 
- Module[{allowedSLJ, allowedSLJM, termSLJ, termsSLJM},
+AllowedSLJMterms[n_] := Module[
+    {allowedSLJ, allowedSLJM, termSLJ, termsSLJM, nn},
     allowedSLJ = AllowedSLJterms[n];
     allowedSLJM = {}; 
-    For[nn = 1, nn <= Length[allowedSLJ], nn++,
-      termSLJ = allowedSLJ[[ nn]];
+    For[nn = 1,
+      nn <= Length[allowedSLJ],
+      nn++,
+      termSLJ = allowedSLJ[[nn]];
       termsSLJM = 
     Table[{termSLJ[[1]], termSLJ[[2]], termSLJ[[3]], 
       M}, {M, - termSLJ[[3]], termSLJ[[3]]}];
-      allowedSLJM = Join[allowedSLJM, termsSLJM];];
-    SortBy[allowedSLJM, Last]]
+      allowedSLJM = Join[allowedSLJM, termsSLJM];
+      ];
+    Return[SortBy[allowedSLJM, Last]];
+    ]
 
-AllowedNKSLJMforJMterms[n_, J_, MJ_] :=  
- Module[{allowedSL, allowedNKSL, allowedSLJM},
-    allowedNKSL = AllowedNKSLterms[n];
-  allowedSL = AllowedSLterms[n];
+AllowedNKSLJMforJMterms[n_, J_, MJ_] := Module[
+  {allowedSL, allowedNKSL, allowedSLJM},
+  allowedNKSL = AllowedNKSLterms[n];
+  allowedSL   = AllowedSLterms[n];
   allowedSLJM = {}; 
-    For[nn = 1, nn <= Length[allowedSL],
-      termSL = allowedSL[[ nn]];
-      termNKSL = allowedNKSL[[ nn]];
-      termsSLJ = 
-    If[Abs[termSL[[1]] - termSL[[2]]] <= J <= Total[termSL] && 
-      Abs[MJ] <= J, {{termNKSL, J, MJ}}, {}];
-      allowedSLJM = Join[allowedSLJM, termsSLJ];
-      nn++];
-    allowedSLJM]
+  For[nn = 1,
+    nn <= Length[allowedSL],
+    termSL = allowedSL[[nn]];
+    termNKSL = allowedNKSL[[nn]];
+    termsSLJ = If[(Abs[termSL[[1]] - termSL[[2]]] 
+                   <= J 
+                   <= Total[termSL] 
+                   && (Abs[MJ] <= J)
+                  ),
+                  {{termNKSL, J, MJ}},
+                  {}];
+    allowedSLJM = Join[allowedSLJM, termsSLJ];
+    nn++];
+    Return[allowedSLJM];
+    ]
 
-AllowedNKSLJMforJterms[n_, J_] :=  
- Module[{allowedSL, allowedNKSL, allowedSLJM, Mvals},
-    allowedNKSL = AllowedNKSLterms[n];
+AllowedNKSLJMforJterms[n_, J_] := Module[
+  {allowedSL, allowedNKSL, allowedSLJM, Mvals},
+  allowedNKSL = AllowedNKSLterms[n];
   allowedSL = AllowedSLterms[n];
   allowedSLJM = {}; 
   Mvals = Range[-J, J];
-    For[nn = 1, nn <= Length[allowedSL],
-      termSL = allowedSL[[ nn]];
-      termNKSL = allowedNKSL[[ nn]];
-      termsSLJ = 
-    If[Abs[termSL[[1]] - termSL[[2]]] <= J <= 
-      Total[termSL], {{termNKSL, J}}, {}];
-      allowedSLJM = Join[allowedSLJM, termsSLJ];
-      nn++];
-    Tuples[{allowedSLJM, Mvals}]]
+  For[nn = 1,
+    nn <= Length[allowedSL],
+    termSL = allowedSL[[nn]];
+    termNKSL = allowedNKSL[[nn]];
+    termsSLJ = If[Abs[termSL[[1]] - termSL[[2]]] <= J <= 
+              Total[termSL], {{termNKSL, J}}, {}
+              ];
+    allowedSLJM = Join[allowedSLJM, termsSLJ];
+    nn++];
+  Return[Tuples[{allowedSLJM, Mvals}]];
+  ]
 
 AllowedMforJ[j_] := Range[-j, j, 1];
 
@@ -1565,14 +1606,18 @@ AllowedJ[n_] := Table[J, {J, minJ[n], maxJ[n]}];
 (* ############################################################################################## *)
 (* ###############################              SOLVERS            ############################## *)
 
-ShiftedLevels[originalLevels_] := Module[{GroundEnergy},
-  GroundEnergy = First[First[Sort[originalLevels]]];
-  Map[{#[[1]] - GroundEnergy, #[[2]], #[[3]]} &, originalLevels]]
+ShiftedLevels[originalLevels_] := Module[
+  {groundEnergy, shifted},
+  groundEnergy = Sort[originalLevels][[1,1]];
+  shifted      = Map[{#[[1]] - groundEnergy, #[[2]], #[[3]]} &, originalLevels];
+  Return[shifted];
+  ]
 
 LoadGuillotParameters::usage = "LoadGuillotParameters[Ln] loads into the current session the parameters for \!\(\*SuperscriptBox[\(Ln\), \(\(3\)\(+\)\)]\). In addition of defining values inside of the session, the function also returns a list with the following quantities : {nf, E0, E1 , E2, E3 , \[Zeta], \[Alpha], \[Beta], \[Gamma], T2, T3, T4, T6, T7, T8, M0, M2, M4, P0, P2, P4, P6, B02, B06}";
 LoadGuillotParameters::argerr = "Not a lanthanide."
 
-LoadGuillotParameters[Ln_]:=Module[{paramAssoc},
+LoadGuillotParameters[Ln_]:= Module[
+  {paramAssoc},
   Which[
     (* The hard-coded values used here are from Table I, "Spectra of lanthanides", Carnall et al, 1989.*)
     Ln=="Ce" || Ln==1,
@@ -1587,7 +1632,7 @@ LoadGuillotParameters[Ln_]:=Module[{paramAssoc},
 
     Ln=="Pr" || Ln==2,
       (
-      nf = 2; Fsup2 = 68878; Fsup4 = 50347; Fsup6=32901;
+      nf = 2; Fsup2 = 68878; Fsup4 = 50347; Fsup6 = 32901;
       \[Zeta] = 751.7; \[Alpha] =16.23; \[Beta] = -566.6; \[Gamma] = 1371;
       T2 = 0; T3 = 0; T4 = 0; T6 = 0; T7 = 0; T8 = 0;
       M0 = 2.08; P2 = -88.6;
@@ -1605,7 +1650,7 @@ LoadGuillotParameters[Ln_]:=Module[{paramAssoc},
 
     Ln=="Pm" || Ln==4,
       (
-      nf=4; Fsup2 = 76400;Fsup4 = 54900; Fsup6 = 37700;
+      nf = 4; Fsup2 = 76400;Fsup4 = 54900; Fsup6 = 37700;
       \[Zeta] = 1025; \[Alpha] = 20.50; \[Beta] = -560; \[Gamma] = 1475;
       T2 = 300; T3 = 35; T4 = 58; T6 = -310; T7 = 350; T8 = 320;
       M0 = 2.4; P2 = 275;
@@ -1693,7 +1738,7 @@ LoadGuillotParameters[Ln_]:=Module[{paramAssoc},
       nf = 13; Fsup2 = 0; Fsup4 = 0; Fsup6 = 0;
       luFnames = FileNames[All, FileNameJoin[{moduleDir, "params", "Yb"}]];
       shortNames = FileNameSplit[#][[-1]] & /@ luFnames;
-      luFname = DialogInput[Prepend[MapThread[Button[#1,DialogReturn[#2]]&,{shortNames,luFnames}],TextCell[Style["These are the files available for Yb, choose one:",12]]]];
+      luFname = DialogInput[Prepend[MapThread[Button[#1, DialogReturn[#2]]&, {shortNames, luFnames}], TextCell[Style["These are the files available for Yb, choose one:", 12]]]];
       Get[luFname];
       ),
     
@@ -1714,36 +1759,46 @@ LoadGuillotParameters[Ln_]:=Module[{paramAssoc},
   T2, T3, T4, T6, T7, T8, M0, M2, M4, P0, P2, P4, P6, B02, B06}];
 ];
 
-Options[LoadParameters]={
+Options[LoadParameters] = {
     "Source"->"Carnall",
     "Free Ion"->False,
     "gs"->2.002319304386,
     "gI"->0.987};
-LoadParameters[Ln_,OptionsPattern[]]:=(
-  source=OptionValue["Source"];
-  params=Which[source=="Carnall",
-  (Association[Carnall["data"][Ln]])
-  ];
-  (*If a free ion then all the parameters from the crystal field are set to zero*)
-  If[OptionValue["Free Ion"],
-    Do[params[cfSymbol]=0,{cfSymbol,cfSymbols}]
-  ];
-  params[F0] = 0;
-  params[M2] = 0.56 * params[M0]; (* See Carnall 1989, Table I, caption*)
-  params[M4] = 0.31 * params[M0]; (* See Carnall 1989, Table I, caption*)
-  params[P0] = 0;
-  params[P4] = 0.5 * params[P2];  (* See Carnall 1989, Table I, caption*)
-  params[P6] = 0.1 * params[P2];  (* See Carnall 1989, Table I, caption*)
-  params[gs] = OptionValue["gs"];
-  params[gI] = OptionValue["gI"];
-  params[nf] = Round[params[nf]];
-  {params[E0],params[E1],params[E2],params[E3]} = FtoE[params[F0],params[F2],params[F4],params[F6]];
-  params[E0]=0;
-  Return[params];
-);
+LoadParameters[Ln_, OptionsPattern[]]:= Module[
+  {source, params},
+  (
+    source = OptionValue["Source"];
+    params = Which[source=="Carnall",
+            (Association[Carnall["data"][Ln]])
+            ];
+    (*If a free ion then all the parameters from the crystal field are set to zero*)
+    If[OptionValue["Free Ion"],
+      Do[params[cfSymbol] = 0, {cfSymbol, cfSymbols}]
+    ];
+    params[F0] = 0;
+    params[M2] = 0.56 * params[M0]; (* See Carnall 1989, Table I, caption, probably fixed based on HF values*)
+    params[M4] = 0.31 * params[M0]; (* See Carnall 1989, Table I, caption, probably fixed based on HF values*)
+    params[P0] = 0;
+    params[P4] = 0.5 * params[P2];  (* See Carnall 1989, Table I, caption, probably fixed based on HF values*)
+    params[P6] = 0.1 * params[P2];  (* See Carnall 1989, Table I, caption, probably fixed based on HF values*)
+    params[gs] = OptionValue["gs"];
+    params[gI] = OptionValue["gI"];
+    params[nf] = Round[params[nf]];
+    {params[E0], params[E1], params[E2], params[E3]} = FtoE[params[F0], params[F2], params[F4], params[F6]];
+    params[E0] = 0;
+    Return[params];
+  )
+];
 
 
-(*nf is number of electrons, and IiN is nuclear spin val*)
+EnergyMatrixFileName::usage = "EnergyMatrixFileName[nf, IiN] gives the filename for the energy matrix table for an atom with nf electrons and a nucleus of spin IiN.";
+EnergyMatrixFileName[n_, IiN_] := (
+  fname = FileNameJoin[{moduleDir,
+      "hams",
+      StringJoin[{"f", ToString[n], "_I_", ToString[2*IiN + 1], "_EnergyMatrixTable.m"}]}];
+  Return[fname];
+  );
+
 SolveStates::usage = 
 "SolveStates[nf, IiN] solves the energy values and states for an atom with n f-electrons with a nucleus of spin IiN. This function assumes that all the parameters that determine the Hamiltonian for a specific ion in a specific host have already been loaded into the session; these can be loaded by using the function LoadGuillotParameters.
 This function also requires files for pre-computed energy matrix tables that provide the symbols EnergyMatrixTable[_, _, _, _, _].
@@ -1754,51 +1809,47 @@ References:
 1. Sign inversion for \[Zeta]: Wybourne, Spectroscopic Properties of Rare Earths. 
 2. Sign inversion for {T2, T3, T4, T6, T7, T8}: Hansen and Judd, Matrix Elements of Scalar Three Electron Operators for the Atomic f Shell.";
 
-EnergyMatrixFileName::usage = "EnergyMatrixFileName[nf, IiN] gives the filename for the energy matrix table for an atom with nf electrons and a nucleus of spin IiN.";
-EnergyMatrixFileName[n_, IiN_] := (
-  fname=FileNameJoin[{moduleDir,
-      "hams",
-      StringJoin[{"f", ToString[n], "_I_", ToString[2*IiN + 1], "_EnergyMatrixTable.m"}]}];
-  Return[fname];
-  );
-
-SolveStates[nf_,IiN_,params_]:=Module[
+Options[SolveStates] = {"Return Symbolic Matrix" -> False};
+SolveStates[nf_, IiN_, params_, OptionsPattern[]]:= Module[
   {n, ii, jj, JMvals},
   (*#####################################*)
   (*hole-particle equivalence enforcement*)
-  n=nf;
-  (*If[nf>7,(n=14-nf;(*hole-particle equivalence*)
-  {\[Zeta],T2,T3,T4,T6,T7,T8}=-{\[Zeta],T2,T3,T4,T6,T7,T8};
+  n = nf;
+  (*If[nf>7, (n = 14-nf;(*hole-particle equivalence*)
+  {\[Zeta], T2, T3, T4, T6, T7, T8} = -{\[Zeta], T2, T3, T4, T6, T7, T8};
   )];*)
   (*hole-particle equivalence enforcement*)
   (*#####################################*)
   (*Load symbolic expressions for energy sub-matrices.*)
-  Get[EnergyMatrixFileName[n,IiN]];
+  Get[EnergyMatrixFileName[n, IiN]];
   (*Patch together the entire matrix representation in block-diagonal form.*)
-  EnergyMatrix=ConstantArray[0, {Length[AllowedJ[n]], Length[AllowedJ[n]]}];
-  Do[EnergyMatrix[[jj,ii]]=EnergyMatrixTable[{n,AllowedJ[n][[ii]],AllowedJ[n][[jj]],IiN,IiN}];,
-    {ii,1,Length[AllowedJ[n]]},
-    {jj,1,Length[AllowedJ[n]]}
+  EnergyMatrix = ConstantArray[0, {Length[AllowedJ[n]], Length[AllowedJ[n]]}];
+  Do[EnergyMatrix[[jj, ii]] = EnergyMatrixTable[{n, AllowedJ[n][[ii]], AllowedJ[n][[jj]], IiN, IiN}];,
+    {ii, 1, Length[AllowedJ[n]]},
+    {jj, 1, Length[AllowedJ[n]]}
     ];
-  EnergyMatrix=ArrayFlatten[EnergyMatrix];
-  SymbolicMatrix=EnergyMatrix;
-  EnergyMatrix=ReplaceInSparseArray[EnergyMatrix,params];
+  EnergyMatrix = ArrayFlatten[EnergyMatrix];
+  SymbolicMatrix = EnergyMatrix;
+  EnergyMatrix = ReplaceInSparseArray[EnergyMatrix, params];
   Print["The energy matrix has dimensions:", Dimensions[EnergyMatrix]];
   (*Solve for eigenvalues and eigenvectors.*)
-  EnergyLevels={};
-  {EigenvalueJM,EigenvectorJM}=Eigensystem[EnergyMatrix];
-  EigenvalueJM=Re[EigenvalueJM];
+  EnergyLevels = {};
+  {EigenvalueJM, EigenvectorJM} = Eigensystem[EnergyMatrix];
+  EigenvalueJM = Re[EigenvalueJM];
   (*There might be a very small imaginary part.*)
-  (*Print[{Dimensions@EigenvalueJM,Dimensions@EigenvectorJM}];*)
+  (*Print[{Dimensions@EigenvalueJM, Dimensions@EigenvectorJM}];*)
   (*Parse the results for the eigenvectors in terms of the ordered basis being used.*)
-  EnergyStates={};
-  Do[EnergyStates=Join[EnergyStates, EnergyStatesTable[{n,AllowedJ[n][[nn]],IiN}]],
-    {nn,1,Length[AllowedJ[n]]}
+  EnergyStates = {};
+  Do[EnergyStates = Join[EnergyStates, EnergyStatesTable[{n, AllowedJ[n][[nn]], IiN}]],
+    {nn, 1, Length[AllowedJ[n]]}
     ];
-  Do[EnergyLevels=Join[EnergyLevels, {{EigenvalueJM[[nn]],EigenvectorJM[[nn]],EnergyStates}}];,
-    {nn,1,Length[EigenvalueJM]}
+  Do[EnergyLevels = Join[EnergyLevels, {{EigenvalueJM[[nn]], EigenvectorJM[[nn]], EnergyStates}}];,
+    {nn, 1, Length[EigenvalueJM]}
     ];
-  Return[{SymbolicMatrix,EnergyLevels}];
+  If[OptionValue["Return Symbolic Matrix"],
+  Return[{SymbolicMatrix, EnergyLevels}]
+  ];
+  Return[EnergyLevels];
 ];
 
 (* ###############################              SOLVERS            ############################## *)
@@ -1807,30 +1858,18 @@ SolveStates[nf_,IiN_,params_]:=Module[
 (* ############################################################################################## *)
 (* ###############################               MISC              ############################## *)
 
-SymbToNum::usage="SymbToNum[expr, numAssociation] takes an expression expr and returns what results after making the replacements defined in the given replacementAssociation. If replacementAssociation doesn't define values for expected keys, they are taken to be zero.";
-SymbToNum[expr_,replacementAssociation_]:=(
-  includedKeys=Keys[replacementAssociation];
+SymbToNum::usage = "SymbToNum[expr, numAssociation] takes an expression expr and returns what results after making the replacements defined in the given replacementAssociation. If replacementAssociation doesn't define values for expected keys, they are taken to be zero.";
+SymbToNum[expr_, replacementAssociation_]:= (
+  includedKeys = Keys[replacementAssociation];
   (*If a key is not defined, make its value zero.*)
-  fullAssociation=Table[(
-    If[MemberQ[includedKeys,key],
+  fullAssociation = Table[(
+    If[MemberQ[includedKeys, key],
       ToExpression[key]->replacementAssociation[key],
       ToExpression[key]->0
     ]
   ),
-  {key,paramSymbols}];
+  {key, paramSymbols}];
   Return[expr/.fullAssociation];
-)
-
-MinusOneTo::usage="MinusOneTo[a1,a2,...,an] returns -1 if Total[{a1,a2,...,an}] is odd, 1 if even, and Null if not an integer.";
-MinusOneTo[values__]:=(
-  exponent=Total[List[values]];
-  Assert[IntegerQ[exponent]];
-  If[!IntegerQ[exponent],
-  Return[Null]];
-  If[EvenQ[exponent],
-    Return[1],
-    Return[-1]
-  ]
 )
 
 SimpleConjugate::usage = "SimpleConjugate[expr] takes an expression and applies a simplified version of the conjugate in that all it does is that it replaces the imaginary unit I with -I. It assumes that every other symbol is real so that it remains the same under complex conjugation. Among other expressions it is valid for any rational or polynomial expression with complex coefficients and real variables.";
@@ -1839,9 +1878,7 @@ SimpleConjugate[expr_] := expr /. Complex[a_, b_] :> a - I b;
 ExportMZip::usage = 
   "ExportMZip[filename, object] exports the given object and compresses it. It first exports in .m format, it then compresses that file in to a zip file, and finally the .m file is deleted. The filename must be a full path, and end with .m. This probably won't work on a PC.";
 ExportMZip[filename_, object_] := (
-   zipTemplate = 
-    StringTemplate[
-     "cd \"`sourceDir`\"; zip \"`dest`\" \"`source`\""];
+   zipTemplate = StringTemplate["cd \"`sourceDir`\"; zip \"`dest`\" \"`source`\""];
    delTemplate = StringTemplate["rm \"`rmFname`\""];
    Export[filename, object];
    zipFilename = StringReplace[filename, ".m" -> ".zip"];
@@ -1859,40 +1896,37 @@ ExportMZip[filename_, object_] := (
 ImportMZip::usage = 
   "ImportMZip[filename] decompresses the provided filename, and imports the enclosed .m file that it is assumed to contain. After being imported the uncompressed file is deleted from disk. The provided filename bust be a full path, and end with .zip. This probably won't work on a PC.";
 ImportMZip[filename_] := (
-  splitName = FileNameSplit[filename];
-  sourceDir = FileNameJoin[splitName[[1 ;; -2]]];
-  delTemplate = StringTemplate["rm \"`rmFname`\""];
+  splitName     = FileNameSplit[filename];
+  sourceDir     = FileNameJoin[splitName[[1 ;; -2]]];
+  delTemplate   = StringTemplate["rm \"`rmFname`\""];
   unzipTemplate = StringTemplate["cd `sourceDir`; unzip \"`source`\""];
-  unzipCmd = 
-   unzipTemplate[<|"sourceDir" -> sourceDir, 
-     "source" -> FileNameSplit[filename][[-1]]|>];
+  unzipCmd      = unzipTemplate[<|"sourceDir" -> sourceDir, 
+                                  "source" -> FileNameSplit[filename][[-1]]|>];
   Run[unzipCmd];
   mFilename = StringReplace[filename, ".zip" -> ".m"];
-  imported = Import[mFilename];
-  delCmd = delTemplate[<|"rmFname" -> mFilename|>];
+  imported  = Import[mFilename];
+  delCmd    = delTemplate[<|"rmFname" -> mFilename|>];
   Run[delCmd];
-  Return[imported]
+  Return[imported];
   );
 
 EnergyLevelDiagram::usage = "EnergyLevelDiagram[states] takes states and produces a visualization of its energy spectrum.
 The resultant visualization can be navigated by clicking and dragging to zoom in on a region, or by clicking and dragging horizontally while pressing Ctrl. Double-click to reset the view.";
-
-Options[EnergyLevelDiagram]={"Title"->"", "ImageSize"->1000, "AspectRatio" -> 1/8, "Background"->"Automatic"};
-
-EnergyLevelDiagram[states_,OptionsPattern[]]:=(
-energies = First/@states;
-ExploreGraphics@ListPlot[Tooltip[{{#,0},{#,1}}, {Quantity[#/8065.54429,"eV"], Quantity[#,1/"Centimeters"]}] &/@ energies,
-  Joined -> True,
-  PlotStyle -> Black,
-  AspectRatio -> OptionValue["AspectRatio"],
-  ImageSize -> OptionValue["ImageSize"],
-  Frame -> True,
-  PlotRange -> {All,{0,1}},
-  FrameTicks -> {{None,None},{Automatic,Automatic}},
-  FrameStyle -> Directive[15,Dashed,Thin],
-  PlotLabel -> Style[OptionValue["Title"],15,Bold],
-  Background -> OptionValue["Background"],
-  FrameLabel -> {"\!\(\*FractionBox[\(E\), SuperscriptBox[\(cm\), \(-1\)]]\)"}]
+Options[EnergyLevelDiagram] = {"Title"->"", "ImageSize"->1000, "AspectRatio" -> 1/8, "Background"->"Automatic"};
+EnergyLevelDiagram[states_, OptionsPattern[]]:= (
+  energies = First/@states;
+  ExploreGraphics@ListPlot[Tooltip[{{#, 0}, {#, 1}}, {Quantity[#/8065.54429, "eV"], Quantity[#, 1/"Centimeters"]}] &/@ energies,
+    Joined       -> True,
+    PlotStyle    -> Black,
+    AspectRatio  -> OptionValue["AspectRatio"],
+    ImageSize    -> OptionValue["ImageSize"],
+    Frame        -> True,
+    PlotRange    -> {All, {0, 1}},
+    FrameTicks   -> {{None, None}, {Automatic, Automatic}},
+    FrameStyle   -> Directive[15, Dashed, Thin],
+    PlotLabel    -> Style[OptionValue["Title"], 15, Bold],
+    Background   -> OptionValue["Background"],
+    FrameLabel   -> {"\!\(\*FractionBox[\(E\), SuperscriptBox[\(cm\), \(-1\)]]\)"}]
 )
 
 ExploreGraphics::usage = 
@@ -1904,19 +1938,23 @@ OptAxesRedraw::usage =
 Options[ExploreGraphics] = {OptAxesRedraw -> False};
 
 ExploreGraphics[graph_Graphics, opts : OptionsPattern[]] := With[
-   {gr = First[graph],
-    opt = 
-     DeleteCases[Options[graph], 
-      PlotRange -> PlotRange | AspectRatio | AxesOrigin -> _],
+   {gr  = First[graph],
+    opt = DeleteCases[Options[graph], 
+          PlotRange -> PlotRange | AspectRatio | AxesOrigin -> _],
     plr = PlotRange /. AbsoluteOptions[graph, PlotRange],
-    ar = AspectRatio /. AbsoluteOptions[graph, AspectRatio],
-    ao = AbsoluteOptions[AxesOrigin],
+    ar  = AspectRatio /. AbsoluteOptions[graph, AspectRatio],
+    ao  = AbsoluteOptions[AxesOrigin],
     rectangle = {Dashing[Small], 
-       Line[{#1, {First[#2], Last[#1]}, #2, {First[#1], 
-          Last[#2]}, #1}]} &,
+       Line[{#1, 
+            {First[#2], Last[#1]},
+            #2, 
+            {First[#1], Last[#2]},
+            #1}]} &,
     optAxesRedraw = OptionValue[OptAxesRedraw]},
-   DynamicModule[{dragging = False, first, second, rx1, rx2, ry1, ry2,
-      range = plr}, {{rx1, rx2}, {ry1, ry2}} = plr;
+   DynamicModule[
+      {dragging=False, first, second, rx1, rx2, ry1, ry2,
+      range = plr}, 
+      {{rx1, rx2}, {ry1, ry2}} = plr;
     Panel@
      EventHandler[
       Dynamic@Graphics[
@@ -1934,7 +1972,7 @@ ExploreGraphics[graph_Graphics, opts : OptionsPattern[]] := With[
          second = MousePosition["Graphics"]
          ),
        "MouseClicked" :> (
-         If[CurrentValue@"MouseClickCount" == 2,
+         If[CurrentValue@"MouseClickCount"==2,
            range = plr];
          ),
        {"MouseUp", 1} :> If[dragging,
@@ -1956,12 +1994,12 @@ ExploreGraphics[graph_Graphics, opts : OptionsPattern[]] := With[
          range[[2]] = {0, 1};
          )}]]];
 
-ReplaceInSparseArray::usage="ReplaceInSparseArray[sparseArray,rules] takes a sparse array that may contain symbolic quantities and returns a sparse array in which the given replacement rules have been used.";
-ReplaceInSparseArray[s_SparseArray,rule_] := (With[{
+ReplaceInSparseArray::usage = "ReplaceInSparseArray[sparseArray, rules] takes a sparse array that may contain symbolic quantities and returns a sparse array in which the given replacement rules have been used.";
+ReplaceInSparseArray[s_SparseArray, rule_] := (With[{
     elem = s["NonzeroValues"]/.rule,
     def  = s["Background"]/.rule
     },
-    srep = SparseArray[Automatic,s["Dimensions"],def,{1,{s["RowPointers"],s["ColumnIndices"]},elem}];
+    srep = SparseArray[Automatic, s["Dimensions"], def, {1, {s["RowPointers"], s["ColumnIndices"]}, elem}];
   ];
   Return[srep];
   );
