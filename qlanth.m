@@ -1,6 +1,6 @@
 (* -----------------------------------------------------------------
 This  code was authored by Chris Dodson and turned into a package by
-David Lizarazo in 2022.
+David Lizarazo in 2022-2023.
 +------------------------------------------------------------------+
 |                                                                  |
 |                      __                     __     __            |
@@ -298,7 +298,7 @@ Ck[l_, k_] := (-1)^l *(2 l+1) * ThreeJay[{l, 0}, {l, 0}, {k, 0}]
 
 fk::usage = "Slater integral. See Wybourne (1965) eqn. 2-93.";
 fk[n_, l_, NKSL_, NKSLp_, k_]:= Module[
-  {S, L, PossibleStates, Sb, Lb},
+  {S, L, PossibleStates, Sb, Lb, SL},
   {S, L}         = findSL[NKSL];
   PossibleStates = StringCases[AllowedNKSLterms[n], ToString[2 S+1]~~__];
   PossibleStates = DeleteCases[PossibleStates, {}];
@@ -307,9 +307,9 @@ fk[n_, l_, NKSL_, NKSLp_, k_]:= Module[
       (1/2
       * ( Abs[Ck[l, k]])^2 
       * ( 1/(2L+1) 
-        * Sum[( ReducedUkTable[{n, l, x, NKSL , k}]
-              * ReducedUkTable[{n, l, x, NKSLp, k}]),
-              {x, PossibleStates}]
+        * Sum[( ReducedUkTable[{n, l, SL, NKSL , k}]
+              * ReducedUkTable[{n, l, SL, NKSLp, k}]),
+              {SL, PossibleStates}]
         - (KroneckerDelta[NKSL, NKSLp] 
           * (n (4 l+2-n)) 
           / (2 l+1)
@@ -588,10 +588,10 @@ t112PsiPsipStates[SL_, SpLp_]:= Module[
   jj = 1;
   \[Alpha]==1;
   PsiPsipStates = {{"1S", "3P"}, {"3P", "1S"}, {"3P", "3P"},
-                 {"3P", "1D"}, {"1D", "3P"}, {"1D", "3F"},
-                 {"3F", "1D"}, {"3F", "3F"}, {"3F", "1G"},
-                 {"1G", "3F"}, {"1G", "3H"}, {"3H", "1G"},
-                 {"3H", "3H"}, {"3H", "1I"}, {"1I", "3H"}};
+                   {"3P", "1D"}, {"1D", "3P"}, {"1D", "3F"},
+                   {"3F", "1D"}, {"3F", "3F"}, {"3F", "1G"},
+                   {"1G", "3F"}, {"1G", "3H"}, {"3H", "1G"},
+                   {"3H", "3H"}, {"3H", "1I"}, {"1I", "3H"}};
   p0 = {-2, -2, -1, Sqrt[15/2], Sqrt[15/2], -Sqrt[10], -Sqrt[10],
       -Sqrt[14], Sqrt[11], Sqrt[11], -Sqrt[10], -Sqrt[10],
       -Sqrt[55], Sqrt[13/2], Sqrt[13/2]};
@@ -2003,6 +2003,116 @@ ReplaceInSparseArray[s_SparseArray, rule_] := (With[{
   ];
   Return[srep];
   );
+
+Options[ParseTeXLikeSymbol] = {"Form" -> "List"};
+ParseTeXLikeSymbol::usage = 
+  "ParseTeXLikeSymbol[string] parses a string for a symbol given in \
+latex notation and returns a corresponding mathematica symbol. The \
+string may have expressions for several symbols, they need to be \
+separated by single spaces. In addition the _ and ^ symbols used in \
+LaTeX notation need to have arguments that are enclosed in \
+parenthesis, for example \"x_2\" is invalid, instead \"x_{2}\" should \
+have been given.";
+ParseTeXLikeSymbol[bigString_, OptionsPattern[]] := (
+   form = OptionValue["Form"];
+   (*parse greek*)
+   symbols = Table[(
+      str = StringReplace[string, {"\\alpha" -> "\[Alpha]",
+         "\\beta" -> "\[Beta]",
+         "\\gamma" -> "\[Gamma]",
+         "\\psi" -> "\[Psi]"}];
+      symbol = Which[
+        StringContainsQ[str, "_"] && Not[StringContainsQ[str, "^"]],
+        (
+         (*yes sub no sup*)
+         mainSymbol = StringSplit[str, "_"][[1]];
+         mainSymbol = ToExpression[mainSymbol];
+         
+         subPart = 
+          StringCases[str, 
+            RegularExpression@"\\{(.*?)\\}" -> "$1"][[1]];
+         Subscript[mainSymbol, subPart]
+         ),
+        Not[StringContainsQ[str, "_"]] && StringContainsQ[str, "^"],
+        (
+         (*no sub yes sup*)
+         mainSymbol = StringSplit[str, "^"][[1]];
+         mainSymbol = ToExpression[mainSymbol];
+         
+         supPart = 
+          StringCases[str, 
+            RegularExpression@"\\{(.*?)\\}" -> "$1"][[1]];
+         Superscript[mainSymbol, supPart]),
+        StringContainsQ[str, "_"] && StringContainsQ[str, "^"],
+        (
+         (*yes sub yes sup*)
+         mainSymbol = StringSplit[str, "_"][[1]];
+         mainSymbol = ToExpression[mainSymbol];
+         {subPart, supPart} = 
+          StringCases[str, RegularExpression@"\\{(.*?)\\}" -> "$1"];
+         Subsuperscript[mainSymbol, subPart, supPart]
+         ),
+        True,
+        ((*no sup or sub*)
+         str)
+        ];
+      symbol
+      ),
+     {string, StringSplit[bigString, " "]}];
+   Which[
+    form == "Row",
+    Return[Row[symbols]],
+    form == "List",
+    Return[symbols]
+    ]
+   );
+Options[LabeledGrid]={
+    ItemSize->Automatic,
+    Alignment->Center,
+    Frame->All,
+    "Separator"->",",
+    "Pivot"->""
+};
+LabeledGrid::usage="LabeledGrid[data, rowHeaders, columnHeaders] provides a grid of given data interpreted as a matrix of values whose rows are labeled by rowHeaders and whose columns are labeled by columnHeaders. When hovering with the mouse over the grid elements, the row and column labels are displayed with the given separator between them.";
+LabeledGrid[data_,rowHeaders_,columnHeaders_,OptionsPattern[]]:=Module[
+    {gridList=data,rowHeads=rowHeaders,colHeads=columnHeaders},
+    (
+    separator=OptionValue["Separator"];
+    pivot=OptionValue["Pivot"];
+    gridList=Table[
+            Tooltip[
+              data[[rowIdx,colIdx]],
+              DisplayForm[
+                RowBox[{rowHeads[[rowIdx]],
+                        separator,
+                        colHeads[[colIdx]]}
+                      ]
+                      ]
+                    ],
+        {rowIdx,Dimensions[data][[1]]},
+        {colIdx,Dimensions[data][[2]]}];
+    gridList=Transpose[Prepend[gridList,colHeads]];
+    rowHeads=Prepend[rowHeads,pivot];
+    gridList=Prepend[gridList,rowHeads]//Transpose;
+    Grid[gridList,
+        Frame->OptionValue[Frame],
+        Alignment->OptionValue[Alignment],
+        Frame->OptionValue[Frame],
+        ItemSize->OptionValue[ItemSize]
+        ]
+)
+]
+
+Options[HamiltonianForm]={
+    "Separator"->"",
+    "Pivot"->""
+}
+HamiltonianForm::usage="HamiltonianForm[hamMatrix, basisLabels] takes the matrix representation of a hamiltonian together with a set of symbols representing the ordered basis in which the operator is represented. With this it creates a displayed form that has adequately labeled row and columns together with informative values when hovering over the matrix elements using the mouse cursor.";
+HamiltonianForm[hamMatrix_, basisLabels_, OptionsPattern[]]:=(
+    braLabels=DisplayForm[RowBox[{"\[LeftAngleBracket]",#,"\[RightBracketingBar]"}]]&/@basisLabels;
+    ketLabels=DisplayForm[RowBox[{"\[LeftBracketingBar]",#,"\[RightAngleBracket]"}]]&/@basisLabels;
+    LabeledGrid[hamMatrix,braLabels,ketLabels,"Separator"->OptionValue["Separator"],"Pivot"->OptionValue["Pivot"]]
+    )
 
 (* ###############################               MISC              ############################## *)
 (* ############################################################################################## *)
