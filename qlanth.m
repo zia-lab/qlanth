@@ -156,106 +156,6 @@ LoadGuillotParameters::usage = "";
 
 CFP::usage = "CFP[{n, NKSL}] provides a list whose first element echoes NKSL and whose other elements are lists with two elements the first one being the symbol of a parent term and the second being the corresponding coefficient of fractional parentage. n must satisfy 1 <= n <= 7";
 
-
-(* ############################################################################################## *)
-(* ############################################ Data ############################################ *)
-
-PrintTemporary["Loading data from Carnall ..."];
-carnallFname = FileNameJoin[{moduleDir, "data", "Carnall.m"}];
-Carnall = Import[carnallFname];
-Carnall::usage = "Association of data from Carnall et al (1989) with the following keys: {data, annotations, paramSymbols, elementNames, rawData, rawAnnotations, annnotatedData, appendix:Pr:Association, appendix:Pr:Calculated, appendix:Pr:RawTable, appendix:Headings}";
-
-PrintTemporary["Loading table with coefficients of fractional parentage ..."];
-CFPfname = FileNameJoin[{moduleDir, "data", "CFPs.m"}]
-If[!FileExistsQ[CFPfname],
-  (PrintTemporary[">> CFPs.m not found, generating ..."];
-    CFP = GenerateCFP[];
-  ),
-  CFP = Import[CFPfname];
-]
-CFP::usage = "CFP[n, termSymbol] provides the coefficients of fractional parentage for the given term termSymbol and number of electrons n.";
-
-PrintTemporary["Loading table of reduced matrix elements for unit tensor operators ..."]
-ReducedUkTableFname = FileNameJoin[{moduleDir, "data", "ReducedUkTable.m"}]
-If[!FileExistsQ[ReducedUkTableFname],
-  (PrintTemporary[">> ReducedUkTable.m not found, generating ..."];
-    ReducedUkTable = GenerateReducedUkTable[];
-  ),
-  ReducedUkTable = Import[ReducedUkTableFname];
-]
-ReducedUkTable::usage = "ReducedUkTable[{n, l = 3, SL, SpLp, k}] provides reduced matrix elements of the spherical tensor operator Uk. See Cowan (1981) section 11-9 \"Unit Tensor Operators\".";
-
-PrintTemporary["Loading table of matrix elements for the electrostatic interaction ..."];
-ElectrostaticMatrixTablefname = FileNameJoin[{moduleDir, "data", "ElectrostaticMatrixTable.m"}]
-If[!FileExistsQ[ElectrostaticMatrixTablefname],
-  (PrintTemporary[">> ElectrostaticMatrixTable.m not found, generating ..."];
-    ElectrostaticMatrixTable = GenerateElectrostaticMatrixTable[];
-  ),
-  ElectrostaticMatrixTable = Import[ElectrostaticMatrixTablefname];
-]
-
-ElectrostaticMatrixTable::usage = "ElectrostaticMatrixTable[{n, SL, SpLp}] provides the calculated result of ElectrostaticMatrix[n, SL, SpLp]."; 
-
-PrintTemporary["Loading table of matrix elements for Vk1 ..."];
-ReducedVk1TableFname = FileNameJoin[{moduleDir, "data", "ReducedVk1Table.m"}];
-If[!FileExistsQ[ReducedVk1TableFname],
-  (PrintTemporary[">> ReducedVk1Table.m not found, generating ..."];
-    ReducedVk1Table = GenerateVk1Table[7, True];
-  ),
-  ReducedVk1Table = Import[ReducedVk1TableFname];
-]
-
-PrintTemporary["Loading table of matrix elements for spin-orbit ..."];
-SpinOrbitTableFname = FileNameJoin[{moduleDir, "data", "SpinOrbitTable.m"}];
-If[!FileExistsQ[SpinOrbitTableFname],
-  (PrintTemporary[">> SpinOrbitTable.m not found, generating ..."];
-    SpinOrbitTable = GenerateSpinOrbitTable[7, True];
-  ),
-  SpinOrbitTable = Import[SpinOrbitTableFname];
-]
-
-Export[FileNameJoin[{moduleDir, "data", "ReducedAiZiTable.m"}], 
-  AiZiTable];
-
-PrintTemporary["Loading table of reduce AiZi matrix elements ..."];
-AiZiTableFname = FileNameJoin[{moduleDir, "data", "ReducedAiZiTable.m"}];
-If[!FileExistsQ[AiZiTableFname],
-  (PrintTemporary[">> ReducedAiZiTable.m not found, generating ..."];
-    AiZiTable = GenerateAiZiTable[7, True, True];
-  ),
-  AiZiTable = Import[AiZiTableFname];
-];
-
-PrintTemporary["Loading table of matrix elements for spin-other-orbit and electrostatically-correlated-spin-orbit ..."];
-SOOandECSOTableFname = FileNameJoin[{moduleDir, "data", "SOOandECSOTable.m"}];
-If[!FileExistsQ[SpinOrbitTableFname],
-  (PrintTemporary[">> SOOandECSOTable.m not found, generating ..."];
-    SOOandECSOTable = GenerateSOOandECSOTable[7, True];
-  ),
-  SOOandECSOTable = Import[SOOandECSOTableFname];
-]
-
-PrintTemporary["Loading table of reduce T22 matrix elements ..."];
-T22TableFname = FileNameJoin[{moduleDir, "data", "ReducedT22Table.m"}];
-If[!FileExistsQ[T22TableFname],
-  (PrintTemporary[">> ReducedT22Table.m not found, generating ..."];
-    T22Table = GenerateT22Table[7, True, True];
-  ),
-  T22Table = Import[T22TableFname];
-]
-
-PrintTemporary["Loading table of matrix elements for spin-spin ..."];
-SpinSpinTableFname = FileNameJoin[{moduleDir, "data", "SpinSpinTable.m"}];
-If[!FileExistsQ[SpinSpinTableFname],
-  (PrintTemporary[">> SpinSpinTable.m not found, generating ..."];
-    SpinSpinTable = GenerateSpinSpinTable[7, True];
-  ),
-  SpinSpinTable = Import[SpinSpinTableFname];
-]
-
-(* ############################################ Data ############################################ *)
-(* ############################################################################################## *)
-
 (* ############################################################################################## *)
 (* ################################### Racah Algebra Goodies #################################### *)
 
@@ -361,6 +261,7 @@ ElectrostaticMatrix[n_, NKSL_, NKSLp_]:= Module[
 (* ############################################################################################## *)
 (* ####################################### Table Generation Functions ########################### *)
 
+GenerateCFP::usage = "Generates the tables for the coefficients of fractional parentage. Results are exported to the file CFP.m";
 GenerateCFP[export_:True]:= (
   CFP = Table[
     {n, NKSL} -> First[CFPterms[n, NKSL]],
@@ -372,7 +273,49 @@ GenerateCFP[export_:True]:= (
   ];
   Return[CFP];
 )
-GenerateCFP::usage = "Generates the tables for the coefficients of fractional parentage. Results are exported to the file CFP.m";
+
+GenerateCFPAssoc::usage = "GenerateCFPAssoc[export] converts the coefficients of fractional parentage into an association in which zero values are explicit. If export is True, the association is exported to the file CFPAssoc.m.";
+GenerateCFPAssoc[export_:True]:= (
+  CFPAssoc = Association[];
+  Do[
+    (daughterTerms = AllowedNKSLterms[\[CapitalNu]];
+    parentTerms    = AllowedNKSLterms[\[CapitalNu] - 1];
+    Do[
+      (
+      cfps = CFP[{\[CapitalNu], daughter}];
+      cfps = cfps[[2 ;;]];
+      parents = First /@ cfps;
+      Do[
+        (
+        key = {\[CapitalNu], daughter, parent};
+        cfp = If[
+          MemberQ[parents, parent],
+          (
+            idx = Position[parents, parent][[1, 1]];
+            cfps[[idx]][[2]]
+            ),
+          (
+            0
+            )
+          ];
+        CFPAssoc[key] = cfp;
+        ),
+        {parent, parentTerms}
+        ]
+      ),
+      {daughter, daughterTerms}
+      ]
+    ),
+    {\[CapitalNu], 2, 7}
+    ];
+  If[export,
+    (
+    CFPAssocfname = FileNameJoin[{moduleDir, "data", "CFPAssoc.m"}];
+    Export[CFPAssocfname, CFPAssoc];
+    )
+  ];
+  Return[CFPAssoc];
+)
 
 GenerateElectrostaticMatrixTable[export_:True]:= (
   ElectrostaticMatrixTable = Table[
@@ -2115,6 +2058,112 @@ HamiltonianForm[hamMatrix_, basisLabels_, OptionsPattern[]]:=(
     )
 
 (* ###############################               MISC              ############################## *)
+(* ############################################################################################## *)
+
+(* ############################################################################################## *)
+(* ############################################ Data ############################################ *)
+
+PrintTemporary["Loading data from Carnall ..."];
+carnallFname = FileNameJoin[{moduleDir, "data", "Carnall.m"}];
+Carnall = Import[carnallFname];
+Carnall::usage = "Association of data from Carnall et al (1989) with the following keys: {data, annotations, paramSymbols, elementNames, rawData, rawAnnotations, annnotatedData, appendix:Pr:Association, appendix:Pr:Calculated, appendix:Pr:RawTable, appendix:Headings}";
+
+PrintTemporary["Loading table with coefficients of fractional parentage ..."];
+CFPfname = FileNameJoin[{moduleDir, "data", "CFPs.m"}]
+If[!FileExistsQ[CFPfname],
+  (PrintTemporary[">> CFPs.m not found, generating ..."];
+    CFP = GenerateCFP[];
+  ),
+  CFP = Import[CFPfname];
+]
+CFP::usage = "CFP[n, termSymbol] provides the coefficients of fractional parentage for the given term termSymbol and number of electrons n.";
+
+PrintTemporary["Loading association with coefficients of fractional parentage ..."];
+CFPAfname = FileNameJoin[{moduleDir, "data", "CFPAssoc.m"}]
+If[!FileExistsQ[CFPAfname],
+  (PrintTemporary[">> CFPAssoc.m not found, generating ..."];
+    CFPAssoc = GenerateCFPAssoc[True];
+  ),
+  CFPAssoc = Import[CFPAfname];
+]
+CFPAssoc::usage = " CFPAssoc is an association where keys are of lists of the form {num_electrons, daugherTerm, parentTerm} and values are the corresponding coefficients of fractional parentage. The terms given in string-spectroscopic notation. If a certain daughter term does not have a parent term, the value is 0.";
+
+PrintTemporary["Loading table of reduced matrix elements for unit tensor operators ..."]
+ReducedUkTableFname = FileNameJoin[{moduleDir, "data", "ReducedUkTable.m"}]
+If[!FileExistsQ[ReducedUkTableFname],
+  (PrintTemporary[">> ReducedUkTable.m not found, generating ..."];
+    ReducedUkTable = GenerateReducedUkTable[];
+  ),
+  ReducedUkTable = Import[ReducedUkTableFname];
+]
+ReducedUkTable::usage = "ReducedUkTable[{n, l = 3, SL, SpLp, k}] provides reduced matrix elements of the spherical tensor operator Uk. See Cowan (1981) section 11-9 \"Unit Tensor Operators\".";
+
+PrintTemporary["Loading table of matrix elements for the electrostatic interaction ..."];
+ElectrostaticMatrixTablefname = FileNameJoin[{moduleDir, "data", "ElectrostaticMatrixTable.m"}]
+If[!FileExistsQ[ElectrostaticMatrixTablefname],
+  (PrintTemporary[">> ElectrostaticMatrixTable.m not found, generating ..."];
+    ElectrostaticMatrixTable = GenerateElectrostaticMatrixTable[];
+  ),
+  ElectrostaticMatrixTable = Import[ElectrostaticMatrixTablefname];
+]
+
+ElectrostaticMatrixTable::usage = "ElectrostaticMatrixTable[{n, SL, SpLp}] provides the calculated result of ElectrostaticMatrix[n, SL, SpLp]."; 
+
+PrintTemporary["Loading table of matrix elements for Vk1 ..."];
+ReducedVk1TableFname = FileNameJoin[{moduleDir, "data", "ReducedVk1Table.m"}];
+If[!FileExistsQ[ReducedVk1TableFname],
+  (PrintTemporary[">> ReducedVk1Table.m not found, generating ..."];
+    ReducedVk1Table = GenerateVk1Table[7, True];
+  ),
+  ReducedVk1Table = Import[ReducedVk1TableFname];
+]
+
+PrintTemporary["Loading table of matrix elements for spin-orbit ..."];
+SpinOrbitTableFname = FileNameJoin[{moduleDir, "data", "SpinOrbitTable.m"}];
+If[!FileExistsQ[SpinOrbitTableFname],
+  (PrintTemporary[">> SpinOrbitTable.m not found, generating ..."];
+    SpinOrbitTable = GenerateSpinOrbitTable[7, True];
+  ),
+  SpinOrbitTable = Import[SpinOrbitTableFname];
+]
+
+PrintTemporary["Loading table of reduce AiZi matrix elements ..."];
+AiZiTableFname = FileNameJoin[{moduleDir, "data", "ReducedAiZiTable.m"}];
+If[!FileExistsQ[AiZiTableFname],
+  (PrintTemporary[">> ReducedAiZiTable.m not found, generating ..."];
+    AiZiTable = GenerateAiZiTable[7, True, True];
+  ),
+  AiZiTable = Import[AiZiTableFname];
+];
+
+PrintTemporary["Loading table of matrix elements for spin-other-orbit and electrostatically-correlated-spin-orbit ..."];
+SOOandECSOTableFname = FileNameJoin[{moduleDir, "data", "SOOandECSOTable.m"}];
+If[!FileExistsQ[SpinOrbitTableFname],
+  (PrintTemporary[">> SOOandECSOTable.m not found, generating ..."];
+    SOOandECSOTable = GenerateSOOandECSOTable[7, True];
+  ),
+  SOOandECSOTable = Import[SOOandECSOTableFname];
+]
+
+PrintTemporary["Loading table of reduce T22 matrix elements ..."];
+T22TableFname = FileNameJoin[{moduleDir, "data", "ReducedT22Table.m"}];
+If[!FileExistsQ[T22TableFname],
+  (PrintTemporary[">> ReducedT22Table.m not found, generating ..."];
+    T22Table = GenerateT22Table[7, True, True];
+  ),
+  T22Table = Import[T22TableFname];
+]
+
+PrintTemporary["Loading table of matrix elements for spin-spin ..."];
+SpinSpinTableFname = FileNameJoin[{moduleDir, "data", "SpinSpinTable.m"}];
+If[!FileExistsQ[SpinSpinTableFname],
+  (PrintTemporary[">> SpinSpinTable.m not found, generating ..."];
+    SpinSpinTable = GenerateSpinSpinTable[7, True];
+  ),
+  SpinSpinTable = Import[SpinSpinTableFname];
+]
+
+(* ############################################ Data ############################################ *)
 (* ############################################################################################## *)
 
 EndPackage[]
