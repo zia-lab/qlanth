@@ -1743,7 +1743,7 @@ EnergyMatrixFileName[n_, IiN_] := (
   );
 
 SolveStates::usage = 
-"SolveStates[nf, IiN] solves the energy values and states for an atom with n f-electrons with a nucleus of spin IiN. This function assumes that all the parameters that determine the Hamiltonian for a specific ion in a specific host have already been loaded into the session; these can be loaded by using the function LoadGuillotParameters.
+"SolveStates[nf, IiN, params] solves the energy values and states for an atom with n f-electrons with a nucleus of spin IiN. params is an association with the parameters of the specific ion under study.
 This function also requires files for pre-computed energy matrix tables that provide the symbols EnergyMatrixTable[_, _, _, _, _].
 To account for configurations f^n with n > 7, particle-hole dualities are enforced for \[Zeta] and T_i.
 The unit for the returned energies is cm^-1.
@@ -1855,9 +1855,16 @@ ImportMZip[filename_] := (
 
 EnergyLevelDiagram::usage = "EnergyLevelDiagram[states] takes states and produces a visualization of its energy spectrum.
 The resultant visualization can be navigated by clicking and dragging to zoom in on a region, or by clicking and dragging horizontally while pressing Ctrl. Double-click to reset the view.";
-Options[EnergyLevelDiagram] = {"Title"->"", "ImageSize"->1000, "AspectRatio" -> 1/8, "Background"->"Automatic"};
+Options[EnergyLevelDiagram] = {
+  "Title"->"", 
+  "ImageSize"->1000, 
+  "AspectRatio" -> 1/8, 
+  "Background"->"Automatic",
+  "Epilog"->{}
+  };
 EnergyLevelDiagram[states_, OptionsPattern[]]:= (
   energies = First/@states;
+  epi = OptionValue["Epilog"];
   ExploreGraphics@ListPlot[Tooltip[{{#, 0}, {#, 1}}, {Quantity[#/8065.54429, "eV"], Quantity[#, 1/"Centimeters"]}] &/@ energies,
     Joined       -> True,
     PlotStyle    -> Black,
@@ -1869,7 +1876,8 @@ EnergyLevelDiagram[states_, OptionsPattern[]]:= (
     FrameStyle   -> Directive[15, Dashed, Thin],
     PlotLabel    -> Style[OptionValue["Title"], 15, Bold],
     Background   -> OptionValue["Background"],
-    FrameLabel   -> {"\!\(\*FractionBox[\(E\), SuperscriptBox[\(cm\), \(-1\)]]\)"}]
+    FrameLabel   -> {"\!\(\*FractionBox[\(E\), SuperscriptBox[\(cm\), \(-1\)]]\)"},
+    Epilog       -> epi]
 )
 
 ExploreGraphics::usage = 
