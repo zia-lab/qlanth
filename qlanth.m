@@ -1842,7 +1842,7 @@ ImportMZip[filename_] := (
   splitName     = FileNameSplit[filename];
   sourceDir     = FileNameJoin[splitName[[1 ;; -2]]];
   delTemplate   = StringTemplate["rm \"`rmFname`\""];
-  unzipTemplate = StringTemplate["cd `sourceDir`; unzip \"`source`\""];
+  unzipTemplate = StringTemplate["cd \"`sourceDir`\"; unzip \"`source`\""];
   unzipCmd      = unzipTemplate[<|"sourceDir" -> sourceDir, 
                                   "source" -> FileNameSplit[filename][[-1]]|>];
   Run[unzipCmd];
