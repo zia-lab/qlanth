@@ -454,6 +454,117 @@ GenerateSpinOrbitTable[nmax_:7, export_:False]:= (
   Return[SpinOrbitTable];
 )
 
+GenerateThreeBodyTable::usage = "GenerateThreeBodyTable[nmax, export] computes the matrix values for the three-body interaction for f^n configurations up to n = nmax. The function returns an Association whose keys are lists of the form {n, SL, SpLp}. If export is set to True, then the result is exported to the data subfolder for the folder in which this package is in.";
+GenerateThreeBodyTable[nmax_ : 7, export_ : False] := (
+  ti3fname = FileNameJoin[{moduleDir, "data", "ti3.m"}];
+  ti3 = Import[ti3fname];
+  
+  ti3PsiPsipStates[SL_, SpLp_, tnp_, k_] := 
+   Module[{Statesn1, tkvals, PositionofState, kposition, ii, Snt, 
+     Sntt, Lnt, Lntt, jj, S, L, Sp, Lp, tnk},
+    Statesn1 = 
+     Reverse[Sort[
+       Join[Thread[{AllowedNKSLterms[3], AllowedNKSLterms[3]}], 
+        Permutations[AllowedNKSLterms[3], {2}]]]];
+    For[ii = 1, ii <= Length[Statesn1], ii++, {
+      {Snt, Lnt} = findSL[Statesn1[[ii, 1]]];
+      {Sntt, Lntt} = findSL[Statesn1[[ii, 2]]];
+      If[Snt == Sntt && Lnt == Lntt, 
+       0, {Statesn1 = Delete[Statesn1, ii], ii = ii - 1}]}];
+    tkvals = {2, 3, 4, 6, 7, 8, 11, 12, 14, 15, 16, 17, 18, 19};
+    kposition = Position[tkvals, k][[1, 1]];
+    {S, L} = findSL[SL];
+    {Sp, Lp} = findSL[SpLp];
+    tnk = 0;
+    If[S == Sp && L == Lp,
+     PositionofState = 0;
+     jj = 1;
+     While[PositionofState == 0 && jj <= Length[Statesn1], 
+      If[Statesn1[[jj, 1]] == SL && Statesn1[[jj, 2]] == SpLp, 
+       PositionofState = jj, PositionofState = 0]; jj++];
+     If[PositionofState == 0, tnk = tnk + 0, 
+      tnk = tnp[[kposition, PositionofState]]], 0];
+     tnk
+    ];
+  
+  ti[n_, SL_, SpLp_, k_] := 
+   Module[{nn, S, L, Sp, Lp, cfpSL, cfpSpLp, parentSL, parentSpLp, 
+     tnk},
+    {S, L} = findSL[SL];
+    {Sp, Lp} = findSL[SpLp];
+    tnk = 0;
+    If[S == Sp && L == Lp,
+     (cfpSL = CFP[{n, SL}];
+      cfpSpLp = CFP[{n, SpLp}];
+      For[nn = 2, nn <= Length[cfpSL], nn++,
+       parentSL = Part[cfpSL, nn, 1];
+       tnk = (tnk
+          + Sum[
+           (cfpSL[[nn, 2]] 
+             *cfpSpLp[[mm, 2]] 
+             *tktable[{n - 1, parentSL, Part[cfpSpLp, mm, 1], k}]
+            ),
+           {mm, 2, Length[cfpSpLp]}]);
+       ]
+      )
+     ];
+    Return[n/(n - 3) tnk ];
+    ];
+
+  (*Calculate the matrix elements of t^i*)
+
+  tktable = Association[];
+  kvalues = {2, 3, 4, 6, 7, 8, 11, 12, 14, 15, 16, 17, 18, 19};
+  (*Initialize n=1,2*)
+  Do[
+   (
+    Do[
+     (
+      tktable[{n, SL, SpLp, k}] = Which[
+         n <= 2,
+         0,
+         n == 3,
+         Simplify[ti3PsiPsipStates[SL, SpLp, ti3, k]],
+         True,
+          Simplify[ti[n,  SL, SpLp, k]]
+         ];
+      ),
+     {SL,     AllowedNKSLterms[n]}, 
+     {SpLp, AllowedNKSLterms[n]}, 
+     {k, kvalues}
+     ];
+    PrintTemporary[
+     StringJoin["\[ScriptF]", ToString[n], " configuration complete"]];
+    ),
+    {n, 1, nmax}
+   ];
+
+  (*Now use those matrix elements to determine their sum as weighted by their corresponding strenghts Ti*)
+  Tparams = {T2, T3, T4, T6, T7, T8, T11, T12, T14, T15, T16, T17, 
+    T18, T19};
+  ThreeBodyTable = Association[];
+  Do[
+   Do[
+    ThreeBodyTable[{n, SL, SpLp}] = Sum[(
+        tktable[{n, SL, SpLp, kvalues[[kk]]}]
+         *Tparams[[kk]]),
+       {kk, 1, 14}];, 
+    {SL, AllowedNKSLterms[n]}, 
+    {SpLp, AllowedNKSLterms[n]}
+    ];
+   PrintTemporary[
+    StringJoin["\[ScriptF]", ToString[n], " matrix complete"]];,
+    {n, 1, nmax}];
+  If[export,
+   (
+    threeBodyTablefname = 
+     FileNameJoin[{moduleDir, "data", "ThreeBodyTable.m"}];
+    Export[threeBodyTablefname, ThreeBodyTable];
+    )
+   ];
+  Return[ThreeBodyTable];
+  )
+
 (* ############################# Spin Orbit ################################ *)
 (* ######################################################################### *)
 
@@ -1134,7 +1245,7 @@ TwoBodyNKSL[SL_, SpLp_] := Module[
 (* ######################################################################### *)
 
 Options[EnergyMatrix] = {"Sparse"->True};
-EnergyMatrix::usage = "EnergyMatrix[n, J, J', I, I'] provides the matrix element <J, I|H|J', I'> within the f^n configuration, it does this by adding the following interactions: Coulomb, spin-orbit, spin-other-orbit, electrostatically-correlated-spin-orbit, spin-spin, and crystal-field.";
+EnergyMatrix::usage = "EnergyMatrix[n, J, J', I, I'] provides the matrix element <J, I|H|J', I'> within the f^n configuration, it does this by adding the following interactions: Coulomb, spin-orbit, spin-other-orbit, electrostatically-correlated-spin-orbit, spin-spin, three-body interactions, and crystal-field.";
 EnergyMatrix[n_, J_, Jp_, Ii_, Ip_, CFTable_, OptionsPattern[]]:= (
   eMatrix = Table[
   subKron = ( KroneckerDelta[NKSLJM[[4]], NKSLJMp[[4]]]
@@ -1149,6 +1260,7 @@ EnergyMatrix[n_, J_, Jp_, Ii_, Ip_, CFTable_, OptionsPattern[]]:= (
         + SpinOrbitTable[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}]
         + SOOandECSOTable[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}]
         + SpinSpinTable[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}]
+        + ThreeBodyTable[{n, NKSLJM[[1]], NKSLJMp[[1]]}]
        )
       )
     ]
@@ -1743,8 +1855,9 @@ EnergyMatrixFileName[n_, IiN_] := (
   );
 
 SolveStates::usage = 
-"SolveStates[nf, IiN, params] solves the energy values and states for an atom with n f-electrons with a nucleus of spin IiN. params is an association with the parameters of the specific ion under study.
+"SolveStates[nf, IiN, params, \"maxEigenvalues\" -> maxE] solves the energy values and states for an atom with n f-electrons with a nucleus of spin IiN. params is an association with the parameters of the specific ion under study.
 This function also requires files for pre-computed energy matrix tables that provide the symbols EnergyMatrixTable[_, _, _, _, _].
+The optional parameter \"maxEigenvalues\" (default: \"All\") specifies the number of eigenvalues to be returned. If maxE is \"All\" then all eigenvalues are returned. If maxE is positive then the k largest (in absolute value) eigenvalues are returned. If maxE is negative then the k smallest (in absolute value) eigenvalues are returned.
 To account for configurations f^n with n > 7, particle-hole dualities are enforced for \[Zeta] and T_i.
 The unit for the returned energies is cm^-1.
 -----------------------
@@ -1752,9 +1865,13 @@ References:
 1. Sign inversion for \[Zeta]: Wybourne, Spectroscopic Properties of Rare Earths. 
 2. Sign inversion for {T2, T3, T4, T6, T7, T8}: Hansen and Judd, Matrix Elements of Scalar Three Electron Operators for the Atomic f Shell.";
 
-Options[SolveStates] = {"Return Symbolic Matrix" -> False};
+Options[SolveStates] = {"Return Symbolic Matrix" -> False,
+                        "maxEigenvalues" -> "All"};
 SolveStates[nf_, IiN_, params_, OptionsPattern[]]:= Module[
   {n, ii, jj, JMvals},
+  maxEigen = OptionValue["maxEigenvalues"];
+  (*#####################################*)
+  (*hole-particle equivalence enforcement*)
   (*#####################################*)
   (*hole-particle equivalence enforcement*)
   n = nf;
@@ -1774,10 +1891,19 @@ SolveStates[nf_, IiN_, params_, OptionsPattern[]]:= Module[
   EnergyMatrix = ArrayFlatten[EnergyMatrix];
   SymbolicMatrix = EnergyMatrix;
   EnergyMatrix = ReplaceInSparseArray[EnergyMatrix, params];
-  Print["The energy matrix has dimensions:", Dimensions[EnergyMatrix]];
+  problemSize = Dimensions[EnergyMatrix][[1]];
+  If[maxEigen!="All",
+  (If[Abs[maxEigen]>problemSize,
+    maxEigen="All"]
+    )
+    ];
+  PrintTemporary["The energy matrix has dimensions:", Dimensions[EnergyMatrix]];
   (*Solve for eigenvalues and eigenvectors.*)
   EnergyLevels = {};
-  {EigenvalueJM, EigenvectorJM} = Eigensystem[EnergyMatrix];
+  {EigenvalueJM, EigenvectorJM} = If[maxEigen=="All",
+                  Eigensystem[EnergyMatrix],
+                  Eigensystem[EnergyMatrix, maxEigen]
+                  ];
   EigenvalueJM = Re[EigenvalueJM];
   (*There might be a very small imaginary part.*)
   (*Print[{Dimensions@EigenvalueJM, Dimensions@EigenvectorJM}];*)
@@ -2169,6 +2295,15 @@ If[!FileExistsQ[SpinSpinTableFname],
     SpinSpinTable = GenerateSpinSpinTable[7, True];
   ),
   SpinSpinTable = Import[SpinSpinTableFname];
+]
+
+PrintTemporary["Loading table of matrix elements for three-body interactions ..."];
+ThreeBodyFname = FileNameJoin[{moduleDir, "data", "ThreeBodyTable.m"}];
+If[!FileExistsQ[ThreeBodyFname],
+  (PrintTemporary[">> ThreeBody.m not found, generating ..."];
+    ThreeBodyTable = GenerateThreeBodyTable[7, True];
+  ),
+  ThreeBodyTable = Import[ThreeBodyFname];
 ]
 
 (* ############################################ Data ############################################ *)
