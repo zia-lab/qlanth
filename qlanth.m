@@ -1279,19 +1279,37 @@ Return[eMatrix]
 EnergyStates[n_, J_, Ii_]:= AllowedNKSLJMIMforJIterms[n, J, Ii];
 
 Options[TabulateEnergyMatrixTable] = {"Sparse"->True}
-TabulateEnergyMatrixTable::usage = "TabulateEnergyMatrixTable[n, I] returns a list with three elements {EnergyMatrixTable, EnergyStatesTable, AllowedM}. EnergyMatrixTable is an Association with keys equal to lists of the form {n, J, Jp, Ii, Ii}. EnergyStatesTable is an association with keys equal to lists of the form {n, J, Ii}. AllowedM is a list with keys equal to lists of the form {n, J} and values equal to lists equal to the corresponding values of MJ.";
+TabulateEnergyMatrixTable::usage = "TabulateEnergyMatrixTable[n, I] returns a list with three elements {EnergyMatrixTable, EnergyStatesTable, AllowedM}. EnergyMatrixTable is an Association with keys equal to lists of the form {n, J, Jp, Ii, Ii}. EnergyStatesTable is an Association with keys equal to lists of the form {n, J, Ii}. AllowedM is another Association with keys equal to lists of the form {n, J} and values equal to lists equal to the corresponding values of MJ. It's unnecessary (and it won't work in this implementation) to give n > 7 given the equivalency between electron and hole configurations.";
 TabulateEnergyMatrixTable[n_, Ii_, CFTable_, OptionsPattern[]]:= (
   EnergyMatrixTable = <||>;
   EnergyStatesTable = <||>;
   AllowedM = <||>;
+  totalIterations = Length[AllowedJ[n]]^2;
+  template1 = StringTemplate["Iteration `numiter` of `totaliter`"];
+  template2 = StringTemplate["`remtime` min remaining"];
+  template4 = StringTemplate["Time elapsed = `runtime` min"];
+  numiter   = 0;
+  startTime = Now;
+  temp = PrintTemporary[
+    Dynamic[
+      Grid[{
+          {template1[<|"numiter"->numiter, "totaliter"->totalIterations|>]},
+          {template2[<|"remtime"->Round[QuantityMagnitude[UnitConvert[(Now-startTime)/(Max[1,numiter])*(totalIterations-numiter), "min"]], 0.1]|>]},
+          {template4[<|"runtime"->Round[QuantityMagnitude[UnitConvert[(Now-startTime), "min"]], 0.1]|>]},
+          {ProgressIndicator[numiter,{1,totalIterations}]}
+    }]
+  ]
+  ];
   Do[
     (EnergyMatrixTable[{n, J, Jp, Ii, Ii}] = EnergyMatrix[n, J, Jp, Ii, Ii, CFTable, "Sparse"->OptionValue["Sparse"]];
-     EnergyStatesTable[{n, J, Ii}]       = EnergyStates[n, J, Ii];
-     AllowedM[{n, J}]                   = Table[M, {J, minJ[n], maxJ[n]}, {M, -J, J}];
+     EnergyStatesTable[{n, J, Ii}]         = EnergyStates[n, J, Ii];
+     AllowedM[{n, J}]                      = Table[M, {J, minJ[n], maxJ[n]}, {M, -J, J}];
+     numiter += 1;
     ),
     {Jp, AllowedJ[n]},
     {J, AllowedJ[n]}
   ];
+  NotebookDelete[temp];
   Return[{EnergyMatrixTable, EnergyStatesTable, AllowedM}];
 )
 
@@ -1963,7 +1981,7 @@ ExportMZip[filename_, object_] := (
    );
 
 ImportMZip::usage = 
-  "ImportMZip[filename] decompresses the provided filename, and imports the enclosed .m file that it is assumed to contain. After being imported the uncompressed file is deleted from disk. The provided filename bust be a full path, and end with .zip. This probably won't work on a PC.";
+  "ImportMZip[filename] decompresses the provided filename, and imports the enclosed .m file that it is assumed to contain. After being imported the uncompressed file is deleted from disk. The provided filename must be a full path, and end with .zip. This probably won't work on a PC.";
 ImportMZip[filename_] := (
   splitName     = FileNameSplit[filename];
   sourceDir     = FileNameJoin[splitName[[1 ;; -2]]];
