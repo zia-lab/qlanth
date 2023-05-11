@@ -108,6 +108,21 @@ paramSymbols = Select[paramSymbols, # != ""& ];
 paramSymbols = ToExpression[StringSplit[#, ":"][[1]]] & /@ paramSymbols;
 Protect /@ paramSymbols;
 
+Options[ParamPad] = {"Print" -> True}
+
+ParamPad::usage = 
+  "ParamPad[params] takes an Association params whose keys are a subset of paramSymbols. The function returns a new Association where all the keys not present in the given association, will also present in the given association, with their values set to zero.
+  The function additionally takes an option \"Print\" that if set to True, will print the symbols that were not present in the given association, default is True.";
+ParamPad[params_, OptionsPattern[]] := (
+  notPresentSymbols = Complement[paramSymbols, Keys[params]];
+  If[OptionValue["Print"], Print["Symbols not in given params: ", notPresentSymbols]];
+  newParams = Transpose[{paramSymbols, ConstantArray[0, Length[paramSymbols]]}];
+  newParams = (#[[1]] -> #[[2]]) & /@ newParams;
+  newParams = Association[newParams];
+  newParams = Join[newParams, params];
+  Return[newParams];
+  )
+
 cfSymbols = {B02, B04, B06, B12, B14, B16, B22, B24, B26, B34, B36, 
    B44, B46, B56, B66, S12, S14, S16, S22, S24, S26, S34, S36, S44, 
    S46, S56, S66};
@@ -1872,6 +1887,18 @@ EnergyMatrixFileName[n_, IiN_] := (
   Return[fname];
   );
 
+HoleElectronConjugation::usage = "HoleElectronConjugation[params] takes the parameters that define a configuration and converts them so that they may be interpreted under its conjugate configuration.";
+
+HoleElectronConjugation[params_] := (
+  newParams = params;
+  flipSignsOf = {\[Zeta], T2, T3, T4, T6, T7, T8};
+  (* flipSignsOf = Join[flipSignsOf, cfSymbols]; *)
+  Do[
+    (newParams[flipper] = -newParams[flipper]), 
+  {flipper, flipSignsOf}];
+  Return[newParams];
+  )
+
 SolveStates::usage = 
 "SolveStates[nf, IiN, params, \"maxEigenvalues\" -> maxE] solves the energy values and states for an atom with n f-electrons with a nucleus of spin IiN. params is an association with the parameters of the specific ion under study.
 This function also requires files for pre-computed energy matrix tables that provide the symbols EnergyMatrixTable[_, _, _, _, _].
@@ -1885,17 +1912,19 @@ References:
 
 Options[SolveStates] = {"Return Symbolic Matrix" -> False,
                         "maxEigenvalues" -> "All"};
-SolveStates[nf_, IiN_, params_, OptionsPattern[]]:= Module[
+SolveStates[nf_, IiN_, params0_, OptionsPattern[]]:= Module[
   {n, ii, jj, JMvals},
   maxEigen = OptionValue["maxEigenvalues"];
   (*#####################################*)
   (*hole-particle equivalence enforcement*)
-  (*#####################################*)
-  (*hole-particle equivalence enforcement*)
   n = nf;
-  (*If[nf>7, (n = 14-nf;(*hole-particle equivalence*)
-  {\[Zeta], T2, T3, T4, T6, T7, T8} = -{\[Zeta], T2, T3, T4, T6, T7, T8};
-  )];*)
+  If[nf>7, 
+  (
+    n = 14-nf; (*hole-particle equivalence*)
+    params = HoleElectronConjugation[params0];
+  ),
+    params = params0;
+  ];
   (*hole-particle equivalence enforcement*)
   (*#####################################*)
   (*Load symbolic expressions for energy sub-matrices.*)
@@ -2213,6 +2242,223 @@ HamiltonianForm[hamMatrix_, basisLabels_, OptionsPattern[]]:=(
 (* ############################################################################################## *)
 
 (* ############################################################################################## *)
+(* ####################################### Ion-Solvers ########################################## *)
+
+
+ErbiumSolver::usage = "ErbiumSolver[numSuperCycles, numSols, solverIterations] runs the solver for the Erbium problem. The solver is run for numSuperCycles super cycles, each of which consists of numSols solutions.
+
+Inspect the code to modify a number of other parameters that can also be tweaked.
+
+The solver returns a list of numSols solutions, each of which is a list of the form {startingPoint, solution}. Where startingPoint is the starting point for the solution, and solution is a list whose first element is the minimum value for the RMS errror and whose second element is an list of replacement rules for the Hamiltonian parameters.
+
+This solver is rather ad-hoc, but it works well enough for the Erbium problem. But is left here since it will surely be helpful in other cases.
+
+The matrices that are needed for the solver are imported from the file ./data/Erbium-Solver-Toolbits.m. This file contains the ansatz data from Carnall for Er3+ in LaF3. It also contains a template used to call FindMinimum with different chose varialbes. And most importantly, it contains a function that allows for efficient creation of the matrix that is diagonalized in the solver.
+
+The starting values for the solution parameters are taken from Carnall's data for LaF3:Er3+. The different solutions returned by this function differ in how the signs of {B02, B04, B06, B22, B24, B26, B44, B46, B66, M0, P2, T2, T3, T4, T6, T7, T8} are randomly changed from the Carnall data on lanthanum fluoride.
+
+The solver uses the following steps: 1) First only E1, E2, E3, α, β, γ, ζ are allowed to vary. 2) Then all parameters are allowed to vary. 3) Then only the crystal field parameters are allowed to vary. 4) Then only {M0,P2,T2,T3,T4,T6,T7,T8} are allowed to vary. 5) Finally all parameters are allowed to vary again. This sequency is repeated numSuperCycles times.
+
+The solver uses the QuasiNewton method option in FindMinimum.
+
+The solverIterations argument is a list of the number of iterations for each of the 5 solver steps. The default is solverIterations = {100, 200, 100, 100, 400}. 
+
+The experimental data used here is from Gruber et al. - 1993 - Energy levels and correlation crystal-field effects in Er3+ doped garnets.
+
+The solver creates a progress notebook that can be used to monitor the progress of the solver. The progress notebook can be closed at any time, the solver will continue to run in the background.
+
+The following is the string used for the solverTemplate template:
+
+  ansatz=`chosenVarListR`;
+  vars=Transpose[{
+  `chosenVarList`,
+  ansatz}];
+  partialSol=FindMinimum[
+  SumOSquares[`B02`,`B04`,`B06`,`B22`,`B24`,`B26`,`B44`,`B46`,`B66`,
+  `E1`,`E2`,`E3`,`M0`,`P2`,`T2`,`T3`,`T4`,`T6`,`T7`,`T8`,`\[Alpha]`,`\
+  \[Beta]`,`\[Gamma]`,`\[Zeta]`],
+  vars,
+  MaxIterations->maxIters,
+  Method->\" QuasiNewton \",
+  StepMonitor:>(
+  rmsHistory=AddToList[rmsHistory,SumOSquares[`B02`,`B04`,`B06`,`B22`,`\
+  B24`,`B26`,`B44`,`B46`,`B66`,`E1`,`E2`,`E3`,`M0`,`P2`,`T2`,`T3`,`T4`,`\
+  T6`,`T7`,`T8`,`\[Alpha]`,`\[Beta]`,`\[Gamma]`,`\[Zeta]`],maxHistory];
+  paramSols=AddToList[paramSols,{`B02`,`B04`,`B06`,`B22`,`B24`,`B26`,`\
+  B44`,`B46`,`B66`,`E1`,`E2`,`E3`,`M0`,`P2`,`T2`,`T3`,`T4`,`T6`,`T7`,`\
+  T8`,`\[Alpha]`,`\[Beta]`,`\[Gamma]`,`\[Zeta]`},maxHistory];
+  )
+  ];
+  `chosenVarListR`= Last/@partialSol[[2]];
+
+";
+
+ErbiumSolver[numSuperCycles_, numSols_, solverIterations_:{100, 200, 100, 100, 400}]:=(
+
+{numIter0, numIter1, numIter2, numIter3, numIter4} = solverIterations;
+AddToList[list_, element_, maxSize_] := 
+Module[{tempList = Append[list, element]}, 
+  If[Length[tempList] > maxSize, 
+  Drop[tempList, Length[tempList] - maxSize], tempList]];
+
+ProgressNotebook[] := (
+  nb = CreateDocument[
+    (
+    Dynamic[GraphicsColumn[{
+        ListPlot[rmsHistory,
+        PlotMarkers -> "OpenMarkers",
+        Frame -> True,
+        FrameLabel -> {"Iteration", "RMS"},
+        ImageSize -> 800,
+        AspectRatio -> 1/3,
+        FrameStyle -> Directive[Thick, 15],
+        
+        PlotLabel -> 
+          If[Length[rmsHistory] != 0, rmsHistory[[-1]], ""]],
+        ListPlot[(#/#[[1]]) & /@ Transpose[paramSols],
+        Joined -> True,
+        PlotRange -> {All, {-5, 5}},
+        Frame -> True,
+        ImageSize -> 800,
+        AspectRatio -> 1,
+        FrameStyle -> Directive[Thick, 15],
+        FrameLabel -> {"Iteration", "Params"}]
+        }], TrackedSymbols :> {rmsHistory, paramSols}]
+    ),
+    WindowSize -> {590, 750},
+    WindowSelected -> True,
+    WindowTitle -> "Solver Progress"];
+  Return[nb];
+  );
+solutions = {};
+
+Do[(
+  (
+   trunk = Import["./data/Er-Solver-Toolbits.m"];
+   carnallAnsatz = trunk["carnallAnsatz"];
+   fMatrix = trunk["fMatrix"];
+   expData = trunk["expData"];
+   picker = trunk["picker"];
+   solverTemplate = trunk["solverTemplate"];
+   LogSol[init_, final_] := (
+     (*fname=StringJoin["sols-"]<>ToString[UnixTime[]]<>".m";*)
+     fname = "sols-" <> CreateUUID[] <> ".m";
+     optimum = final[[1]];
+     Print["Saving to", fname];
+     exporter = 
+      Association[{"start" -> init, "bestRMS" -> optimum, 
+        "end" -> final[[2]]}];
+     Export[fname, exporter]
+     );
+   ClearAll[SumOSquares];
+   SumOSquares[B02v_?NumericQ, B04v_?NumericQ, B06v_?NumericQ, 
+     B22v_?NumericQ, B24v_?NumericQ, B26v_?NumericQ, B44v_?NumericQ, 
+     B46v_?NumericQ, B66v_?NumericQ, E1v_?NumericQ, E2v_?NumericQ, 
+     E3v_?NumericQ, M0v_?NumericQ, P2v_?NumericQ, T2v_?NumericQ, 
+     T3v_?NumericQ, T4v_?NumericQ, T6v_?NumericQ, T7v_?NumericQ, 
+     T8v_?NumericQ, \[Alpha]v_?NumericQ, \[Beta]v_?
+      NumericQ, \[Gamma]v_?NumericQ, \[Zeta]v_?NumericQ] := (
+     mat = 
+      fMatrix[B02v, B04v, B06v, B22v, B24v, B26v, B44v, B46v, B66v, 
+       E1v, E2v, E3v, M0v, P2v, T2v, T3v, T4v, T6v, T7v, 
+       T8v, \[Alpha]v, \[Beta]v, \[Gamma]v, \[Zeta]v];
+     eigenvals = Sort[Eigenvalues[mat, Method -> "Banded"]];
+     eigenvals = Chop[eigenvals - Min[eigenvals]];
+     eigenvals = eigenvals[[;; ;; 2]];
+     eigenvals = eigenvals[[;; 134]];
+     eigenvals = Pick[eigenvals, picker];
+     rms = Sqrt[Total[(eigenvals - expData)^2]/117.];
+     Return[rms];
+     );
+   );
+  numCycles = 4;
+  modelVars = {B02, B04, B06, B22, B24, B26, B44, B46, B66, E1, E2, 
+    E3, M0, P2, T2, T3, T4, T6, T7, 
+    T8, \[Alpha], \[Beta], \[Gamma], \[Zeta]};
+  maxHistory = 200;
+  rmsHistory = {};
+  paramSols = {};
+  
+  nb = ProgressNotebook[];
+  maxChosenVars = Length[modelVars];
+  minChosenVars = Ceiling[maxChosenVars/2];
+  tweakSigns = True;
+  
+  (*build initial ansatz*)
+  ansatz = (# -> carnallAnsatz[#]) & /@ {B02, B04, B06, B22, B24, B26,
+      B44, B46, B66, E1, E2, E3, M0, P2, T2, T3, T4, T6, T7, 
+     T8, \[Alpha], \[Beta], \[Gamma], \[Zeta], F2, F4, F6};
+  ansatz = Association[ansatz];
+  ansatz[E0] = 0;
+  ansatz[E1] = 
+   14*ansatz[F2]/405 + 7*ansatz[F4]/297 + 350*ansatz[F6]/11583;
+  ansatz[E2] = -ansatz[F2]/2025 - ansatz[F4]/3267 + 
+    175*ansatz[F6]/1656369;
+  ansatz[E3] = 
+   ansatz[F2]/135 + 2*ansatz[F4]/1089 - 175*ansatz[F6]/42471;
+  ansatz = 
+   ansatz[#] & /@ {B02, B04, B06, B22, B24, B26, B44, B46, B66, E1, 
+     E2, E3, M0, P2, T2, T3, T4, T6, T7, 
+     T8, \[Alpha], \[Beta], \[Gamma], \[Zeta]};
+  If[tweakSigns,
+   Do[ansatz[[i]] = 
+     RandomChoice[{1, -1}]*ansatz[[i]], {i, {1, 2, 3, 4, 5, 6, 7, 8, 
+      9, 13, 14, 15, 16, 17, 18, 19, 20}}]
+   ];
+  {B02r, B04r, B06r, B22r, B24r, B26r, B44r, B46r, B66r, E1r, E2r, 
+    E3r, M0r, P2r, T2r, T3r, T4r, T6r, T7r, 
+    T8r, \[Alpha]r, \[Beta]r, \[Gamma]r, \[Zeta]r} = ansatz[[;; 24]];
+  startingPoint = 
+   Association[(#[[1]] -> #[[2]]) & /@ Transpose[{modelVars, ansatz}]];
+
+  varConcerto = {
+    0 -> {numIter0, {E1, E2, E3, \[Alpha], \[Beta], \[Gamma], \[Zeta]}},
+    1 -> {numIter1, modelVars},
+    2 -> {numIter2, {B02, B04, B06, B22, B24, B26, B44, B46, B66}},
+    3 -> {numIter3, {M0, P2, T2, T3, T4, T6, T7, T8}},
+    4 -> {numIter4, modelVars}};
+  varConcerto = Association[varConcerto];
+  loopMessage = StringTemplate["Cycle `numCycle`/`allCycles`"];
+  Off[FindMinimum::lstol];
+  Off[FindMinimum::cvmit];
+  
+  Do[
+   Do[(
+     {maxIters, chosenVars} = varConcerto[cycle];
+     frozenVars = Complement[modelVars, chosenVars];
+     frozenReps = (ToString[#] -> ToString[#] <> "r") & /@ 
+       frozenVars;
+     varyingReps = (ToString[#] -> ToString[#]) & /@ chosenVars;
+     varyingRepsAnsatzBridge = (ToString[#] <> "r") & /@ chosenVars;
+     stringReps = Association[Join[frozenReps, varyingReps]];
+     stringReps["chosenVarList"] = ToString[chosenVars];
+     stringReps["chosenVarListR"] = 
+      ToString[varyingRepsAnsatzBridge];
+     solverString = solverTemplate[stringReps];
+     Print[
+      loopMessage[<|"numCycle" -> cycle, 
+        "allCycles" -> numCycles|>]];
+     Print["Using: ", chosenVars];
+     ToExpression[solverString];
+     ),
+    {cycle, 0, numCycles}],
+   {superCycle, 1, numSuperCycles}
+   ];
+  NotebookClose[nb];
+  Print[partialSol];
+  (* LogSol[startingPoint, partialSol]; *)
+  AppendTo[solutions,{startingPoint, partialSol}];
+  ),
+ {bigReps, 1, numSols}
+ ];
+ Return[solutions]
+);
+
+(* ####################################### Ion-Solvers ########################################## *)
+(* ############################################################################################## *)
+
+
+(* ############################################################################################## *)
 (* ############################################ Data ############################################ *)
 
 PrintTemporary["Loading data from Carnall ..."];
@@ -2326,5 +2572,7 @@ If[!FileExistsQ[ThreeBodyFname],
 
 (* ############################################ Data ############################################ *)
 (* ############################################################################################## *)
+
+
 
 EndPackage[]
