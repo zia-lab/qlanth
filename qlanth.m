@@ -1263,6 +1263,7 @@ Options[EnergyMatrix] = {"Sparse"->True};
 EnergyMatrix::usage = "EnergyMatrix[n, J, J', I, I'] provides the matrix element <J, I|H|J', I'> within the f^n configuration, it does this by adding the following interactions: Coulomb, spin-orbit, spin-other-orbit, electrostatically-correlated-spin-orbit, spin-spin, three-body interactions, and crystal-field.";
 EnergyMatrix[n_, J_, Jp_, Ii_, Ip_, CFTable_, OptionsPattern[]]:= (
   eMatrix = Table[
+  (*Condition for a scalar matrix op*)
   subKron = ( KroneckerDelta[NKSLJM[[4]], NKSLJMp[[4]]]
           * KroneckerDelta[J, Jp]
           * KroneckerDelta[NKSLJM[[3]], NKSLJMp[[3]]]);
@@ -1358,6 +1359,43 @@ TabulateManyEnergyMatrixTables[ns_, Iis_, OptionsPattern[]]:= (
   ];
 Return[fNames];
 )
+
+HamMatrixAssembly::usage="HamMatrixAssembly[n, IiN] returns the Hamiltonian matrix for the f^n_i configuration with nuclear spin I_i. The matrix is returned as a SparseArray."
+
+HamMatrixAssembly[nf_, IiN_] := Module[
+  {n, ii, jj, JMvals},
+  (*#####################################*)
+  (*hole-particle equivalence enforcement*)
+  n = nf;
+  numFittedLevels = Total[If[#, 1, 0] & /@ picker];
+  allVars = {E0, E1, E2, E3, \[Zeta], F0, F2, F4, F6, M0, M2, M4, T2, 
+    T3, T4, T6, T7, T8, P0, P2, P4, P6, gs, 
+    gI, \[Alpha], \[Beta], \[Gamma], B02, B04, B06, B12, B14, B16, 
+    B22, B24, B26, B34, B36, B44, B46, B56, B66, S12, S14, S16, S22, 
+    S24, S26, S34, S36, S44, S46, S56, S66, T11, T12, T14, T15, T16, 
+    T17, T18, T19};
+  params0 = AssociationThread[allVars, allVars];
+
+  (*hole-particle equivalence*)
+  If[nf > 7, (n = 14 - nf;
+    params = HoleElectronConjugation[params0];),
+    params = params0;];
+
+  (*Load symbolic expressions for energy sub-matrices.*)
+  Get[EnergyMatrixFileName[n, IiN]];
+  (*Patch together the entire matrix representation in block-
+  diagonal form.*)
+  EnergyMatrix = 
+   ConstantArray[0, {Length[AllowedJ[n]], Length[AllowedJ[n]]}];
+  Do[EnergyMatrix[[jj, ii]] = 
+     EnergyMatrixTable[{n, AllowedJ[n][[ii]], AllowedJ[n][[jj]], IiN, 
+       IiN}];, {ii, 1, Length[AllowedJ[n]]},
+   {jj, 1, Length[AllowedJ[n]]}
+   ];
+  EnergyMatrix = ArrayFlatten[EnergyMatrix];
+  EnergyMatrix = ReplaceInSparseArray[EnergyMatrix, params];
+  Return[EnergyMatrix];
+  ]
 
 (* ####################################### Table Generation Functions ########################### *)
 (* ############################################################################################## *)
@@ -1936,8 +1974,8 @@ SolveStates[nf_, IiN_, params0_, OptionsPattern[]]:= Module[
     {jj, 1, Length[AllowedJ[n]]}
     ];
   EnergyMatrix = ArrayFlatten[EnergyMatrix];
-  SymbolicMatrix = EnergyMatrix;
   EnergyMatrix = ReplaceInSparseArray[EnergyMatrix, params];
+  SymbolicMatrix = EnergyMatrix;
   problemSize = Dimensions[EnergyMatrix][[1]];
   If[maxEigen!="All",
   (If[Abs[maxEigen]>problemSize,
@@ -1967,6 +2005,258 @@ SolveStates[nf_, IiN_, params0_, OptionsPattern[]]:= Module[
   ];
   Return[EnergyLevels];
 ];
+
+Options[FitToHam] = {
+   "LogSolution" -> False,
+   "TweakSigns" -> True,
+   "ProgressWindow" -> True};
+FitToHam::usage = "
+FitToHam can be use to fit the parameters of a given model Hamiltonian to a set of observed energy levels. The starting values are taken from Carnall's paper on LaF3, and if the option \"TweakSigns\" is set to True, then the signs of the parameters for the crystal field parameters are randomly switched. If the option \"LogSolution\" is set to True, then each of the found solutions is written to disk. If the option \"ProgressWindow\" is set to True, then a progress window is opened that shows the progress of the average root mean squared error together with a view of the changes in the fitted parameters, in this plot at most 200 values for all the parameters are shown, and all the values are normalized using the first element of the last 200 values.
+
+Parameters
+----------
+numElectons (int):
+ionSymbol (str): the atomic symbol for the corresponding ion.
+hamMatrix (List[List] or SparseArray): representing the model Hamiltonian with all its corresponding parameters.
+expData (List): energy values for the different levels in increasing order.
+simplifier (List): with replacement rules that are applied to modelMatrix. These replacement rules can be used to exclude certain parameters from the fitting, or to impose certain symmetry constraints.
+picker (List): a list of booleans that determine wheter the corresponding energy in expData will be used or not for fitting.
+numSuperCycles (int): the solver proceeds in stages, this value determines how many times this set of stages will be repeated.
+solverIterations (List): a list of integers that determines how many iterations will be run for each of the steps in the solver sequence. Must have as many values as varConcerto does.
+
+Returns
+-------
+solutions (List): a list of lists where the first element echoes back the starting values for the fit parameters and the second element equals a list where the first element is the minimum rms error and the second is an Association corresponding to the fitted parameters. 
+";
+FitToHam[numElectrons_,
+  ionSymbol_,
+  hamMatrix_,
+  expData_,
+  simplifier_,
+  picker_,
+  numSuperCycles_,
+  numSols_,
+  hostName_:"",
+  solverIterations_ : {100, 200, 100, 100, 400},
+  OptionsPattern[]] := (
+  Off[FindMinimum::lstol];
+  Off[FindMinimum::cvmit];
+  numFittedLevels = Total[If[#, 1, 0] & /@ picker];
+  startParams = Association[Carnall["data"][ionSymbol]];
+  (*For improved efficiency the given matrix needs to be converted to a CompiledFunction.*)
+  fitMatrix = ReplaceInSparseArray[hamMatrix, simplifier];
+  reps = 
+   Transpose[{{B02, B04, B06, B22, B24, B26, B44, B46, B66, E1, E2, 
+      E3, M0, P2, T2, T3, T4, T6, T7, 
+      T8, \[Alpha], \[Beta], \[Gamma], \[Zeta]},
+     {B02v, B04v, B06v, B22v, B24v, B26v, B44v, B46v, B66v, E1v, E2v, 
+      E3v, M0v, 
+      P2v, -T2v, -T3v, -T4v, -T6v, -T7v, -T8v, \[Alpha]v, \[Beta]v, \[Gamma]v, -\[Zeta]v}}];
+  reps = (#[[1]] -> #[[2]]) & /@ reps;
+  funMatrix = Normal[fitMatrix];
+  fMatrix = 
+   Compile[{B02v, B04v, B06v, B22v, B24v, B26v, B44v, B46v, B66v, E1v,
+      E2v, E3v, M0v, P2v, T2v, T3v, T4v, T6v, T7v, 
+     T8v, \[Alpha]v, \[Beta]v, \[Gamma]v, \[Zeta]v}, 
+    Evaluate[funMatrix /. reps]];
+  
+  {numIter0, numIter1, numIter2, numIter3, numIter4} = solverIterations;
+  (*This association is used to define the different stages in the solver.*)
+  varConcerto = {
+    0 -> {numIter0, {E1, E2, 
+       E3, \[Alpha], \[Beta], \[Gamma], \[Zeta]}},
+    1 -> {numIter1, modelVars},
+    2 -> {numIter2, {B02, B04, B06, B22, B24, B26, B44, B46, B66}}, 
+    3 -> {numIter3, {M0, P2, T2, T3, T4, T6, T7, T8}},
+    4 -> {numIter4, modelVars}};
+  varConcerto = Association[varConcerto];
+  
+  (* This template *)
+  solverTemplate = StringTemplate["
+ansatz=`chosenVarListR`;
+vars=Transpose[{`chosenVarList`,ansatz}];
+partialSol=FindMinimum[
+SumOSquares[`B02`,`B04`,`B06`,`B22`,`B24`,`B26`,`B44`,`B46`,`B66`,`E1`\
+,`E2`,`E3`,`M0`,`P2`,`T2`,`T3`,`T4`,`T6`,`T7`,`T8`,`\[Alpha]`,`\[Beta]\
+`,`\[Gamma]`,`\[Zeta]`],
+vars,
+MaxIterations->`maxIters`,
+Method->\"QuasiNewton\",
+StepMonitor:>(
+rmsHistory=AddToList[rmsHistory,SumOSquares[`B02`,`B04`,`B06`,`B22`,`\
+B24`,`B26`,`B44`,`B46`,`B66`,`E1`,`E2`,`E3`,`M0`,`P2`,`T2`,`T3`,`T4`,`\
+T6`,`T7`,`T8`,`\[Alpha]`,`\[Beta]`,`\[Gamma]`,`\[Zeta]`],maxHistory];
+paramSols=AddToList[paramSols,{`B02`,`B04`,`B06`,`B22`,`B24`,`B26`,`\
+B44`,`B46`,`B66`,`E1`,`E2`,`E3`,`M0`,`P2`,`T2`,`T3`,`T4`,`T6`,`T7`,`\
+T8`,`\[Alpha]`,`\[Beta]`,`\[Gamma]`,`\[Zeta]`},maxHistory];
+)
+];
+`chosenVarListR`= Last/@partialSol[[2]];
+"];
+  
+  AddToList[list_, element_, maxSize_] := Module[{
+     tempList = Append[list, element]},
+    If[Length[tempList] > maxSize,
+     Drop[tempList,
+      Length[tempList] - maxSize],
+     tempList]
+    ];
+
+  progressTemplate = StringTemplate["\[Sigma]=`rms` | `elapsedTime`"];
+  ProgressNotebook[] := (nb = CreateDocument[(
+       Dynamic[
+        GraphicsColumn[{
+          ListPlot[rmsHistory,
+           PlotMarkers -> "OpenMarkers",
+           Frame -> True,
+           FrameLabel -> {"Iteration", "RMS"},
+           ImageSize -> 800,
+           AspectRatio -> 1/3,
+           FrameStyle -> Directive[Thick, 15], 
+           PlotLabel -> If[Length[rmsHistory] != 0, progressTemplate[<|"rms" -> rmsHistory[[-1]], "elapsedTime" -> (Now - startTime)|>], ""]
+            ], 
+          ListPlot[(#/#[[1]]) & /@ Transpose[paramSols],
+           Joined -> True,
+           PlotRange -> {All, {-5, 5}},
+           Frame -> True,
+           ImageSize -> 800,
+           AspectRatio -> 1,
+           FrameStyle -> Directive[Thick, 15],
+           FrameLabel -> {"Iteration", "Params"}]}], 
+        TrackedSymbols :> {rmsHistory, paramSols}
+        ]),
+      WindowSize -> {590, 750},
+      WindowSelected -> True,
+      WindowTitle -> "Solver Progress"];
+    Return[nb];
+    );
+  
+  LogSol[init_, final_, solHistory_, prefix_:""] := (
+    fname = prefix <> "-sols-" <> CreateUUID[] <> ".m";
+    optimum = final[[1]];
+    Print["Saving solution to: ", fname];
+    exporter = 
+     Association[{"start" -> init, 
+       "bestRMS" -> optimum,
+       "solHistory" -> solHistory,
+       "prefix" -> prefix,
+       "end" -> final[[2]]}];
+    Export[fname, exporter]);
+  
+  solutions = {};
+  Do[
+   (
+    ClearAll[SumOSquares];
+    SumOSquares[
+      B02v_?NumericQ, B04v_?NumericQ, B06v_?NumericQ,
+      B22v_?NumericQ, B24v_?NumericQ, B26v_?NumericQ,
+      B44v_?NumericQ, B46v_?NumericQ, B66v_?NumericQ,
+      E1v_?NumericQ, E2v_?NumericQ, E3v_?NumericQ,
+      M0v_?NumericQ, P2v_?NumericQ, T2v_?NumericQ,
+      T3v_?NumericQ, T4v_?NumericQ, T6v_?NumericQ,
+      T7v_?NumericQ, T8v_?NumericQ, \[Alpha]v_?NumericQ,
+      \[Beta]v_?NumericQ, \[Gamma]v_?NumericQ, \[Zeta]v_?NumericQ] := (
+      mat = 
+       fMatrix[B02v, B04v, B06v, B22v, B24v, B26v, B44v, B46v, B66v, 
+        E1v, E2v, E3v, M0v, P2v, T2v, T3v, T4v, T6v, T7v, 
+        T8v, \[Alpha]v, \[Beta]v, \[Gamma]v, \[Zeta]v];
+      eigenvals = Sort[Eigenvalues[mat, Method -> "Banded"]];
+      eigenvals = Chop[eigenvals - Min[eigenvals]];
+      eigenvals = eigenvals[[;; ;; 2]];
+      eigenvals = eigenvals[[;; 134]];
+      eigenvals = Pick[eigenvals, picker];
+      rms = Sqrt[Total[(eigenvals - expData)^2]/numFittedLevels];
+      Return[rms];
+      );
+    
+    numCycles = 4;
+    modelVars = {B02, B04, B06, B22, B24, B26, B44, B46, B66, E1, E2, 
+      E3, M0, P2, T2, T3, T4, T6, T7, 
+      T8, \[Alpha], \[Beta], \[Gamma], \[Zeta]};
+    maxHistory = 200;
+    rmsHistory = {};
+    paramSols = {};
+    startTime = Now;
+    If[OptionValue["ProgressWindow"],
+     nb = ProgressNotebook[];
+     ];
+    maxChosenVars = Length[modelVars];
+    minChosenVars = Ceiling[maxChosenVars/2];
+    
+    ansatz = (# -> startParams[#]) & /@ {B02, B04, B06, B22, B24, B26,
+        B44, B46, B66, E1, E2, E3, M0, P2, T2, T3, T4, T6, T7, 
+       T8, \[Alpha], \[Beta], \[Gamma], \[Zeta], F2, F4, F6};
+    ansatz = Association[ansatz];
+    
+    (*Convert from Fs to Es*)
+    ansatz[E0] = 0;
+    ansatz[E1] = 
+     14/405*ansatz[F2] + 7/297*ansatz[F4] + 350/11583*ansatz[F6];
+    ansatz[E2] = -1/2025 ansatz[F2] - 1/3267 ansatz[F4] + 
+      175/1656369*ansatz[F6];
+    ansatz[E3] = 
+     1/135 ansatz[F2] + 2/1089*ansatz[F4] - 175/42471*ansatz[F6];
+    ansatz = 
+     ansatz[#] & /@ {B02, B04, B06, B22, B24, B26, B44, B46, B66, E1, 
+       E2, E3, M0, P2, T2, T3, T4, T6, T7, 
+       T8, \[Alpha], \[Beta], \[Gamma], \[Zeta]};
+    
+    If[OptionValue["TweakSigns"],
+     Do[
+      ansatz[[i]] = 
+       RandomChoice[{1, -1}]*ansatz[[i]], {i, {1, 2, 3, 4, 5, 6, 7, 8,
+         9, 13, 14, 15, 16, 17, 18, 19, 20}}
+      ]
+     ];
+    
+    {B02r, B04r, B06r, B22r, B24r, B26r, B44r, B46r, B66r, E1r, E2r, 
+      E3r, M0r, P2r, T2r, T3r, T4r, T6r, T7r, 
+      T8r, \[Alpha]r, \[Beta]r, \[Gamma]r, \[Zeta]r} = ansatz[[;; 24]];
+    startingPoint = 
+     Association[(#[[1]] -> #[[2]]) & /@ 
+       Transpose[{modelVars, ansatz}]];
+    
+    loopMessage = StringTemplate["Cycle `numCycle`/`allCycles`"];
+    
+    Do[
+     Do[
+      (
+       {maxIters, chosenVars} = varConcerto[cycle];
+       frozenVars = Complement[modelVars, chosenVars];
+       frozenReps = (ToString[#] -> ToString[#] <> "r") & /@ 
+         frozenVars;
+       varyingReps = (ToString[#] -> ToString[#]) & /@ chosenVars;
+       varyingRepsAnsatzBridge = (ToString[#] <> "r") & /@ 
+         chosenVars;
+       stringReps = Association[Join[frozenReps, varyingReps]];
+       stringReps["chosenVarList"] = ToString[chosenVars];
+       stringReps["chosenVarListR"] = 
+        ToString[varyingRepsAnsatzBridge];
+       stringReps["maxIters"] = 
+        ToString[solverIterations[[cycle + 1]]];
+       solverString = solverTemplate[stringReps];
+       pt = PrintTemporary[
+        loopMessage[<|"numCycle" -> (cycle+1), 
+          "allCycles" -> (numCycles+1)|>]," : ","Using: ", chosenVars];
+       ToExpression[solverString];
+       NotebookDelete[pt];
+       ),
+      {cycle, 0, numCycles}
+      ],
+     {superCycle, 1, numSuperCycles}
+     ];
+    If[OptionValue["ProgressWindow"],
+     NotebookClose[nb];
+     ];
+    If[OptionValue["LogSolution"],
+     LogSol[startingPoint, partialSol, paramSols, ionSymbol<>"-"<>hostName];
+     ];
+    AppendTo[solutions, {startingPoint, partialSol}];
+    ),
+   {bigReps, 1, numSols}
+   ];
+  Return[solutions]
+  )
 
 (* ###############################              SOLVERS            ############################## *)
 (* ############################################################################################## *)
@@ -2340,14 +2630,14 @@ Do[(
    expData = trunk["expData"];
    picker = trunk["picker"];
    solverTemplate = trunk["solverTemplate"];
-   LogSol[init_, final_] := (
-     (*fname=StringJoin["sols-"]<>ToString[UnixTime[]]<>".m";*)
-     fname = "sols-" <> CreateUUID[] <> ".m";
+   LogSol[init_, final_, prefix_:""] := (
+     fname = prefix <> "sols-" <> CreateUUID[] <> ".m";
      optimum = final[[1]];
      Print["Saving to", fname];
      exporter = 
-      Association[{"start" -> init, "bestRMS" -> optimum, 
-        "end" -> final[[2]]}];
+      Association[{"start" -> init, 
+                   "bestRMS" -> optimum, 
+                   "end" -> final[[2]]}];
      Export[fname, exporter]
      );
    ClearAll[SumOSquares];
@@ -2446,7 +2736,6 @@ Do[(
    ];
   NotebookClose[nb];
   Print[partialSol];
-  (* LogSol[startingPoint, partialSol]; *)
   AppendTo[solutions,{startingPoint, partialSol}];
   ),
  {bigReps, 1, numSols}
