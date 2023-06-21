@@ -1245,10 +1245,9 @@ TwoBodyNKSL::usage = "TwoBodyNKSL[SL, SpLp] returns the matrix element for confi
 TwoBodyNKSL[SL_, SpLp_] := Module[
   {S, L},
   {S, L} = findSL[SL];
-  val = (If[L==findSL[SpLp][[2]],
-    \[Alpha] * L * (L + 1), 
-    0] + 
-   If[SL==SpLp, 
+  val = ( 
+   If[SL==SpLp,
+    \[Alpha] * L * (L + 1) +
     GR7W[Part[First[findNKLSterm[SL]], 3]] + 
     GG2U[Part[First[findNKLSterm[SL]], 4]],
     0]);
