@@ -31,7 +31,7 @@ Off[SixJSymbol::tri];
 
 (* Physical Constants*)
 bohrRadius = 5.29177210903 * 10^-9;
-ee = 1.602176634 * 10^-9;
+ee = 1.602176634 * 10^-19;
 
 specAlphabet = "SPDFGHIKLMNOQRTUV";
 moduleDir = DirectoryName[$InputFileName];
@@ -102,6 +102,8 @@ S44: crystal field parameter S_4^4
 S46: crystal field parameter S_4^6
 S56: crystal field parameter S_5^6
 S66: crystal field parameter S_6^6
+
+\[Epsilon]: ground level baseline shift
 ";
 paramSymbols = StringSplit[paramAtlas, "\n"];
 paramSymbols = Select[paramSymbols, # != ""& ];
@@ -111,8 +113,8 @@ Protect /@ paramSymbols;
 Options[ParamPad] = {"Print" -> True}
 
 ParamPad::usage = 
-  "ParamPad[params] takes an Association params whose keys are a subset of paramSymbols. The function returns a new Association where all the keys not present in the given association, will also present in the given association, with their values set to zero.
-  The function additionally takes an option \"Print\" that if set to True, will print the symbols that were not present in the given association, default is True.";
+  "ParamPad[params] takes an Association params whose keys are a subset of paramSymbols. The function returns a new Association where all the keys not present in the given association, will also be present in the returned Association, with their values set to zero.
+  The function additionally takes an option \"Print\" that if set to True, will print the symbols that were not present in the given Association, default is True.";
 ParamPad[params_, OptionsPattern[]] := (
   notPresentSymbols = Complement[paramSymbols, Keys[params]];
   If[OptionValue["Print"], Print["Symbols not in given params: ", notPresentSymbols]];
@@ -250,6 +252,17 @@ FtoE[F0_, F2_, F4_, F6_] := (Module[
   E2 = (1/Dk[2]*F2 - 3/Dk[4]*F4 + 7/Dk[6]*F6)/9;
   E3 = (5/Dk[2]*F2 + 6/Dk[4]*F4 - 91/Dk[6]*F6)/3;
   Return[{E0, E1, E2, E3}];
+]
+);
+
+EtoF::usage = "EtoF[E0, E1, E2, E3] calculates the corresponding {0, F2, F4, F6} values.";
+EtoF[E0_, E1_, E2_, E3_] := (Module[
+  {F0, F2, F4, F6},
+  F0 = 1/7 (7 E0 + 9 E1);
+  F2 = 75/14 (E1 + 143 E2 + 11 E3);
+  F4 = 99/7 (E1 - 130 E2 + 4 E3);
+  F6 = 5577/350 (E1 + 35 E2 - 7 E3);
+  Return[{F0, F2, F4, F6}];
 ]
 );
 
@@ -1076,9 +1089,9 @@ Cqk[nf_, q_, k_, NKSL_, J_, M_, NKSLp_, Jp_, Mp_] := Module[
   ]
 
 Bqk::usage = "";
-Bqk[q_, 2] := {B02, B12, B22}[[q + 1]];
-Bqk[q_, 4] := {B04, B14, B24, B34, B44}[[q + 1]];
-Bqk[q_, 6] := {B06, B16, B26, B36, B46, B56, B66}[[q + 1]];
+Bqk[q_, 2] := {B02/2, B12, B22}[[q + 1]];
+Bqk[q_, 4] := {B04/2, B14, B24, B34, B44}[[q + 1]];
+Bqk[q_, 6] := {B06/2, B16, B26, B36, B46, B56, B66}[[q + 1]];
 
 Sqk::usage = "";
 Sqk[q_, 2] := {Sm22, Sm12, S02,  S12,  S22}[[q + 3]];
@@ -2036,7 +2049,7 @@ FitToHam[numElectrons_,
   numSuperCycles_,
   numSols_,
   hostName_:"",
-  solverIterations_ : {100, 200, 100, 100, 400},
+  solverIterations_ : {100, 200, 100, 100, 400, 10},
   OptionsPattern[]] := (
   Off[FindMinimum::lstol];
   Off[FindMinimum::cvmit];
@@ -2059,7 +2072,7 @@ FitToHam[numElectrons_,
      T8v, \[Alpha]v, \[Beta]v, \[Gamma]v, \[Zeta]v}, 
     Evaluate[funMatrix /. reps]];
   
-  {numIter0, numIter1, numIter2, numIter3, numIter4} = solverIterations;
+  {numIter0, numIter1, numIter2, numIter3, numIter4, numIter5} = solverIterations;
   (*This association is used to define the different stages in the solver.*)
   varConcerto = {
     0 -> {numIter0, {E1, E2, 
@@ -2067,7 +2080,8 @@ FitToHam[numElectrons_,
     1 -> {numIter1, modelVars},
     2 -> {numIter2, {B02, B04, B06, B22, B24, B26, B44, B46, B66}}, 
     3 -> {numIter3, {M0, P2, T2, T3, T4, T6, T7, T8}},
-    4 -> {numIter4, modelVars}};
+    4 -> {numIter4, modelVars},
+    5 -> {numIter5, \[Epsilon]}};
   varConcerto = Association[varConcerto];
   
   (* This template *)
@@ -2077,17 +2091,17 @@ vars=Transpose[{`chosenVarList`,ansatz}];
 partialSol=FindMinimum[
 SumOSquares[`B02`,`B04`,`B06`,`B22`,`B24`,`B26`,`B44`,`B46`,`B66`,`E1`\
 ,`E2`,`E3`,`M0`,`P2`,`T2`,`T3`,`T4`,`T6`,`T7`,`T8`,`\[Alpha]`,`\[Beta]\
-`,`\[Gamma]`,`\[Zeta]`],
+`,`\[Gamma]`,`\[Zeta]`, `\[Epsilon]`],
 vars,
 MaxIterations->`maxIters`,
 Method->\"QuasiNewton\",
 StepMonitor:>(
 rmsHistory=AddToList[rmsHistory,SumOSquares[`B02`,`B04`,`B06`,`B22`,`\
 B24`,`B26`,`B44`,`B46`,`B66`,`E1`,`E2`,`E3`,`M0`,`P2`,`T2`,`T3`,`T4`,`\
-T6`,`T7`,`T8`,`\[Alpha]`,`\[Beta]`,`\[Gamma]`,`\[Zeta]`],maxHistory];
+T6`,`T7`,`T8`,`\[Alpha]`,`\[Beta]`,`\[Gamma]`,`\[Zeta]`,`\[Epsilon]`],maxHistory];
 paramSols=AddToList[paramSols,{`B02`,`B04`,`B06`,`B22`,`B24`,`B26`,`\
 B44`,`B46`,`B66`,`E1`,`E2`,`E3`,`M0`,`P2`,`T2`,`T3`,`T4`,`T6`,`T7`,`\
-T8`,`\[Alpha]`,`\[Beta]`,`\[Gamma]`,`\[Zeta]`},maxHistory];
+T8`,`\[Alpha]`,`\[Beta]`,`\[Gamma]`,`\[Zeta]`,`\[Epsilon]`},maxHistory];
 )
 ];
 `chosenVarListR`= Last/@partialSol[[2]];
@@ -2154,7 +2168,8 @@ T8`,`\[Alpha]`,`\[Beta]`,`\[Gamma]`,`\[Zeta]`},maxHistory];
       M0v_?NumericQ, P2v_?NumericQ, T2v_?NumericQ,
       T3v_?NumericQ, T4v_?NumericQ, T6v_?NumericQ,
       T7v_?NumericQ, T8v_?NumericQ, \[Alpha]v_?NumericQ,
-      \[Beta]v_?NumericQ, \[Gamma]v_?NumericQ, \[Zeta]v_?NumericQ] := (
+      \[Beta]v_?NumericQ, \[Gamma]v_?NumericQ,
+      \[Zeta]v_?NumericQ, \[Epsilon]v_?NumericQ] := (
       mat = 
        fMatrix[B02v, B04v, B06v, B22v, B24v, B26v, B44v, B46v, B66v, 
         E1v, E2v, E3v, M0v, P2v, T2v, T3v, T4v, T6v, T7v, 
@@ -2164,14 +2179,14 @@ T8`,`\[Alpha]`,`\[Beta]`,`\[Gamma]`,`\[Zeta]`},maxHistory];
       eigenvals = eigenvals[[;; ;; 2]];
       eigenvals = eigenvals[[;; 134]];
       eigenvals = Pick[eigenvals, picker];
-      rms = Sqrt[Total[(eigenvals - expData)^2]/numFittedLevels];
+      rms = Sqrt[Total[(eigenvals - expData + \[Epsilon]v)^2]/numFittedLevels];
       Return[rms];
       );
     
     numCycles = 4;
     modelVars = {B02, B04, B06, B22, B24, B26, B44, B46, B66, E1, E2, 
       E3, M0, P2, T2, T3, T4, T6, T7, 
-      T8, \[Alpha], \[Beta], \[Gamma], \[Zeta]};
+      T8, \[Alpha], \[Beta], \[Gamma], \[Zeta], \[Epsilon]};
     maxHistory = 200;
     rmsHistory = {};
     paramSols = {};
@@ -2211,6 +2226,8 @@ T8`,`\[Alpha]`,`\[Beta]`,`\[Gamma]`,`\[Zeta]`},maxHistory];
     {B02r, B04r, B06r, B22r, B24r, B26r, B44r, B46r, B66r, E1r, E2r, 
       E3r, M0r, P2r, T2r, T3r, T4r, T6r, T7r, 
       T8r, \[Alpha]r, \[Beta]r, \[Gamma]r, \[Zeta]r} = ansatz[[;; 24]];
+    \[Epsilon]r = 0.001;
+    ansatz = Append[ansatz, \[Epsilon]r];
     startingPoint = 
      Association[(#[[1]] -> #[[2]]) & /@ 
        Transpose[{modelVars, ansatz}]];
@@ -2281,7 +2298,7 @@ SimpleConjugate::usage = "SimpleConjugate[expr] takes an expression and applies 
 SimpleConjugate[expr_] := expr /. Complex[a_, b_] :> a - I b;
 
 ExportMZip::usage = 
-  "ExportMZip[filename, object] exports the given object and compresses it. It first exports in .m format, it then compresses that file in to a zip file, and finally the .m file is deleted. The filename must be a full path, and end with .m. This probably won't work on a PC.";
+  "ExportMZip[filename, object] exports the given object and compresses it. It first exports in .m format, it then compresses that file in to a zip file, and finally the .m file is deleted. The filename must be a full path and end with .m. This probably won't work on a PC.";
 ExportMZip[filename_, object_] := (
    zipTemplate = StringTemplate["cd \"`sourceDir`\"; zip \"`dest`\" \"`source`\""];
    delTemplate = StringTemplate["rm \"`rmFname`\""];
@@ -2299,7 +2316,7 @@ ExportMZip[filename_, object_] := (
    );
 
 ImportMZip::usage = 
-  "ImportMZip[filename] decompresses the provided filename, and imports the enclosed .m file that it is assumed to contain. After being imported the uncompressed file is deleted from disk. The provided filename must be a full path, and end with .zip. This probably won't work on a PC.";
+  "ImportMZip[filename] decompresses the provided filename, and imports the enclosed .m file that it is assumed to contain. After being imported the uncompressed file is deleted from disk. The provided filename must be a full path and end with .zip. This probably won't work on a PC.";
 ImportMZip[filename_] := (
   splitName     = FileNameSplit[filename];
   sourceDir     = FileNameJoin[splitName[[1 ;; -2]]];
