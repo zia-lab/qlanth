@@ -62,6 +62,15 @@ T6:
 T7:
 T8:
 
+T11:
+T12:
+T14:
+T15:
+T16:
+T18:
+T17:
+T19:
+
 P0: 0th parameter for the two-body electrostatically correlated spin-orbit interaction.
 P2: 2th parameter for the two-body electrostatically correlated spin-orbit interaction.
 P4: 4th parameter for the two-body electrostatically correlated spin-orbit interaction.
@@ -139,19 +148,23 @@ fnTerms::usage = "This list contains the labels of f^n configurations. Each elem
 NKLSterms::usage = "NKLSterms[n, L, S] give all the terms that correspond to the given number of electrons n, with total orbital angular momentum L, and total spin angular momentum S.";
 findNKLSterm::usage = "findNKLSterm[SL] for a given string SL that only represent the LS part of a spectroscopic term, this function returns all the terms that are compatible with it. This is only for f^n configurations. The provided terms might belong to more than one configuration.";
 AA::usage = "Given a list with the parts corresponding to the quasi-rational representation of a number, this function parses the result into a regular number.";
-CFPterms::usage = "CFPterms[n] gives all the daughter and parent terms, together with the corresponding coefficients of fractional parentage, that correspond to the the f^n configuration. 
-CFPterms[n, SL] gives all the daughter and parent terms, together with the corresponding coefficients of fractional parentage, that are compatible with the given string SL in the f^n configuration 
+CFPterms::usage = "CFPterms[n] gives all the daughter and parent terms, together with the corresponding coefficients of fractional parentage, that correspond to the the f^n configuration.
+
+CFPterms[n, SL] gives all the daughter and parent terms, together with the corresponding coefficients of fractional parentage, that are compatible with the given string SL in the f^n configuration.
+
 CFPterms[n, L, S] gives all the daughter and parent terms, together with the corresponding coefficients of fractional parentage, that correspond to the given total orbital angular momentum L and total spin S n the f^n configuration. L being an integer, and S being integer or half-integer.
+
 In all cases the output is in the shape of a list with enclosed lists having the format {daughter_term, {parent_term_1, CFP_1}, {parent_term_2, CFP_2}, ...}.
 Only the one-body coefficients for f-electrons are provided.
 In all cases it must be that 1 <= n <= 7.
+
 Data for these was parsed from Velkov, \"Multi-electron coefficients of fractional parentage for the p, d, and f shells\".";
 
 AllowedSLterms::usage = "AllowedSLterms[n] returns a list with the allowed terms in the f^n configuration, the terms are given as lists in the format {S, L}. This list may have redundancies which are compatible with the degeneracies that might correspond to the given case.";
-AllowedNKSLterms::usage = "AllowedNKSLterms[n] returns a list with the allowed terms in the f^n configuration, the terms are given as strings in spectroscopic notation. An integer as the last is used to distinguish cases with degenaracy.";
+AllowedNKSLterms::usage = "AllowedNKSLterms[n] returns a list with the allowed terms in the f^n configuration, the terms are given as strings in spectroscopic notation. The integers in the last positions are used to distinguish cases with degeneracy.";
 maxJ::usage = "maxJ[n] gives the maximum J = S+L that corresponds to the configuration f^n.";
 minJ::usage = "minJ[n] gives the minimum J = S+L that corresponds to the configuration f^n.";
-AllowedSLJterms::usage = "AllowedSLJterms[n] returns a list with the allowed {S, L, J} terms in the f^n configuration, the terms are given as lists in the format {S, L, J}. This list may have redundancies which are compatible with the degeneracies that might correspond to the given case.";
+AllowedSLJterms::usage = "AllowedSLJterms[n] returns a list with the allowed {S, L, J} terms in the f^n configuration, the terms are given as lists in the format {S, L, J}. This list may have repeated elements which account for possible degeneracies of the related term.";
 
 AllowedNKSLJterms::usage = "AllowedNKSLJterms[n] returns a list with the allowed {SL, J} terms in the f^n configuration, the terms are given as lists in the format {SL, J} where SL is a string in spectroscopic notation.";
 AllowedNKSLforJterms::usage = "AllowedNKSLforJterms[n, J] gives the terms that correspond to the given total angular momentum J in the f^n configuration. The result is a list whose elements are lists of length 2, the first element being the SL term in spectroscopic notation, and the second element being J.";
@@ -165,8 +178,8 @@ AllowedNKSLJMforJterms::usage = "AllowedNKSLJMforJterms[n, J] returns a list wit
 
 ShiftedLevels::usage = "
 ShiftedLevels[originalLevels] takes a list of levels of the form
-{{energy_1, coeff_vector_1, basis}, 
-{energy_2, coeff_vector_2, basis},
+{{energy_1, coeff_vector_1}, 
+{energy_2, coeff_vector_2},
 ...}} 
 and returns the same input except that now to every energy the minimum of all of them has been subtracted.";
 LoadGuillotParameters::usage = "";
@@ -1229,17 +1242,6 @@ GR7W := Association[
     "222" -> \[Gamma]/5*15}
    ];
 
-AlphaL::usage = "AlphaL[SL, SpLp] returns the matrix element for the Trees operator for the two given terms SL and SpLp.";
-AlphaL[SL_, SpLp_] := Module[
-  {S, L},
-  (
-    {S, L} = findSL[SL];
-    If[L==findSL[SpLp][[2]], 
-      \[Alpha] L (L + 1),
-      0]
-  )
-  ]
-
 GG2NKSL::usage = "GG2NKSL[SL, SpLp] returns the matrix element of the configuration interaction term corresponding to the Casimir operator G2, for the two given terms SL and SpLp.";
 GG2NKSL[SL_, SpLp_] := (
  If[SL==SpLp,
@@ -1287,7 +1289,7 @@ EnergyMatrix[n_, J_, Jp_, Ii_, Ip_, CFTable_, OptionsPattern[]]:= (
         + TwoBodyNKSL[NKSLJM[[1]], NKSLJMp[[1]]]
         + SpinOrbitTable[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}]
         + SOOandECSOTable[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}]
-        + SpinSpinTable[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}]
+        + 0*SpinSpinTable[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}]
         + ThreeBodyTable[{n, NKSLJM[[1]], NKSLJMp[[1]]}]
        )
       )
@@ -1622,13 +1624,13 @@ CFPterms[n_, L_, S_] := Module[
 (* ############################### Allowed SL, SLJ, and SLJM Terms ############################## *)
 
 
-AllowedSLterms[n_] := Map[findSL[First[#]] &, CFPterms[n]]
+AllowedSLterms[n_] := Map[findSL[First[#]] &, CFPterms[Min[n,14-n]]]
 
-AllowedNKSLterms[n_] := Map[First, CFPterms[n]]
+AllowedNKSLterms[n_] := Map[First, CFPterms[Min[n,14-n]]]
 
-maxJ[n_] := Max[Map[Total, AllowedSLterms[n]]]
+maxJ[n_] := Max[Map[Total, AllowedSLterms[Min[n,14-n]]]]
 
-minJ[n_] := Min[Map[Abs[Part[#, 1] - Part[#, 2]] &, AllowedSLterms[n]]]
+minJ[n_] := Min[Map[Abs[Part[#, 1] - Part[#, 2]] &, AllowedSLterms[Min[n,14-n]]]]
 
 AllowedSLJterms[n_] := Module[
   {allowedSL, allowedSLJ},
@@ -1747,7 +1749,7 @@ AllowedJ[n_] := Table[J, {J, minJ[n], maxJ[n]}];
 ShiftedLevels[originalLevels_] := Module[
   {groundEnergy, shifted},
   groundEnergy = Sort[originalLevels][[1,1]];
-  shifted      = Map[{#[[1]] - groundEnergy, #[[2]], #[[3]]} &, originalLevels];
+  shifted      = Map[{#[[1]] - groundEnergy, #[[2]]} &, originalLevels];
   Return[shifted];
   ]
 
@@ -1942,19 +1944,34 @@ HoleElectronConjugation::usage = "HoleElectronConjugation[params] takes the para
 HoleElectronConjugation[params_] := (
   newParams = params;
   flipSignsOf = {\[Zeta], T2, T3, T4, T6, T7, T8};
-  (* flipSignsOf = Join[flipSignsOf, cfSymbols]; *)
+  flipSignsOf = Join[flipSignsOf, cfSymbols];
   Do[
     (newParams[flipper] = -newParams[flipper]), 
   {flipper, flipSignsOf}];
   Return[newParams];
   )
 
-SolveStates::usage = 
-"SolveStates[nf, IiN, params, \"maxEigenvalues\" -> maxE] solves the energy values and states for an atom with n f-electrons with a nucleus of spin IiN. params is an association with the parameters of the specific ion under study.
-This function also requires files for pre-computed energy matrix tables that provide the symbols EnergyMatrixTable[_, _, _, _, _].
+
+SolveStates::usage = "SolveStates[nf, IiN, params] solves the energy values and states for an atom with n f-electrons with a nucleus of spin IiN. params is an Association with the parameters of the specific ion under study.
+This function requires files for pre-computed energy matrix tables that provide the symbols EnergyMatrixTable[_, _, _, _, _].
 The optional parameter \"maxEigenvalues\" (default: \"All\") specifies the number of eigenvalues to be returned. If maxE is \"All\" then all eigenvalues are returned. If maxE is positive then the k largest (in absolute value) eigenvalues are returned. If maxE is negative then the k smallest (in absolute value) eigenvalues are returned.
 To account for configurations f^n with n > 7, particle-hole dualities are enforced for \[Zeta] and T_i.
 The unit for the returned energies is cm^-1.
+
+Parameters
+----------
+nf (int) : Number of f-electrons.
+IiN (int) : Nuclear spin.
+params (Association) : Parameters of the ion under study.
+
+Returns
+-------
+{eigenstates, basis} (list): eigenstates is a list wher each element is a list with two elements, the first element being the energy eigenvalue and the second being a list that represents the eigenvector in the computational basis. basis is a list of lists that represent the computational basis. The elements of the basis are lists of the form {{{SL, J}, mJ}, I}, where SL is given a string.
+
+Options
+-------
+\"Return Symbolic Matrix\" (bool) : If True then the function returns instead a list with the three elements {levels, basis, symbolicMatrix}.
+\"maxEigenvalues\" (int) : Number of eigenvalues to be returned. If \"All\" then all eigenvalues are returned. If positive then the k largest (in absolute value) eigenvalues are returned. If negative then the k smallest (in absolute value) eigenvalues are returned.
 -----------------------
 References:
 1. Sign inversion for \[Zeta]: Wybourne, Spectroscopic Properties of Rare Earths. 
@@ -1986,8 +2003,8 @@ SolveStates[nf_, IiN_, params0_, OptionsPattern[]]:= Module[
     {jj, 1, Length[AllowedJ[n]]}
     ];
   EnergyMatrix = ArrayFlatten[EnergyMatrix];
+  symbolicMatrix = EnergyMatrix;
   EnergyMatrix = ReplaceInSparseArray[EnergyMatrix, params];
-  SymbolicMatrix = EnergyMatrix;
   problemSize = Dimensions[EnergyMatrix][[1]];
   If[maxEigen!="All",
   (If[Abs[maxEigen]>problemSize,
@@ -1996,26 +2013,25 @@ SolveStates[nf_, IiN_, params0_, OptionsPattern[]]:= Module[
     ];
   PrintTemporary["The energy matrix has dimensions:", Dimensions[EnergyMatrix]];
   (*Solve for eigenvalues and eigenvectors.*)
-  EnergyLevels = {};
   {EigenvalueJM, EigenvectorJM} = If[maxEigen=="All",
                   Eigensystem[EnergyMatrix],
                   Eigensystem[EnergyMatrix, maxEigen]
                   ];
   EigenvalueJM = Re[EigenvalueJM];
   (*There might be a very small imaginary part.*)
-  (*Print[{Dimensions@EigenvalueJM, Dimensions@EigenvectorJM}];*)
   (*Parse the results for the eigenvectors in terms of the ordered basis being used.*)
-  EnergyStates = {};
-  Do[EnergyStates = Join[EnergyStates, EnergyStatesTable[{n, AllowedJ[n][[nn]], IiN}]],
+  basis = {};
+  Do[basis = Join[basis, EnergyStatesTable[{n, AllowedJ[n][[nn]], IiN}]],
     {nn, 1, Length[AllowedJ[n]]}
     ];
-  Do[EnergyLevels = Join[EnergyLevels, {{EigenvalueJM[[nn]], EigenvectorJM[[nn]], EnergyStates}}];,
+  levels = {};
+  Do[levels = Join[levels, {{EigenvalueJM[[nn]], EigenvectorJM[[nn]]}}];,
     {nn, 1, Length[EigenvalueJM]}
     ];
   If[OptionValue["Return Symbolic Matrix"],
-  Return[{SymbolicMatrix, EnergyLevels}]
+  Return[{levels, basis, symbolicMatrix}]
   ];
-  Return[EnergyLevels];
+  Return[{levels, basis}];
 ];
 
 Options[FitToHam] = {
@@ -2275,6 +2291,123 @@ T8`,`\[Alpha]`,`\[Beta]`,`\[Gamma]`,`\[Zeta]`,`\[Epsilon]`},maxHistory];
   )
 
 (* ###############################              SOLVERS            ############################## *)
+(* ############################################################################################## *)
+
+(* ############################################################################################## *)
+(* ############################        EIGEN-VECTOR ANALYSIS          ########################### *)
+
+PrettySaunders::usage = "PrettySaunders[SL, J] produces a human-redeable symbol for the given Russel-Saunders term."
+PrettySaundersSLJ[{{SL_, J_}, MJ_}] := (
+  If[StringQ[SL],
+   {S, L} = findSL[SL],
+   {S, L} = SL
+   ];
+  Return[RowBox[
+    {AdjustmentBox[Style[2*S + 1, Smaller], BoxBaselineShift -> -1, 
+      BoxMargins -> 0], AdjustmentBox[printL[L], BoxMargins -> -0.2],
+     AdjustmentBox[
+      Style[InputForm[J], Small, FontTracking -> "Narrow"], 
+      BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]
+     }] // DisplayForm])
+
+PrettySaundersSLJmJ[{{SL_, J_}, mJ_}] := (If[
+   StringQ[SL], {S, L} = findSL[SL], {S, L} = SL];
+  Return[
+   RowBox[{AdjustmentBox[Style[2*S + 1, Smaller], 
+       BoxBaselineShift -> -1, BoxMargins -> 0], 
+      AdjustmentBox[printL[L], BoxMargins -> -0.2], 
+      AdjustmentBox[
+       Style[{InputForm[J], mJ}, Small, FontTracking -> "Narrow"], 
+       BoxBaselineShift -> 1, 
+       BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}] // DisplayForm])
+
+BasisVecInRusselSaunders::usage = "BasisVecInRusselSaunders[basisVec] takes a basis vector in the format {{{LSstring, Jval}, mJval}, nucSpin} and returns a human-readable symbol for the corresponding Russel-Saunders term. The nuclear spin is ignored."
+BasisVecInRusselSaunders[basisVec_] := (
+  {{{LSstring, Jval}, mJval}, nucSpin} = basisVec;
+  Ket[PrettySaunders[LSstring, Jval], mJval]
+  )
+
+LSJMJTemplate = 
+  StringTemplate[
+   "\!\(\*TemplateBox[{\nRowBox[{\"`LS`\", \",\", \nRowBox[{\"J\", \
+\"=\", \"`J`\"}], \",\", \nRowBox[{\"mJ\", \"=\", \"`mJ`\"}]}]},\n\
+\"Ket\"]\)"];
+BasisVecInLSJMJ::usage = "BasisVecInLSJMJ[basisVec] takes a basis vector in the format {{{LSstring, Jval}, mJval}, nucSpin} and returns a human-readable symbol for the corresponding LSJMJ term in the form |LS, J=..., mJ=...> The nuclear spin is ignored."
+BasisVecInLSJMJ[basisVec_] := (
+   {{{LSstring, Jval}, mJval}, nucSpin} = basisVec;
+   LSJMJTemplate[<|
+     "LS" -> LSstring,
+     "J" -> ToString[Jval, InputForm], 
+     "mJ" -> ToString[mJval, InputForm]|>]
+   );
+
+ParseStates::usage = "ParseStates[states, basis] takes a list of eigenstates in terms of their coefficients in the given basis and returns a list of the same states in terms of their energy, LSJMJ symbol, J, mJ, S, L, LSJ symbol, and LS symbol. The LS symbol returned corresponds to the term with the largest coefficient in the given basis.";
+ParseStates[states_, basis_, OptionsPattern[]] := (
+  parsedStates = Table[(
+     {energy, eigenVec} = state;
+     maxTermIndex = Ordering[Abs[eigenVec]][[-1]];
+     {{{LSstring, Jval}, mJval}, nucSpin} = basis[[maxTermIndex]];
+     LSJsymbol = Subscript[LSstring, {Jval, mJval}];
+     LSJMJsymbol = LSstring <> ToString[Jval, InputForm];
+     {S, L} = findSL[LSstring];
+     {energy, LSstring, Jval, mJval, S, L, LSJsymbol, LSJMJsymbol}
+     ),
+    {state, fstates}];
+  Return[parsedStates]
+  )
+
+ParseStatesByNumBasisVecs::usage = "ParseStatesByNumBasisVecs[states, basis, numBasisVecs] takes a list of eigenstates in terms of their coefficients in the given basis and returns a list of the same states in terms of their energy and the coefficients of the numBasisVecs most significant basis vectors.";
+ParseStatesByNumBasisVecs[states_, basis_, numBasisVecs_, roundTo_ : 0.01] := (
+  parsedStates = Table[(
+     {energy, eigenVec} = state;
+     energy = Chop[energy];
+     probs = Round[Abs[eigenVec^2], roundTo];
+     amplitudes = Round[eigenVec, roundTo];
+     ordering = Ordering[probs];
+     chosenIndices = ordering[[-numBasisVecs ;;]];
+     majorComponents = basis[[chosenIndices]];
+     majorProbabilities = amplitudes[[chosenIndices]];
+     majorComponents = BasisVecInLSJMJ /@ majorComponents;
+     majorRep = majorProbabilities . majorComponents;
+     {energy, majorRep}
+     ),
+    {state, fstates}];
+  Return[parsedStates]
+  )
+
+FindThresholdPosition::usage = "FindThresholdPosition[list, threshold] returns the position of the first element in list that is greater than threshold. If no such element exists, it returns the length of list. The elements of the given list must be in ascending order.";
+FindThresholdPosition[list_, threshold_] := 
+ Module[{position}, 
+  position = Position[list, _?(# > threshold &), 1, 1];
+  thrPos = If[Length[position] > 0,
+    position[[1, 1]],
+    Length[list]];
+  If[thrPos == 0, Return[1], Return[thrPos+1]]
+  ]
+
+ParseStatesByProbabilitySum::usage = "ParseStatesByProbabilitySum[states, basis, probSum] takes a list of eigenstates in terms of their coefficients in the given basis and returns a list of the same states in terms of their energy and the coefficients of the basis vectors that sum to at least probSum.";
+ParseStatesByProbabilitySum[states_, basis_, probSum_, roundTo_ : 0.01] :=(
+    parsedStates = Table[({energy, eigenVec} = state;
+    energy = Chop[energy];
+    amplitudes = Round[eigenVec, roundTo];
+    probs = Round[Abs[eigenVec^2], roundTo];
+    ordering = Reverse[Ordering[probs]];
+    orderedProbs = probs[[ordering]];
+    accProb = Accumulate[orderedProbs];
+    thresholdIndex = FindThresholdPosition[accProb, probSum];
+    chosenIndices = ordering[[;; thresholdIndex]];
+    majorComponents = basis[[chosenIndices]];
+    majorProbabilities = amplitudes[[chosenIndices]];
+    notnullProbs = 
+     Flatten[Position[majorProbabilities, _?(Abs[#] != 0 &)]];
+    majorComponents = PrettySaundersSLJmJ[#[[1]]] & /@ majorComponents;
+    majorProbabilities = majorProbabilities[[notnullProbs]];
+    majorComponents = Ket /@ majorComponents[[notnullProbs]];
+    majorRep = majorProbabilities . majorComponents;
+    {energy, majorRep}), {state, states}];
+ Return[parsedStates])
+
+(* ############################        EIGEN-VECTOR ANALYSIS          ########################### *)
 (* ############################################################################################## *)
 
 (* ############################################################################################## *)
@@ -2830,7 +2963,7 @@ If[!FileExistsQ[SpinOrbitTableFname],
   SpinOrbitTable = Import[SpinOrbitTableFname];
 ]
 
-PrintTemporary["Loading table of reduce AiZi matrix elements ..."];
+PrintTemporary["Loading table of reduced AiZi matrix elements ..."];
 AiZiTableFname = FileNameJoin[{moduleDir, "data", "ReducedAiZiTable.m"}];
 If[!FileExistsQ[AiZiTableFname],
   (PrintTemporary[">> ReducedAiZiTable.m not found, generating ..."];
@@ -2848,7 +2981,7 @@ If[!FileExistsQ[SpinOrbitTableFname],
   SOOandECSOTable = Import[SOOandECSOTableFname];
 ]
 
-PrintTemporary["Loading table of reduce T22 matrix elements ..."];
+PrintTemporary["Loading table of reduced T22 matrix elements ..."];
 T22TableFname = FileNameJoin[{moduleDir, "data", "ReducedT22Table.m"}];
 If[!FileExistsQ[T22TableFname],
   (PrintTemporary[">> ReducedT22Table.m not found, generating ..."];
