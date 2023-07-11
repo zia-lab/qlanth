@@ -1037,7 +1037,7 @@ GenerateSpinSpinTable[nmax_, export_] :=
 
 
 (* ######################################################################### *)
-(* ########################## Spin-Other-Orbit ############################# *)
+(* ##### Spin-Other-Orbit and Electrostatically-Correlated-Spin-Orbit ###### *)
 
 SOOandECSO[n_, SL_, SpLp_, J_]:= Module[
   {S, Sp, L, Lp},
@@ -1046,10 +1046,12 @@ SOOandECSO[n_, SL_, SpLp_, J_]:= Module[
   Return[(-1)^(Sp+L+J) * SixJay[{Sp, Lp, J}, {L, S, 1}] * AiZiTable[{n, SL, SpLp}]];
 ]
 
+Prescaling = {P2->P2/225, P4->P4/1089, P6->25 P6/184041}
+
 GenerateSOOandECSOTable[nmax_, export_:False]:= (
   SOOandECSOTable = <||>;
   Do[
-    SOOandECSOTable[{n, SL, SpLp, J}] = (SOOandECSO[n, SL, SpLp, J]/.{P2->P2/225, P4->P4/1089, P6->25 P6/184041});,
+    SOOandECSOTable[{n, SL, SpLp, J}] = (SOOandECSO[n, SL, SpLp, J] /. Prescaling);,
   {n, 1, nmax},
   {J, minJ[n], maxJ[n]},
   {SL, Map[First, AllowedNKSLforJterms[n, J]]},
@@ -1064,7 +1066,7 @@ GenerateSOOandECSOTable[nmax_, export_:False]:= (
   Return[SOOandECSOTable];
 );
 
-(* ########################## Spin-Other-Orbit ############################# *)
+(* ##### Spin-Other-Orbit and Electrostatically-Correlated-Spin-Orbit ###### *)
 (* ######################################################################### *)
 
 (* ######################################################################### *)
@@ -1289,7 +1291,7 @@ EnergyMatrix[n_, J_, Jp_, Ii_, Ip_, CFTable_, OptionsPattern[]]:= (
         + TwoBodyNKSL[NKSLJM[[1]], NKSLJMp[[1]]]
         + SpinOrbitTable[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}]
         + SOOandECSOTable[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}]
-        + 0*SpinSpinTable[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}]
+        (* + SpinSpinTable[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}] *)
         + ThreeBodyTable[{n, NKSLJM[[1]], NKSLJMp[[1]]}]
        )
       )
@@ -1403,13 +1405,109 @@ HamMatrixAssembly[nf_, IiN_] := Module[
    ConstantArray[0, {Length[AllowedJ[n]], Length[AllowedJ[n]]}];
   Do[EnergyMatrix[[jj, ii]] = 
      EnergyMatrixTable[{n, AllowedJ[n][[ii]], AllowedJ[n][[jj]], IiN, 
-       IiN}];, {ii, 1, Length[AllowedJ[n]]},
-   {jj, 1, Length[AllowedJ[n]]}
+       IiN}];,
+       {ii, 1, Length[AllowedJ[n]]},
+       {jj, 1, Length[AllowedJ[n]]}
    ];
   EnergyMatrix = ArrayFlatten[EnergyMatrix];
   EnergyMatrix = ReplaceInSparseArray[EnergyMatrix, params];
   Return[EnergyMatrix];
   ]
+
+OperatorsMatrix::usage="OperatorsMatrix[n, Ii, ops] returns the matrix representation of the sum of the operators in the list ops for the f^n configuration with nuclear spin I_i.
+ops may be any subset of: {\"Electrostatic\", \"Two-body CI\", \"Spin-orbit\", \"Spin-other-orbit and electrostatically-correlated-spin-orbit\", \"Spin-spin\", \"Three-body CI\"}";
+OperatorsMatrix[n_,Ii_,ops_]:=
+(
+operatorCalls=<|
+    "Electrostatic"->"ElectrostaticMatrixTable[{"<>ToString[n]<>",NKSLJM[[1]],NKSLJMp[[1]]}]",
+    "Two-body CI"->"TwoBodyNKSL[NKSLJM[[1]],NKSLJMp[[1]]]",
+    "Spin-orbit"->"SpinOrbitTable[{"<>ToString[n]<>",NKSLJM[[1]],NKSLJMp[[1]],NKSLJM[[2]]}]",
+    "Spin-other-orbit and electrostatically-correlated-spin-orbit"->"SOOandECSOTable[{"<>ToString[n]<>",NKSLJM[[1]],NKSLJMp[[1]],NKSLJM[[2]]}]",
+    "Spin-spin"->"SpinSpinTable[{"<>ToString[n]<>",NKSLJM[[1]],NKSLJMp[[1]],NKSLJM[[2]]}]",
+    "Three-body CI"->"ThreeBodyTable[{"<>ToString[n]<>",NKSLJM[[1]],NKSLJMp[[1]]}]"
+    |>;
+opMatrixTemplate=If[MemberQ[ops,"Crystal-field"],
+If[Length[ops]>1,
+  StringTemplate["opMatrix = Table[
+  (
+  (*Condition for a scalar matrix op*)
+  subKron=(
+    KroneckerDelta[NKSLJM[[4]],NKSLJMp[[4]]]
+  * KroneckerDelta[`J`,`Jp`]
+  * KroneckerDelta[NKSLJM[[3]],NKSLJMp[[3]]]);
+  matValue = If[subKron==0, 0, Simplify[(`iteratorSum`)]];
+  matValue += CrystalFieldTable[{"<>ToString[n]<>", NKSLJM[[1]], NKSLJM[[2]], NKSLJM[[3]], NKSLJMp[[1]], NKSLJMp[[2]], NKSLJMp[[3]]}];
+      matValue
+  ),
+  {NKSLJMp, Partition[Flatten[AllowedNKSLJMIMforJIterms["<>ToString[n]<>",`Jp`,`Ip`]],4]},
+  {NKSLJM,  Partition[Flatten[AllowedNKSLJMIMforJIterms["<>ToString[n]<>",`J`,`Ii`]],4]}];"],
+  StringTemplate["opMatrix = Table[
+  (
+  CrystalFieldTable[{"<>ToString[n]<>", NKSLJM[[1]], NKSLJM[[2]], NKSLJM[[3]], NKSLJMp[[1]], NKSLJMp[[2]], NKSLJMp[[3]]}]
+  ),
+  {NKSLJMp, Partition[Flatten[AllowedNKSLJMIMforJIterms["<>ToString[n]<>",`Jp`,`Ip`]],4]},
+  {NKSLJM,  Partition[Flatten[AllowedNKSLJMIMforJIterms["<>ToString[n]<>",`J`,`Ii`]],4]}];"]
+],
+  StringTemplate["opMatrix = Table[
+  (
+  (*Condition for a scalar matrix op*)
+  subKron=(
+    KroneckerDelta[NKSLJM[[4]],NKSLJMp[[4]]]
+  * KroneckerDelta[`J`,`Jp`]
+  * KroneckerDelta[NKSLJM[[3]],NKSLJMp[[3]]]);
+  matValue = If[subKron==0, 0, Simplify[(`iteratorSum`)]];
+  matValue
+  ),
+  {NKSLJMp, Partition[Flatten[AllowedNKSLJMIMforJIterms["<>ToString[n]<>",`Jp`,`Ip`]],4]},
+  {NKSLJM,  Partition[Flatten[AllowedNKSLJMIMforJIterms["<>ToString[n]<>",`J`,`Ii`]],4]}];"]
+];
+
+If[MemberQ[ops,"Crystal-field"],
+  (
+  CFdataFilename=FileNameJoin[{moduleDir,"data","CrystalFieldTable_f"<>ToString[n]<>".zip"}];PrintTemporary["Importing CrystalFieldTable from ",CFdataFilename," ..."];
+  CrystalFieldTable=ImportMZip[CFdataFilename];
+  operators=Delete[ops,Position[ops,"Crystal-field"][[1,1]]];
+  ),
+  operators=ops;
+  ];
+
+OperatorMatrixAssoc=<||>;
+If[Length[operators]!=0,
+  (
+  iteratorSum=StringJoin[Riffle[operatorCalls[#]&/@operators," + "]];
+  OperatorMatrix[J_,Jp_,Ip_,CFTable_:0]:=(
+  tableExpression=opMatrixTemplate[<|"iteratorSum"->iteratorSum,
+    "J"->ToString[J,InputForm],
+    "Jp"->ToString[Jp,InputForm],
+    "Ii"->ToString[Ii,InputForm],
+    "Ip"->ToString[Ip,InputForm]|>];
+  ToExpression[tableExpression];
+  Return[opMatrix]
+  );
+  ),
+  OperatorMatrix[J_,Jp_,Ip_,CFTable_:0]:=(
+    tableExpression=opMatrixTemplate[<|"J"->ToString[J,InputForm],
+      "Jp"->ToString[Jp,InputForm],
+      "Ii"->ToString[Ii,InputForm],
+      "Ip"->ToString[Ip,InputForm]|>];
+    ToExpression[tableExpression];
+    Return[opMatrix]
+  );
+];
+
+Do[(
+  OperatorMatrixAssoc[{n,J,Jp,Ii,Ii}]=OperatorMatrix[J,Jp,Ii];
+  ),
+{Jp,AllowedJ[n]},
+{J,AllowedJ[n]}];
+
+operatorMatrix=ConstantArray[0,{Length[AllowedJ[n]],Length[AllowedJ[n]]}];
+Do[operatorMatrix[[jj,ii]]=OperatorMatrixAssoc[{n,AllowedJ[n][[ii]],AllowedJ[n][[jj]],Ii,Ii}];
+  ,{ii,1,Length[AllowedJ[n]]}
+  ,{jj,1,Length[AllowedJ[n]]}];
+operatorMatrix=ArrayFlatten[operatorMatrix];
+Return[operatorMatrix]
+)
 
 (* ####################################### Table Generation Functions ########################### *)
 (* ############################################################################################## *)
