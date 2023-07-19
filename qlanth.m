@@ -36,6 +36,8 @@ ee = 1.602176634 * 10^-19;
 specAlphabet = "SPDFGHIKLMNOQRTUV";
 moduleDir = DirectoryName[$InputFileName];
 
+SimplifyFun = Expand;
+
 theLanthanides = {"Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb"};
 theActinides = {"Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr"};
 paramAtlas = "
@@ -185,6 +187,25 @@ and returns the same input except that now to every energy the minimum of all of
 LoadGuillotParameters::usage = "";
 
 CFP::usage = "CFP[{n, NKSL}] provides a list whose first element echoes NKSL and whose other elements are lists with two elements the first one being the symbol of a parent term and the second being the corresponding coefficient of fractional parentage. n must satisfy 1 <= n <= 7";
+
+chenDeltasRaw = 
+  Import[FileNameJoin[{moduleDir, "data", "the-chen-deltas.csv"}]];
+chenDeltasRaw = chenDeltasRaw[[2 ;;]];
+chenDeltas = <||>;
+Off[Power::infy];
+Do[
+  ({right, wrong} = {chenDeltasRaw[[row]][[4 ;;]], 
+     chenDeltasRaw[[row + 1]][[4 ;;]]};
+   key = chenDeltasRaw[[row]][[1 ;; 3]];
+   repRule = (#[[1]] -> #[[2]]*#[[1]]) & /@ 
+     Transpose[{{M0, M2, M4, P2, P4, P6}, right/wrong}];
+   chenDeltas[key] = <|"right" -> right, "wrong" -> wrong, 
+     "repRule" -> repRule|>;
+   chenDeltas[{key[[1]], key[[3]], key[[2]]}] = <|"right" -> right, 
+     "wrong" -> wrong, "repRule" -> repRule|>;
+   ),
+  {row, 1, Length[chenDeltasRaw], 2}];
+On[Power::infy]
 
 (* ############################################################################################## *)
 (* ################################### Racah Algebra Goodies #################################### *)
@@ -360,7 +381,7 @@ GenerateCFPAssoc[export_:True]:= (
 
 GenerateElectrostaticMatrixTable[export_:True]:= (
   ElectrostaticMatrixTable = Table[
-    {n, SL, SpLp} -> Simplify[ElectrostaticMatrix[n, SL, SpLp]], 
+    {n, SL, SpLp} -> SimplifyFun[ElectrostaticMatrix[n, SL, SpLp]], 
     {n, 1, 7},
     {SL, AllowedNKSLterms[n]}, 
     {SpLp, AllowedNKSLterms[n]}
@@ -377,7 +398,7 @@ GenerateReducedUkTable::usage = "GenerateReducedUkTable[] can be used to generat
 GenerateReducedUkTable[export_:True]:= (
   Off[SixJSymbol::tri];
   ReducedUkTable = Table[
-    {n, 3, SL, SpLp, k} -> Simplify[ReducedUk[n, 3, SL, SpLp, k]],
+    {n, 3, SL, SpLp, k} -> SimplifyFun[ReducedUk[n, 3, SL, SpLp, k]],
     {n, 1, 7},
     {SL, AllowedNKSLterms[n]}, 
     {SpLp, AllowedNKSLterms[n]}, 
@@ -441,7 +462,7 @@ GenerateVk1Table[nmax_:7, export_:False]:= (
   Monitor[
     ReducedVk1Table = Table[
       (counter = counter+1;
-      {n, SL, SpLp, 1} -> Simplify[ReducedVk1[n, SL, SpLp, 1]]
+      {n, SL, SpLp, 1} -> SimplifyFun[ReducedVk1[n, SL, SpLp, 1]]
       ),
       {n, 1, nmax},
       {SL, AllowedNKSLterms[n]}, 
@@ -565,9 +586,9 @@ GenerateThreeBodyTable[nmax_ : 7, export_ : False] := (
          n <= 2,
          0,
          n == 3,
-         Simplify[ti3PsiPsipStates[SL, SpLp, ti3, k]],
+         SimplifyFun[ti3PsiPsipStates[SL, SpLp, ti3, k]],
          True,
-          Simplify[ti[n,  SL, SpLp, k]]
+          SimplifyFun[ti[n,  SL, SpLp, k]]
          ];
       ),
      {SL,     AllowedNKSLterms[n]}, 
@@ -612,64 +633,99 @@ GenerateThreeBodyTable[nmax_ : 7, export_ : False] := (
 (* ######################################################################### *)
 (* ################ Magnetically-Correlated Corrections #################### *)
 
-T222PsiPsipStates[SL_, SpLp_]:= Module[{jj, PositionofState, \[Alpha], PsiPsipStates, m0, m2, m4, m, Tkk2m},
-  PositionofState = 0;
-  jj = 1;
-  \[Alpha]==2;
-  PsiPsipStates = {{"3P", "3P"},
-                   {"3P", "3F"}, {"3F", "3P"},
-                   {"3F", "3F"}, {"3F", "3H"},
-                   {"3H", "3F"}, {"3H", "3H"}};
-  m0 = {-12, 3 8/Sqrt[3], 3 8/Sqrt[3], -(4/3) Sqrt[14], 2 8/3 Sqrt[11/2], 2 8/3 Sqrt[11/2], 4/3 Sqrt[143]};
-  m2 = {-24, 8/Sqrt[3], 8/Sqrt[3], 8 4/3 Sqrt[14], -(23/11) 8/3 Sqrt[11/2], -(23/11) 8/3 Sqrt[11/2], -(34/11) 4/3 Sqrt[143]};
-  m4 = {-(300/11), -(100/11) 8/Sqrt[3], -(100/11) 8/Sqrt[3], -(200/11) 4/3 Sqrt[14], -(325/121) 8/3 Sqrt[11/2], -(325/121) 8/3 Sqrt[11/2], -(1325/1573) 4/3 Sqrt[143]};
-  m = {m0, m2, m4};
-  While[jj<= Length[PsiPsipStates]&&PositionofState==0,
-    PositionofState = If[PsiPsipStates[[jj, 1]]==SL && PsiPsipStates[[jj, 2]]==SpLp,
-                      jj,
-                      0];
-    jj++
-  ];
-  Tkk2m = If[PositionofState==0, 
-            0, 
-            (m[[1, PositionofState]] * M0
-            +m[[2, PositionofState]] * M2
-            +m[[3, PositionofState]] * M4)];
-  Return[Tkk2m];
-];
 
-T112PsiPsipStates[SL_, SpLp_]:= Module[
-  {jj, PositionofState, \[Alpha], PsiPsipStates, m0, m2, m4, m, Tkk2m},
-  PositionofState = 0;
-  jj = 1;
-  \[Alpha]==1;
-  PsiPsipStates= {{"1S", "3P"},
-                  {"3P", "1S"}, {"3P", "3P"},
-                  {"3P", "1D"}, {"1D", "3P"},
-                  {"1D", "3F"}, {"3F", "1D"},
-                  {"3F", "3F"}, {"3F", "1G"},
-                  {"1G", "3F"}, {"1G", "3H"},
-                  {"3H", "1G"}, {"3H", "3H"},
-                  {"3H", "1I"}, {"1I", "3H"}};
-  m0 = {6, 6, -36, -Sqrt[(2/15)] 23, -Sqrt[(2/15)] 23, Sqrt[2/5] 23, Sqrt[2/5] 23, -2 Sqrt[14] 15, -Sqrt[11] 6, -Sqrt[11] 6, Sqrt[2/5] 39, Sqrt[2/5] 39, -8 1/Sqrt[55] 132, -5 Sqrt[26], -5 Sqrt[26]};
-  m2 = {2, 2, -72, -Sqrt[(2/15)] 14, -Sqrt[(2/15)] 14, Sqrt[2/5] 6, Sqrt[2/5] 6, -2 Sqrt[14], Sqrt[11] 64/33, Sqrt[11] 64/33, -Sqrt[(2/5)] 728/33, -Sqrt[(2/5)] 728/33, 8/Sqrt[55] 23, -(30/11) Sqrt[26], -(30/11) Sqrt[26]};
-  m4 = {10/11, 10/11, -(900/11), -Sqrt[(2/15)] 115/11, -Sqrt[(2/15)] 115/11, -(195/11) Sqrt[2/5], -(195/11) Sqrt[2/5], 2 Sqrt[14] 10/11, -Sqrt[11] 1240/363, -Sqrt[11] 1240/363, -(3175/363) Sqrt[2/5], -(3175/363) Sqrt[2/5], 8/Sqrt[55] 130/11, -(375/1573) Sqrt[26], -(375/1573) Sqrt[26]};
+T222PsiPsipStates::usage="T222PsiPsipStates[SL, SpLp] returns the reduced matrix element of the scalar component of the double tensor T22 for the given SL terms SL, SpLp.
+Data used here for m0, m2, m4 is from Table I of Judd, BR, HM Crosswhite, and Hannah Crosswhite. Intra-Atomic Magnetic Interactions for f Electrons. Physical Review 169, no. 1 (1968): 130.
+";
+T222PsiPsipStates[SL_, SpLp_] := 
+  Module[{statePosition, PsiPsipStates, m0, m2, m4, Tkk2m},
+   PsiPsipStates = {
+    {"3P", "3P"}, {"3P", "3F"}, 
+    {"3F", "3P"}, {"3F", "3F"}, 
+    {"3F", "3H"}, {"3H", "3F"},
+    {"3H", "3H"}
+    };
+   m0 = {-12, 
+      3 8/Sqrt[3], 3 8/Sqrt[3], 
+      -(4/3) Sqrt[14], 
+      2 8/3 Sqrt[11/2], 2 8/3 Sqrt[11/2], 
+      4/3 Sqrt[143]
+      };
+   m2 = {-24, 
+     8/Sqrt[3], 8/Sqrt[3], 
+     8 4/3 Sqrt[14], 
+     -(23/11) 8/3 Sqrt[11/2], -(23/11) 8/3 Sqrt[11/2],
+     -(34/11) 4/3 Sqrt[143]};
+   m4 = {-(300/11), 
+      -(100/11) 8/Sqrt[3], -(100/11) 8/Sqrt[3], 
+      -(200/11) 4/3 Sqrt[14], 
+      -(325/121) 8/3 Sqrt[11/2], 
+      -(325/121) 8/3 Sqrt[11/2], 
+      -(1325/1573) 4/3 Sqrt[143]
+      };
+   statePosition = Position[PsiPsipStates, {SL, SpLp}];
+   If[Length[statePosition] == 0,
+    Return[0],
+    statePosition = statePosition[[1, 1]]];
+   Tkk2m = (m0[[statePosition]] * M0 + m2[[statePosition]] * M2 + 
+      m4[[statePosition]] * M4);
+   Return[Tkk2m];
+   ];
 
-  m = {m0, m2, m4};
-  While[jj<= Length[PsiPsipStates]&&PositionofState==0,
-    PositionofState = If[PsiPsipStates[[jj, 1]]==SL && PsiPsipStates[[jj, 2]]==SpLp,
-                      jj,
-                      0];
-    jj++
-  ];
-  Tkk2m = If[PositionofState==0, 
-          0, 
-          (m[[1, PositionofState]] M0
-          +m[[2, PositionofState]] M2
-          +m[[3, PositionofState]] M4)
-          ];
-  Return[Tkk2m];
-];
+T112PsiPsipStates::usage="T112PsiPsipStates[SL, SpLp] returns the reduced matrix element of the scalar component of the double tensor T11 for the given SL terms SL, SpLp.
+Data used here for m0, m2, m4 is from Table II of Judd, BR, HM Crosswhite, and Hannah Crosswhite. Intra-Atomic Magnetic Interactions for f Electrons. Physical Review 169, no. 1 (1968): 130.
+";
+T112PsiPsipStates[SL_, SpLp_] := 
+  Module[{statePosition, PsiPsipStates, m0, m2, m4, Tkk2m},
+   PsiPsipStates = {
+      {"1S", "3P"}, {"3P", "1S"},
+      {"3P", "3P"}, {"3P", "1D"},
+      {"1D", "3P"}, {"1D", "3F"},
+      {"3F", "1D"}, {"3F", "3F"}, 
+      {"3F", "1G"}, {"1G", "3F"},
+      {"1G", "3H"}, {"3H", "1G"},
+      {"3H", "3H"}, {"3H", "1I"},
+      {"1I", "3H"}
+      };
+   m0 = {6, 6, 
+        -36,
+        -Sqrt[(2/15)] 23, -Sqrt[(2/15)] 23,
+        Sqrt[2/5] 23, Sqrt[2/5] 23, 
+        -2 Sqrt[14] 15, 
+        -Sqrt[11] 6, -Sqrt[11] 6, 
+        Sqrt[2/5] 39, Sqrt[2/5] 39, 
+        -8 1/Sqrt[55] 132, 
+        -5 Sqrt[26], -5 Sqrt[26]
+        };
+   m2 = {2, 2, 
+        -72, 
+        -Sqrt[(2/15)] 14, 
+        -Sqrt[(2/15)] 14, 
+        Sqrt[2/5] 6, Sqrt[2/5] 6,
+        -2 Sqrt[14], 
+        Sqrt[11] 64/33, Sqrt[11] 64/33, 
+        -Sqrt[(2/5)] 728/33, -Sqrt[(2/5)] 728/33, 
+        8/Sqrt[55] 23, 
+        -(30/11) Sqrt[26], -(30/11) Sqrt[26]
+        };
+   m4 = {10/11, 10/11, 
+      -(900/11), 
+      -Sqrt[(2/15)] 115/11, -Sqrt[(2/15)] 115/11, 
+      -(195/11) Sqrt[2/5], -(195/11) Sqrt[2/5], 
+      2 Sqrt[14] 10/11, 
+      -Sqrt[11] 1240/363, -Sqrt[11] 1240/363, 
+      -(3175/363) Sqrt[2/5], -(3175/363) Sqrt[2/5], 
+      8/Sqrt[55] 130/11, 
+      -(375/1573) Sqrt[26], -(375/1573) Sqrt[26]
+      };
+   statePosition = Position[PsiPsipStates, {SL, SpLp}];
+   If[Length[statePosition] == 0,
+    Return[0],
+    statePosition = statePosition[[1, 1]]];
+   Tkk2m = (m0[[statePosition]] * M0 + m2[[statePosition]] * M2 + 
+      m4[[statePosition]] * M4);
+   Return[Tkk2m];
+   ];
 
 (* ################ Magnetically-Correlated Corrections #################### *)
 (* ######################################################################### *)
@@ -677,44 +733,66 @@ T112PsiPsipStates[SL_, SpLp_]:= Module[
 (* ######################################################################### *)
 (* ############################ Reduced t^11 ############################### *)
 
+t112PsiPsipStates::usage="t112PsiPsipStates[SL, SpLp] returns the reduced matrix element of the double tensor operator t11 for the corresponding given terms {SL, SpLp}.
+
+The values for p0, p2, and p4 are the coefficients obtained from Table VII of \"Judd, BR, HM Crosswhite, and Hannah Crosswhite. “Intra-Atomic Magnetic Interactions for f Electrons.” Physical Review 169, no. 1 (1968): 130.\"
+
+"
 t112PsiPsipStates[SL_, SpLp_]:= Module[
-  {jj, PositionofState, \[Alpha], PsiPsipStates, p0, p2, p4, p6, p, t112p},
-  PositionofState = 0;
-  jj = 1;
-  \[Alpha]==1;
+  {statePosition, PsiPsipStates, p0, p2, p4, p6, t112p},
+
   PsiPsipStates = {{"1S", "3P"}, {"3P", "1S"}, {"3P", "3P"},
                    {"3P", "1D"}, {"1D", "3P"}, {"1D", "3F"},
                    {"3F", "1D"}, {"3F", "3F"}, {"3F", "1G"},
                    {"1G", "3F"}, {"1G", "3H"}, {"3H", "1G"},
                    {"3H", "3H"}, {"3H", "1I"}, {"1I", "3H"}};
-  p0 = {-2, -2, -1, Sqrt[15/2], Sqrt[15/2], -Sqrt[10], -Sqrt[10],
-      -Sqrt[14], Sqrt[11], Sqrt[11], -Sqrt[10], -Sqrt[10],
-      -Sqrt[55], Sqrt[13/2], Sqrt[13/2]};
-  p2 = {-105, -105, -45, Sqrt[15/2] 32, Sqrt[15/2] 32, -Sqrt[10] 9/2,
-      -Sqrt[10] 9/2, Sqrt[14] 10, -Sqrt[11] 20, -Sqrt[11] 20,
-      Sqrt[10] 55/2, Sqrt[10] 55/2, Sqrt[55] 25, -Sqrt[(13/2)] 0,
-      -Sqrt[(13/2)] 0};
-  p4 = {-231, -231, -33, -Sqrt[(15/2)] 33, -Sqrt[(15/2)] 33, Sqrt[10] 66,
-      Sqrt[10] 66, Sqrt[14] 33, Sqrt[11] 32, Sqrt[11] 32, -Sqrt[10] 23,
-      -Sqrt[10] 23, Sqrt[55] 51, -Sqrt[(13/2)] 21, -Sqrt[(13/2)] 21};
-  p6 = {-429, -429, 1287, Sqrt[15/2] (-286), Sqrt[15/2] (-286),
-      Sqrt[10] (-(429/2)), Sqrt[10] (-(429/2)), Sqrt[14] 286,
-      Sqrt[11] (-104), Sqrt[11] (-104), Sqrt[10] (-(65/2)),
-      Sqrt[10] (-(65/2)), Sqrt[55] 13, Sqrt[13/2] (-6), Sqrt[13/2] (-6)};
+  p0 = {-2, -2,
+        -1,
+        Sqrt[15/2], Sqrt[15/2],
+        -Sqrt[10], -Sqrt[10],
+        -Sqrt[14],
+        Sqrt[11], Sqrt[11],
+        -Sqrt[10], -Sqrt[10],
+        -Sqrt[55], 
+        Sqrt[13/2], Sqrt[13/2]};
+  p2 = {-105, -105,
+      -45, 
+      Sqrt[15/2] 32, Sqrt[15/2] 32,
+      -Sqrt[10] 9/2, -Sqrt[10] 9/2,
+      Sqrt[14] 10,
+      -Sqrt[11] 20, -Sqrt[11] 20,
+      Sqrt[10] 55/2, Sqrt[10] 55/2,
+      Sqrt[55] 25, 
+      0, 0};
+  p4 = {-231, -231,
+      -33, 
+      -Sqrt[(15/2)] 33, -Sqrt[(15/2)] 33, 
+      Sqrt[10] 66, Sqrt[10] 66,
+      Sqrt[14] 33, 
+      Sqrt[11] 32, Sqrt[11] 32,
+      -Sqrt[10] 23, -Sqrt[10] 23, 
+      Sqrt[55] 51, 
+      -Sqrt[(13/2)] 21, -Sqrt[(13/2)] 21};
+  p6 = {-429, -429,
+      1287,
+      Sqrt[15/2] (-286), Sqrt[15/2] (-286),
+      Sqrt[10] (-(429/2)), Sqrt[10] (-(429/2)),
+      Sqrt[14] 286,
+      Sqrt[11] (-104), Sqrt[11] (-104),
+      Sqrt[10] (-(65/2)), Sqrt[10] (-(65/2)),
+      Sqrt[55] 13, 
+      Sqrt[13/2] (-6), Sqrt[13/2] (-6)};
 
-  p = {p0, p2, p4, p6};
-  While[jj<= Length[PsiPsipStates]&&PositionofState==0,
-        PositionofState = If[PsiPsipStates[[jj, 1]]==SL && PsiPsipStates[[jj, 2]]==SpLp,
-                          jj,
-                          0];
-        jj++
-  ];
-  t112p = If[PositionofState==0,
-          0, 
-          (p[[1, PositionofState]] P0
-          +p[[2, PositionofState]] P2
-          +p[[3, PositionofState]] P4
-          +p[[4, PositionofState]] P6)];
+  statePosition = Position[PsiPsipStates, {SL, SpLp}];
+  t112p = If[Length[statePosition]==0,
+    0,
+    (
+      statePosition = statePosition[[1, 1]];
+      ( p0[[statePosition]] P0
+      + p2[[statePosition]] P2
+      + p4[[statePosition]] P4
+      + p6[[statePosition]] P6)
+    )];
   Return[t112p];
 ]
 
@@ -724,62 +802,89 @@ t112PsiPsipStates[SL_, SpLp_]:= Module[
 (* ######################################################################### *)
 (* ############################ Reduced AiZi ############################### *)
 
-AiZi2PsiPsipStates[SL_, SpLp_]:= Module[
-  {PositionofState, kk, PsiPsipStates, a13, z13, aizi2p},
+AiZi2PsiPsipStates::usage="AiZi2PsiPsipStates[SL, SpLp] returns the sum of the reduced matrix elements corresponding to the operator T11, t11, and -a14 z13 for the corresponding given terms {SL, SpLp}.
+
+The value for a13 is taken from Table VIII of \"Judd, BR, HM Crosswhite, and Hannah Crosswhite. “Intra-Atomic Magnetic Interactions for f Electrons.” Physical Review 169, no. 1 (1968): 130.\"
+
+The values for the reduced matrix elements of z13 are obtained from Table IX of the same paper.
+";
+AiZi2PsiPsipStates[SL_, SpLp_] :=
+Module[{statePosition, PsiPsipStates, a13, z13, aizi2p}, 
   PositionofState = 0;
   kk = 1;
-  PsiPsipStates = {{"1S", "3P"}, {"3P", "1S"}, {"3P", "3P"},
-                 {"3P", "1D"}, {"1D", "3P"}, {"1D", "3F"},
-                 {"3F", "1D"}, {"3F", "3F"}, {"3F", "1G"},
-                 {"1G", "3F"}, {"1G", "3H"}, {"3H", "1G"},
-                 {"3H", "3H"}, {"3H", "1I"}, {"1I", "3H"}};
-  a13 = -33 M0+3 M2+15/11 M4-6 P0+3/2 (35 P2+77 P4+143 P6);
-  z13 = {2, 2, 1, 1/Sqrt[1080] (-90), 1/Sqrt[1080] (-90), Sqrt[2/405] 45, Sqrt[2/405] 45, Sqrt[14] 1, 1/Sqrt[891] (-99 ), 1/Sqrt[891] (-99 ), 990/Sqrt[98010], 990/Sqrt[98010], 55/Sqrt[55], -2574/Sqrt[1019304], -2574/Sqrt[1019304]};
-  While[kk<= Length[PsiPsipStates]&&PositionofState==0,
-    PositionofState = If[PsiPsipStates[[kk, 1]]==SL && PsiPsipStates[[kk, 2]]==SpLp,
-                      kk,
-                      0];
-    kk++
-  ];
-  aizi2p = If[PositionofState==0, 
-            0,
-            Simplify[(
-              T112PsiPsipStates[SL, SpLp]
-              +t112PsiPsipStates[SL, SpLp]
-              -a13/6 z13[[PositionofState]]
-            )
-            ]
-  ];
+  PsiPsipStates = {
+    {"1S", "3P"}, {"3P", "1S"}, 
+    {"3P", "3P"}, {"3P", "1D"}, 
+    {"1D", "3P"}, {"1D", "3F"}, 
+    {"3F", "1D"}, {"3F", "3F"}, 
+    {"3F", "1G"}, {"1G", "3F"}, 
+    {"1G", "3H"}, {"3H", "1G"}, 
+    {"3H", "3H"}, {"3H", "1I"}, 
+    {"1I", "3H"}};
+  a13 = (-33 M0 + 3 M2 + 15/11 M4 
+        - 6 P0 + 3/2 (35 P2 + 77 P4 + 143 P6));
+  z13 = {2, 2, 
+    1, 
+    1/Sqrt[1080] (-90), 
+    1/Sqrt[1080] (-90), 
+    Sqrt[2/405] 45,
+    Sqrt[2/405] 45,
+    Sqrt[14],
+    1/Sqrt[891] (-99),
+    1/Sqrt[891] (-99), 
+    990/Sqrt[98010],
+    990/Sqrt[98010], 
+    55/Sqrt[55],
+    -2574/Sqrt[1019304],
+    -2574/Sqrt[1019304]};
+  statePosition = Position[PsiPsipStates, {SL, SpLp}];
+  If[Length[statePosition] == 0,
+   Return[0],
+   statePosition = statePosition[[1, 1]]];
+  
+  aizi2p = (
+      T112PsiPsipStates[SL, SpLp]
+     + t112PsiPsipStates[SL, SpLp]
+     - a13/6 z13[[statePosition]]);
+  aizi2p = SimplifyFun[aizi2p];
   Return[aizi2p];
-];
+  ];
 
+aizi::usage="aizi[n, SL, SpLp] calculates the reduced matrix elements of the (spin-other-orbit + ECSO) operator for the f^n configuration corresponding to the terms SL and SpLp.
+
+It does this by using equation (4) of \"Judd, BR, HM Crosswhite, and Hannah Crosswhite. “Intra-Atomic Magnetic Interactions for f Electrons.” Physical Review 169, no. 1 (1968): 130.\"
+
+The values for the coefficients of fractional parentage originate from the tables of Velkov.
+";
 aizi[n_, SL_, SpLp_]:= Module[
   {s, l, nn, S, L, Sp, Lp, cfpSL, cfpSpLp, parentSL, Sb, Lb, parentSpLp, aizival},
   {s, l} = {1/2, 3};
   {S, L} = findSL[SL];
   {Sp, Lp} = findSL[SpLp];
-  cfpSL = CFP[{n, SL}];
+  cfpSL   = CFP[{n, SL}];
   cfpSpLp = CFP[{n, SpLp}];
-  For[(
-    aizival = 0;nn = 2),
-    nn<= Length[cfpSL],
-    nn++,
+
+  aizival = Table[
     (
       parentSL = cfpSL[[nn, 1]];
       {Sb, Lb} = findSL[parentSL];
       dval = Sum[(
         cfpSpLp[[mm, 2]] 
-        *SixJay[{S, 1, Sp}, {findSL[cfpSpLp[[mm, 1]]][[1]], s, Sb}] 
-        *SixJay[{L, 1, Lp}, {findSL[cfpSpLp[[mm, 1]]][[2]], l, Lb}] 
-        *AiZiTable[{n-1, parentSL, Part[cfpSpLp, mm, 1]}]
+        * SixJay[{S, 1, Sp}, {findSL[cfpSpLp[[mm, 1]]][[1]], s, Sb}] 
+        * SixJay[{L, 1, Lp}, {findSL[cfpSpLp[[mm, 1]]][[2]], l, Lb}] 
+        * AiZiTable[{n-1, parentSL, cfpSpLp[[mm, 1]]}]
       ),
         {mm, 2, Length[cfpSpLp]}
         ];
-      dval = (cfpSL[[nn, 2]] * (-1)^(Sb+Lb+s+l+Sp+Lp) * dval);
-      aizival+= dval;
-    )
+      phase = (-1)^(Sb+Lb+s+l+Sp+Lp);
+      dval *= phase * cfpSL[[nn, 2]];
+      dval
+    ),
+    {nn, 2, Length[cfpSL]}
   ];
-  Return[n/(n-2) * Sqrt[(2 S+1) (2 Sp+1) (2 L+1) (2Lp+1)] * aizival];
+  aizival = Total[aizival];
+  aizival *= n/(n-2) * Sqrt[(2 S + 1) (2 Sp + 1) (2 L+ 1) (2Lp + 1)];
+  Return[aizival];
 ];
 
 GenerateAiZiTable[nmax_, export_:False, progressIndicator_:False]:= (
@@ -814,13 +919,13 @@ GenerateAiZiTable[nmax_, export_:False, progressIndicator_:False]:= (
         n==1,
         0,
         n==2,
-        AiZi2PsiPsipStates[SL, SpLp],
+        SimplifyFun[AiZi2PsiPsipStates[SL, SpLp]],
         True,
-        Simplify[aizi[n,  SL, SpLp]]
+        SimplifyFun[aizi[n,  SL, SpLp]]
       ];
     ),
-    {n, 1, nmax},
-    {SL, AllowedNKSLterms[n]}, 
+    {n,    1, nmax},
+    {SL,   AllowedNKSLterms[n]}, 
     {SpLp, AllowedNKSLterms[n]}
   ];
   If[export,
@@ -837,66 +942,74 @@ GenerateAiZiTable[nmax_, export_:False, progressIndicator_:False]:= (
 (* ######################################################################### *)
 (* ############################# T11 and T22 ############################### *)
 
-T11n[n_, SL_, SpLp_]:= Module[
-  {s, l, nn, S, L, Sp, Lp, cfpSL, cfpSpLp, parentSL, Sb, Lb, parentSpLp, Tnkk, dval},
-  s = 1/2;
-  l = 3;
+T11n::usage="T11n[n, SL, SpLp] calculate the reduced matrix element of the T11 operator for the f^n configuration corresponding to the terms SL and SpLp. It is essentially the same as T22n with a different value of t.
+
+It does this by using equation (4) of \"Judd, BR, HM Crosswhite, and Hannah Crosswhite. “Intra-Atomic Magnetic Interactions for f Electrons.” Physical Review 169, no. 1 (1968): 130.\"
+";
+T11n[n_, SL_, SpLp_]:= Module[{s, l, t, nn, S, L, Sp, Lp, cfpSL, cfpSpLp, parentSL, Sb, Lb, parentSpLp, Tnkk, dval, phase}, 
+  {s, l} = {1/2, 3};
   {S, L} = findSL[SL];
   {Sp, Lp} = findSL[SpLp];
+  t = 1;
   cfpSL = CFP[{n, SL}];
   cfpSpLp = CFP[{n, SpLp}];
-  For[(Tnkk=0; nn=2;),
-  nn<= Length[cfpSL],
-  nn++,
-  parentSL = cfpSL[[nn, 1]];
-  {Sb, Lb} = findSL[parentSL];
-  dval = Sum[(
-    cfpSpLp[[mm, 2]] 
-    * SixJay[{S, 1, Sp}, {findSL[cfpSpLp[[mm, 1]]][[1]], s, Sb}]
-    * SixJay[{L, 1, Lp}, {findSL[cfpSpLp[[mm, 1]]][[2]], l, Lb}] 
-    * T11Table[{n-1, parentSL, Part[cfpSpLp, mm, 1]}]
-    ),
-    {mm, 2, Length[cfpSpLp]}];
-  dval = (cfpSL[[nn, 2]]
-        * (-1)^(Sb+Lb+s+l+Sp+Lp)
-        * dval);
-  Tnkk+= dval;
-  ];
-  Tnkk = n/(n-2) * Sqrt[(2 S+1) (2 Sp+1) (2 L+1) (2Lp+1)] *Tnkk;
+  
+  Tnkk = Table[
+    (parentSL = cfpSL[[nn, 1]];
+     {Sb, Lb} = findSL[parentSL];
+     dval = Sum[(
+        cfpSpLp[[mm, 2]]
+         * SixJay[{S, t, Sp},
+          {findSL[cfpSpLp[[mm, 1]]][[1]], s, Sb}]
+         * SixJay[{L, t, Lp},
+          {findSL[cfpSpLp[[mm, 1]]][[2]], l, Lb}]
+         * T11Table[{n - 1, parentSL, cfpSpLp[[mm, 1]]}]),
+       {mm, 2, Length[cfpSpLp]}];
+     phase = (-1)^(Sb + Lb + s + l + Sp + Lp);
+     dval *= phase * cfpSL[[nn, 2]];
+     dval),
+    {nn, 2, Length[cfpSL]}];
+  Tnkk = Total[Tnkk];
+  Tnkk *= n/(n - 2) * Sqrt[(2 S + 1) (2 Sp + 1) (2 L + 1) (2 Lp + 1)];
   Return[Tnkk];
-];
+  ];
 
-T22n[n_, SL_, SpLp_]:= Module[
-  {s, l, nn, S, L, Sp, Lp, cfpSL, cfpSpLp, parentSL, Sb, Lb, parentSpLp, Tnkk, dval},
-  s = 1/2;
-  l = 3;
+T22n::usage="T22n[n, SL, SpLp] calculates the reduced matrix element of the T22 operator for the f^n configuration corresponding to the terms SL and SpLp.
+
+It does this by using equation (4) of \"Judd, BR, HM Crosswhite, and Hannah Crosswhite. “Intra-Atomic Magnetic Interactions for f Electrons.” Physical Review 169, no. 1 (1968): 130.\"
+";
+T22n[n_, SL_, SpLp_]:= Module[{s, l, t, nn, S, L, Sp, Lp, cfpSL, cfpSpLp, parentSL, Sb, Lb, parentSpLp, Tnkk, dval, phase}, 
+  {s, l} = {1/2, 3};
   {S, L} = findSL[SL];
   {Sp, Lp} = findSL[SpLp];
-  cfpSL = CFP[{n, SL}];
+  t = 2;
+  cfpSL   = CFP[{n, SL}];
   cfpSpLp = CFP[{n, SpLp}];
-  For[(Tnkk = 0;nn = 2),
-  nn<= Length[cfpSL],
-  nn++,
-  parentSL = Part[cfpSL, nn, 1];
-  {Sb, Lb} = findSL[parentSL];
-  dval = Sum[(cfpSpLp[[mm, 2]] 
-            * SixJay[{S, 2, Sp}, {findSL[Part[cfpSpLp, mm, 1]][[1]], s, Sb}] 
-            * SixJay[{L, 2, Lp}, {findSL[Part[cfpSpLp, mm, 1]][[2]], l, Lb}] 
-            * T22Table[{n-1, parentSL, Part[cfpSpLp, mm, 1]}]
-  ),
-  {mm, 2, Length[cfpSpLp]}
-  ];
-  dval = (dval
-      *cfpSL[[nn, 2]]
-      *(-1)^(Sb+Lb+s+l+Sp+Lp));
-  Tnkk+= dval;
-  ];
-  Tnkk = n/(n-2) * Sqrt[(2 S+1) (2 Sp+1) (2 L+1) (2Lp+1)] *Tnkk;
+  
+  Tnkk = Table[
+    (parentSL = cfpSL[[nn, 1]];
+     {Sb, Lb} = findSL[parentSL];
+     dval = Sum[(
+        cfpSpLp[[mm, 2]]
+         * SixJay[{S, t, Sp},
+          {findSL[cfpSpLp[[mm, 1]]][[1]], s, Sb}]
+         * SixJay[{L, t, Lp},
+          {findSL[cfpSpLp[[mm, 1]]][[2]], l, Lb}]
+         * T22Table[{n - 1, parentSL, cfpSpLp[[mm, 1]]}]),
+       {mm, 2, Length[cfpSpLp]}];
+     phase = (-1)^(Sb + Lb + s + l + Sp + Lp);
+     dval *= phase * cfpSL[[nn, 2]];
+     dval),
+    {nn, 2, Length[cfpSL]}];
+  Tnkk = Total[Tnkk];
+  Tnkk *= n/(n - 2) * Sqrt[(2 S + 1) (2 Sp + 1) (2 L + 1) (2 Lp + 1)];
   Return[Tnkk];
-];
+  ];
 
-GenerateT11Table[nmax_, export_, progressIndicator_]:= (
-  If[progressIndicator, (
+GenerateT11Table::usage="GenerateT11Table[nmax] calculates the reduced matrix elements of the double tensor operator T11 up to the configuration f^nmax. If the optional value \"Export\" is set to True, the resultant Association is saved to the data folder. If the optional value \"Progress Indicator\" is set to True then the function displays a progress indicator as the matrix elements are calculated.";
+Options[GenerateT11Table]={"Export"->False, "Progress Indicator"->True};
+GenerateT11Table[nmax_, OptionsPattern[]]:= (
+  If[OptionValue["Progress Indicator"], (
     numItersai = Association[Table[n->Length[AllowedNKSLterms[n]]^2, {n, 1, nmax}]];
     counters = Association[Table[n->0, {n, 1, nmax}]];
     totalIters = Total[Values[numItersai[[1;;nmax]]]];
@@ -930,16 +1043,16 @@ GenerateT11Table[nmax_, export_, progressIndicator_]:= (
     n==1,
     0,
     n==2,
-    Simplify[T112PsiPsipStates[SL, SpLp]],
+    SimplifyFun[T112PsiPsipStates[SL, SpLp]],
     True,
-    Simplify[T11n[n,  SL, SpLp]]
+    SimplifyFun[T11n[n,  SL, SpLp]]
     ];
     ),
     {n, 1, nmax},
     {SL, AllowedNKSLterms[n]},
     {SpLp, AllowedNKSLterms[n]}
   ];
-  If[export,
+  If[OptionValue["Export"],
     (
     fname = FileNameJoin[{moduleDir, "data", "ReducedT11Table.m"}];
     Export[fname, T11Table];
@@ -982,9 +1095,9 @@ GenerateT22Table[nmax_, export_, progressIndicator_]:= (
     n==1,
     0,
     n==2,
-    Simplify[T222PsiPsipStates[SL, SpLp]],
+    SimplifyFun[T222PsiPsipStates[SL, SpLp]],
     True,
-    Simplify[T22n[n,  SL, SpLp]]
+    SimplifyFun[T22n[n,  SL, SpLp]]
     ];),
     {n, 1, nmax},
     {SL, AllowedNKSLterms[n]}, 
@@ -1005,15 +1118,25 @@ GenerateT22Table[nmax_, export_, progressIndicator_]:= (
 (* ######################################################################### *)
 (* ############################# Spin-Spin ################################# *)
 
+SpinSpin::usage="SpinSpin[n, SL, SpLp, J] returns the matrix element <|SL,J|spin-spin|SpLp,J|> for the spin-spin operator within the configuration f^n. This matrix element is independent of MJ. This is obtained by querying the relevant reduced matrix element by querying the Association T22Table and putting in the adequate phase and 6-j symbol.
+
+This is calculated according to equation (3) in \"Judd, BR, HM Crosswhite, and Hannah Crosswhite. “Intra-Atomic Magnetic Interactions for f Electrons.” Physical Review 169, no. 1 (1968): 130.\"
+\".
+";
 SpinSpin[n_, SL_, SpLp_, J_] := Module[
-  {S, L, Sp, Lp, \[Alpha]},
+  {S, L, Sp, Lp, \[Alpha], val},
    \[Alpha] = 2;
    {S, L} = findSL[SL];
    {Sp, Lp} = findSL[SpLp];
-   (-1)^(Sp + L + J) SixJay[{Sp, Lp, J}, {L, S, \[Alpha]}]* 
-    T22Table[{n, SL, SpLp}]];
+   val = ((-1)^(Sp + L + J) 
+        * SixJay[{Sp, Lp, J}, {L, S, \[Alpha]}]
+        * T22Table[{n, SL, SpLp}]);
+   Return[val]
+    ];
 
-GenerateSpinSpinTable[nmax_, export_] :=
+GenerateSpinSpinTable::usage="GenerateSpinSpinTable[nmax] generates the matrix elements in the |LSJ> basis for the (spin-other-orbit + electrostatically-correlated-spin-orbit) operator. It returns an Association where the keys are of the form {n, SL, SpLp, J}. If the option \"Export\" is set to True then the resulting object is saved to the data folder. Since this is a scalar operator, there is no MJ dependence. This dependence only comes into play when the crystal field contribution is taken into account.";
+Options[GenerateSpinSpinTable] = {"Export"->False};
+GenerateSpinSpinTable[nmax_, OptionsPattern[]] :=
  (
   SpinSpinTable = <||>;
   PrintTemporary[Dynamic[n]];
@@ -1021,10 +1144,10 @@ GenerateSpinSpinTable[nmax_, export_] :=
    SpinSpinTable[{n, SL, SpLp, J}] = (SpinSpin[n, SL, SpLp, J]);,
    {n, 1, nmax},
    {J, minJ[n], maxJ[n]},
-   {SL, Map[First, AllowedNKSLforJterms[n, J]]}, {SpLp, 
-    Map[First, AllowedNKSLforJterms[n, J]]}
+   {SL,   First /@ AllowedNKSLforJterms[n, J]},
+   {SpLp, First /@ AllowedNKSLforJterms[n, J]}
    ];
-  If[export,
+  If[OptionValue["Export"],
    (fname = FileNameJoin[{moduleDir, "data", "SpinSpinTable.m"}];
     Export[fname, SpinSpinTable];
     )
@@ -1039,25 +1162,34 @@ GenerateSpinSpinTable[nmax_, export_] :=
 (* ######################################################################### *)
 (* ##### Spin-Other-Orbit and Electrostatically-Correlated-Spin-Orbit ###### *)
 
+SOOandECSO::usage="SOOandECSO[n, SL, SpLp, J] returns the matrix element <|SL,J|spin-spin|SpLp,J|> for the combined effects of the spin-other-orbit interaction and the electrostatically-correlated-spin-orbit (which originates from configuration interaction effects) within the configuration f^n. This matrix element is independent of MJ. This is obtained by querying the relevant reduced matrix element by querying the Association AiZiTable and putting in the adequate phase and 6-j symbol. The AiZiTable puts together the reduced matrix elements from three operators.
+
+This is calculated according to equation (3) in \"Judd, BR, HM Crosswhite, and Hannah Crosswhite. “Intra-Atomic Magnetic Interactions for f Electrons.” Physical Review 169, no. 1 (1968): 130.\".
+";
 SOOandECSO[n_, SL_, SpLp_, J_]:= Module[
-  {S, Sp, L, Lp},
+  {S, Sp, L, Lp, \[Alpha], val},
+  \[Alpha] = 1;
   {S, L}   = findSL[SL];
   {Sp, Lp} = findSL[SpLp];
-  Return[(-1)^(Sp+L+J) * SixJay[{Sp, Lp, J}, {L, S, 1}] * AiZiTable[{n, SL, SpLp}]];
+  val = ((-1)^(Sp + L + J) 
+      * SixJay[{Sp, Lp, J}, {L, S, \[Alpha]}] 
+      * AiZiTable[{n, SL, SpLp}]);
+  Return[val];
 ]
 
-Prescaling = {P2->P2/225, P4->P4/1089, P6->25 P6/184041}
-
-GenerateSOOandECSOTable[nmax_, export_:False]:= (
+Prescaling = {P2 -> P2/225, P4 -> P4/1089, P6 -> 25 P6 / 184041};
+GenerateSOOandECSOTable::usage="GenerateSOOandECSOTable[nmax] generates the matrix elements in the |LSJ> basis for the (spin-other-orbit + electrostatically-correlated-spin-orbit) operator. It returns an Association where the keys are of the form {n, SL, SpLp, J}. If the option \"Export\" is set to True then the resulting object is saved to the data folder. Since this is a scalar operator, there is no MJ dependence. This dependence only comes into play when the crystal field contribution is taken into account.";
+Options[GenerateSOOandECSOTable] = {"Export"->False}
+GenerateSOOandECSOTable[nmax_, OptionsPattern[]]:= (
   SOOandECSOTable = <||>;
   Do[
     SOOandECSOTable[{n, SL, SpLp, J}] = (SOOandECSO[n, SL, SpLp, J] /. Prescaling);,
   {n, 1, nmax},
   {J, minJ[n], maxJ[n]},
-  {SL, Map[First, AllowedNKSLforJterms[n, J]]},
-  {SpLp, Map[First, AllowedNKSLforJterms[n, J]]}
+  {SL,   First /@ AllowedNKSLforJterms[n, J]},
+  {SpLp, First /@ AllowedNKSLforJterms[n, J]}
   ];
-  If[export,
+  If[OptionValue["Export"],
   (
     fname = FileNameJoin[{moduleDir, "data", "SOOandECSOTable.m"}];
     Export[fname, SOOandECSOTable];
@@ -1262,8 +1394,7 @@ TwoBodyNKSL::usage = "TwoBodyNKSL[SL, SpLp] returns the matrix element for confi
 TwoBodyNKSL[SL_, SpLp_] := Module[
   {S, L},
   {S, L} = findSL[SL];
-  val = ( 
-   If[SL==SpLp,
+  val = (If[SL==SpLp,
     \[Alpha] * L * (L + 1) +
     GR7W[Part[First[findNKLSterm[SL]], 3]] + 
     GG2U[Part[First[findNKLSterm[SL]], 4]],
@@ -1275,34 +1406,58 @@ TwoBodyNKSL[SL_, SpLp_] := Module[
 (* ########### Configuration-Interaction via Casimir Operators ############# *)
 (* ######################################################################### *)
 
-Options[EnergyMatrix] = {"Sparse"->True};
+MagneticInteractions[{n_, SLJ_, SLJp_, J_}, chenDelta_, includeSpinSpin_] := (
+  ss = If[includeSpinSpin,
+    SpinSpinTable[{n, SLJ, SLJp, J}],
+    0];
+  sooandecso = SOOandECSOTable[{n, SLJ, SLJp, J}];
+  total = ss + sooandecso;
+  key = {n, SLJ, SLJp, J};
+  If[chenDelta,
+    If[
+      MemberQ[Keys[chenDeltas], {n, SLJ, SLJp}],
+    (
+      {S, L} = findSL[SLJ];
+      {Sp, Lp} = findSL[SLJp];
+      phase = (-1)^(Sp + L + J);
+      Msixjay = SixJay[{Sp, Lp, J},{L, S, 2}];
+      Psixjay = SixJay[{Sp, Lp, J},{L, S, 1}];
+      {M0v, M2v, M4v, P2v, P4v, P6v} = chenDeltas[{n, SLJ, SLJp}]["wrong"];
+      total = phase*Msixjay(M0v*M0+M2v*M2+M4v*M4);
+      total +=  phase*Psixjay(P2v*P2+P4v*P4+P6v*P6);
+      total = total /. Prescaling;
+    )
+    ]
+    ];
+  Return[total];
+)
+
+Options[EnergyMatrix] = {"Sparse"->True, "ChenDeltas"->False, "Include Spin-Spin"->True};
 EnergyMatrix::usage = "EnergyMatrix[n, J, J', I, I'] provides the matrix element <J, I|H|J', I'> within the f^n configuration, it does this by adding the following interactions: Coulomb, spin-orbit, spin-other-orbit, electrostatically-correlated-spin-orbit, spin-spin, three-body interactions, and crystal-field.";
 EnergyMatrix[n_, J_, Jp_, Ii_, Ip_, CFTable_, OptionsPattern[]]:= (
   eMatrix = Table[
-  (*Condition for a scalar matrix op*)
-  subKron = ( KroneckerDelta[NKSLJM[[4]], NKSLJMp[[4]]]
-          * KroneckerDelta[J, Jp]
-          * KroneckerDelta[NKSLJM[[3]], NKSLJMp[[3]]]);
-  matValue = If[subKron==0,
-    0,
-    Simplify[
-      (subKron
-      * ( ElectrostaticMatrixTable[{n, NKSLJM[[1]], NKSLJMp[[1]]}]
-        + TwoBodyNKSL[NKSLJM[[1]], NKSLJMp[[1]]]
-        + SpinOrbitTable[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}]
-        + SOOandECSOTable[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}]
-        (* + SpinSpinTable[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}] *)
-        + ThreeBodyTable[{n, NKSLJM[[1]], NKSLJMp[[1]]}]
-       )
-      )
-    ]
+    (*Condition for a scalar matrix op*)
+    subKron = (KroneckerDelta[NKSLJM[[4]], NKSLJMp[[4]]]
+            * KroneckerDelta[J, Jp]
+            * KroneckerDelta[NKSLJM[[3]], NKSLJMp[[3]]]);
+    matValue = If[subKron==0,
+      0,
+      SimplifyFun[
+        (ElectrostaticMatrixTable[{n, NKSLJM[[1]], NKSLJMp[[1]]}]
+          + TwoBodyNKSL[NKSLJM[[1]], NKSLJMp[[1]]]
+          + SpinOrbitTable[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}]
+          + MagneticInteractions[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}, 
+                  OptionValue["ChenDeltas"], OptionValue["Include Spin-Spin"]]
+          + ThreeBodyTable[{n, NKSLJM[[1]], NKSLJMp[[1]]}]
+        )
+      ]
+    ];
+    matValue += CFTable[{n, NKSLJM[[1]], NKSLJM[[2]], NKSLJM[[3]], NKSLJMp[[1]], NKSLJMp[[2]], NKSLJMp[[3]]}];
+    matValue
+    ,
+  {NKSLJMp, Partition[Flatten[AllowedNKSLJMIMforJIterms[n, Jp, Ip]], 4]},
+  {NKSLJM , Partition[Flatten[AllowedNKSLJMIMforJIterms[n, J, Ii]], 4]}
   ];
-  matValue += CFTable[{n, NKSLJM[[1]], NKSLJM[[2]], NKSLJM[[3]], NKSLJMp[[1]], NKSLJMp[[2]], NKSLJMp[[3]]}];
-  matValue
-  ,
-{NKSLJMp, Partition[Flatten[AllowedNKSLJMIMforJIterms[n, Jp, Ip]], 4]},
-{NKSLJM , Partition[Flatten[AllowedNKSLJMIMforJIterms[n, J, Ii]], 4]}
-];
 If[OptionValue["Sparse"],
  eMatrix = SparseArray[eMatrix]];
 Return[eMatrix]
@@ -1310,7 +1465,7 @@ Return[eMatrix]
 
 EnergyStates[n_, J_, Ii_]:= AllowedNKSLJMIMforJIterms[n, J, Ii];
 
-Options[TabulateEnergyMatrixTable] = {"Sparse"->True}
+Options[TabulateEnergyMatrixTable] = {"Sparse"->True, "ChenDeltas"->False, "Include Spin-Spin"->True};
 TabulateEnergyMatrixTable::usage = "TabulateEnergyMatrixTable[n, I] returns a list with three elements {EnergyMatrixTable, EnergyStatesTable, AllowedM}. EnergyMatrixTable is an Association with keys equal to lists of the form {n, J, Jp, Ii, Ii}. EnergyStatesTable is an Association with keys equal to lists of the form {n, J, Ii}. AllowedM is another Association with keys equal to lists of the form {n, J} and values equal to lists equal to the corresponding values of MJ. It's unnecessary (and it won't work in this implementation) to give n > 7 given the equivalency between electron and hole configurations.";
 TabulateEnergyMatrixTable[n_, Ii_, CFTable_, OptionsPattern[]]:= (
   EnergyMatrixTable = <||>;
@@ -1333,9 +1488,9 @@ TabulateEnergyMatrixTable[n_, Ii_, CFTable_, OptionsPattern[]]:= (
   ]
   ];
   Do[
-    (EnergyMatrixTable[{n, J, Jp, Ii, Ii}] = EnergyMatrix[n, J, Jp, Ii, Ii, CFTable, "Sparse"->OptionValue["Sparse"]];
-     EnergyStatesTable[{n, J, Ii}]         = EnergyStates[n, J, Ii];
-     AllowedM[{n, J}]                      = Table[M, {J, minJ[n], maxJ[n]}, {M, -J, J}];
+    (EnergyMatrixTable[{n, J, Jp, Ii, Ii}] = EnergyMatrix[n, J, Jp, Ii, Ii, CFTable, "Sparse"->OptionValue["Sparse"], "ChenDeltas"->OptionValue["ChenDeltas"], "Include Spin-Spin"->OptionValue["Include Spin-Spin"]];
+     EnergyStatesTable[{n, J, Ii}]  = EnergyStates[n, J, Ii];
+     AllowedM[{n, J}]               = Table[M, {J, minJ[n], maxJ[n]}, {M, -J, J}];
      numiter += 1;
     ),
     {Jp, AllowedJ[n]},
@@ -1345,7 +1500,7 @@ TabulateEnergyMatrixTable[n_, Ii_, CFTable_, OptionsPattern[]]:= (
   Return[{EnergyMatrixTable, EnergyStatesTable, AllowedM}];
 )
 
-Options[TabulateManyEnergyMatrixTables] = {"Overwrite"->False, "Sparse"->True};
+Options[TabulateManyEnergyMatrixTables] = {"Overwrite"->False, "Sparse"->True, "ChenDeltas"->False, "Include Spin-Spin"->True};
 TabulateManyEnergyMatrixTables::usage = "TabulateManyEnergyMatrixTables[{n1, n2, ...}, {I1, I2, ...}] calculates the tables of matrix elements for the requested f^n_i configurations with the given nuclear spin I_i. The function does not return the matrices themselves. It instead returns an Association whose keys are lists of the form {n, I} and whose values are the filenames where the output of TabulateEnergyMatrixTables was saved to. When these files are loaded with Get, the following three symbols are thus defined: EnergyMatrixTable, EnergyStatesTable, and AllowedM.
 EnergyMatrixTable is an Association whose keys are of the form {n, J, Jp, Ii, Ii} and whose values are matrix elements.";
 TabulateManyEnergyMatrixTables[ns_, Iis_, OptionsPattern[]]:= (
@@ -1362,7 +1517,7 @@ TabulateManyEnergyMatrixTables[ns_, Iis_, OptionsPattern[]]:= (
       fNames[{n, Ii}] = exportFname;
       If[FileExistsQ[exportFname] && Not[overwrite],
         Continue[]];
-      {EnergyMatrixTable, EnergyStatesTable, AllowedM} = TabulateEnergyMatrixTable[n, Ii, CrystalFieldTable, "Sparse"->OptionValue["Sparse"]];
+      {EnergyMatrixTable, EnergyStatesTable, AllowedM} = TabulateEnergyMatrixTable[n, Ii, CrystalFieldTable, "Sparse"->OptionValue["Sparse"], "ChenDeltas"->OptionValue["ChenDeltas"], "Include Spin-Spin"->OptionValue["Include Spin-Spin"]];
       If[FileExistsQ[exportFname]&&overwrite,
         DeleteFile[exportFname]];
       Save[exportFname, {EnergyMatrixTable, EnergyStatesTable, AllowedM}];
@@ -1435,7 +1590,7 @@ If[Length[ops]>1,
     KroneckerDelta[NKSLJM[[4]],NKSLJMp[[4]]]
   * KroneckerDelta[`J`,`Jp`]
   * KroneckerDelta[NKSLJM[[3]],NKSLJMp[[3]]]);
-  matValue = If[subKron==0, 0, Simplify[(`iteratorSum`)]];
+  matValue = If[subKron==0, 0, SimplifyFun[(`iteratorSum`)]];
   matValue += CrystalFieldTable[{"<>ToString[n]<>", NKSLJM[[1]], NKSLJM[[2]], NKSLJM[[3]], NKSLJMp[[1]], NKSLJMp[[2]], NKSLJMp[[3]]}];
       matValue
   ),
@@ -1455,7 +1610,7 @@ If[Length[ops]>1,
     KroneckerDelta[NKSLJM[[4]],NKSLJMp[[4]]]
   * KroneckerDelta[`J`,`Jp`]
   * KroneckerDelta[NKSLJM[[3]],NKSLJMp[[3]]]);
-  matValue = If[subKron==0, 0, Simplify[(`iteratorSum`)]];
+  matValue = If[subKron==0, 0, SimplifyFun[(`iteratorSum`)]];
   matValue
   ),
   {NKSLJMp, Partition[Flatten[AllowedNKSLJMIMforJIterms["<>ToString[n]<>",`Jp`,`Ip`]],4]},
@@ -2409,7 +2564,11 @@ PrettySaundersSLJ[{{SL_, J_}, MJ_}] := (
      }] // DisplayForm])
 
 PrettySaundersSLJmJ[{{SL_, J_}, mJ_}] := (If[
-   StringQ[SL], {S, L} = findSL[SL], {S, L} = SL];
+   StringQ[SL], 
+   ({S, L} = findSL[SL];
+    L = StringTake[SL, {2, -1}];
+    ), 
+   {S, L} = SL];
   Return[
    RowBox[{AdjustmentBox[Style[2*S + 1, Smaller], 
        BoxBaselineShift -> -1, BoxMargins -> 0], 
@@ -2486,22 +2645,22 @@ FindThresholdPosition[list_, threshold_] :=
 ParseStatesByProbabilitySum::usage = "ParseStatesByProbabilitySum[states, basis, probSum] takes a list of eigenstates in terms of their coefficients in the given basis and returns a list of the same states in terms of their energy and the coefficients of the basis vectors that sum to at least probSum.";
 ParseStatesByProbabilitySum[states_, basis_, probSum_, roundTo_ : 0.01] :=(
     parsedStates = Table[({energy, eigenVec} = state;
-    energy = Chop[energy];
-    amplitudes = Round[eigenVec, roundTo];
-    probs = Round[Abs[eigenVec^2], roundTo];
-    ordering = Reverse[Ordering[probs]];
-    orderedProbs = probs[[ordering]];
-    accProb = Accumulate[orderedProbs];
-    thresholdIndex = FindThresholdPosition[accProb, probSum];
-    chosenIndices = ordering[[;; thresholdIndex]];
-    majorComponents = basis[[chosenIndices]];
-    majorProbabilities = amplitudes[[chosenIndices]];
-    notnullProbs = 
-     Flatten[Position[majorProbabilities, _?(Abs[#] != 0 &)]];
-    majorComponents = PrettySaundersSLJmJ[#[[1]]] & /@ majorComponents;
-    majorProbabilities = majorProbabilities[[notnullProbs]];
-    majorComponents = Ket /@ majorComponents[[notnullProbs]];
-    majorRep = majorProbabilities . majorComponents;
+      energy = Chop[energy];
+      amplitudes = Round[eigenVec, roundTo];
+      probs = Round[Abs[eigenVec^2], roundTo];
+      ordering = Reverse[Ordering[probs]];
+      orderedProbs = probs[[ordering]];
+      accProb = Accumulate[orderedProbs];
+      thresholdIndex = Min[Length[accProb], FindThresholdPosition[accProb, probSum]];
+      chosenIndices = ordering[[;; thresholdIndex]];
+      majorComponents = basis[[chosenIndices]];
+      majorProbabilities = amplitudes[[chosenIndices]];
+      notnullProbs = 
+      Flatten[Position[majorProbabilities, _?(Abs[#] != 0 &)]];
+      majorComponents = PrettySaundersSLJmJ[#[[1]]] & /@ majorComponents;
+      majorProbabilities = majorProbabilities[[notnullProbs]];
+      majorComponents = Ket /@ majorComponents[[notnullProbs]];
+      majorRep = majorProbabilities . majorComponents;
     {energy, majorRep}), {state, states}];
  Return[parsedStates])
 
@@ -2997,7 +3156,7 @@ Do[(
 (* ############################################################################################## *)
 (* ############################################ Data ############################################ *)
 
-PrintTemporary["Loading data from Carnall ..."];
+PrintTemporary["Loading data from Carnall for LaF3 ..."];
 carnallFname = FileNameJoin[{moduleDir, "data", "Carnall.m"}];
 Carnall = Import[carnallFname];
 Carnall::usage = "Association of data from Carnall et al (1989) with the following keys: {data, annotations, paramSymbols, elementNames, rawData, rawAnnotations, annnotatedData, appendix:Pr:Association, appendix:Pr:Calculated, appendix:Pr:RawTable, appendix:Headings}";
@@ -3097,7 +3256,7 @@ If[!FileExistsQ[SpinSpinTableFname],
   SpinSpinTable = Import[SpinSpinTableFname];
 ]
 
-PrintTemporary["Loading table of matrix elements for three-body interactions ..."];
+PrintTemporary["Loading table of matrix elements for three-body configuration-interaction effects ..."];
 ThreeBodyFname = FileNameJoin[{moduleDir, "data", "ThreeBodyTable.m"}];
 If[!FileExistsQ[ThreeBodyFname],
   (PrintTemporary[">> ThreeBody.m not found, generating ..."];
