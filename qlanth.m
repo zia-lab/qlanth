@@ -140,6 +140,32 @@ cfSymbols = {B02, B04, B06, B12, B14, B16, B22, B24, B26, B34, B36,
    B44, B46, B56, B66, S12, S14, S16, S22, S24, S26, S34, S36, S44, 
    S46, S56, S66};
 
+TSymbols = {T2, T3, T4, T6, T7, T8, T11, T12, T14, T15, T16, T17, T18, T19};
+
+ImportData::usage="ImportData[key] loads into the current session the symbol corresponding to the the given key. The name of the loaded symbol is not necessarily the same as the given key. To see available key call ImportData[]. Function returns nothing.";
+ImportData[key_:""]:=(
+  Module[{importantThings,importTemplate,message,symbolName,fname},
+    importantThings=<|
+      "Reid-fncross"->{
+      "Importing data for reduced matrix elements from Reid's linuxemp as",
+      "fncrossReid",
+      FileNameJoin[{moduleDir,"data","fncross.m"}]
+      }
+      |>;
+    If[Not[MemberQ[Keys[importantThings],key]],
+      (Print["Non-existent key, available data keys are: ",Keys[importantThings]];
+      Return[Null];
+      )
+    ];
+    {message,symbolName,fname} = importantThings[key];
+    message=Row[{message," ",Style[symbolName,Bold],"."}];
+    Print[message];
+    importTemplate=StringTemplate["`symbolName`=Import[\"`fname`\"];"];
+    importCommand=importTemplate[<|"symbolName"->symbolName,"fname"->fname|>];
+    ToExpression[importCommand]
+]
+)
+
 printL::usage = "printL[L] give the string representation of a given angular momentum.";
 findSL::usage = "findSL[LS] gives the spin and orbital angular momentum that corresponds to the provided string LS.";
 findSL\[Gamma]::usage = "findSL\[Gamma][LS] gives the spin and orbital angular momentum that corresponds to the provided string LS. The provided lists contains terms that belong to one of the f^n configurations. The last element of this list provides a digit that differentiates between different possibly degenerate terms.";
@@ -520,35 +546,23 @@ GenerateThreeBodyTable::usage = "GenerateThreeBodyTable[nmax, export] computes t
 GenerateThreeBodyTable[nmax_ : 7, export_ : False] := (
   ti3fname = FileNameJoin[{moduleDir, "data", "ti3.m"}];
   ti3 = Import[ti3fname];
+  juddOperators = Import[FileNameJoin[{moduleDir, "data", "juddOperators.m"}]];
   
-  ti3PsiPsipStates[SL_, SpLp_, tnp_, k_] := 
-   Module[{Statesn1, tkvals, PositionofState, kposition, ii, Snt, 
-     Sntt, Lnt, Lntt, jj, S, L, Sp, Lp, tnk},
-    Statesn1 = 
-     Reverse[Sort[
-       Join[Thread[{AllowedNKSLterms[3], AllowedNKSLterms[3]}], 
-        Permutations[AllowedNKSLterms[3], {2}]]]];
-    For[ii = 1, ii <= Length[Statesn1], ii++, {
-      {Snt, Lnt} = findSL[Statesn1[[ii, 1]]];
-      {Sntt, Lntt} = findSL[Statesn1[[ii, 2]]];
-      If[Snt == Sntt && Lnt == Lntt, 
-       0, {Statesn1 = Delete[Statesn1, ii], ii = ii - 1}]}];
-    tkvals = {2, 3, 4, 6, 7, 8, 11, 12, 14, 15, 16, 17, 18, 19};
-    kposition = Position[tkvals, k][[1, 1]];
-    {S, L} = findSL[SL];
-    {Sp, Lp} = findSL[SpLp];
-    tnk = 0;
-    If[S == Sp && L == Lp,
-     PositionofState = 0;
-     jj = 1;
-     While[PositionofState == 0 && jj <= Length[Statesn1], 
-      If[Statesn1[[jj, 1]] == SL && Statesn1[[jj, 2]] == SpLp, 
-       PositionofState = jj, PositionofState = 0]; jj++];
-     If[PositionofState == 0, tnk = tnk + 0, 
-      tnk = tnp[[kposition, PositionofState]]], 0];
-     tnk
+  ti3PsiPsipStates::usage="ti3PsiPsipStates[SL, SpLp, k] returns the value for the reduced matrix element of the three-body operator t_k for the terms {SL, SpLp} for the f^3 configuration.
+  
+  Data used here was taken from tables 1 and 2 from Judd, BR, and MA Suskin. \"
+  Complete Set of Orthogonal Scalar Operators for the Configuration f^3\". JOSA B 1, no. 2 (1984): 261-65.\"";
+  ti3PsiPsipStates[SL_, SpLp_, k_] := (
+    tiKey = "t_{" <> ToString[k] <> "}";
+    jOP = juddOperators[{3, tiKey}];
+    key = {SL, SpLp};
+    val = If[MemberQ[Keys[jOP], key],
+      jOP[key],
+      0
     ];
-  
+    Return[val];
+  );
+
   ti[n_, SL_, SpLp_, k_] := 
    Module[{nn, S, L, Sp, Lp, cfpSL, cfpSpLp, parentSL, parentSpLp, 
      tnk},
@@ -586,13 +600,13 @@ GenerateThreeBodyTable[nmax_ : 7, export_ : False] := (
          n <= 2,
          0,
          n == 3,
-         SimplifyFun[ti3PsiPsipStates[SL, SpLp, ti3, k]],
+         SimplifyFun[ti3PsiPsipStates[SL, SpLp, k]],
          True,
-          SimplifyFun[ti[n,  SL, SpLp, k]]
+         SimplifyFun[ti[n,  SL, SpLp, k]]
          ];
       ),
      {SL,     AllowedNKSLterms[n]}, 
-     {SpLp, AllowedNKSLterms[n]}, 
+     {SpLp,   AllowedNKSLterms[n]}, 
      {k, kvalues}
      ];
     PrintTemporary[
@@ -602,14 +616,12 @@ GenerateThreeBodyTable[nmax_ : 7, export_ : False] := (
    ];
 
   (*Now use those matrix elements to determine their sum as weighted by their corresponding strenghts Ti*)
-  Tparams = {T2, T3, T4, T6, T7, T8, T11, T12, T14, T15, T16, T17, 
-    T18, T19};
+
   ThreeBodyTable = Association[];
   Do[
    Do[
     ThreeBodyTable[{n, SL, SpLp}] = Sum[(
-        tktable[{n, SL, SpLp, kvalues[[kk]]}]
-         *Tparams[[kk]]),
+        tktable[{n, SL, SpLp, kvalues[[kk]]}] * TSymbols[[kk]]),
        {kk, 1, 14}];, 
     {SL, AllowedNKSLterms[n]}, 
     {SpLp, AllowedNKSLterms[n]}
