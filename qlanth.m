@@ -56,6 +56,7 @@ F6:
 M0: 0th Marvin integral
 M2: 2nd Marvin integral
 M4: 4th Marvin integral
+\[Sigma]SS: spin-spin override
 
 T2:
 T3:
@@ -1418,10 +1419,8 @@ TwoBodyNKSL[SL_, SpLp_] := Module[
 (* ########### Configuration-Interaction via Casimir Operators ############# *)
 (* ######################################################################### *)
 
-MagneticInteractions[{n_, SLJ_, SLJp_, J_}, chenDelta_, includeSpinSpin_] := (
-  ss = If[includeSpinSpin,
-    SpinSpinTable[{n, SLJ, SLJp, J}],
-    0];
+MagneticInteractions[{n_, SLJ_, SLJp_, J_}, chenDelta_] := (
+  ss = \[Sigma]SS * SpinSpinTable[{n, SLJ, SLJp, J}];
   sooandecso = SOOandECSOTable[{n, SLJ, SLJp, J}];
   total = ss + sooandecso;
   key = {n, SLJ, SLJp, J};
@@ -1435,8 +1434,8 @@ MagneticInteractions[{n_, SLJ_, SLJp_, J_}, chenDelta_, includeSpinSpin_] := (
       Msixjay = SixJay[{Sp, Lp, J},{L, S, 2}];
       Psixjay = SixJay[{Sp, Lp, J},{L, S, 1}];
       {M0v, M2v, M4v, P2v, P4v, P6v} = chenDeltas[{n, SLJ, SLJp}]["wrong"];
-      total = phase*Msixjay(M0v*M0+M2v*M2+M4v*M4);
-      total +=  phase*Psixjay(P2v*P2+P4v*P4+P6v*P6);
+      total  = phase*Msixjay(M0v*M0 + M2v*M2 + M4v*M4);
+      total +=  phase*Psixjay(P2v*P2 + P4v*P4 + P6v*P6);
       total = total /. Prescaling;
     )
     ]
@@ -1444,7 +1443,7 @@ MagneticInteractions[{n_, SLJ_, SLJp_, J_}, chenDelta_, includeSpinSpin_] := (
   Return[total];
 )
 
-Options[EnergyMatrix] = {"Sparse"->True, "ChenDeltas"->False, "Include Spin-Spin"->True};
+Options[EnergyMatrix] = {"Sparse"->True, "ChenDeltas"->False};
 EnergyMatrix::usage = "EnergyMatrix[n, J, J', I, I'] provides the matrix element <J, I|H|J', I'> within the f^n configuration, it does this by adding the following interactions: Coulomb, spin-orbit, spin-other-orbit, electrostatically-correlated-spin-orbit, spin-spin, three-body interactions, and crystal-field.";
 EnergyMatrix[n_, J_, Jp_, Ii_, Ip_, CFTable_, OptionsPattern[]]:= (
   eMatrix = Table[
@@ -1459,7 +1458,7 @@ EnergyMatrix[n_, J_, Jp_, Ii_, Ip_, CFTable_, OptionsPattern[]]:= (
           + TwoBodyNKSL[NKSLJM[[1]], NKSLJMp[[1]]]
           + SpinOrbitTable[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}]
           + MagneticInteractions[{n, NKSLJM[[1]], NKSLJMp[[1]], NKSLJM[[2]]}, 
-                  OptionValue["ChenDeltas"], OptionValue["Include Spin-Spin"]]
+                  OptionValue["ChenDeltas"]]
           + ThreeBodyTable[{n, NKSLJM[[1]], NKSLJMp[[1]]}]
         )
       ]
@@ -1477,7 +1476,7 @@ Return[eMatrix]
 
 EnergyStates[n_, J_, Ii_]:= AllowedNKSLJMIMforJIterms[n, J, Ii];
 
-Options[TabulateEnergyMatrixTable] = {"Sparse"->True, "ChenDeltas"->False, "Include Spin-Spin"->True};
+Options[TabulateEnergyMatrixTable] = {"Sparse"->True, "ChenDeltas"->False};
 TabulateEnergyMatrixTable::usage = "TabulateEnergyMatrixTable[n, I] returns a list with three elements {EnergyMatrixTable, EnergyStatesTable, AllowedM}. EnergyMatrixTable is an Association with keys equal to lists of the form {n, J, Jp, Ii, Ii}. EnergyStatesTable is an Association with keys equal to lists of the form {n, J, Ii}. AllowedM is another Association with keys equal to lists of the form {n, J} and values equal to lists equal to the corresponding values of MJ. It's unnecessary (and it won't work in this implementation) to give n > 7 given the equivalency between electron and hole configurations.";
 TabulateEnergyMatrixTable[n_, Ii_, CFTable_, OptionsPattern[]]:= (
   EnergyMatrixTable = <||>;
@@ -1500,7 +1499,7 @@ TabulateEnergyMatrixTable[n_, Ii_, CFTable_, OptionsPattern[]]:= (
   ]
   ];
   Do[
-    (EnergyMatrixTable[{n, J, Jp, Ii, Ii}] = EnergyMatrix[n, J, Jp, Ii, Ii, CFTable, "Sparse"->OptionValue["Sparse"], "ChenDeltas"->OptionValue["ChenDeltas"], "Include Spin-Spin"->OptionValue["Include Spin-Spin"]];
+    (EnergyMatrixTable[{n, J, Jp, Ii, Ii}] = EnergyMatrix[n, J, Jp, Ii, Ii, CFTable, "Sparse"->OptionValue["Sparse"], "ChenDeltas"->OptionValue["ChenDeltas"]];
      EnergyStatesTable[{n, J, Ii}]  = EnergyStates[n, J, Ii];
      AllowedM[{n, J}]               = Table[M, {J, minJ[n], maxJ[n]}, {M, -J, J}];
      numiter += 1;
@@ -1512,7 +1511,7 @@ TabulateEnergyMatrixTable[n_, Ii_, CFTable_, OptionsPattern[]]:= (
   Return[{EnergyMatrixTable, EnergyStatesTable, AllowedM}];
 )
 
-Options[TabulateManyEnergyMatrixTables] = {"Overwrite"->False, "Sparse"->True, "ChenDeltas"->False, "Include Spin-Spin"->True};
+Options[TabulateManyEnergyMatrixTables] = {"Overwrite"->False, "Sparse"->True, "ChenDeltas"->False};
 TabulateManyEnergyMatrixTables::usage = "TabulateManyEnergyMatrixTables[{n1, n2, ...}, {I1, I2, ...}] calculates the tables of matrix elements for the requested f^n_i configurations with the given nuclear spin I_i. The function does not return the matrices themselves. It instead returns an Association whose keys are lists of the form {n, I} and whose values are the filenames where the output of TabulateEnergyMatrixTables was saved to. When these files are loaded with Get, the following three symbols are thus defined: EnergyMatrixTable, EnergyStatesTable, and AllowedM.
 EnergyMatrixTable is an Association whose keys are of the form {n, J, Jp, Ii, Ii} and whose values are matrix elements.";
 TabulateManyEnergyMatrixTables[ns_, Iis_, OptionsPattern[]]:= (
@@ -1529,7 +1528,7 @@ TabulateManyEnergyMatrixTables[ns_, Iis_, OptionsPattern[]]:= (
       fNames[{n, Ii}] = exportFname;
       If[FileExistsQ[exportFname] && Not[overwrite],
         Continue[]];
-      {EnergyMatrixTable, EnergyStatesTable, AllowedM} = TabulateEnergyMatrixTable[n, Ii, CrystalFieldTable, "Sparse"->OptionValue["Sparse"], "ChenDeltas"->OptionValue["ChenDeltas"], "Include Spin-Spin"->OptionValue["Include Spin-Spin"]];
+      {EnergyMatrixTable, EnergyStatesTable, AllowedM} = TabulateEnergyMatrixTable[n, Ii, CrystalFieldTable, "Sparse"->OptionValue["Sparse"], "ChenDeltas"->OptionValue["ChenDeltas"]];
       If[FileExistsQ[exportFname]&&overwrite,
         DeleteFile[exportFname]];
       Save[exportFname, {EnergyMatrixTable, EnergyStatesTable, AllowedM}];
@@ -1568,17 +1567,17 @@ HamMatrixAssembly[nf_, IiN_] := Module[
   Get[EnergyMatrixFileName[n, IiN]];
   (*Patch together the entire matrix representation in block-
   diagonal form.*)
-  EnergyMatrix = 
+  ThisEnergyMatrix = 
    ConstantArray[0, {Length[AllowedJ[n]], Length[AllowedJ[n]]}];
-  Do[EnergyMatrix[[jj, ii]] = 
+  Do[ThisEnergyMatrix[[jj, ii]] = 
      EnergyMatrixTable[{n, AllowedJ[n][[ii]], AllowedJ[n][[jj]], IiN, 
        IiN}];,
        {ii, 1, Length[AllowedJ[n]]},
        {jj, 1, Length[AllowedJ[n]]}
    ];
-  EnergyMatrix = ArrayFlatten[EnergyMatrix];
-  EnergyMatrix = ReplaceInSparseArray[EnergyMatrix, params];
-  Return[EnergyMatrix];
+  ThisEnergyMatrix = ArrayFlatten[ThisEnergyMatrix];
+  ThisEnergyMatrix = ReplaceInSparseArray[ThisEnergyMatrix, params];
+  Return[ThisEnergyMatrix];
   ]
 
 OperatorsMatrix::usage="OperatorsMatrix[n, Ii, ops] returns the matrix representation of the sum of the operators in the list ops for the f^n configuration with nuclear spin I_i.
@@ -2262,25 +2261,25 @@ SolveStates[nf_, IiN_, params0_, OptionsPattern[]]:= Module[
   (*Load symbolic expressions for energy sub-matrices.*)
   Get[EnergyMatrixFileName[n, IiN]];
   (*Patch together the entire matrix representation in block-diagonal form.*)
-  EnergyMatrix = ConstantArray[0, {Length[AllowedJ[n]], Length[AllowedJ[n]]}];
-  Do[EnergyMatrix[[jj, ii]] = EnergyMatrixTable[{n, AllowedJ[n][[ii]], AllowedJ[n][[jj]], IiN, IiN}];,
+  ThisEnergyMatrix = ConstantArray[0, {Length[AllowedJ[n]], Length[AllowedJ[n]]}];
+  Do[ThisEnergyMatrix[[jj, ii]] = EnergyMatrixTable[{n, AllowedJ[n][[ii]], AllowedJ[n][[jj]], IiN, IiN}];,
     {ii, 1, Length[AllowedJ[n]]},
     {jj, 1, Length[AllowedJ[n]]}
     ];
-  EnergyMatrix = ArrayFlatten[EnergyMatrix];
-  symbolicMatrix = EnergyMatrix;
-  EnergyMatrix = ReplaceInSparseArray[EnergyMatrix, params];
-  problemSize = Dimensions[EnergyMatrix][[1]];
+  ThisEnergyMatrix = ArrayFlatten[ThisEnergyMatrix];
+  symbolicMatrix = ThisEnergyMatrix;
+  ThisEnergyMatrix = ReplaceInSparseArray[ThisEnergyMatrix, params];
+  problemSize = Dimensions[ThisEnergyMatrix][[1]];
   If[maxEigen!="All",
   (If[Abs[maxEigen]>problemSize,
     maxEigen="All"]
     )
     ];
-  PrintTemporary["The energy matrix has dimensions:", Dimensions[EnergyMatrix]];
+  PrintTemporary["The energy matrix has dimensions:", Dimensions[ThisEnergyMatrix]];
   (*Solve for eigenvalues and eigenvectors.*)
   {EigenvalueJM, EigenvectorJM} = If[maxEigen=="All",
-                  Eigensystem[EnergyMatrix],
-                  Eigensystem[EnergyMatrix, maxEigen]
+                  Eigensystem[ThisEnergyMatrix],
+                  Eigensystem[ThisEnergyMatrix, maxEigen]
                   ];
   EigenvalueJM = Re[EigenvalueJM];
   (*There might be a very small imaginary part.*)
@@ -2298,6 +2297,91 @@ SolveStates[nf_, IiN_, params0_, OptionsPattern[]]:= Module[
   ];
   Return[{levels, basis}];
 ];
+
+IonSolverLaF3::usage="IonSolverLaF3[numE, hostName] solves the energy levels of a lanthanide ion with numE f-electrons in lanthanum fluoride. It does this by querying the fit parameters from Carnall's tables. This function is used to compare the calculated values as calculated with qlanth with the calculated values quoted by Carnall.
+
+Parameters
+----------
+numE (int) : Number of f-electrons.
+
+Options
+-------
+\"Include Spin-Spin\" (bool) : If True then the spin-spin interaction is included as a contribution to the m_k operators. The default is True.
+
+Returns
+-------
+{rmsDifference, gtEnergies, cfenergies, ln, carnallAssignments, {fstates, basis, symbolicMatrix}} (list): with
+  rmsDifference (float) : The root-mean-square difference between the calculated values from Carnall and the ones computed here.
+  gtEnergies (list) : The calculated values for the energy levels as quoted by Carnall.
+  cfenergies (list) : The calculated values for the energy levels as calculated here.
+  ln (string) : The symbol of the lanthanide ion.
+  carnallAssignments (list) : The assignments of the energy levels as quoted by Carnall.
+  {fstates, basis, symbolicMatrix} (list) : The eigenstates, basis and symbolic matrix as calculated here.
+"; 
+Options[IonSolverLaF3] = {"Include Spin-Spin" -> True};
+IonSolverLaF3[numE_, OptionsPattern[]] := (
+  spinspin = OptionValue["Include Spin-Spin"];
+  host = "LaF3";
+  ln = StringSplit["Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb"][[numE]];
+  terms = AllowedNKSLJterms[Min[numE, 14 - numE]];
+  expData = 
+   Flatten[#["Exp (1/cm)"] & /@ 
+     Values[Carnall["appendix:" <> ln <> ":Association"]]];
+  
+  (*In Carnalls approach the crystal field is assumed to have C_{2v} symmetry, which is a simplification from the actual point symmetry of C_2*)
+  simplifier = {
+    B12 -> 0, B14 -> 0, B16 -> 0, B34 -> 0, B36 -> 0, B56 -> 0,
+    S12 -> 0, S14 -> 0, S16 -> 0, S22 -> 0, S24 -> 0, S26 -> 0, 
+    S34 -> 0, S36 -> 0, S44 -> 0, S46 -> 0, S56 -> 0, S66 -> 0, 
+    T11 -> 0, T12 -> 0, T14 -> 0, T15 -> 0, T16 -> 0, T18 -> 0, 
+    T17 -> 0, T19 -> 0};
+  eTofs = (#[[1]] -> #[[2]]) & /@ Transpose[{{E0, E1, E2, E3}, FtoE[F0, F2, F4, F6]}];
+  ham = Normal[HamMatrixAssembly[numE, 0]];
+  simpleHam = ham /. simplifier;
+  simpleHam = simpleHam /. eTofs;
+  hamParams = DeleteDuplicates[Flatten[Variables /@ simpleHam]];
+  ham = Normal[HamMatrixAssembly[numE, 0]];
+  termNames = First /@ terms;
+  termSimplifier = Table[termN -> If[StringLength[termN] == 3,
+      StringTake[termN, {1, 2}],
+      termN
+      ], {termN, termNames}];
+  
+  (*Load the parameters from Carnall*)
+  params = LoadParameters[ln, "Free Ion" -> False];
+  (*Enforce the override to the spin-spin contribution to the magnetic interactions*)
+  params[\[Sigma]SS] = If[spinspin, 1, 0];
+  (*Everything that is not given is set to zero*)
+  params = ParamPad[params, "Print" -> True];
+
+  {fstates, basis, symbolicMatrix} = 
+   SolveStates[params[nf], 0, params, 
+    "Return Symbolic Matrix" -> True];
+  fstates = ShiftedLevels[fstates];
+  fstates = SortBy[fstates, First];
+  cfenergies = First /@ fstates;
+  cfenergies = Chop[cfenergies];
+  If[OddQ[numE],
+   (
+    cfenergies = cfenergies[[;; ;; 2]];
+    )
+   ];
+
+  
+  mainKey = StringTemplate["appendix:`Ln`:Association"][<|"Ln" -> ln|>];
+  lnData = Carnall[mainKey];
+  carnalKeys = lnData // Keys;
+  repetitions = Length[lnData[#]["Calc (1/cm)"]] & /@ carnalKeys;
+  carnallAssignments = 
+   First /@ Carnall["appendix:" <> ln <> ":RawTable"];
+  
+  carnalKey = StringTemplate["appendix:`Ln`:Calculated"][<|"Ln" -> ln|>];
+  gtEnergies = Sort[Carnall[carnalKey]];
+  diffs = Sort[cfenergies][[;; Length[gtEnergies]]] - gtEnergies;
+  rmsDifference = Sqrt[Total[diffs^2/Length[diffs]]];
+  
+  Return[{rmsDifference, gtEnergies, cfenergies, ln, carnallAssignments, {fstates, basis, symbolicMatrix}}]
+  )
 
 Options[FitToHam] = {
    "LogSolution" -> False,

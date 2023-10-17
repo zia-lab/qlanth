@@ -1,0 +1,3692 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 13.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[    143827,       3684]
+NotebookOptionsPosition[    141039,       3626]
+NotebookOutlinePosition[    141434,       3642]
+CellTagsIndexPosition[    141391,       3639]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"\[Mu]E", "=", 
+   RowBox[{"9.284", "*", 
+    SuperscriptBox["10", 
+     RowBox[{"-", "24"}]]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"R", "=", 
+   RowBox[{"100", "*", 
+    SuperscriptBox["10", 
+     RowBox[{"-", "12"}]]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"\[Mu]0", "=", 
+   RowBox[{"4", "\[Pi]", " ", "*", " ", 
+    SuperscriptBox["10", 
+     RowBox[{"-", "7"}]]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"eV", "=", 
+   RowBox[{"1.602", "*", 
+    SuperscriptBox["10", 
+     RowBox[{"-", "19"}]]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"eVtoKy", "=", "8065.73"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"(", 
+   RowBox[{
+    FractionBox["\[Mu]0", 
+     RowBox[{"4", " ", "\[Pi]"}]], "*", " ", 
+    FractionBox[
+     SuperscriptBox["\[Mu]E", "2"], 
+     SuperscriptBox["R", "3"]]}], ")"}], 
+  FractionBox["1", "eV"], "*", "eVtoKy"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.895828811070815*^9, 3.8958289907764*^9}, {
+  3.895829040385079*^9, 3.895829041368598*^9}},
+ CellLabel->
+  "In[1000]:=",ExpressionUUID->"4bb33c71-69f1-4da7-b6ee-4f8d6429c8d6"],
+
+Cell[BoxData["0.43396172988694154`"], "Output",
+ CellChangeTimes->{{3.89582893300708*^9, 3.895828953938139*^9}, 
+   3.895828991152442*^9, 3.895829042244671*^9},
+ CellLabel->
+  "Out[1005]=",ExpressionUUID->"403312dd-6674-4a82-a0ce-bf4bd721b2a4"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(", 
+   RowBox[{
+    FractionBox["\[Mu]0", 
+     RowBox[{"4", " ", "\[Pi]"}]], "*", " ", 
+    FractionBox[
+     SuperscriptBox["\[Mu]E", "2"], 
+     SuperscriptBox["R", "3"]]}], ")"}], 
+  FractionBox["1", "eV"], "*", 
+  SuperscriptBox["10", "6"]}]], "Input",
+ CellChangeTimes->{{3.8958290749000893`*^9, 3.895829083884294*^9}},
+ CellLabel->
+  "In[1007]:=",ExpressionUUID->"3266802e-9cd8-4f99-ab85-fed52e2cc8c9"],
+
+Cell[BoxData["53.803156054931364`"], "Output",
+ CellChangeTimes->{{3.895829075090518*^9, 3.895829084378685*^9}},
+ CellLabel->
+  "Out[1007]=",ExpressionUUID->"10bfe1fc-4b85-46e1-96b4-bc24a497ecbc"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"PositionIndex", "[", 
+  RowBox[{"{", 
+   RowBox[{"1", ",", "1", ",", "2"}], "}"}], "]"}]], "Input",
+ CellChangeTimes->{{3.895843936893422*^9, 3.895843962559656*^9}},
+ CellLabel->
+  "In[1054]:=",ExpressionUUID->"5b3093c8-3fad-46e6-a383-9c671c2b4630"],
+
+Cell[BoxData[
+ RowBox[{"\[LeftAssociation]", 
+  RowBox[{
+   RowBox[{"1", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "2"}], "}"}]}], ",", 
+   RowBox[{"2", "\[Rule]", 
+    RowBox[{"{", "3", "}"}]}]}], "\[RightAssociation]"}]], "Output",
+ CellChangeTimes->{{3.8958439378472223`*^9, 3.895843962841501*^9}},
+ CellLabel->
+  "Out[1054]=",ExpressionUUID->"baba8567-60c2-4023-9608-6f43b42e96ba"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["zeroIndices"], "Input",
+ CellChangeTimes->{{3.8958440049273777`*^9, 3.89584400641573*^9}},
+ CellLabel->
+  "In[1058]:=",ExpressionUUID->"686b87bf-161c-4925-9a89-b7b624d97af4"],
+
+Cell[BoxData[
+ RowBox[{"{", "}"}]], "Output",
+ CellChangeTimes->{3.895844006714581*^9},
+ CellLabel->
+  "Out[1058]=",ExpressionUUID->"a0610720-bbec-4f35-8e9d-86e9d3ebc4f7"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["allIndices"], "Input",
+ CellLabel->
+  "In[1063]:=",ExpressionUUID->"6b85c396-a15d-4684-af51-c779dc544860"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "1", ",", "2", ",", "3", ",", "4", ",", "5", ",", "6", ",", "7", ",", "8", 
+   ",", "9", ",", "10", ",", "11", ",", "12", ",", "13"}], "}"}]], "Output",
+ CellChangeTimes->{3.8958440553250237`*^9},
+ CellLabel->
+  "Out[1063]=",ExpressionUUID->"426a5aa9-b541-48fe-a6b2-c56eff837aa1"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["nonZeroIndices"], "Input",
+ CellLabel->
+  "In[1153]:=",ExpressionUUID->"6c3a0d2b-6d6f-4a1e-baa9-17405d77a0fb"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "2", ",", "3", ",", "4", ",", "5", ",", "6", ",", "7", ",", "8", ",", "9", 
+   ",", "10", ",", "11", ",", "12"}], "}"}]], "Output",
+ CellChangeTimes->{3.895844449806386*^9},
+ CellLabel->
+  "Out[1153]=",ExpressionUUID->"523f6eb5-4602-44af-b1a5-5e14e604f825"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["hLabels"], "Input",
+ CellChangeTimes->{{3.895844455387569*^9, 3.8958444569099293`*^9}},
+ CellLabel->
+  "In[1154]:=",ExpressionUUID->"1275ee2f-a9f9-4552-bcd6-2486392b7b4c"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"2", ",", "\<\"Pr\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"3", ",", "\<\"Nd\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"4", ",", "\<\"Pm\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"5", ",", "\<\"Sm\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"6", ",", "\<\"Eu\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"7", ",", "\<\"Gd\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"8", ",", "\<\"Tb\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"9", ",", "\<\"Dy\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"10", ",", "\<\"Ho\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"11", ",", "\<\"Er\"\>"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"12", ",", "\<\"Tm\"\>"}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{3.895844457171814*^9},
+ CellLabel->
+  "Out[1154]=",ExpressionUUID->"1fbe73e0-e10a-4178-9be8-4b8bb3123e51"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["values"], "Input",
+ CellChangeTimes->{{3.895844464295348*^9, 3.895844464956381*^9}},
+ CellLabel->
+  "In[1155]:=",ExpressionUUID->"51e69819-f6d4-4705-8294-0de55c921512"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "68878.`", ",", "73018.`", ",", "76400.`", ",", "79805.`", ",", "83125.`", 
+   ",", "85669.`", ",", "88995.`", ",", "91903.`", ",", "94564.`", ",", 
+   "97483.`", ",", "100134.`"}], "}"}]], "Output",
+ CellChangeTimes->{3.8958444653102417`*^9},
+ CellLabel->
+  "Out[1155]=",ExpressionUUID->"7f248380-cd46-461c-8888-2887af6cf9e2"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["hLabels"], "Input",
+ CellLabel->
+  "In[1182]:=",ExpressionUUID->"382ed2da-c5fd-4753-bc30-dcb96a31ecdd"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   TemplateBox[{
+     RowBox[{"{", 
+       RowBox[{"3", ",", "\"Nd\""}], "}"}], "\"3+\""},
+    "Superscript"], ",", 
+   TemplateBox[{
+     RowBox[{"{", 
+       RowBox[{"4", ",", "\"Pm\""}], "}"}], "\"3+\""},
+    "Superscript"], ",", 
+   TemplateBox[{
+     RowBox[{"{", 
+       RowBox[{"5", ",", "\"Sm\""}], "}"}], "\"3+\""},
+    "Superscript"], ",", 
+   TemplateBox[{
+     RowBox[{"{", 
+       RowBox[{"6", ",", "\"Eu\""}], "}"}], "\"3+\""},
+    "Superscript"], ",", 
+   TemplateBox[{
+     RowBox[{"{", 
+       RowBox[{"7", ",", "\"Gd\""}], "}"}], "\"3+\""},
+    "Superscript"], ",", 
+   TemplateBox[{
+     RowBox[{"{", 
+       RowBox[{"8", ",", "\"Tb\""}], "}"}], "\"3+\""},
+    "Superscript"], ",", 
+   TemplateBox[{
+     RowBox[{"{", 
+       RowBox[{"9", ",", "\"Dy\""}], "}"}], "\"3+\""},
+    "Superscript"], ",", 
+   TemplateBox[{
+     RowBox[{"{", 
+       RowBox[{"10", ",", "\"Ho\""}], "}"}], "\"3+\""},
+    "Superscript"], ",", 
+   TemplateBox[{
+     RowBox[{"{", 
+       RowBox[{"11", ",", "\"Er\""}], "}"}], "\"3+\""},
+    "Superscript"], ",", 
+   TemplateBox[{
+     RowBox[{"{", 
+       RowBox[{"12", ",", "\"Tm\""}], "}"}], "\"3+\""},
+    "Superscript"]}], "}"}]], "Output",
+ CellChangeTimes->{3.8958445759844627`*^9},
+ CellLabel->
+  "Out[1182]=",ExpressionUUID->"391ae9ba-ee66-4eb2-bf94-0218b84ecd98"]
+}, Open  ]],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"keyParams", "=", 
+   RowBox[{"{", 
+    RowBox[{
+    "F2", ",", "F4", ",", "F6", ",", "\[Zeta]", ",", "\[Alpha]", ",", 
+     "\[Beta]", ",", "\[Gamma]", ",", "T2", ",", "T3", ",", "T4", ",", "T6", 
+     ",", "T7", ",", "T8", ",", "M0", ",", "P2", ",", "B02", ",", "B04", ",", 
+     "B06", ",", "B22", ",", "B24", ",", "B44", ",", "B26", ",", "B46", ",", 
+     "B66"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"carnallVal", "=", 
+   RowBox[{"Transpose", "[", 
+    RowBox[{"Values", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"keyParams", "/.", "#"}], ")"}], "&"}], "/@", 
+      RowBox[{"Carnall", "[", "\"\<data\>\"", "]"}]}], "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"allIndices", "=", 
+   RowBox[{"Range", "[", "13", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"horizonLabels", "=", 
+   RowBox[{"Transpose", "[", 
+    RowBox[{"{", 
+     RowBox[{"allIndices", ",", 
+      RowBox[{"StringSplit", "[", 
+       RowBox[{
+       "\"\<Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb\>\"", ",", "\"\< \>\""}], 
+       "]"}]}], "}"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"paramPlots", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"(", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"values", "=", 
+        RowBox[{"carnallVal", "[", 
+         RowBox[{"[", "i", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"values", "=", 
+        RowBox[{"Transpose", "[", 
+         RowBox[{"{", 
+          RowBox[{"allIndices", ",", "values"}], "}"}], "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"zeroIndices", "=", 
+        RowBox[{"Flatten", "[", 
+         RowBox[{"Position", "[", 
+          RowBox[{"values", ",", "0."}], "]"}], "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"nonZeroIndices", "=", 
+        RowBox[{"Complement", "[", 
+         RowBox[{"allIndices", ",", "zeroIndices"}], "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"values", "=", 
+        RowBox[{"values", "[", 
+         RowBox[{"[", "nonZeroIndices", "]"}], "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"hLabels", "=", 
+        RowBox[{"horizonLabels", "[", 
+         RowBox[{"[", "nonZeroIndices", "]"}], "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"hLabels", "=", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"#", "[", 
+             RowBox[{"[", "1", "]"}], "]"}], ",", 
+            RowBox[{"Superscript", "[", 
+             RowBox[{
+              RowBox[{"#", "[", 
+               RowBox[{"[", "2", "]"}], "]"}], ",", "\"\<3+\>\""}], "]"}]}], 
+           "}"}], "&"}], "/@", "hLabels"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"ListPlot", "[", 
+        RowBox[{"values", ",", "\[IndentingNewLine]", 
+         RowBox[{"PlotLabel", "->", 
+          RowBox[{"Style", "[", 
+           RowBox[{
+            RowBox[{"keyParams", "[", 
+             RowBox[{"[", "i", "]"}], "]"}], ",", "20"}], "]"}]}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{"ImageSize", "->", "800"}], ",", "\[IndentingNewLine]", 
+         RowBox[{"AspectRatio", "->", 
+          RowBox[{"1", "/", "2"}]}], ",", "\[IndentingNewLine]", 
+         RowBox[{"Frame", "->", "True"}], ",", "\[IndentingNewLine]", 
+         RowBox[{"FrameStyle", "->", 
+          RowBox[{"Directive", "[", "15", "]"}]}], ",", "\[IndentingNewLine]", 
+         RowBox[{"FrameLabel", "->", 
+          RowBox[{"{", 
+           RowBox[{"\"\<\>\"", ",", 
+            RowBox[{
+             RowBox[{"ToString", "[", 
+              RowBox[{"keyParams", "[", 
+               RowBox[{"[", "i", "]"}], "]"}], "]"}], "<>", 
+             "\"\< / Ky\>\""}]}], "}"}]}], ",", "\[IndentingNewLine]", 
+         RowBox[{"FrameTicks", "->", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"Automatic", ",", "All"}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"hLabels", ",", "hLabels"}], "}"}]}], "}"}]}]}], 
+        "\[IndentingNewLine]", "]"}]}], ")"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "1", ",", 
+       RowBox[{"Length", "[", "carnallVal", "]"}]}], "}"}]}], "]"}]}], 
+  ";"}]}], "Input",
+ CellChangeTimes->{{3.895840420545679*^9, 3.895840706505239*^9}, {
+  3.895840790773816*^9, 3.895840801089909*^9}, {3.895842705321988*^9, 
+  3.895842733520199*^9}, {3.895843913232011*^9, 3.8958439325613623`*^9}, {
+  3.8958439684072447`*^9, 3.895844247948946*^9}, {3.895844303609373*^9, 
+  3.895844469763433*^9}, {3.895844518068025*^9, 3.895844744867587*^9}, {
+  3.89584494579161*^9, 3.895844950233387*^9}},
+ CellLabel->
+  "In[1247]:=",ExpressionUUID->"c64b1b4b-9e94-4b0d-b619-174b19246df0"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"superLanthanum", "=", 
+  RowBox[{"Grid", "[", 
+   RowBox[{"Partition", "[", 
+    RowBox[{"paramPlots", ",", "6"}], "]"}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.8958446822788973`*^9, 3.895844683386693*^9}, {
+  3.89584481189108*^9, 3.895844844825054*^9}},
+ CellLabel->
+  "In[1252]:=",ExpressionUUID->"7f7765e8-fa83-4a60-985e-bb2781294cec"],
+
+Cell[BoxData[
+ TagBox[GridBox[{
+    {
+     GraphicsBox[{{}, 
+       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+        0.012833333333333334`], AbsoluteThickness[1.6], 
+        PointBox[{{3., 73018.}, {4., 76400.}, {5., 79805.}, {6., 83125.}, {7.,
+          85669.}, {8., 88995.}, {9., 91903.}, {10., 94564.}, {11., 97483.}, {
+         12., 100134.}}]}, {{}, {}}},
+      AspectRatio->NCache[
+        Rational[1, 2], 0.5],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{2.812500000000006, 71511.55555555572},
+      DisplayFunction->Identity,
+      Frame->{{True, True}, {True, True}},
+      FrameLabel->{{
+         FormBox[
+          TagBox["\"F2 / Ky\"", HoldForm], TraditionalForm], None}, {
+         FormBox[
+          TagBox["\"\"", HoldForm], TraditionalForm], None}},
+      FrameStyle->Directive[15],
+      FrameTicks->{{Automatic, All}, {{{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}, {{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->800,
+      Method->{
+       "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
+        "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}},
+      PlotLabel->FormBox[
+        StyleBox["F2", 20, StripOnInput -> False], TraditionalForm],
+      PlotRange->{{2.812500000000006, 12.}, {71511.55555555572, 100134.}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.05], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}], 
+     GraphicsBox[{{}, 
+       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+        0.012833333333333334`], AbsoluteThickness[1.6], 
+        PointBox[{{3., 52789.}, {4., 54900.}, {5., 57175.}, {6., 59268.}, {7.,
+          60825.}, {8., 62919.}, {9., 64372.}, {10., 66397.}, {11., 67904.}, {
+         12., 69613.}}]}, {{}, {}}},
+      AspectRatio->NCache[
+        Rational[1, 2], 0.5],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{2.812500000000006, 51854.33333333345},
+      DisplayFunction->Identity,
+      Frame->{{True, True}, {True, True}},
+      FrameLabel->{{
+         FormBox[
+          TagBox["\"F4 / Ky\"", HoldForm], TraditionalForm], None}, {
+         FormBox[
+          TagBox["\"\"", HoldForm], TraditionalForm], None}},
+      FrameStyle->Directive[15],
+      FrameTicks->{{Automatic, All}, {{{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}, {{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->800,
+      Method->{
+       "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
+        "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}},
+      PlotLabel->FormBox[
+        StyleBox["F4", 20, StripOnInput -> False], TraditionalForm],
+      PlotRange->{{2.812500000000006, 12.}, {51854.33333333345, 69613.}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.05], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}], 
+     GraphicsBox[{{}, 
+       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+        0.012833333333333334`], AbsoluteThickness[1.6], 
+        PointBox[{{3., 35757.}, {4., 37700.}, {5., 40250.}, {6., 42560.}, {7.,
+          44776.}, {8., 47252.}, {9., 49386.}, {10., 52022.}, {11., 54010.}, {
+         12., 55975.}}]}, {{}, {}}},
+      AspectRatio->NCache[
+        Rational[1, 2], 0.5],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{2.812500000000006, 34633.77777777786},
+      DisplayFunction->Identity,
+      Frame->{{True, True}, {True, True}},
+      FrameLabel->{{
+         FormBox[
+          TagBox["\"F6 / Ky\"", HoldForm], TraditionalForm], None}, {
+         FormBox[
+          TagBox["\"\"", HoldForm], TraditionalForm], None}},
+      FrameStyle->Directive[15],
+      FrameTicks->{{Automatic, All}, {{{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}, {{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->800,
+      Method->{
+       "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
+        "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}},
+      PlotLabel->FormBox[
+        StyleBox["F6", 20, StripOnInput -> False], TraditionalForm],
+      PlotRange->{{2.812500000000006, 12.}, {34633.77777777786, 55975.}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.05], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}], 
+     GraphicsBox[{{}, 
+       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+        0.012833333333333334`], AbsoluteThickness[1.6], 
+        PointBox[{{1., 647.3}, {2., 751.7}, {3., 885.3}, {4., 1025.}, {5., 
+         1176.}, {6., 1338.}, {7., 1508.}, {8., 1707.}, {9., 1913.}, {10., 
+         2145.}, {11., 2376.}, {12., 2636.}, {13., 2928.}}]}, {{}, {}}},
+      AspectRatio->NCache[
+        Rational[1, 2], 0.5],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{0, 0},
+      DisplayFunction->Identity,
+      Frame->{{True, True}, {True, True}},
+      FrameLabel->{{
+         FormBox[
+          TagBox["\"\[Zeta] / Ky\"", HoldForm], TraditionalForm], None}, {
+         FormBox[
+          TagBox["\"\"", HoldForm], TraditionalForm], None}},
+      FrameStyle->Directive[15],
+      FrameTicks->{{Automatic, All}, {{{1, 
+           FormBox[
+            
+            TemplateBox[{"\"Ce\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {2, 
+           FormBox[
+            
+            TemplateBox[{"\"Pr\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {13, 
+           FormBox[
+            
+            TemplateBox[{"\"Yb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}, {{1, 
+           FormBox[
+            
+            TemplateBox[{"\"Ce\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {2, 
+           FormBox[
+            
+            TemplateBox[{"\"Pr\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {13, 
+           FormBox[
+            
+            TemplateBox[{"\"Yb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->800,
+      Method->{
+       "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
+        "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}},
+      PlotLabel->FormBox[
+        StyleBox["\[Zeta]", 20, StripOnInput -> False], TraditionalForm],
+      PlotRange->{{0, 13.}, {0, 2928.}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.02], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}], 
+     GraphicsBox[{{}, 
+       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+        0.012833333333333334`], AbsoluteThickness[1.6], 
+        PointBox[{{3., 21.34}, {4., 20.5}, {5., 20.16}, {6., 20.16}, {7., 
+         18.92}, {8., 18.4}, {9., 18.02}, {10., 17.15}, {11., 17.79}, {12., 
+         17.26}}]}, {{}, {}}},
+      AspectRatio->NCache[
+        Rational[1, 2], 0.5],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{2.812500000000006, 16.91722222222226},
+      DisplayFunction->Identity,
+      Frame->{{True, True}, {True, True}},
+      FrameLabel->{{
+         FormBox[
+          TagBox["\"\[Alpha] / Ky\"", HoldForm], TraditionalForm], None}, {
+         FormBox[
+          TagBox["\"\"", HoldForm], TraditionalForm], None}},
+      FrameStyle->Directive[15],
+      FrameTicks->{{Automatic, All}, {{{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}, {{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->800,
+      Method->{
+       "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
+        "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}},
+      PlotLabel->FormBox[
+        StyleBox["\[Alpha]", 20, StripOnInput -> False], TraditionalForm],
+      PlotRange->{{2.812500000000006, 12.}, {16.91722222222226, 21.34}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.05], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}], 
+     GraphicsBox[{{}, 
+       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+        0.012833333333333334`], AbsoluteThickness[1.6], 
+        PointBox[{{3., -593.}, {4., -560.}, {5., -566.9}, {6., -566.9}, {
+         7., -600.}, {8., -590.9}, {9., -633.4}, {10., -607.9}, {
+         11., -582.1}, {12., -624.5}}]}, {{}, {}}},
+      AspectRatio->NCache[
+        Rational[1, 2], 0.5],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{2.812500000000006, -555.9222222222235},
+      DisplayFunction->Identity,
+      Frame->{{True, True}, {True, True}},
+      FrameLabel->{{
+         FormBox[
+          TagBox["\"\[Beta] / Ky\"", HoldForm], TraditionalForm], None}, {
+         FormBox[
+          TagBox["\"\"", HoldForm], TraditionalForm], None}},
+      FrameStyle->Directive[15],
+      FrameTicks->{{Automatic, All}, {{{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}, {{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->800,
+      Method->{
+       "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
+        "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}},
+      PlotLabel->FormBox[
+        StyleBox["\[Beta]", 20, StripOnInput -> False], TraditionalForm],
+      PlotRange->{{2.812500000000006, 12.}, {-633.4, -560.}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.05], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}]},
+    {
+     GraphicsBox[{{}, 
+       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+        0.012833333333333334`], AbsoluteThickness[1.6], 
+        PointBox[{{3., 1445.}, {4., 1475.}, {5., 1500.}, {6., 1500.}, {7., 
+         1575.}, {8., 1650.}, {9., 1790.}, {10., 1800.}, {11., 1800.}, {12., 
+         1820.}}]}, {{}, {}}},
+      AspectRatio->NCache[
+        Rational[1, 2], 0.5],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{2.812500000000006, 1424.16666666667},
+      DisplayFunction->Identity,
+      Frame->{{True, True}, {True, True}},
+      FrameLabel->{{
+         FormBox[
+          TagBox["\"\[Gamma] / Ky\"", HoldForm], TraditionalForm], None}, {
+         FormBox[
+          TagBox["\"\"", HoldForm], TraditionalForm], None}},
+      FrameStyle->Directive[15],
+      FrameTicks->{{Automatic, All}, {{{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}, {{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->800,
+      Method->{
+       "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
+        "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}},
+      PlotLabel->FormBox[
+        StyleBox["\[Gamma]", 20, StripOnInput -> False], TraditionalForm],
+      PlotRange->{{2.812500000000006, 12.}, {1424.16666666667, 1820.}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.05], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}], 
+     GraphicsBox[{{}, 
+       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+        0.012833333333333334`], AbsoluteThickness[1.6], 
+        PointBox[{{3., 298.}, {4., 300.}, {5., 300.}, {6., 300.}, {7., 
+         300.}, {8., 320.}, {9., 329.}, {10., 400.}, {11., 400.}, {12., 
+         400.}}]}, {{}, {}}},
+      AspectRatio->NCache[
+        Rational[1, 2], 0.5],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{2.812500000000006, 292.333333333334},
+      DisplayFunction->Identity,
+      Frame->{{True, True}, {True, True}},
+      FrameLabel->{{
+         FormBox[
+          TagBox["\"T2 / Ky\"", HoldForm], TraditionalForm], None}, {
+         FormBox[
+          TagBox["\"\"", HoldForm], TraditionalForm], None}},
+      FrameStyle->Directive[15],
+      FrameTicks->{{Automatic, All}, {{{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}, {{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->800,
+      Method->{
+       "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
+        "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}},
+      PlotLabel->FormBox[
+        StyleBox["T2", 20, StripOnInput -> False], TraditionalForm],
+      PlotRange->{{2.812500000000006, 12.}, {292.333333333334, 400.}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.05], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}], 
+     GraphicsBox[{{}, 
+       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+        0.012833333333333334`], AbsoluteThickness[1.6], 
+        PointBox[{{3., 35.}, {4., 35.}, {5., 36.}, {6., 40.}, {7., 42.}, {8., 
+         40.}, {9., 36.}, {10., 37.}, {11., 43.}}]}, {{}, {}}},
+      AspectRatio->NCache[
+        Rational[1, 2], 0.5],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{2.83333333333334, 34.555555555555635`},
+      DisplayFunction->Identity,
+      Frame->{{True, True}, {True, True}},
+      FrameLabel->{{
+         FormBox[
+          TagBox["\"T3 / Ky\"", HoldForm], TraditionalForm], None}, {
+         FormBox[
+          TagBox["\"\"", HoldForm], TraditionalForm], None}},
+      FrameStyle->Directive[15],
+      FrameTicks->{{Automatic, All}, {{{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}, {{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->800,
+      Method->{
+       "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
+        "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}},
+      PlotLabel->FormBox[
+        StyleBox["T3", 20, StripOnInput -> False], TraditionalForm],
+      PlotRange->{{2.83333333333334, 11.}, {34.555555555555635`, 43.}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.05], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}], 
+     GraphicsBox[{{}, 
+       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+        0.012833333333333334`], AbsoluteThickness[1.6], 
+        PointBox[{{3., 59.}, {4., 58.}, {5., 56.}, {6., 60.}, {7., 62.}, {8., 
+         50.}, {9., 127.}, {10., 107.}, {11., 73.}}]}, {{}, {}}},
+      AspectRatio->NCache[
+        Rational[1, 2], 0.5],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{2.83333333333334, 0},
+      DisplayFunction->Identity,
+      Frame->{{True, True}, {True, True}},
+      FrameLabel->{{
+         FormBox[
+          TagBox["\"T4 / Ky\"", HoldForm], TraditionalForm], None}, {
+         FormBox[
+          TagBox["\"\"", HoldForm], TraditionalForm], None}},
+      FrameStyle->Directive[15],
+      FrameTicks->{{Automatic, All}, {{{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}, {{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->800,
+      Method->{
+       "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
+        "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}},
+      PlotLabel->FormBox[
+        StyleBox["T4", 20, StripOnInput -> False], TraditionalForm],
+      PlotRange->{{2.83333333333334, 11.}, {0, 127.}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.02], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}], 
+     GraphicsBox[{{}, 
+       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+        0.012833333333333334`], AbsoluteThickness[1.6], 
+        PointBox[{{3., -285.}, {4., -310.}, {5., -347.}, {6., -300.}, {
+         7., -295.}, {8., -395.}, {9., -314.}, {10., -264.}, {
+         11., -271.}}]}, {{}, {}}},
+      AspectRatio->NCache[
+        Rational[1, 2], 0.5],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{2.83333333333334, -256.7222222222228},
+      DisplayFunction->Identity,
+      Frame->{{True, True}, {True, True}},
+      FrameLabel->{{
+         FormBox[
+          TagBox["\"T6 / Ky\"", HoldForm], TraditionalForm], None}, {
+         FormBox[
+          TagBox["\"\"", HoldForm], TraditionalForm], None}},
+      FrameStyle->Directive[15],
+      FrameTicks->{{Automatic, All}, {{{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}, {{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->800,
+      Method->{
+       "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
+        "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}},
+      PlotLabel->FormBox[
+        StyleBox["T6", 20, StripOnInput -> False], TraditionalForm],
+      PlotRange->{{2.83333333333334, 11.}, {-395., -264.}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.05], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}], 
+     GraphicsBox[{{}, 
+       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+        0.012833333333333334`], AbsoluteThickness[1.6], 
+        PointBox[{{3., 332.}, {4., 350.}, {5., 373.}, {6., 370.}, {7., 
+         350.}, {8., 303.}, {9., 404.}, {10., 316.}, {11., 308.}}]}, {{}, {}}},
+      AspectRatio->NCache[
+        Rational[1, 2], 0.5],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{2.83333333333334, 297.3888888888896},
+      DisplayFunction->Identity,
+      Frame->{{True, True}, {True, True}},
+      FrameLabel->{{
+         FormBox[
+          TagBox["\"T7 / Ky\"", HoldForm], TraditionalForm], None}, {
+         FormBox[
+          TagBox["\"\"", HoldForm], TraditionalForm], None}},
+      FrameStyle->Directive[15],
+      FrameTicks->{{Automatic, All}, {{{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}, {{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->800,
+      Method->{
+       "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
+        "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}},
+      PlotLabel->FormBox[
+        StyleBox["T7", 20, StripOnInput -> False], TraditionalForm],
+      PlotRange->{{2.83333333333334, 11.}, {297.3888888888896, 404.}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.05], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}]},
+    {
+     GraphicsBox[{{}, 
+       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+        0.012833333333333334`], AbsoluteThickness[1.6], 
+        PointBox[{{3., 305.}, {4., 320.}, {5., 348.}, {6., 320.}, {7., 
+         310.}, {8., 317.}, {9., 315.}, {10., 336.}, {11., 299.}}]}, {{}, {}}},
+      AspectRatio->NCache[
+        Rational[1, 2], 0.5],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{2.83333333333334, 296.2777777777785},
+      DisplayFunction->Identity,
+      Frame->{{True, True}, {True, True}},
+      FrameLabel->{{
+         FormBox[
+          TagBox["\"T8 / Ky\"", HoldForm], TraditionalForm], None}, {
+         FormBox[
+          TagBox["\"\"", HoldForm], TraditionalForm], None}},
+      FrameStyle->Directive[15],
+      FrameTicks->{{Automatic, All}, {{{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}, {{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->800,
+      Method->{
+       "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
+        "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}},
+      PlotLabel->FormBox[
+        StyleBox["T8", 20, StripOnInput -> False], TraditionalForm],
+      PlotRange->{{2.83333333333334, 11.}, {296.2777777777785, 348.}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.05], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}], 
+     GraphicsBox[{{}, 
+       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+        0.012833333333333334`], AbsoluteThickness[1.6], 
+        PointBox[{{3., 2.11}, {4., 2.4}, {5., 2.6}, {6., 2.1}, {7., 3.22}, {
+         8., 2.39}, {9., 3.39}, {10., 2.54}, {11., 3.86}, {12., 
+         3.81}}]}, {{}, {}}},
+      AspectRatio->NCache[
+        Rational[1, 2], 0.5],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{2.812500000000006, 2.002222222222227},
+      DisplayFunction->Identity,
+      Frame->{{True, True}, {True, True}},
+      FrameLabel->{{
+         FormBox[
+          TagBox["\"M0 / Ky\"", HoldForm], TraditionalForm], None}, {
+         FormBox[
+          TagBox["\"\"", HoldForm], TraditionalForm], None}},
+      FrameStyle->Directive[15],
+      FrameTicks->{{Automatic, All}, {{{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}, {{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->800,
+      Method->{
+       "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
+        "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}},
+      PlotLabel->FormBox[
+        StyleBox["M0", 20, StripOnInput -> False], TraditionalForm],
+      PlotRange->{{2.812500000000006, 12.}, {2.002222222222227, 3.86}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.05], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}], 
+     GraphicsBox[{{}, 
+       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+        0.012833333333333334`], AbsoluteThickness[1.6], 
+        PointBox[{{3., 192.}, {4., 275.}, {5., 357.}, {6., 360.}, {7., 
+         676.}, {8., 373.}, {9., 719.}, {10., 605.}, {11., 594.}, {12., 
+         695.}}]}, {{}, {}}},
+      AspectRatio->NCache[
+        Rational[1, 2], 0.5],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{2.812500000000006, 0},
+      DisplayFunction->Identity,
+      Frame->{{True, True}, {True, True}},
+      FrameLabel->{{
+         FormBox[
+          TagBox["\"P2 / Ky\"", HoldForm], TraditionalForm], None}, {
+         FormBox[
+          TagBox["\"\"", HoldForm], TraditionalForm], None}},
+      FrameStyle->Directive[15],
+      FrameTicks->{{Automatic, All}, {{{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}, {{3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->800,
+      Method->{
+       "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
+        "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}},
+      PlotLabel->FormBox[
+        StyleBox["P2", 20, StripOnInput -> False], TraditionalForm],
+      PlotRange->{{2.812500000000006, 12.}, {0, 719.}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.02], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}], 
+     GraphicsBox[{{}, 
+       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+        0.012833333333333334`], AbsoluteThickness[1.6], 
+        PointBox[{{1., -218.}, {2., -218.}, {3., -256.}, {4., -245.}, {
+         5., -224.}, {6., -217.}, {7., -231.}, {8., -231.}, {9., -244.}, {
+         10., -240.}, {11., -238.}, {12., -249.}, {13., -249.}}]}, {{}, {}}},
+      AspectRatio->NCache[
+        Rational[1, 2], 0.5],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{0, -214.83333333333383`},
+      DisplayFunction->Identity,
+      Frame->{{True, True}, {True, True}},
+      FrameLabel->{{
+         FormBox[
+          TagBox["\"B02 / Ky\"", HoldForm], TraditionalForm], None}, {
+         FormBox[
+          TagBox["\"\"", HoldForm], TraditionalForm], None}},
+      FrameStyle->Directive[15],
+      FrameTicks->{{Automatic, All}, {{{1, 
+           FormBox[
+            
+            TemplateBox[{"\"Ce\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {2, 
+           FormBox[
+            
+            TemplateBox[{"\"Pr\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {13, 
+           FormBox[
+            
+            TemplateBox[{"\"Yb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}, {{1, 
+           FormBox[
+            
+            TemplateBox[{"\"Ce\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {2, 
+           FormBox[
+            
+            TemplateBox[{"\"Pr\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {13, 
+           FormBox[
+            
+            TemplateBox[{"\"Yb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->800,
+      Method->{
+       "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
+        "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}},
+      PlotLabel->FormBox[
+        StyleBox["B02", 20, StripOnInput -> False], TraditionalForm],
+      PlotRange->{{0, 13.}, {-256., -217.}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.05], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}], 
+     GraphicsBox[{{}, 
+       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+        0.012833333333333334`], AbsoluteThickness[1.6], 
+        PointBox[{{1., 738.}, {2., 738.}, {3., 496.}, {4., 470.}, {5., 
+         452.}, {6., 413.}, {7., 604.}, {8., 604.}, {9., 506.}, {10., 560.}, {
+         11., 453.}, {12., 457.}, {13., 457.}}]}, {{}, {}}},
+      AspectRatio->NCache[
+        Rational[1, 2], 0.5],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{0, 394.94444444444537`},
+      DisplayFunction->Identity,
+      Frame->{{True, True}, {True, True}},
+      FrameLabel->{{
+         FormBox[
+          TagBox["\"B04 / Ky\"", HoldForm], TraditionalForm], None}, {
+         FormBox[
+          TagBox["\"\"", HoldForm], TraditionalForm], None}},
+      FrameStyle->Directive[15],
+      FrameTicks->{{Automatic, All}, {{{1, 
+           FormBox[
+            
+            TemplateBox[{"\"Ce\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {2, 
+           FormBox[
+            
+            TemplateBox[{"\"Pr\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {13, 
+           FormBox[
+            
+            TemplateBox[{"\"Yb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}, {{1, 
+           FormBox[
+            
+            TemplateBox[{"\"Ce\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {2, 
+           FormBox[
+            
+            TemplateBox[{"\"Pr\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {13, 
+           FormBox[
+            
+            TemplateBox[{"\"Yb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->800,
+      Method->{
+       "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
+        "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}},
+      PlotLabel->FormBox[
+        StyleBox["B04", 20, StripOnInput -> False], TraditionalForm],
+      PlotRange->{{0, 13.}, {394.94444444444537`, 738.}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.05], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}], 
+     GraphicsBox[{{}, 
+       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+        0.012833333333333334`], AbsoluteThickness[1.6], 
+        PointBox[{{1., 679.}, {2., 679.}, {3., 641.}, {4., 640.}, {5., 
+         649.}, {6., 558.}, {7., 280.}, {8., 280.}, {9., 367.}, {10., 376.}, {
+         11., 373.}, {12., 282.}, {13., 282.}}]}, {{}, {}}},
+      AspectRatio->NCache[
+        Rational[1, 2], 0.5],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{0, 0},
+      DisplayFunction->Identity,
+      Frame->{{True, True}, {True, True}},
+      FrameLabel->{{
+         FormBox[
+          TagBox["\"B06 / Ky\"", HoldForm], TraditionalForm], None}, {
+         FormBox[
+          TagBox["\"\"", HoldForm], TraditionalForm], None}},
+      FrameStyle->Directive[15],
+      FrameTicks->{{Automatic, All}, {{{1, 
+           FormBox[
+            
+            TemplateBox[{"\"Ce\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {2, 
+           FormBox[
+            
+            TemplateBox[{"\"Pr\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {13, 
+           FormBox[
+            
+            TemplateBox[{"\"Yb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}, {{1, 
+           FormBox[
+            
+            TemplateBox[{"\"Ce\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {2, 
+           FormBox[
+            
+            TemplateBox[{"\"Pr\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {13, 
+           FormBox[
+            
+            TemplateBox[{"\"Yb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->800,
+      Method->{
+       "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
+        "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}},
+      PlotLabel->FormBox[
+        StyleBox["B06", 20, StripOnInput -> False], TraditionalForm],
+      PlotRange->{{0, 13.}, {0, 679.}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.02], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}]},
+    {
+     GraphicsBox[{{}, 
+       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+        0.012833333333333334`], AbsoluteThickness[1.6], 
+        PointBox[{{1., -50.}, {2., -120.}, {3., -48.}, {4., -50.}, {
+         5., -50.}, {6., -50.}, {7., -99.}, {8., -99.}, {9., -65.}, {
+         10., -107.}, {11., -91.}, {12., -105.}, {13., -105.}}]}, {{}, {}}},
+      AspectRatio->NCache[
+        Rational[1, 2], 0.5],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{0, 0},
+      DisplayFunction->Identity,
+      Frame->{{True, True}, {True, True}},
+      FrameLabel->{{
+         FormBox[
+          TagBox["\"B22 / Ky\"", HoldForm], TraditionalForm], None}, {
+         FormBox[
+          TagBox["\"\"", HoldForm], TraditionalForm], None}},
+      FrameStyle->Directive[15],
+      FrameTicks->{{Automatic, All}, {{{1, 
+           FormBox[
+            
+            TemplateBox[{"\"Ce\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {2, 
+           FormBox[
+            
+            TemplateBox[{"\"Pr\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {13, 
+           FormBox[
+            
+            TemplateBox[{"\"Yb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}, {{1, 
+           FormBox[
+            
+            TemplateBox[{"\"Ce\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {2, 
+           FormBox[
+            
+            TemplateBox[{"\"Pr\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {13, 
+           FormBox[
+            
+            TemplateBox[{"\"Yb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->800,
+      Method->{
+       "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
+        "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}},
+      PlotLabel->FormBox[
+        StyleBox["B22", 20, StripOnInput -> False], TraditionalForm],
+      PlotRange->{{0, 13.}, {-120., 0}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.05], 
+         Scaled[0.02]}},
+      Ticks->{Automatic, Automatic}], 
+     GraphicsBox[{{}, 
+       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+        0.012833333333333334`], AbsoluteThickness[1.6], 
+        PointBox[{{1., 431.}, {2., 431.}, {3., 521.}, {4., 525.}, {5., 
+         597.}, {6., 597.}, {7., 340.}, {8., 340.}, {9., 305.}, {10., 250.}, {
+         11., 308.}, {12., 320.}, {13., 320.}}]}, {{}, {}}},
+      AspectRatio->NCache[
+        Rational[1, 2], 0.5],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{0, 0},
+      DisplayFunction->Identity,
+      Frame->{{True, True}, {True, True}},
+      FrameLabel->{{
+         FormBox[
+          TagBox["\"B24 / Ky\"", HoldForm], TraditionalForm], None}, {
+         FormBox[
+          TagBox["\"\"", HoldForm], TraditionalForm], None}},
+      FrameStyle->Directive[15],
+      FrameTicks->{{Automatic, All}, {{{1, 
+           FormBox[
+            
+            TemplateBox[{"\"Ce\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {2, 
+           FormBox[
+            
+            TemplateBox[{"\"Pr\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {13, 
+           FormBox[
+            
+            TemplateBox[{"\"Yb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}, {{1, 
+           FormBox[
+            
+            TemplateBox[{"\"Ce\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {2, 
+           FormBox[
+            
+            TemplateBox[{"\"Pr\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {13, 
+           FormBox[
+            
+            TemplateBox[{"\"Yb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->800,
+      Method->{
+       "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
+        "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}},
+      PlotLabel->FormBox[
+        StyleBox["B24", 20, StripOnInput -> False], TraditionalForm],
+      PlotRange->{{0, 13.}, {0, 597.}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.02], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}], 
+     GraphicsBox[{{}, 
+       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+        0.012833333333333334`], AbsoluteThickness[1.6], 
+        PointBox[{{1., 616.}, {2., 616.}, {3., 563.}, {4., 490.}, {5., 
+         408.}, {6., 408.}, {7., 452.}, {8., 452.}, {9., 523.}, {10., 466.}, {
+         11., 417.}, {12., 428.}, {13., 428.}}]}, {{}, {}}},
+      AspectRatio->NCache[
+        Rational[1, 2], 0.5],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{0, 396.4444444444453},
+      DisplayFunction->Identity,
+      Frame->{{True, True}, {True, True}},
+      FrameLabel->{{
+         FormBox[
+          TagBox["\"B44 / Ky\"", HoldForm], TraditionalForm], None}, {
+         FormBox[
+          TagBox["\"\"", HoldForm], TraditionalForm], None}},
+      FrameStyle->Directive[15],
+      FrameTicks->{{Automatic, All}, {{{1, 
+           FormBox[
+            
+            TemplateBox[{"\"Ce\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {2, 
+           FormBox[
+            
+            TemplateBox[{"\"Pr\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {13, 
+           FormBox[
+            
+            TemplateBox[{"\"Yb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}, {{1, 
+           FormBox[
+            
+            TemplateBox[{"\"Ce\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {2, 
+           FormBox[
+            
+            TemplateBox[{"\"Pr\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {13, 
+           FormBox[
+            
+            TemplateBox[{"\"Yb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->800,
+      Method->{
+       "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
+        "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}},
+      PlotLabel->FormBox[
+        StyleBox["B44", 20, StripOnInput -> False], TraditionalForm],
+      PlotRange->{{0, 13.}, {396.4444444444453, 616.}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.05], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}], 
+     GraphicsBox[{{}, 
+       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+        0.012833333333333334`], AbsoluteThickness[1.6], 
+        PointBox[{{1., -921.}, {2., -921.}, {3., -839.}, {4., -750.}, {
+         5., -706.}, {6., -706.}, {7., -721.}, {8., -721.}, {9., -590.}, {
+         10., -576.}, {11., -489.}, {12., -482.}, {13., -482.}}]}, {{}, {}}},
+      AspectRatio->NCache[
+        Rational[1, 2], 0.5],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{0, -457.6111111111121},
+      DisplayFunction->Identity,
+      Frame->{{True, True}, {True, True}},
+      FrameLabel->{{
+         FormBox[
+          TagBox["\"B26 / Ky\"", HoldForm], TraditionalForm], None}, {
+         FormBox[
+          TagBox["\"\"", HoldForm], TraditionalForm], None}},
+      FrameStyle->Directive[15],
+      FrameTicks->{{Automatic, All}, {{{1, 
+           FormBox[
+            
+            TemplateBox[{"\"Ce\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {2, 
+           FormBox[
+            
+            TemplateBox[{"\"Pr\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {13, 
+           FormBox[
+            
+            TemplateBox[{"\"Yb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}, {{1, 
+           FormBox[
+            
+            TemplateBox[{"\"Ce\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {2, 
+           FormBox[
+            
+            TemplateBox[{"\"Pr\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {13, 
+           FormBox[
+            
+            TemplateBox[{"\"Yb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->800,
+      Method->{
+       "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
+        "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}},
+      PlotLabel->FormBox[
+        StyleBox["B26", 20, StripOnInput -> False], TraditionalForm],
+      PlotRange->{{0, 13.}, {-921., -482.}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.05], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}], 
+     GraphicsBox[{{}, 
+       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+        0.012833333333333334`], AbsoluteThickness[1.6], 
+        PointBox[{{1., -348.}, {2., -348.}, {3., -408.}, {4., -450.}, {
+         5., -508.}, {6., -508.}, {7., -204.}, {8., -204.}, {9., -236.}, {
+         10., -227.}, {11., -240.}, {12., -234.}, {13., -234.}}]}, {{}, {}}},
+      AspectRatio->NCache[
+        Rational[1, 2], 0.5],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{0, 0},
+      DisplayFunction->Identity,
+      Frame->{{True, True}, {True, True}},
+      FrameLabel->{{
+         FormBox[
+          TagBox["\"B46 / Ky\"", HoldForm], TraditionalForm], None}, {
+         FormBox[
+          TagBox["\"\"", HoldForm], TraditionalForm], None}},
+      FrameStyle->Directive[15],
+      FrameTicks->{{Automatic, All}, {{{1, 
+           FormBox[
+            
+            TemplateBox[{"\"Ce\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {2, 
+           FormBox[
+            
+            TemplateBox[{"\"Pr\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {13, 
+           FormBox[
+            
+            TemplateBox[{"\"Yb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}, {{1, 
+           FormBox[
+            
+            TemplateBox[{"\"Ce\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {2, 
+           FormBox[
+            
+            TemplateBox[{"\"Pr\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {13, 
+           FormBox[
+            
+            TemplateBox[{"\"Yb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->800,
+      Method->{
+       "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
+        "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}},
+      PlotLabel->FormBox[
+        StyleBox["B46", 20, StripOnInput -> False], TraditionalForm],
+      PlotRange->{{0, 13.}, {-508., 0}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.05], 
+         Scaled[0.02]}},
+      Ticks->{Automatic, Automatic}], 
+     GraphicsBox[{{}, 
+       {RGBColor[0.368417, 0.506779, 0.709798], PointSize[
+        0.012833333333333334`], AbsoluteThickness[1.6], 
+        PointBox[{{1., -788.}, {2., -788.}, {3., -831.}, {4., -760.}, {
+         5., -692.}, {6., -692.}, {7., -509.}, {8., -509.}, {9., -556.}, {
+         10., -546.}, {11., -536.}, {12., -492.}, {13., -492.}}]}, {{}, {}}},
+      AspectRatio->NCache[
+        Rational[1, 2], 0.5],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{0, -473.16666666666765`},
+      DisplayFunction->Identity,
+      Frame->{{True, True}, {True, True}},
+      FrameLabel->{{
+         FormBox[
+          TagBox["\"B66 / Ky\"", HoldForm], TraditionalForm], None}, {
+         FormBox[
+          TagBox["\"\"", HoldForm], TraditionalForm], None}},
+      FrameStyle->Directive[15],
+      FrameTicks->{{Automatic, All}, {{{1, 
+           FormBox[
+            
+            TemplateBox[{"\"Ce\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {2, 
+           FormBox[
+            
+            TemplateBox[{"\"Pr\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {13, 
+           FormBox[
+            
+            TemplateBox[{"\"Yb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}, {{1, 
+           FormBox[
+            
+            TemplateBox[{"\"Ce\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {2, 
+           FormBox[
+            
+            TemplateBox[{"\"Pr\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {3, 
+           FormBox[
+            
+            TemplateBox[{"\"Nd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {4, 
+           FormBox[
+            
+            TemplateBox[{"\"Pm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {5, 
+           FormBox[
+            
+            TemplateBox[{"\"Sm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {6, 
+           FormBox[
+            
+            TemplateBox[{"\"Eu\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {7, 
+           FormBox[
+            
+            TemplateBox[{"\"Gd\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {8, 
+           FormBox[
+            
+            TemplateBox[{"\"Tb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {9, 
+           FormBox[
+            
+            TemplateBox[{"\"Dy\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {10, 
+           FormBox[
+            
+            TemplateBox[{"\"Ho\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {11, 
+           FormBox[
+            
+            TemplateBox[{"\"Er\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {12, 
+           FormBox[
+            
+            TemplateBox[{"\"Tm\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}, {13, 
+           FormBox[
+            
+            TemplateBox[{"\"Yb\"", "\"3+\""}, "Superscript", SyntaxForm -> 
+             SuperscriptBox], TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      ImageSize->800,
+      Method->{
+       "OptimizePlotMarkers" -> True, "OptimizePlotMarkers" -> True, 
+        "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+            Identity[
+             Part[#, 1]], 
+            Identity[
+             Part[#, 2]]}& )}},
+      PlotLabel->FormBox[
+        StyleBox["B66", 20, StripOnInput -> False], TraditionalForm],
+      PlotRange->{{0, 13.}, {-831., -492.}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.05], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}]}
+   },
+   AutoDelete->False,
+   GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+  "Grid"]], "Output",
+ CellChangeTimes->{{3.8958446847034197`*^9, 3.895844691983984*^9}, {
+   3.8958447410277433`*^9, 3.895844747573944*^9}, {3.895844813188232*^9, 
+   3.895844851238805*^9}, 3.895844952708727*^9},
+ CellLabel->
+  "Out[1252]=",ExpressionUUID->"016065fe-4255-4b43-9542-e52030d60b65"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Export", "[", 
+  RowBox[{"\"\<~/Desktop/LaF3.pdf\>\"", ",", "superLanthanum"}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.8958449566956587`*^9, 3.895844975306068*^9}},
+ CellLabel->
+  "In[1253]:=",ExpressionUUID->"7e62dda2-b6b5-43cc-961d-8bee9853beef"],
+
+Cell[BoxData["\<\"~/Desktop/LaF3.pdf\"\>"], "Output",
+ CellChangeTimes->{3.895844977186809*^9},
+ CellLabel->
+  "Out[1253]=",ExpressionUUID->"6a912778-3f42-40b9-8f10-6730aeb4f781"]
+}, Open  ]]
+},
+WindowSize->{1294, 911},
+WindowMargins->{{213, Automatic}, {Automatic, 62}},
+FrontEndVersion->"13.1 for Mac OS X ARM (64-bit) (June 16, 2022)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"caf67082-a3bc-4e28-98ed-f5b1886b5313"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 1177, 35, 185, "Input",ExpressionUUID->"4bb33c71-69f1-4da7-b6ee-4f8d6429c8d6"],
+Cell[1760, 59, 244, 4, 48, "Output",ExpressionUUID->"403312dd-6674-4a82-a0ce-bf4bd721b2a4"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2041, 68, 445, 13, 54, "Input",ExpressionUUID->"3266802e-9cd8-4f99-ab85-fed52e2cc8c9"],
+Cell[2489, 83, 196, 3, 48, "Output",ExpressionUUID->"10bfe1fc-4b85-46e1-96b4-bc24a497ecbc"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2722, 91, 273, 6, 30, "Input",ExpressionUUID->"5b3093c8-3fad-46e6-a383-9c671c2b4630"],
+Cell[2998, 99, 396, 10, 48, "Output",ExpressionUUID->"baba8567-60c2-4023-9608-6f43b42e96ba"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3431, 114, 188, 3, 30, "Input",ExpressionUUID->"686b87bf-161c-4925-9a89-b7b624d97af4"],
+Cell[3622, 119, 171, 4, 48, "Output",ExpressionUUID->"a0610720-bbec-4f35-8e9d-86e9d3ebc4f7"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3830, 128, 120, 2, 30, "Input",ExpressionUUID->"6b85c396-a15d-4684-af51-c779dc544860"],
+Cell[3953, 132, 322, 7, 48, "Output",ExpressionUUID->"426a5aa9-b541-48fe-a6b2-c56eff837aa1"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4312, 144, 124, 2, 30, "Input",ExpressionUUID->"6c3a0d2b-6d6f-4a1e-baa9-17405d77a0fb"],
+Cell[4439, 148, 299, 7, 48, "Output",ExpressionUUID->"523f6eb5-4602-44af-b1a5-5e14e604f825"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4775, 160, 185, 3, 30, "Input",ExpressionUUID->"1275ee2f-a9f9-4552-bcd6-2486392b7b4c"],
+Cell[4963, 165, 930, 27, 48, "Output",ExpressionUUID->"1fbe73e0-e10a-4178-9be8-4b8bb3123e51"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5930, 197, 182, 3, 30, "Input",ExpressionUUID->"51e69819-f6d4-4705-8294-0de55c921512"],
+Cell[6115, 202, 369, 8, 48, "Output",ExpressionUUID->"7f248380-cd46-461c-8888-2887af6cf9e2"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[6521, 215, 117, 2, 30, "Input",ExpressionUUID->"382ed2da-c5fd-4753-bc30-dcb96a31ecdd"],
+Cell[6641, 219, 1354, 45, 51, "Output",ExpressionUUID->"391ae9ba-ee66-4eb2-bf94-0218b84ecd98"]
+}, Open  ]],
+Cell[8010, 267, 4765, 116, 451, "Input",ExpressionUUID->"c64b1b4b-9e94-4b0d-b619-174b19246df0"],
+Cell[CellGroupData[{
+Cell[12800, 387, 364, 8, 30, "Input",ExpressionUUID->"7f7765e8-fa83-4a60-985e-bb2781294cec"],
+Cell[13167, 397, 127362, 3210, 1887, "Output",ExpressionUUID->"016065fe-4255-4b43-9542-e52030d60b65"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[140566, 3612, 275, 6, 30, "Input",ExpressionUUID->"7e62dda2-b6b5-43cc-961d-8bee9853beef"],
+Cell[140844, 3620, 179, 3, 48, "Output",ExpressionUUID->"6a912778-3f42-40b9-8f10-6730aeb4f781"]
+}, Open  ]]
+}
+]
+*)
+
