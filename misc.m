@@ -3,6 +3,7 @@ BeginPackage["misc`"];
 ExportToH5;
 FlattenBasis;
 RecoverBasis;
+FlowMatching;
 GreedyMatching;
 HelperNotebook;
 StochasticMatching;
@@ -162,6 +163,76 @@ StochasticMatching[aValues0_, bValues0_, numShuffles_ : 200, OptionsPattern[]] :
      pairedIndices = 
       MapIndexed[{#2[[1]], Position[bValues, #1[[2]]][[1, 1]]} &, 
        bestValues];
+     Return[{bestValues, pairedIndices}]
+     )
+    ];
+   )
+  ]
+
+FlowMatching::usage="FlowMatching[aList, bList] returns a list of pairs of elements from aList and bList that are closest to each other, this is returned in a list together with a mapping of indices from the aList to those in bList to which they were matched. The option \"alistLabels\" can be used to specify labels for the elements in aList. The option \"blistLabels\" can be used to specify labels for the elements in bList. If these options are used, the function returns a list with three elements the pairs of matched elements, the pairs of corresponding matched labels, and the mapping of indices. This is basically a wrapper around Mathematica's FindMinimumCostFlow function.";
+Options[FlowMatching] = {"alistLabels" -> {}, "blistLabels" -> {}};
+FlowMatching[aValues0_, bValues0_, notMatched_ : 0, 
+  OptionsPattern[]] := Module[{
+   A = aValues0, B = bValues0, edgesSourceToA, capacitySourceToA,
+   costSourceToA, midLayer, midLayerEdges, midCapacities,
+   midCosts, edgesBtoSink, capacityBtoSink, costBtoSink,
+   allCapacities, allCosts, allEdges, graph,
+   flow, bestValues, bestLabels,
+   aLabels, bLabels, pairedIndices, matchingLabels},
+  (
+   matchingLabels = (Length[OptionValue["alistLabels"]] > 0);
+   aLabels = OptionValue["alistLabels"];
+   bLabels = OptionValue["blistLabels"];
+   
+   (*Build up the edges costs and capacities*)
+   (*From source to the nodes representing the values of the first \
+list*)
+   edgesSourceToA = ("source" \[DirectedEdge] {"A", #}) & /@ 
+     Range[1, nA];
+   capacitySourceToA = ConstantArray[1, nA];
+   costSourceToA = ConstantArray[0, nA];
+   
+   (*From all the elements of A to all the elements of B*)
+   midLayer = 
+    Table[{{"A", i} \[DirectedEdge] ({"B", j}), 1, 
+      Abs[A[[i]] - B[[j]]]}, {i, 1, nA}, {j, 1, nB}];
+   midLayer = Flatten[midLayer, 1];
+   {midLayerEdges, midCapacities, midCosts} = Transpose[midLayer];
+   
+   (*From the elements of B to the sink*)
+   edgesBtoSink = ({"B", #} \[DirectedEdge] "sink") & /@ 
+     Range[1, nB];
+   capacityBtoSink = ConstantArray[1, nB];
+   costBtoSink = ConstantArray[0, nB];
+   
+   (*Put it all together*)
+   allCapacities = 
+    Join[capacitySourceToA, midCapacities, capacityBtoSink];
+   allCosts = Join[costSourceToA, midCosts, costBtoSink];
+   allEdges = Join[edgesSourceToA, midLayerEdges, edgesBtoSink];
+   graph = 
+    Graph[allEdges, EdgeCapacity -> allCapacities, 
+     EdgeCost -> allCosts];
+   
+   (*Solve it*)
+   flow = 
+    FindMinimumCostFlow[graph, "source", "sink", nA, 
+     "OptimumFlowData"];
+   (*Collect the pairs of matched indices*)
+   pairedIndices = 
+    Select[flow["EdgeList"], 
+     And[Not[#[[1]] === "source"], Not[#[[2]] === "sink"]] &];
+   pairedIndices = {#[[1, 2]], #[[2, 2]]} & /@ pairedIndices;
+   (*Collect the pairs of matched values*)
+   bestValues = {A[[#[[1]]]], B[[#[[1]]]]} & /@ pairedIndices;
+   (*Account for having been given labels*)
+   If[matchingLabels,
+    (
+     bestLabels = {aLabels[[#[[1]]]], bLabels[[#[[2]]]]} & /@ 
+       pairedIndices;
+     Return[{bestValues, bestLabels, pairedIndices}]
+     ),
+    (
      Return[{bestValues, pairedIndices}]
      )
     ];
