@@ -1,0 +1,911 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 13.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     40194,        903]
+NotebookOptionsPosition[     36501,        839]
+NotebookOutlinePosition[     37277,        863]
+CellTagsIndexPosition[     37234,        860]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["qLanth : Table Generator", "Title",
+ CellChangeTimes->{{3.866561008726151*^9, 3.866561012858223*^9}, {
+  3.866561154959708*^9, 3.866561182398954*^9}, {3.906728019105769*^9, 
+  3.906728021136181*^9}},
+ TextAlignment->Center,ExpressionUUID->"f3dab00c-756e-4b1f-9a29-d532363347ff"],
+
+Cell[TextData[{
+ "In this notebook the reduced matrix elements for the following operators \
+are put together and the matrix elements in the LSJMJ basis are evaluated in \
+terms of these:\nelectrostatic, spin-orbit, \nconfig interaction via Casimir \
+operators, \nspin-other-orbit, \nelectrostatically correlated spin orbit, \n\
+spin-spin, \nand the three-body effective operator.\nGoing from ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["f", "1"], TraditionalForm]],ExpressionUUID->
+  "1c585450-dd78-4358-9f41-cec86710b441"],
+ " to ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["f", "7"], TraditionalForm]],ExpressionUUID->
+  "05edb338-7657-4274-800c-24a2b2142180"],
+ " takes about ten minutes.\n\nAfter this a simpler version of these \
+SparseArray is created. This version zeroes out many parameters that we haven\
+\[CloseCurlyQuote]t yet taken advantage of. These SparseArray are also \
+converted to Python functions."
+}], "Text",
+ CellChangeTimes->{{3.884338541433605*^9, 3.884338573866145*^9}, {
+  3.884339039840309*^9, 3.884339047838854*^9}, {3.892029591652556*^9, 
+  3.892029591888661*^9}, {3.9064868171715384`*^9, 3.906486821664096*^9}, {
+  3.906728781318788*^9, 3.9067288855603437`*^9}, {3.906728930043571*^9, 
+  3.906728953785007*^9}, {3.906729603354409*^9, 3.906729621325438*^9}, {
+  3.906732357692666*^9, 3.9067324537080297`*^9}},
+ TextAlignment->Center,ExpressionUUID->"47503aaa-7b50-458a-bffb-5f91a3d860bc"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"AppendTo", "[", 
+   RowBox[{"$Path", ",", 
+    RowBox[{"NotebookDirectory", "[", "]"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Get", "[", "\"\<qlanth.m\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"LoadAll", "[", "]"}], ";"}]}], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.866625158893896*^9, 3.8666251699518127`*^9}, {
+   3.86662565468071*^9, 3.866625655065934*^9}, {3.867925727834807*^9, 
+   3.867925730467511*^9}, {3.878673720338455*^9, 3.878673721191774*^9}, 
+   3.87867383810907*^9, 3.878675191901079*^9, 3.8786752835763073`*^9, 
+   3.8787416478732557`*^9, {3.8799526959199963`*^9, 3.8799526960770903`*^9}, {
+   3.892029582337204*^9, 3.8920295889408827`*^9}, {3.892552302793804*^9, 
+   3.892552311308173*^9}, 3.8980141354678907`*^9, {3.9067294207882433`*^9, 
+   3.906729421016581*^9}},ExpressionUUID->"8d8b9646-d0e9-44da-9701-\
+014892f72aa1"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "TabulateManyEnergyMatrixTables"}]], "Input",
+ CellChangeTimes->{{3.873904145403717*^9, 3.873904145591063*^9}},
+ CellLabel->"In[8]:=",ExpressionUUID->"5826bdff-cd17-4a32-9677-5e983098066e"],
+
+Cell[BoxData[
+ InterpretationBox[
+  StyleBox[
+   FrameBox[
+    DynamicModuleBox[{System`InformationDump`open$$ = False, 
+     System`InformationDump`mouseOver$$ = False}, 
+     PaneSelectorBox[{True->
+      TagBox[GridBox[{
+         {
+          ItemBox[
+           PaneBox[
+            StyleBox["\<\" Symbol\"\>", "InformationTitleText",
+             StripOnInput->False,
+             BaseStyle -> None],
+            FrameMargins->{{4, 0}, {-1, 1}}],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False]},
+         {
+          ItemBox[
+           PaneBox[
+            
+            StyleBox["\<\"TabulateManyEnergyMatrixTables[{n1, n2, ...}, {I1, \
+I2, ...}] calculates the tables of matrix elements for the requested f^n_i \
+configurations with the given nuclear spin I_i. The function does not return \
+the matrices themselves. It instead returns an Association whose keys are \
+lists of the form {n, I} and whose values are the filenames where the output \
+of TabulateEnergyMatrixTables was saved to. When these files are loaded with \
+Get, the following three symbols are thus defined: EnergyMatrixTable, \
+EnergyStatesTable, and AllowedM.\\nEnergyMatrixTable is an Association whose \
+keys are of the form {n, J, Jp, Ii, Ii} and whose values are matrix elements.\
+\"\>", "InformationUsageText",
+             StripOnInput->False,
+             LineSpacing->{1.5, 1.5, 3.}],
+            FrameMargins->{{10, 10}, {8, 10}}],
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False]},
+         {
+          PaneBox[
+           TagBox[GridBox[{
+              {
+               StyleBox[
+                TagBox[
+                 TooltipBox[
+                  StyleBox["\<\" Definitions\"\>", "InformationRowLabel",
+                   StripOnInput->False],
+                  "\"Definitions\"",
+                  TooltipStyle->"TextStyling"],
+                 Annotation[#, "Definitions", "Tooltip"]& ], "DialogStyle",
+                StripOnInput->False]},
+              {
+               TemplateBox[{"\"\[ThinSpace]\"", 
+                 GridBox[{{
+                    RowBox[{
+                    RowBox[{"TabulateManyEnergyMatrixTables", "[", 
+                    RowBox[{"ns_", ",", "Iis_", ",", 
+                    RowBox[{"OptionsPattern", "[", "]"}]}], "]"}], ":=", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"overwrite", "=", 
+                    RowBox[{"OptionValue", "[", "\"Overwrite\"", "]"}]}], ";", 
+                    RowBox[{"fNames", "=", 
+                    RowBox[{"Association", "[", "]"}]}], ";", 
+                    RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"CFdataFilename", "=", 
+                    RowBox[{"FileNameJoin", "[", 
+                    RowBox[{"{", 
+                    RowBox[{"moduleDir", ",", "\"data\"", ",", 
+                    RowBox[{"\"CrystalFieldTable_f\"", "<>", 
+                    RowBox[{"ToString", "[", "n", "]"}], "<>", "\".zip\""}]}],
+                     "}"}], "]"}]}], ";", 
+                    RowBox[{"PrintTemporary", "[", 
+                    
+                    RowBox[{"\"Importing CrystalFieldTable from \"", ",", 
+                    "CFdataFilename", ",", "\" ...\""}], "]"}], ";", 
+                    RowBox[{"CrystalFieldTable", "=", 
+                    RowBox[{"ImportMZip", "[", "CFdataFilename", "]"}]}], ";", 
+                    RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"PrintTemporary", "[", 
+                    
+                    RowBox[{"\"#------- n = \"", ",", "n", ",", "\" | I = \"",
+                     ",", "Ii", ",", "\" -------#\""}], "]"}], ";", 
+                    RowBox[{"exportFname", "=", 
+                    RowBox[{"EnergyMatrixFileName", "[", 
+                    RowBox[{"n", ",", "Ii"}], "]"}]}], ";", 
+                    RowBox[{
+                    RowBox[{"fNames", "[", 
+                    RowBox[{"{", 
+                    RowBox[{"n", ",", "Ii"}], "}"}], "]"}], "=", 
+                    "exportFname"}], ";", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"FileExistsQ", "[", "exportFname", "]"}], "&&", 
+                    RowBox[{"!", "overwrite"}]}], ",", 
+                    RowBox[{"Continue", "[", "]"}]}], "]"}], ";", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    
+                    RowBox[{"EnergyMatrixTable", ",", "EnergyStatesTable", 
+                    ",", "AllowedM"}], "}"}], "=", 
+                    RowBox[{"TabulateEnergyMatrixTable", "[", 
+                    RowBox[{"n", ",", "Ii", ",", "CrystalFieldTable", ",", 
+                    RowBox[{"\"Sparse\"", "\[Rule]", 
+                    RowBox[{"OptionValue", "[", "\"Sparse\"", "]"}]}], ",", 
+                    RowBox[{"\"ChenDeltas\"", "\[Rule]", 
+                    RowBox[{"OptionValue", "[", "\"ChenDeltas\"", "]"}]}]}], 
+                    "]"}]}], ";", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"FileExistsQ", "[", "exportFname", "]"}], "&&", 
+                    "overwrite"}], ",", 
+                    RowBox[{"DeleteFile", "[", "exportFname", "]"}]}], "]"}], 
+                    ";", 
+                    RowBox[{"Save", "[", 
+                    RowBox[{"exportFname", ",", 
+                    RowBox[{"{", 
+                    
+                    RowBox[{"EnergyMatrixTable", ",", "EnergyStatesTable", 
+                    ",", "AllowedM"}], "}"}]}], "]"}], ";"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"Ii", ",", "Iis"}], "}"}]}], "]"}], ";", 
+                    RowBox[{"ClearAll", "[", "CrystalFieldTable", "]"}], 
+                    ";"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"n", ",", "ns"}], "}"}]}], "]"}], ";", 
+                    RowBox[{"Return", "[", "fNames", "]"}], ";"}], ")"}]}]}, {
+                   " "}}, GridBoxAlignment -> {"Columns" -> {{Left}}}, 
+                  DefaultBaseStyle -> "Column", 
+                  GridBoxItemSize -> {
+                   "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}]},
+                "RowDefault"]}
+             },
+             DefaultBaseStyle->"Column",
+             GridBoxAlignment->{"Columns" -> {{Left}}},
+             
+             GridBoxItemSize->{
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+            "Column"],
+           FrameMargins->{{6, 0}, {3, 6}}], "\<\"\"\>"},
+         {
+          PaneBox[GridBox[{
+             {
+              
+              DynamicModuleBox[{System`InformationDump`open$$ = {
+               False, False, False, False, False, False}}, 
+               StyleBox[GridBox[{
+                  {
+                   TagBox[
+                    TooltipBox[
+                    StyleBox["\<\" Options\"\>", "InformationRowLabel",
+                    StripOnInput->False],
+                    "\"Options\"",
+                    TooltipStyle->"TextStyling"],
+                    Annotation[#, "Options", "Tooltip"]& ], 
+                   RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"\<\"Overwrite\"\>", "\[Rule]", "False"}], ",", 
+                    RowBox[{"\<\"Sparse\"\>", "\[Rule]", "True"}], ",", 
+                    RowBox[{"\<\"ChenDeltas\"\>", "\[Rule]", "False"}]}], 
+                    "}"}]},
+                  {
+                   TagBox[
+                    TooltipBox[
+                    StyleBox["\<\" Full Name\"\>", "InformationRowLabel",
+                    StripOnInput->False],
+                    "\"FullName\"",
+                    TooltipStyle->"TextStyling"],
+                    
+                    Annotation[#, "FullName", 
+                    "Tooltip"]& ], "\<\"qlanth`TabulateManyEnergyMatrixTables\
+\"\>"}
+                 },
+                 AutoDelete->False,
+                 GridBoxAlignment->{"Columns" -> {Right, Left}},
+                 GridBoxDividers->None,
+                 GridBoxItemSize->{"Columns" -> {Automatic, Automatic}},
+                 GridBoxSpacings->{"Columns" -> {
+                    Offset[0.27999999999999997`], {
+                    Offset[0.5599999999999999]}, 
+                    Offset[0.27999999999999997`]}, "Rows" -> {
+                    Offset[0.2], {
+                    Offset[0.8]}, 
+                    Offset[0.2]}}], "DialogStyle",
+                StripOnInput->False],
+               DynamicModuleValues:>{}]}
+            },
+            DefaultBaseStyle->"Column",
+            GridBoxAlignment->{"Columns" -> {{Left}}},
+            GridBoxDividers->{"Columns" -> {{False}}, "Rows" -> {{False}}},
+            
+            GridBoxItemSize->{
+             "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}},
+            GridBoxSpacings->{"Columns" -> {
+                Offset[0.27999999999999997`], {
+                 Offset[0.5599999999999999]}, 
+                Offset[0.27999999999999997`]}, "Rows" -> {
+                Offset[0.2], {
+                 Offset[3.6]}, 
+                Offset[0.2]}}],
+           FrameMargins->{{6, 6}, {6, 3}}], ""},
+         {
+          ItemBox[
+           TagBox[
+            ButtonBox[
+             PaneSelectorBox[{False->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "UpPointerOpener"],
+               ImageSizeCache->{10., {2., 8.}}], True->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "UpPointerOpenerHot"],
+               ImageSizeCache->{10., {2., 8.}}]}, Dynamic[
+              System`InformationDump`mouseOver$$]],
+             Alignment->Left,
+             Appearance->{"Default" -> None},
+             
+             ButtonFunction:>FEPrivate`Set[
+              System`InformationDump`open$$, False],
+             Evaluator->Automatic,
+             FrameMargins->{{9, 0}, {0, 0}},
+             ImageMargins->0,
+             ImageSize->Full,
+             Method->"Preemptive"],
+            
+            EventHandlerTag[{
+             "MouseEntered" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, True], 
+              "MouseExited" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, False], 
+              Method -> "Preemptive", PassEventsDown -> Automatic, 
+              PassEventsUp -> True}]],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], "\[SpanFromLeft]"}
+        },
+        AutoDelete->False,
+        FrameStyle->Directive[
+          GrayLevel[0.8], 
+          Thickness[Tiny]],
+        GridBoxAlignment->{"Columns" -> {Left, Right}, "Rows" -> {{Center}}},
+        GridBoxDividers->{
+         "Columns" -> {{None}}, "Rows" -> {False, {True}, False}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+       "Grid"], False->
+      TagBox[GridBox[{
+         {
+          ItemBox[
+           PaneBox[
+            StyleBox["\<\" Symbol\"\>", "InformationTitleText",
+             StripOnInput->False],
+            FrameMargins->{{4, 0}, {-1, 1}}],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False]},
+         {
+          ItemBox[
+           PaneBox[
+            
+            StyleBox["\<\"TabulateManyEnergyMatrixTables[{n1, n2, ...}, {I1, \
+I2, ...}] calculates the tables of matrix elements for the requested f^n_i \
+configurations with the given nuclear spin I_i. The function does not return \
+the matrices themselves. It instead returns an Association whose keys are \
+lists of the form {n, I} and whose values are the filenames where the output \
+of TabulateEnergyMatrixTables was saved to. When these files are loaded with \
+Get, the following three symbols are thus defined: EnergyMatrixTable, \
+EnergyStatesTable, and AllowedM.\\nEnergyMatrixTable is an Association whose \
+keys are of the form {n, J, Jp, Ii, Ii} and whose values are matrix elements.\
+\"\>", "InformationUsageText",
+             StripOnInput->False,
+             LineSpacing->{1.5, 1.5, 3.}],
+            FrameMargins->{{10, 10}, {8, 10}}],
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False]},
+         {
+          ItemBox[
+           TagBox[
+            ButtonBox[
+             PaneSelectorBox[{False->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "DownPointerOpener"],
+               ImageSizeCache->{10., {2., 8.}}], True->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "DownPointerOpenerHot"],
+               ImageSizeCache->{10., {2., 8.}}]}, Dynamic[
+              System`InformationDump`mouseOver$$]],
+             Alignment->Left,
+             Appearance->{"Default" -> None},
+             
+             ButtonFunction:>FEPrivate`Set[
+              System`InformationDump`open$$, True],
+             Evaluator->Automatic,
+             FrameMargins->{{9, 0}, {0, 0}},
+             ImageMargins->0,
+             ImageSize->Full,
+             Method->"Preemptive"],
+            
+            EventHandlerTag[{
+             "MouseEntered" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, True], 
+              "MouseExited" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, False], 
+              Method -> "Preemptive", PassEventsDown -> Automatic, 
+              PassEventsUp -> True}]],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], "\[SpanFromLeft]"}
+        },
+        AutoDelete->False,
+        FrameStyle->Directive[
+          GrayLevel[0.8], 
+          Thickness[Tiny]],
+        GridBoxAlignment->{"Columns" -> {Left, Right}, "Rows" -> {{Center}}},
+        GridBoxDividers->{
+         "Columns" -> {{None}}, "Rows" -> {False, {True}, False}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+       "Grid"]}, Dynamic[System`InformationDump`open$$],
+      BaselinePosition->Baseline,
+      FrameMargins->0,
+      ImageSize->Automatic],
+     DynamicModuleValues:>{}],
+    BaseStyle->"InformationGridFrame",
+    StripOnInput->False], "InformationGridPlain",
+   StripOnInput->False],
+  InformationData[<|
+   "ObjectType" -> "Symbol", "Usage" -> 
+    "TabulateManyEnergyMatrixTables[{n1, n2, ...}, {I1, I2, ...}] calculates \
+the tables of matrix elements for the requested f^n_i configurations with the \
+given nuclear spin I_i. The function does not return the matrices themselves. \
+It instead returns an Association whose keys are lists of the form {n, I} and \
+whose values are the filenames where the output of TabulateEnergyMatrixTables \
+was saved to. When these files are loaded with Get, the following three \
+symbols are thus defined: EnergyMatrixTable, EnergyStatesTable, and AllowedM.\
+\nEnergyMatrixTable is an Association whose keys are of the form {n, J, Jp, \
+Ii, Ii} and whose values are matrix elements.", "Documentation" -> None, 
+    "OwnValues" -> None, "UpValues" -> None, "DownValues" -> 
+    Information`InformationValueForm[
+     DownValues, qlanth`TabulateManyEnergyMatrixTables, {
+      qlanth`TabulateManyEnergyMatrixTables[
+         Pattern[qlanth`ns, 
+          Blank[]], 
+         Pattern[qlanth`Iis, 
+          Blank[]], 
+         OptionsPattern[]] :> (qlanth`overwrite = OptionValue["Overwrite"]; 
+        qlanth`fNames = <||>; 
+        Do[qlanth`CFdataFilename = 
+           FileNameJoin[{
+             qlanth`moduleDir, "data", "CrystalFieldTable_f" <> 
+              ToString[qlanth`n] <> ".zip"}]; 
+          PrintTemporary[
+           "Importing CrystalFieldTable from ", qlanth`CFdataFilename, 
+            " ..."]; qlanth`CrystalFieldTable = 
+           qlanth`ImportMZip[qlanth`CFdataFilename]; 
+          Do[PrintTemporary[
+             "#------- n = ", qlanth`n, " | I = ", qlanth`Ii, " -------#"]; 
+            qlanth`exportFname = 
+             qlanth`EnergyMatrixFileName[qlanth`n, qlanth`Ii]; 
+            qlanth`fNames[{qlanth`n, qlanth`Ii}] = qlanth`exportFname; If[
+              And[
+               FileExistsQ[qlanth`exportFname], 
+               Not[qlanth`overwrite]], 
+              Continue[]]; {
+              qlanth`EnergyMatrixTable, qlanth`EnergyStatesTable, 
+               qlanth`AllowedM} = 
+             qlanth`TabulateEnergyMatrixTable[
+              qlanth`n, qlanth`Ii, qlanth`CrystalFieldTable, "Sparse" -> 
+               OptionValue["Sparse"], "ChenDeltas" -> 
+               OptionValue["ChenDeltas"]]; If[
+              And[
+               FileExistsQ[qlanth`exportFname], qlanth`overwrite], 
+              DeleteFile[qlanth`exportFname]]; 
+            Save[qlanth`exportFname, {
+              qlanth`EnergyMatrixTable, qlanth`EnergyStatesTable, 
+               qlanth`AllowedM}]; Null, {qlanth`Ii, qlanth`Iis}]; 
+          ClearAll[qlanth`CrystalFieldTable]; Null, {qlanth`n, qlanth`ns}]; 
+        Return[qlanth`fNames]; Null)}], "SubValues" -> None, "DefaultValues" -> 
+    None, "NValues" -> None, "FormatValues" -> None, 
+    "Options" -> {
+     "Overwrite" -> False, "Sparse" -> True, "ChenDeltas" -> False}, 
+    "Attributes" -> {}, "FullName" -> 
+    "qlanth`TabulateManyEnergyMatrixTables"|>, False]]], "Output",
+ CellChangeTimes->{3.873904145877635*^9, 3.875697444802656*^9, 
+  3.875697516087777*^9, 3.879332487158946*^9, 3.879333086733549*^9, 
+  3.879343366707439*^9, 3.879434772001047*^9, 3.884338826970337*^9, 
+  3.89205389673109*^9, 3.89230600960336*^9, 3.9067280776260223`*^9, 
+  3.90672864779088*^9},
+ CellLabel->"Out[8]=",ExpressionUUID->"b7380e69-4b7f-4745-9acf-416c1e9dc8eb"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"TabulateManyEnergyMatrixTables", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"6", ",", "7"}], "}"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"{", "0", "}"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"\"\<Overwrite\>\"", "->", "True"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"\"\<Sparse\>\"", "->", "True"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.873904089208288*^9, 3.8739040897188272`*^9}, {
+   3.8739043917319527`*^9, 3.873904401855109*^9}, {3.873904521953*^9, 
+   3.873904563029686*^9}, {3.873904594855056*^9, 3.8739047027941637`*^9}, {
+   3.873905447038617*^9, 3.8739054528130207`*^9}, {3.875697521782844*^9, 
+   3.8756975271033783`*^9}, {3.879332664411551*^9, 3.879332667724786*^9}, {
+   3.879333094102927*^9, 3.879333096437613*^9}, {3.879333763232594*^9, 
+   3.879333765932448*^9}, {3.8793337980500298`*^9, 3.8793337998779783`*^9}, 
+   3.879334072376986*^9, 3.879341815878716*^9, {3.8793418927669277`*^9, 
+   3.8793418927949457`*^9}, {3.879341996801803*^9, 3.8793420094415703`*^9}, {
+   3.8793422844848843`*^9, 3.879342285326581*^9}, {3.879342392068591*^9, 
+   3.879342393985251*^9}, {3.879780975255444*^9, 3.87978098269446*^9}, 
+   3.879781151471797*^9, {3.891602052803184*^9, 3.89160205977682*^9}, 
+   3.892026381926426*^9, {3.8920264138727903`*^9, 3.8920264171383123`*^9}, {
+   3.892304750683446*^9, 3.8923047520827627`*^9}, {3.892306017572239*^9, 
+   3.892306032924005*^9}, {3.892307103609561*^9, 3.892307103687397*^9}, {
+   3.8923075845462723`*^9, 3.8923075848521748`*^9}, {3.892307679161744*^9, 
+   3.892307680564725*^9}, {3.892307750045384*^9, 3.8923077501945066`*^9}, {
+   3.892307866710432*^9, 3.8923078677757387`*^9}, {3.8923079086240873`*^9, 
+   3.892307912475068*^9}, 3.906723971689979*^9, {3.906728415253811*^9, 
+   3.9067284413227253`*^9}, {3.906728560860273*^9, 3.9067285640514803`*^9}, {
+   3.9067287056460867`*^9, 3.9067287060402927`*^9}, {3.906728897122952*^9, 
+   3.90672889803825*^9}},
+ CellLabel->"In[11]:=",ExpressionUUID->"faf78515-25d7-43ba-ace8-8c74a50f7aaa"],
+
+Cell[BoxData[
+ RowBox[{"\[LeftAssociation]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"6", ",", "0"}], "}"}], 
+    "\[Rule]", \
+"\<\"/Users/juan/ZiaLab/Codebase/qlanth/hams/f6_I_1_EnergyMatrixTable.m\"\>"}]\
+, ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"7", ",", "0"}], "}"}], 
+    "\[Rule]", \
+"\<\"/Users/juan/ZiaLab/Codebase/qlanth/hams/f7_I_1_EnergyMatrixTable.m\"\>"}]\
+}], "\[RightAssociation]"}]], "Output",
+ CellChangeTimes->{
+  3.879333101245778*^9, 3.879333145126322*^9, 3.8793335736262617`*^9, {
+   3.879333605855632*^9, 3.879333609516959*^9}, 3.87933367624229*^9, {
+   3.879333759655641*^9, 3.879333768501175*^9}, 3.879333801706039*^9, 
+   3.879333999432087*^9, 3.879341825872738*^9, {3.879341887526163*^9, 
+   3.879341905921924*^9}, 3.879341943941619*^9, {3.8793419981323957`*^9, 
+   3.8793420213912287`*^9}, 3.8793422419008636`*^9, 3.879342299102128*^9, 
+   3.879343198862636*^9, 3.879434675173663*^9, 3.879434787620822*^9, 
+   3.879780453068263*^9, 3.879780994286028*^9, {3.879781159655278*^9, 
+   3.879781172967553*^9}, 3.879946990391671*^9, 3.8799491879149103`*^9, 
+   3.8800333294683933`*^9, 3.8843388341989202`*^9, 3.891602001355618*^9, 
+   3.8916022717186337`*^9, 3.892026465378275*^9, 3.892053909009304*^9, 
+   3.892056483725515*^9, 3.892305867370469*^9, 3.89230602700159*^9, 
+   3.8923060821229353`*^9, {3.892307084859315*^9, 3.892307110439094*^9}, 
+   3.892307298485427*^9, {3.8923073595848637`*^9, 3.892307366973563*^9}, 
+   3.8923074457165747`*^9, 3.892307518758636*^9, 3.892307554639011*^9, 
+   3.8923076167327747`*^9, 3.892307655946994*^9, 3.892307726127829*^9, {
+   3.892307757440563*^9, 3.8923077858685617`*^9}, 3.892307862815034*^9, 
+   3.8923079025717087`*^9, 3.892309028492605*^9, 3.906724038796376*^9, 
+   3.906728130218864*^9, 3.906728199235271*^9, 3.906728700353075*^9, 
+   3.906728887775367*^9, 3.90672966948562*^9},
+ CellLabel->"Out[11]=",ExpressionUUID->"4b2ed6f7-e6ef-4704-9c6c-9374e04288bb"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Simplifying for most common case and making Python versions", "Section",
+ CellChangeTimes->{{3.906663056966097*^9, 3.906663068452347*^9}, {
+  3.906732462735611*^9, 
+  3.9067324788635178`*^9}},ExpressionUUID->"7596f065-8755-4f4c-b339-\
+5f7ee3399ca8"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ParallelDo", "[", 
+   RowBox[{
+    RowBox[{"(", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"Get", "[", "\"\<qlanth.m\>\"", "]"}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"LoadCarnall", "[", "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"LoadCFP", "[", "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"Print", "[", "numE", "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"eTofs", "=", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"#", "[", 
+            RowBox[{"[", "1", "]"}], "]"}], "->", 
+           RowBox[{"#", "[", 
+            RowBox[{"[", "2", "]"}], "]"}]}], ")"}], "&"}], "/@", 
+        RowBox[{"Transpose", "[", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"E0", ",", "E1", ",", "E2", ",", "E3"}], "}"}], ",", 
+           RowBox[{"FtoE", "[", 
+            RowBox[{"F0", ",", "F2", ",", "F4", ",", "F6"}], "]"}]}], "}"}], 
+         "]"}]}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"eTofs", "=", 
+       RowBox[{"Expand", "[", "eTofs", "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"simplifier", "=", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"B12", "->", "0"}], ",", 
+         RowBox[{"B14", "->", "0"}], ",", 
+         RowBox[{"B16", "->", "0"}], ",", 
+         RowBox[{"B34", "->", "0"}], ",", 
+         RowBox[{"B36", "->", "0"}], ",", 
+         RowBox[{"B56", "->", "0"}], ",", "\[IndentingNewLine]", 
+         RowBox[{"S12", "->", "0"}], ",", 
+         RowBox[{"S14", "->", "0"}], ",", 
+         RowBox[{"S16", "->", "0"}], ",", 
+         RowBox[{"S22", "->", "0"}], ",", 
+         RowBox[{"S24", "->", "0"}], ",", 
+         RowBox[{"S26", "->", "0"}], ",", 
+         RowBox[{"S34", "->", "0"}], ",", 
+         RowBox[{"S36", "->", "0"}], ",", "\[IndentingNewLine]", 
+         RowBox[{"S44", "->", "0"}], ",", 
+         RowBox[{"S46", "->", "0"}], ",", 
+         RowBox[{"S56", "->", "0"}], ",", 
+         RowBox[{"S66", "->", "0"}], ",", 
+         RowBox[{"T11", "->", "0"}], ",", 
+         RowBox[{"T12", "->", "0"}], ",", 
+         RowBox[{"T14", "->", "0"}], ",", 
+         RowBox[{"T15", "->", "0"}], ",", "\[IndentingNewLine]", 
+         RowBox[{"T16", "->", "0"}], ",", 
+         RowBox[{"T18", "->", "0"}], ",", 
+         RowBox[{"T17", "->", "0"}], ",", 
+         RowBox[{"T19", "->", "0"}]}], "}"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"aham", "=", 
+       RowBox[{"HamMatrixAssembly", "[", 
+        RowBox[{"numE", ",", "0"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"aham", "=", 
+       RowBox[{"ReplaceInSparseArray", "[", 
+        RowBox[{"aham", ",", "simplifier"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"aham", "=", 
+       RowBox[{"ReplaceInSparseArray", "[", 
+        RowBox[{"aham", ",", "eTofs"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"matrixName", "=", 
+       RowBox[{"\"\<./hams/SymbolicMatrix-f\>\"", "<>", 
+        RowBox[{"ToString", "[", "numE", "]"}], "<>", "\"\<.m\>\""}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Export", "[", 
+       RowBox[{"matrixName", ",", "aham"}], "]"}], ";"}], 
+     "\[IndentingNewLine]", ")"}], "\[IndentingNewLine]", ",", 
+    RowBox[{"{", 
+     RowBox[{"numE", ",", "4", ",", "7", ",", "1"}], "}"}]}], 
+   "\[IndentingNewLine]", "]"}], ";"}]], "Input",
+ CellChangeTimes->{{3.906663196590073*^9, 3.90666325841045*^9}, {
+   3.906663358344263*^9, 3.9066634116980667`*^9}, {3.906663457121044*^9, 
+   3.906663556776827*^9}, {3.906729893085926*^9, 3.906729901741209*^9}, {
+   3.906730682537162*^9, 3.9067306948504057`*^9}, {3.9067307461003447`*^9, 
+   3.906730751428005*^9}, 3.9067316465837803`*^9, {3.906732041463496*^9, 
+   3.90673204879613*^9}, {3.906733197280449*^9, 3.906733224029297*^9}, {
+   3.9067333057149754`*^9, 3.906733307270741*^9}},
+ CellLabel->"In[86]:=",ExpressionUUID->"e340dab2-54a8-4cf9-bc73-8c3691fef44b"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["\<\"Loading data from Carnall for LaF3 ...\"\>"], "Print",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.906733312025947*^9},
+ CellLabel->
+  "(kernel 1)",ExpressionUUID->"ed971c6b-3d9f-4117-a425-f279bec989eb"],
+
+Cell[BoxData["\<\"Loading data from Carnall for LaF3 ...\"\>"], "Print",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.906733312101017*^9},
+ CellLabel->
+  "(kernel 2)",ExpressionUUID->"07d82bbd-b7e8-4282-8dc5-728481344d90"],
+
+Cell[BoxData["\<\"Loading data from Carnall for LaF3 ...\"\>"], "Print",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9067333121505413`*^9},
+ CellLabel->
+  "(kernel 3)",ExpressionUUID->"1d36a96c-5ef1-48f2-b229-302182157af6"],
+
+Cell[BoxData["\<\"Loading the association with coefficients of fractional \
+parentage ...\"\>"], "Print",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.906733312181973*^9},
+ CellLabel->
+  "(kernel 1)",ExpressionUUID->"4edb1f83-c9f3-4f75-819c-fa26854320d0"],
+
+Cell[BoxData["\<\"Loading the association with coefficients of fractional \
+parentage ...\"\>"], "Print",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.906733312203188*^9},
+ CellLabel->
+  "(kernel 2)",ExpressionUUID->"ac50adde-e52a-4989-9691-f917e5a12f32"],
+
+Cell[BoxData["\<\"Loading the association with coefficients of fractional \
+parentage ...\"\>"], "Print",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.906733312228509*^9},
+ CellLabel->
+  "(kernel 3)",ExpressionUUID->"4386aee3-f5f9-4f97-9dbc-1d9d9538a474"],
+
+Cell[BoxData["\<\"Loading data from Carnall for LaF3 ...\"\>"], "Print",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.906733312250042*^9},
+ CellLabel->
+  "(kernel 4)",ExpressionUUID->"58ed77d7-4364-45b9-b368-9918a4344105"],
+
+Cell[BoxData["\<\"Loading CFPtable ...\"\>"], "Print",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.906733312277185*^9},
+ CellLabel->
+  "(kernel 1)",ExpressionUUID->"4f591904-e485-4220-b69c-e614d6da7cbf"],
+
+Cell[BoxData["\<\"Loading CFPtable ...\"\>"], "Print",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.90673331229904*^9},
+ CellLabel->
+  "(kernel 2)",ExpressionUUID->"b8b684ea-9514-48c0-a974-cbd0d2bac198"],
+
+Cell[BoxData["\<\"Loading CFPtable ...\"\>"], "Print",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9067333123228407`*^9},
+ CellLabel->
+  "(kernel 3)",ExpressionUUID->"67a3aae0-053e-4fd5-b0b5-75dfcbb0cd43"],
+
+Cell[BoxData["\<\"Loading the association with coefficients of fractional \
+parentage ...\"\>"], "Print",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.906733312345028*^9},
+ CellLabel->
+  "(kernel 4)",ExpressionUUID->"cd8a80f6-3806-4f0a-ad22-59b26efc367d"],
+
+Cell[BoxData["\<\"Loading association with coefficients of fractional \
+parentage ...\"\>"], "Print",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9067333123746777`*^9},
+ CellLabel->
+  "(kernel 1)",ExpressionUUID->"9076f558-21f8-40ea-ab3b-192aaf5112dc"],
+
+Cell[BoxData["\<\"Loading association with coefficients of fractional \
+parentage ...\"\>"], "Print",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.906733312406641*^9},
+ CellLabel->
+  "(kernel 2)",ExpressionUUID->"3c96d7c6-f53f-4c96-a518-0f6f629cae9a"],
+
+Cell[BoxData["\<\"Loading association with coefficients of fractional \
+parentage ...\"\>"], "Print",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.906733312465477*^9},
+ CellLabel->
+  "(kernel 3)",ExpressionUUID->"403d9098-baec-43cb-9881-147500585163"],
+
+Cell[BoxData["4"], "Print",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.9067333125168657`*^9},
+ CellLabel->
+  "(kernel 1)",ExpressionUUID->"dee1993b-4389-4302-ba42-e081ef270307"],
+
+Cell[BoxData["5"], "Print",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.90673331255348*^9},
+ CellLabel->
+  "(kernel 2)",ExpressionUUID->"0adc3829-51b9-4620-9891-a34257345d94"],
+
+Cell[BoxData["6"], "Print",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.906733312582766*^9},
+ CellLabel->
+  "(kernel 3)",ExpressionUUID->"b3311c1b-ec35-4f91-993b-a3889a334366"],
+
+Cell[BoxData["\<\"Loading CFPtable ...\"\>"], "Print",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.906733312607565*^9},
+ CellLabel->
+  "(kernel 4)",ExpressionUUID->"b3cf042a-ee63-455a-bed3-a1cabad00ad3"],
+
+Cell[BoxData["\<\"Loading association with coefficients of fractional \
+parentage ...\"\>"], "Print",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.906733312658354*^9},
+ CellLabel->
+  "(kernel 4)",ExpressionUUID->"9aaa8d94-9299-4648-8499-584f14db7e5a"],
+
+Cell[BoxData["7"], "Print",
+ ShowCellLabel->True,
+ CellChangeTimes->{3.906733312905303*^9},
+ CellLabel->
+  "(kernel 4)",ExpressionUUID->"e34c8b81-7299-425b-a5c9-81934014e887"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Do", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"(", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"matrixName", "=", 
+       RowBox[{"\"\<./hams/SymbolicMatrix-f\>\"", "<>", 
+        RowBox[{"ToString", "[", "numE", "]"}], "<>", "\"\<.m\>\""}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"aham", "=", 
+       RowBox[{"Get", "[", "matrixName", "]"}]}], ";", "\[IndentingNewLine]", 
+      
+      RowBox[{"pyName", "=", 
+       RowBox[{"\"\<./hams/sparsef\>\"", "<>", 
+        RowBox[{"ToString", "[", "numE", "]"}], "<>", "\"\<.py\>\""}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"ahampy", "=", 
+       RowBox[{"ToPythonSparseFunction", "[", 
+        RowBox[{"aham", ",", 
+         RowBox[{"\"\<effective_ham_f\>\"", "<>", 
+          RowBox[{"ToString", "[", "numE", "]"}]}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Export", "[", 
+       RowBox[{"pyName", ",", "ahampy", ",", "\"\<Text\>\""}], "]"}]}], 
+     "\[IndentingNewLine]", ")"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"{", 
+     RowBox[{"numE", ",", "1", ",", "7", ",", "1"}], "}"}]}], 
+   "\[IndentingNewLine]", "]"}], ";"}]], "Input",
+ CellChangeTimes->{{3.9066638294564342`*^9, 3.906663848167178*^9}, {
+   3.90666390319376*^9, 3.90666398416994*^9}, 3.906664288658187*^9, {
+   3.906667198914716*^9, 3.906667248858974*^9}, {3.906667338237627*^9, 
+   3.906667354355618*^9}, {3.906667391616974*^9, 3.9066674181981363`*^9}, {
+   3.906730258980082*^9, 3.906730260549885*^9}, {3.9067311488916397`*^9, 
+   3.9067311688945303`*^9}, {3.906732089724019*^9, 3.9067320951190367`*^9}, {
+   3.906732167713181*^9, 3.906732170185951*^9}, 3.906733278305478*^9, {
+   3.906733311941688*^9, 3.906733313704688*^9}, 
+   3.906733932031864*^9},ExpressionUUID->"7e9ecc46-7297-4e6a-98b2-\
+189d34227fd2"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{864, 1057},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+TaggingRules-><|"TryRealOnly" -> False|>,
+CellEpilog:>SelectionMove[
+  EvaluationNotebook[], Next, Cell],
+SpellingDictionaries->{"CorrectWords"->{
+ "Sugano", "Kurvits", "Tanabe", "Dq", "Undoped", "Nielson", "Koster", "numpy",
+   "mrays", "Velkov", "qlanth", "Carnall", "Wybourne", "Crosswhite", 
+  "Gruber"}},
+FrontEndVersion->"13.2 for Mac OS X ARM (64-bit) (January 30, 2023)",
+StyleDefinitions->FrontEnd`FileName[{"Report"}, "StandardReport.nb", 
+  CharacterEncoding -> "UTF-8"],
+ExpressionUUID->"77e6bb94-2926-4014-bb5f-43edbd668f7c"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 284, 4, 97, "Title",ExpressionUUID->"f3dab00c-756e-4b1f-9a29-d532363347ff"],
+Cell[867, 28, 1425, 26, 287, "Text",ExpressionUUID->"47503aaa-7b50-458a-bffb-5f91a3d860bc"],
+Cell[2295, 56, 1050, 22, 105, "Input",ExpressionUUID->"8d8b9646-d0e9-44da-9701-014892f72aa1",
+ InitializationCell->True],
+Cell[CellGroupData[{
+Cell[3370, 82, 217, 3, 41, "Input",ExpressionUUID->"5826bdff-cd17-4a32-9677-5e983098066e"],
+Cell[3590, 87, 18246, 404, 222, "Output",ExpressionUUID->"b7380e69-4b7f-4745-9acf-416c1e9dc8eb"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[21873, 496, 2043, 30, 126, "Input",ExpressionUUID->"faf78515-25d7-43ba-ace8-8c74a50f7aaa"],
+Cell[23919, 528, 1951, 36, 67, "Output",ExpressionUUID->"4b2ed6f7-e6ef-4704-9c6c-9374e04288bb"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[25907, 569, 255, 4, 69, "Section",ExpressionUUID->"7596f065-8755-4f4c-b339-5f7ee3399ca8"],
+Cell[CellGroupData[{
+Cell[26187, 577, 3942, 86, 420, "Input",ExpressionUUID->"e340dab2-54a8-4cf9-bc73-8c3691fef44b"],
+Cell[CellGroupData[{
+Cell[30154, 667, 220, 4, 38, "Print",ExpressionUUID->"ed971c6b-3d9f-4117-a425-f279bec989eb"],
+Cell[30377, 673, 220, 4, 38, "Print",ExpressionUUID->"07d82bbd-b7e8-4282-8dc5-728481344d90"],
+Cell[30600, 679, 222, 4, 38, "Print",ExpressionUUID->"1d36a96c-5ef1-48f2-b229-302182157af6"],
+Cell[30825, 685, 253, 5, 38, "Print",ExpressionUUID->"4edb1f83-c9f3-4f75-819c-fa26854320d0"],
+Cell[31081, 692, 253, 5, 38, "Print",ExpressionUUID->"ac50adde-e52a-4989-9691-f917e5a12f32"],
+Cell[31337, 699, 253, 5, 38, "Print",ExpressionUUID->"4386aee3-f5f9-4f97-9dbc-1d9d9538a474"],
+Cell[31593, 706, 220, 4, 38, "Print",ExpressionUUID->"58ed77d7-4364-45b9-b368-9918a4344105"],
+Cell[31816, 712, 202, 4, 38, "Print",ExpressionUUID->"4f591904-e485-4220-b69c-e614d6da7cbf"],
+Cell[32021, 718, 201, 4, 38, "Print",ExpressionUUID->"b8b684ea-9514-48c0-a974-cbd0d2bac198"],
+Cell[32225, 724, 204, 4, 38, "Print",ExpressionUUID->"67a3aae0-053e-4fd5-b0b5-75dfcbb0cd43"],
+Cell[32432, 730, 253, 5, 38, "Print",ExpressionUUID->"cd8a80f6-3806-4f0a-ad22-59b26efc367d"],
+Cell[32688, 737, 251, 5, 38, "Print",ExpressionUUID->"9076f558-21f8-40ea-ab3b-192aaf5112dc"],
+Cell[32942, 744, 249, 5, 38, "Print",ExpressionUUID->"3c96d7c6-f53f-4c96-a518-0f6f629cae9a"],
+Cell[33194, 751, 249, 5, 38, "Print",ExpressionUUID->"403d9098-baec-43cb-9881-147500585163"],
+Cell[33446, 758, 177, 4, 38, "Print",ExpressionUUID->"dee1993b-4389-4302-ba42-e081ef270307"],
+Cell[33626, 764, 174, 4, 38, "Print",ExpressionUUID->"0adc3829-51b9-4620-9891-a34257345d94"],
+Cell[33803, 770, 175, 4, 38, "Print",ExpressionUUID->"b3311c1b-ec35-4f91-993b-a3889a334366"],
+Cell[33981, 776, 202, 4, 38, "Print",ExpressionUUID->"b3cf042a-ee63-455a-bed3-a1cabad00ad3"],
+Cell[34186, 782, 249, 5, 38, "Print",ExpressionUUID->"9aaa8d94-9299-4648-8499-584f14db7e5a"],
+Cell[34438, 789, 175, 4, 38, "Print",ExpressionUUID->"e34c8b81-7299-425b-a5c9-81934014e887"]
+}, Open  ]]
+}, Open  ]],
+Cell[34640, 797, 1833, 38, 273, "Input",ExpressionUUID->"7e9ecc46-7297-4e6a-98b2-189d34227fd2"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
