@@ -169,11 +169,10 @@ StochasticMatching[aValues0_, bValues0_, numShuffles_ : 200, OptionsPattern[]] :
    )
   ]
 
-FlowMatching::usage="FlowMatching[aList, bList] returns a list of pairs of elements from aList and bList that are closest to each other, this is returned in a list together with a mapping of indices from the aList to those in bList to which they were matched. The option \"alistLabels\" can be used to specify labels for the elements in aList. The option \"blistLabels\" can be used to specify labels for the elements in bList. If these options are used, the function returns a list with three elements the pairs of matched elements, the pairs of corresponding matched labels, and the mapping of indices. This is basically a wrapper around Mathematica's FindMinimumCostFlow function.";
-Options[FlowMatching] = {"alistLabels" -> {}, "blistLabels" -> {}};
-FlowMatching[aValues0_, bValues0_, notMatched_ : 0, 
-  OptionsPattern[]] := Module[{
-   A = aValues0, B = bValues0, edgesSourceToA, capacitySourceToA,
+FlowMatching::usage="FlowMatching[aList, bList] returns a list of pairs of elements from aList and bList that are closest to each other, this is returned in a list together with a mapping of indices from the aList to those in bList to which they were matched. The option \"alistLabels\" can be used to specify labels for the elements in aList. The option \"blistLabels\" can be used to specify labels for the elements in bList. If these options are used, the function returns a list with three elements the pairs of matched elements, the pairs of corresponding matched labels, and the mapping of indices. This is basically a wrapper around Mathematica's FindMinimumCostFlow function. By default the option \"noMatched\" is zero, and this means that all elements of aList must be matched to elements of bList. If this is not the case, the option \"noMatched\" can be used to specify how many elements of aList can be left unmatched.";
+Options[FlowMatching] = {"alistLabels" -> {}, "blistLabels" -> {}, "notMatched" -> 0};
+FlowMatching[aValues0_, bValues0_, OptionsPattern[]] := Module[{
+   aValues = aValues0, bValues = bValues0, edgesSourceToA, capacitySourceToA, nA, nB,
    costSourceToA, midLayer, midLayerEdges, midCapacities,
    midCosts, edgesBtoSink, capacityBtoSink, costBtoSink,
    allCapacities, allCosts, allEdges, graph,
@@ -183,53 +182,43 @@ FlowMatching[aValues0_, bValues0_, notMatched_ : 0,
    matchingLabels = (Length[OptionValue["alistLabels"]] > 0);
    aLabels = OptionValue["alistLabels"];
    bLabels = OptionValue["blistLabels"];
-   
+   nA      = Length[aValues];
+   nB      = Length[bValues];
    (*Build up the edges costs and capacities*)
    (*From source to the nodes representing the values of the first \
 list*)
-   edgesSourceToA = ("source" \[DirectedEdge] {"A", #}) & /@ 
-     Range[1, nA];
+   edgesSourceToA = ("source" \[DirectedEdge] {"A", #}) & /@ Range[1, nA];
    capacitySourceToA = ConstantArray[1, nA];
    costSourceToA = ConstantArray[0, nA];
    
    (*From all the elements of A to all the elements of B*)
-   midLayer = 
-    Table[{{"A", i} \[DirectedEdge] ({"B", j}), 1, 
-      Abs[A[[i]] - B[[j]]]}, {i, 1, nA}, {j, 1, nB}];
+   midLayer = Table[{{"A", i} \[DirectedEdge] ({"B", j}), 1, Abs[aValues[[i]] - bValues[[j]]]}, {i, 1, nA}, {j, 1, nB}];
    midLayer = Flatten[midLayer, 1];
    {midLayerEdges, midCapacities, midCosts} = Transpose[midLayer];
    
    (*From the elements of B to the sink*)
-   edgesBtoSink = ({"B", #} \[DirectedEdge] "sink") & /@ 
-     Range[1, nB];
+   edgesBtoSink = ({"B", #} \[DirectedEdge] "sink") & /@ Range[1, nB];
    capacityBtoSink = ConstantArray[1, nB];
    costBtoSink = ConstantArray[0, nB];
    
    (*Put it all together*)
-   allCapacities = 
-    Join[capacitySourceToA, midCapacities, capacityBtoSink];
+   allCapacities = Join[capacitySourceToA, midCapacities, capacityBtoSink];
    allCosts = Join[costSourceToA, midCosts, costBtoSink];
    allEdges = Join[edgesSourceToA, midLayerEdges, edgesBtoSink];
-   graph = 
-    Graph[allEdges, EdgeCapacity -> allCapacities, 
+   graph = Graph[allEdges, EdgeCapacity -> allCapacities, 
      EdgeCost -> allCosts];
    
    (*Solve it*)
-   flow = 
-    FindMinimumCostFlow[graph, "source", "sink", nA, 
-     "OptimumFlowData"];
+   flow = FindMinimumCostFlow[graph, "source", "sink", nA - OptionValue["notMatched"], "OptimumFlowData"];
    (*Collect the pairs of matched indices*)
-   pairedIndices = 
-    Select[flow["EdgeList"], 
-     And[Not[#[[1]] === "source"], Not[#[[2]] === "sink"]] &];
+   pairedIndices = Select[flow["EdgeList"], And[Not[#[[1]] === "source"], Not[#[[2]] === "sink"]] &];
    pairedIndices = {#[[1, 2]], #[[2, 2]]} & /@ pairedIndices;
    (*Collect the pairs of matched values*)
-   bestValues = {A[[#[[1]]]], B[[#[[1]]]]} & /@ pairedIndices;
+   bestValues = {aValues[[#[[1]]]], bValues[[#[[1]]]]} & /@ pairedIndices;
    (*Account for having been given labels*)
    If[matchingLabels,
     (
-     bestLabels = {aLabels[[#[[1]]]], bLabels[[#[[2]]]]} & /@ 
-       pairedIndices;
+     bestLabels = {aLabels[[#[[1]]]], bLabels[[#[[2]]]]} & /@ pairedIndices;
      Return[{bestValues, bestLabels, pairedIndices}]
      ),
     (
