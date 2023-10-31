@@ -14,7 +14,7 @@ IndexMappingPlot[pairs_, opts : OptionsPattern[]] := Module[{width, height}, (
    width = Max[First /@ pairs];
    height = width/3;
    Return[
-    Graphics[{{Point[{#[[1]], 0}]}, Point[{#[[2]], height}], 
+    Graphics[{{Tooltip[Point[{#[[1]], 0}],#[[1]]]}, Tooltip[Point[{#[[2]], height}],#[[2]]], 
         Line[{{#[[1]], 0}, {#[[2]], height}}]} & /@ pairs, opts, ImageSize -> 800]]
    )
   ]

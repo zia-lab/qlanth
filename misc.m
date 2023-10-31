@@ -169,8 +169,8 @@ StochasticMatching[aValues0_, bValues0_, numShuffles_ : 200, OptionsPattern[]] :
    )
   ]
 
-FlowMatching::usage="FlowMatching[aList, bList] returns a list of pairs of elements from aList and bList that are closest to each other, this is returned in a list together with a mapping of indices from the aList to those in bList to which they were matched. The option \"alistLabels\" can be used to specify labels for the elements in aList. The option \"blistLabels\" can be used to specify labels for the elements in bList. If these options are used, the function returns a list with three elements the pairs of matched elements, the pairs of corresponding matched labels, and the mapping of indices. This is basically a wrapper around Mathematica's FindMinimumCostFlow function. By default the option \"noMatched\" is zero, and this means that all elements of aList must be matched to elements of bList. If this is not the case, the option \"noMatched\" can be used to specify how many elements of aList can be left unmatched. By default the cost function is Abs, but this can be changed with the option \"CostFun\".";
-Options[FlowMatching] = {"alistLabels" -> {}, "blistLabels" -> {}, "notMatched" -> 0, "CostFun"->Abs};
+FlowMatching::usage="FlowMatching[aList, bList] returns a list of pairs of elements from aList and bList that are closest to each other, this is returned in a list together with a mapping of indices from the aList to those in bList to which they were matched. The option \"alistLabels\" can be used to specify labels for the elements in aList. The option \"blistLabels\" can be used to specify labels for the elements in bList. If these options are used, the function returns a list with three elements the pairs of matched elements, the pairs of corresponding matched labels, and the mapping of indices. This is basically a wrapper around Mathematica's FindMinimumCostFlow function. By default the option \"noMatched\" is zero, and this means that all elements of aList must be matched to elements of bList. If this is not the case, the option \"noMatched\" can be used to specify how many elements of aList can be left unmatched. By default the cost function is Abs[#1-#2]&, but this can be changed with the option \"CostFun\", this function needs to take two arguments.";
+Options[FlowMatching] = {"alistLabels" -> {}, "blistLabels" -> {}, "notMatched" -> 0, "CostFun"-> (Abs[#1-#2] &)};
 FlowMatching[aValues0_, bValues0_, OptionsPattern[]] := Module[{
    aValues = aValues0, bValues = bValues0, edgesSourceToA, capacitySourceToA, nA, nB,
    costSourceToA, midLayer, midLayerEdges, midCapacities,
@@ -193,7 +193,7 @@ list*)
    costSourceToA = ConstantArray[0, nA];
    
    (*From all the elements of A to all the elements of B*)
-   midLayer = Table[{{"A", i} \[DirectedEdge] ({"B", j}), 1, cFun[aValues[[i]] - bValues[[j]]]}, {i, 1, nA}, {j, 1, nB}];
+   midLayer = Table[{{"A", i} \[DirectedEdge] ({"B", j}), 1, cFun[aValues[[i]], bValues[[j]]]}, {i, 1, nA}, {j, 1, nB}];
    midLayer = Flatten[midLayer, 1];
    {midLayerEdges, midCapacities, midCosts} = Transpose[midLayer];
    

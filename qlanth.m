@@ -2529,24 +2529,23 @@ Begin["`Private`"]
     )
 
   FastIonSolverLaF3::usage = 
-    "This function solves the energy levels of the given trivalent lanthanide in LaF3.
-  The values for the Hamiltonian are simply taken from the values quoted by Carnall. It uses precomputed symbolic matrices for the Hamiltonian so it's faster than the previous alternatives.
-
-  The function returns a list with seven elements {rmsDifference, carnallEnergies, eigenEnergies, ln, carnallAssignments, eigensys, basis}. Where:
-
-  rmsDifference is the root mean squared difference between the calculated values and those quoted by Carnall;
-
-  carnallEnergies are the quoted calculated values from Carnall;
-
-  eigenEnergies are the calculated energies (in the case of an odd number of electrons the kramers degeneracy has been elided from this list);
-
-  ln is simply a string labelling the corresponding lanthanide;
-
-  carnallAssignments is a list of strings providing the term assignments that Carnall assumed,
-
-  eigensys is a list of tuples where the first element is the energy corresponding to the eigenvector given as the second element;
-
-  basis a list that specifies the basis in which the Hamiltonian was constructed and diagonalized.
+    "This function solves the energy levels of the given trivalent lanthanide in LaF3. The values for the Hamiltonian are simply taken from the values quoted by Carnall. It uses precomputed symbolic matrices for the Hamiltonian so it's faster than the previous alternatives.
+    
+    The function returns a list with seven elements {rmsDifference, carnallEnergies, eigenEnergies, ln, carnallAssignments, eigensys, basis}. Where:
+    
+    rmsDifference is the root mean squared difference between the calculated values and those quoted by Carnall
+    
+    carnallEnergies are the quoted calculated values from Carnall;
+    
+    eigenEnergies are the calculated energies (in the case of an odd number of electrons the kramers degeneracy has been elided from this list);
+    
+    ln is simply a string labelling the corresponding lanthanide;
+    
+    carnallAssignments is a list of strings providing the term assignments that Carnall assumed,
+    
+    eigensys is a list of tuples where the first element is the energy corresponding to the eigenvector given as the second element;
+    
+    basis a list that specifies the basis in which the Hamiltonian was constructed and diagonalized.
   ";
   Options[FastIonSolverLaF3] = {
     "MakeNotebook" -> True,
@@ -2687,14 +2686,14 @@ Begin["`Private`"]
         "Background" -> White]
         , Background -> White, FrameMargins -> 50];
 
-      PrintFun[">> Comparing the term assignements between qlanth and Carnall ..."];
+      PrintFun[">> Comparing the term assignments between qlanth and Carnall ..."];
       assignmentMatches = 
-      If[#[[1]] == #[[2]], "\[Checkmark]", "X"] & /@ 
+      If[StringContainsQ[#[[1]], #[[2]]], "\[Checkmark]", "X"] & /@ 
         Transpose[{carnallAssignments, simplerStateLabels[[;; Length[carnallAssignments]]]}];
       assignmentMatches = {{"\[Checkmark]", 
         Count[assignmentMatches, "\[Checkmark]"]}, {"X", 
         Count[assignmentMatches, "X"]}};
-      labelComparison = (If[#[[1]] == #[[2]], "\[Checkmark]", "X"] & /@ 
+      labelComparison = (If[StringContainsQ[#[[1]], #[[2]]], "\[Checkmark]", "X"] & /@ 
         Transpose[{carnallAssignments, 
           simplerStateLabels[[;; Length[carnallAssignments]]]}]);
       labelComparison = 
@@ -2706,16 +2705,17 @@ Begin["`Private`"]
           "\[Psi]"}], Frame -> All, Spacings -> {2, 2}, 
         FrameStyle -> Blue, 
         Dividers -> {{False, True, False}, {True, True}}];
-
+      DefaultIfMissing[expr_]:= If[FreeQ[expr, Missing[]], expr,"NA"];
       PrintFun[">> Rounding the energy differences for table presentation ..."];
       roundedDiffs = Round[diffs, 0.1];
-      roundedDiffs = 
-      PadRight[roundedDiffs, Length[simplerStateLabels], "-"];
+      roundedDiffs = PadRight[roundedDiffs, Length[simplerStateLabels], "-"];
+      roundedDiffs = DefaultIfMissing /@ roundedDiffs;
       diffs = PadRight[diffs, Length[simplerStateLabels], "-"];
+      diffs = DefaultIfMissing /@ diffs;
       diffTableData = Transpose[{simplerStateLabels, eigenEnergies,
           labelComparison,
           PadRight[carnallAssignments, Length[simplerStateLabels], "-"],
-          PadRight[carnallEnergies, Length[simplerStateLabels], "-"], 
+          DefaultIfMissing/@PadRight[carnallEnergies, Length[simplerStateLabels], "-"], 
           roundedDiffs}];
       diffTable = 
       TableForm[diffTableData, 
@@ -2723,20 +2723,21 @@ Begin["`Private`"]
           "E/\!\(\*SuperscriptBox[\(cm\), \(-1\)]\)", "", "Carnall", 
           "E/\!\(\*SuperscriptBox[\(cm\), \(-1\)]\)", 
           "\[CapitalDelta]E/\!\(\*SuperscriptBox[\(cm\), \(-1\)]\)"}}];
+      
+      diffs = Sort[eigenEnergies][[;; Length[carnallEnergies]]] - carnallEnergies;
+      notBad = FreeQ[#,Missing[]]&/@diffs;
+      diffs = Pick[diffs,notBad];
       diffHistogram = 
       Histogram[diffs, Frame -> True, ImageSize -> 800, 
         AspectRatio -> 1/3, FrameStyle -> Directive[16], 
         FrameLabel -> {"(qlanth-carnall)/Ky", "Freq"}];
-      
-      diffs = 
-      Sort[eigenEnergies][[;; Length[carnallEnergies]]] - 
-        carnallEnergies;
       rmsDifference = Sqrt[Total[diffs^2/Length[diffs]]];
       labelTempate = 
       StringTemplate[
         "\!\(\*SuperscriptBox[\(`ln`\), \(\(3\)\(+\)\)]\)"];
-      diffData = (Sort[eigenEnergies][[;; Length[carnallEnergies]]] - carnallEnergies);
-      diffLabels = simplerStateLabels[[;;Length[diffData]]];
+      diffData = diffs;
+      diffLabels = simplerStateLabels[[;;Length[notBad]]];
+      diffLabels = Pick[diffLabels, notBad];
       diffPlot = Framed[
         ListLabelPlot[diffData,
         diffLabels,
@@ -2744,7 +2745,7 @@ Begin["`Private`"]
         PlotRange -> All,
         ImageSize -> 1200,
         AspectRatio -> 1/3,
-        FrameLabel -> {"Energy Level #", 
+        FrameLabel -> {"", 
           "(qlanth-carnall) / \!\(\*SuperscriptBox[\(cm\), \(-1\)]\)"},
         PlotMarkers -> "OpenMarkers",
         PlotLabel -> 
@@ -2761,10 +2762,10 @@ Begin["`Private`"]
         TextCell["Energy Diagram", "Section", TextAlignment -> Center],
         TextCell[energyDiagram, TextAlignment -> Center],
         TextCell["Multiplet Assignments & Energy Levels", "Section", TextAlignment -> Center],
-        TextCell[assignmentMatches, "Output", TextAlignment -> Center],
-        TextCell[diffTable, "Output", TextAlignment -> Center],
         TextCell[diffHistogram, TextAlignment -> Center],
         TextCell[diffPlot, "Output", TextAlignment -> Center],
+        TextCell[assignmentMatches, "Output", TextAlignment -> Center],
+        TextCell[diffTable, "Output", TextAlignment -> Center],
         TextCell["Truncated Eigenstates", "Section", TextAlignment -> Center],
         TextCell["These are some of the resultant eigenstates which add up to at least a total probability of " <> ToString[eigenstateTruncationProbability] <> ".", "Text", TextAlignment -> Center],
         TextCell[statesTable, "Output", TextAlignment -> Center]
@@ -2778,7 +2779,7 @@ Begin["`Private`"]
           SelectionMove[nb, After, Notebook];
           NotebookWrite[nb, Cell["Reload Data", "Section", TextAlignment -> Center]];
           NotebookWrite[nb, Cell[(
-            "{rmsDifference, carnallEnergies, eigenEnergies, ln, carnallAssignments, simplerStateLabels, eigensys, basis, truncatedStates} = Import[\"" <> exportFname <> "\"];"
+            "{rmsDifference, carnallEnergies, eigenEnergies, ln, carnallAssignments, simplerStateLabels, eigensys, basis, truncatedStates} = Import[FileNameJoin[{NotebookDirectory[],\"" <> StringSplit[exportFname,"/"][[-1]] <> "\"}]];"
             ),"Input"]];
           NotebookWrite[nb, Cell[(
             "Manipulate[First[MinimalBy[truncatedStates, Abs[First[#] - energy] &]], {energy,0}]"
