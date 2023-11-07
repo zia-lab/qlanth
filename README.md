@@ -50,6 +50,6 @@ The included Mathematica notebook `qlanth.nb` has examples of the capabilities t
 
 ## Acknowledgements
 
-- This code was originally authored by Christopher Dodson, and is currently being maintained and expanded by David Lizarazo at Brown University.
+- This code was originally authored by Christopher Dodson, and is currently being maintained and expanded by David Lizarazo at Brown University. It has also benefited from the helpful discussions with Tharnier Puel at the University of Iowa.
 
 - This work is suppported by the National Sicence Foundation Grant No. 1922278.
