@@ -1,16 +1,15 @@
-<div style="text-align: center; white-space: pre; font-family: monospace;">
-+------------------------------------------------------------------+
-|                                                                  |
-|                      __                     __     __            |
-|            ____ _   / /  ____ _   ____     / /_   / /_           |
-|           / __ `/  / /  / __ `/  / __ \   / __/  / __ \          |
-|          / /_/ /  / /  / /_/ /  / / / /  / /_   / / / /          |
-|          \__, /  /_/   \__,_/  /_/ /_/   \__/  /_/ /_/           |
-|            /_/                                                   |
-|                                                                  |
-+------------------------------------------------------------------+
-
-</div>
+```
+  +------------------------------------------------------------------+
+  |                                                                  |
+  |                      __                     __     __            |
+  |            ____ _   / /  ____ _   ____     / /_   / /_           |
+  |           / __ `/  / /  / __ `/  / __ \   / __/  / __ \          |
+  |          / /_/ /  / /  / /_/ /  / / / /  / /_   / / / /          |
+  |          \__, /  /_/   \__,_/  /_/ /_/   \__/  /_/ /_/           |
+  |            /_/                                                   |
+  |                                                                  |
+  +------------------------------------------------------------------+
+```
 
 `qlanth` is a Mathematica package that can be used to calculate the level structure of lanthanide ions embedded in crystals. For this purpose it uses a single configuration description with the effective Hamiltonian shown below. This Hamiltonian aims to describe the observed properties of ions embedded in solids in a picture that imagines them as free-ions but modified by the influence of the lattice in which they find themselves in.
 
@@ -35,9 +34,9 @@ The included Mathematica notebook `qlanth.nb` has examples of the capabilities t
 </picture>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./figs/Pr3plus-states-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="./figs/Pr3plus-states-light.png">
-  <img alt="Single configuration effective Hamiltonian." src="./figs/Pr3plus-states-dark.png">
+  <source media="(prefers-color-scheme: dark)" srcset="./figs/pr3plus-states-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="./figs/pr3plus-states-light.png">
+  <img alt="Single configuration effective Hamiltonian." src="./figs/pr3plus-states-dark.png">
 </picture>
 
 ## References
