@@ -4,14 +4,46 @@ ExportToH5;
 FlattenBasis;
 RecoverBasis;
 FlowMatching;
+SuperIdentity;
+
 GreedyMatching;
 HelperNotebook;
 StochasticMatching;
 ExtractSymbolNames;
 GetModificationDate;
+
+FirstOrderPerturbation;
+SecondOrderPerturbation;
+
 ToPythonSymPyExpression;
 
 Begin["`Private`"];
+
+FirstOrderPerturbation::usage="Given the eigenValues and eigenVectors of a matrix A (which doesn't need to be given) together with a corresponding perturbation matrix perMatrix, this function calculates the first derivative of the eigenvalues with respect to the scale factor of the perturbation matrix. In the sense that the eigenvalues of the matrix A + \[Beta] perMatrix are to first order equal to \[Lambda] + \[Delta]_i \[Beta], where the \[Delta]_i are the returned values. The eigenvalues and eigenvectors are assumed to be given in the same order, i.e. the ith eigenvalue corresponds to the ith eigenvector. This assuming that the eigenvalues are non-degenerate.";
+FirstOrderPerturbation[eigenValues_, eigenVectors_, 
+  perMatrix_] := (Diagonal[
+   eigenVectors . perMatrix . Transpose[eigenVectors]])
+
+SecondOrderPerturbation::usage="Given the eigenValues and eigenVectors of a matrix A (which doesn't need to be given) together with a corresponding perturbation matrix perMatrix, this function calculates the second derivative of the eigenvalues with respect to the scale factor of the perturbation matrix. In the sense that the eigenvalues of the matrix A + \[Beta] perMatrix are to second order equal to \[Lambda] + \[Delta]_i \[Beta] + \[Delta]_i^{(2)}/2 \[Beta]^2, where the \[Delta]_i^{(2)} are the returned values. The eigenvalues and eigenvectors are assumed to be given in the same order, i.e. the ith eigenvalue corresponds to the ith eigenvector. This assuming that the eigenvalues are non-degenerate.";
+SecondOrderPerturbation[eigenValues_, eigenVectors_, perMatrix_] := (
+  dim = Length[perMatrix];
+  eigenBras = Conjugate[eigenVectors];
+  eigenKets = eigenVectors;
+  matV = Transpose[perMatrix . Transpose[eigenKets]];
+  Table[2 *
+    Sum[
+      If[i == j, 
+        0, 
+        Abs[(eigenBras[[j]] . matV[[i]])]^2 / 
+         (eigenValues[[j]] - eigenValues[[i]])
+      ],
+    {i, 1, dim}
+    ],
+  {j, 1, dim}]
+  )
+
+SuperIdentity::usage="SuperIdentity[args] returns the arguments passed to it. This is useful for defining a function that does nothing, but that can be used in a composition.";
+SuperIdentity[args___] := {args};
 
 FlattenBasis::usage="FlattenBasis[basis] takes a basis in the standard representation and separates out the strings that describe the LS part of the labels and the additional numbers that define the values of J MJ and MI. It returns a list with two elements {flatbasisLS, flatbasisNums}. This is useful for saving the basis to an h5 file where the strings and numbers need to be separated.";
 FlattenBasis[basis_] := Module[{flatbasis, flatbasisLS, flatbasisNums},

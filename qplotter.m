@@ -3,9 +3,21 @@ BeginPackage["qplotter`"];
 
 GetColor;
 IndexMappingPlot;
-ListLabelPlot::usage="ListLabelPlot[data, labels] takes a list of numbers with corresponding labels. The data is grouped according to the labels and a ListPlot is created with them so that each group has a different color and their corresponding label is shown in the horizontal axis.";
+ListLabelPlot;
+AutoGraphicsGrid;
 
 Begin["`Private`"];
+
+AutoGraphicsGrid::usage="AutoGraphicsGrid[graphsList] takes a list of graphics and creates a GraphicsGrid with them. The number of columns and rows is chosen automatically so that the grid has a squarish shape.";
+Options[AutoGraphicsGrid] = Options[GraphicsGrid];
+AutoGraphicsGrid[graphsList_, opts : OptionsPattern[]] := 
+  (
+    numGraphs = Length[graphsList];
+    width = Floor[Sqrt[numGraphs]];
+    height = Ceiling[numGraphs/width];
+    groupedGraphs = Partition[graphsList, width, width, 1, Null];
+    GraphicsGrid[groupedGraphs, opts]
+  )
 
 Options[IndexMappingPlot] = Options[Graphics];
 IndexMappingPlot::usage = 
@@ -55,6 +67,7 @@ TickCompressor[fTicks_] :=
 GetColor[s_Style] := s /. Style[_, c_] :> c
 GetColor[_] := Black
 
+ListLabelPlot::usage="ListLabelPlot[data, labels] takes a list of numbers with corresponding labels. The data is grouped according to the labels and a ListPlot is created with them so that each group has a different color and their corresponding label is shown in the horizontal axis.";
 Options[ListLabelPlot] = Append[Options[ListPlot], "TickCompression"->True];
 ListLabelPlot[data_, labels_, opts : OptionsPattern[]] := Module[
   {uniqueLabels, pallete, groupedByTerm, groupedKeys, scatterGroups, 
@@ -63,15 +76,14 @@ ListLabelPlot[data_, labels_, opts : OptionsPattern[]] := Module[
    uniqueLabels  = DeleteDuplicates[labels];
    pallete = Table[ColorData["Rainbow", i], {i, 0, 1, 
       1/(Length[uniqueLabels] - 1)}];
-   uniqueLabels  = (#[[1]] -> #[[2]]) & /@ 
-     Transpose[{RandomSample[uniqueLabels], pallete}];
+   uniqueLabels  = (#[[1]] -> #[[2]]) & /@ Transpose[{RandomSample[uniqueLabels], pallete}];
    uniqueLabels  = Association[uniqueLabels];
    groupedByTerm = GroupBy[Transpose[{labels, Range[Length[data]], data}], First];
    groupedKeys   = Keys[groupedByTerm];
    scatterGroups = Transpose[Transpose[#][[2 ;; 3]]] & /@ Values[groupedByTerm];
    groupedColors = uniqueLabels[#] & /@ groupedKeys;
    frameTicks    = {Transpose[{Range[Length[data]], 
-    Style[Rotate[#, Pi/2], uniqueLabels[#]] & /@ labels}], 
+    Style[Rotate[#, 0], uniqueLabels[#]] & /@ labels}], 
      Automatic};
     If[OptionValue["TickCompression"], (
         compTicks = TickCompressor[frameTicks[[1]]];
