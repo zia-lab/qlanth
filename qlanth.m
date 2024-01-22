@@ -130,6 +130,8 @@ S56: crystal field parameter S_5^6
 S66: crystal field parameter S_6^6
 
 \[Epsilon]: ground level baseline shift
+t2Switch: controls the usage of the t2 operator
+wChErr : If 1 then the errors in Chen are used, if 0 then not.
 ";
 paramSymbols = StringSplit[paramAtlas, "\n"];
 paramSymbols = Select[paramSymbols, # != ""& ];
@@ -140,15 +142,16 @@ cfSymbols = {B02, B04, B06, B12, B14, B16, B22, B24, B26, B34, B36,
    B44, B46, B56, B66, S12, S14, S16, S22, S24, S26, S34, S36, S44, 
    S46, S56, S66};
 
-TSymbols = {T2p, T3, T4, T6, T7, T8, T11p, T12, T14, T15, T16, T17, T18, T19, T2, T11};
+TSymbols = {T2, T2p, T3, T4, T6, T7, T8, T11, T11p, T12, T14, T15, T16, T17, T18, T19};
 
 (*I like the usage strings to be together with the functions so here
 I simply invoke their symbols*)
+
 Dk;
 fK;
-AA;
 CFP;
 Cqk;
+TPO;
 
 Bqk;
 Sqk;
@@ -168,7 +171,6 @@ FindSL;
 SixJay;
 LoadUk;
 
-fnTerms;
 GG2NKSL;
 GR7NKSL;
 LoadCFP;
@@ -183,15 +185,16 @@ CFPTerms;
 AllowedJ;
 CFPTable;
 
+CFPAssoc;
 ThreeJay;
 SpinSpin;
 LoadAiZi;
 ReducedUk;
+Seniority;
 PrintSLJM;
 Generator;
 moduleDir;
 
-NKLSTerms;
 SpinOrbit;
 chenDeltas;
 BasisLSJMJ;
@@ -199,7 +202,9 @@ SOOandECSO;
 
 GenerateCFP;
 TwoBodyNKSL;
+ParseStates;
 LoadCarnall;
+LabeledGrid;
 FindNKLSTerm;
 AllowedMforJ;
 
@@ -208,11 +213,14 @@ TotalCFIters;
 EnergyMatrix;
 EnergyStates;
 LoadSpinSpin;
+SpinSpinTable;
+PrettySaunders;
 
 ShiftedLevels;
 IonSolverLaF3;
 LoadSpinOrbit;
 LoadThreeBody;
+allTermLabels;
 FindSL\[Gamma];
 AllowedSLTerms;
 RobustMissingQ;
@@ -221,6 +229,7 @@ LoadParameters;
 LoadSOOandECSO;
 LoadChenDeltas;
 ThreeBodyTable;
+SOOandECSOTable;
 ThreeBodyTables;
 AllowedSLJTerms;
 OperatorsMatrix;
@@ -237,21 +246,26 @@ GenerateT22Table;
 LoadElectrostatic;
 EnergyMatrixTable;
 AllowedNKSLJTerms;
+PrettySaundersSLJ;
 FastIonSolverLaF3;
 T222PsiPsipStates;
 T112PsiPsipStates;
+EnergyLevelDiagram;
+PrettySaundersSLJmJ;
 
 t112PsiPsipStates;
 GenerateAiZiTable;
 HamMatrixAssembly;
 AiZi2PsiPsipStates;
 ElectrostaticMatrix;
+SquarePrimeToNormal;
 
 AllowedNKSLforJTerms;
 MagneticInteractions;
 ReplaceInSparseArray;
 symbolicHamiltonians;
 EnergyMatrixFileName;
+GenerateThreeBodyTables;
 LoadGuillotParameters;
 GenerateSpinSpinTable;
 HamiltonianMatrixPlot;
@@ -259,20 +273,23 @@ AllowedNKSLJMforJTerms;
 
 GenerateReducedUkTable;
 GenerateSpinOrbitTable;
-GenerateThreeBodyData;
 AllowedNKSLJMforJMTerms;
 GenerateSOOandECSOTable;
 HoleElectronConjugation;
 
+ElectrostaticMatrixTable;
 LoadSymbolicHamiltonians;
 ThreeBodyOperatorProduct;
 AllowedNKSLJMIMforJITerms;
 GenerateCrystalFieldTable;
 TabulateEnergyMatrixTable;
+ParseStatesByNumBasisVecs;
 EnergyStatesTableGenerator;
 
 FastIonSolverLaF3Precision;
+ParseStatesByProbabilitySum;
 TabulateManyEnergyMatrixTables;
+GenerateThreeBodyTablesUsingCFP;
 GenerateElectrostaticMatrixTable;
 
 SimplifyFun = Expand;
@@ -285,6 +302,10 @@ Begin["`Private`"]
   Off[SixJSymbol::tri];
 
   RobustMissingQ[expr_] := (FreeQ[expr, _Missing] === False)
+
+
+  TPO::usage="Two plus one.";
+  TPO[x_] := (2*x + 1)
 
   ParamPad::usage = 
     "ParamPad[params] takes an Association params whose keys are a subset of paramSymbols. The function returns a new Association where all the keys not present in the given association, will also be present in the returned Association, with their values set to zero.
@@ -366,22 +387,28 @@ Begin["`Private`"]
 
   fk::usage = "Slater integral. See Wybourne (1965) eqn. 2-93.";
   fk[n_, l_, NKSL_, NKSLp_, k_]:= Module[
-    {S, L, PossibleStates, Sb, Lb, SL},
+    {S, L, possibleStates, Sb, Lb, SL},
     {S, L}         = FindSL[NKSL];
-    PossibleStates = StringCases[AllowedNKSLTerms[n], ToString[2 S+1]~~__];
-    PossibleStates = DeleteCases[PossibleStates, {}];
-    PossibleStates = Flatten[PossibleStates];
-    PossibleStates = If[{S, L}==FindSL[NKSLp],
-        (1/2
-        * ( Abs[Ck[l, k]])^2 
-        * ( 1/(2L+1) 
-          * Sum[( ReducedUkTable[{n, l, SL, NKSL , k}]
-                * ReducedUkTable[{n, l, SL, NKSLp, k}]),
-                {SL, PossibleStates}]
-          - (KroneckerDelta[NKSL, NKSLp] 
-            * (n (4 l+2-n)) 
-            / (2 l+1)
-            / (4 l+1))
+    possibleStates = StringCases[AllowedNKSLTerms[n], ToString[2 S+1]~~__];
+    possibleStates = DeleteCases[possibleStates, {}];
+    possibleStates = Flatten[possibleStates];
+    possibleStates = If[{S, L}==FindSL[NKSLp],
+        (1/2 * 
+          Abs[Ck[l, k]]^2 *
+          (
+            1 / (2L+1) *
+            Sum[(
+                  ReducedUkTable[{n, l, SL, NKSL , k}] *
+                  ReducedUkTable[{n, l, SL, NKSLp, k}]
+                ),
+            {SL, possibleStates}
+            ] -
+            (
+              KroneckerDelta[NKSL, NKSLp] *
+              (n (4 l+2-n)) /
+              (2 l+1) /
+              (4 l+1)
+            )
           )
         ),
         0
@@ -406,7 +433,7 @@ Begin["`Private`"]
   ]
   );
 
-  EtoF::usage = "EtoF[E0, E1, E2, E3] calculates the corresponding {0, F2, F4, F6} values.";
+  EtoF::usage = "EtoF[E0, E1, E2, E3] calculates the corresponding {F0, F2, F4, F6} values.";
   EtoF[E0_, E1_, E2_, E3_] := (Module[
     {F0, F2, F4, F6},
     F0 = 1/7 (7 E0 + 9 E1);
@@ -473,68 +500,161 @@ Begin["`Private`"]
   (* ####################################### Table Generation Functions ########################### *)
 
   GenerateCFP::usage = "GenerateCFP[] enerates the tables for the coefficients of fractional parentage. Results are exported to the file ./data/CFP.m";
-  GenerateCFP[export_:True]:= (
+  Options[GenerateCFP] = {"Export" -> True, "PhaseFunction"-> "NK"};
+  GenerateCFP[OptionsPattern[]]:= (
     CFP = Table[
       {n, NKSL} -> First[CFPTerms[n, NKSL]],
       {n, 1, 7},
       {NKSL, AllowedNKSLTerms[n]}];
     CFP = Association[CFP];
-    If[export,
+    (* Go all the way to f14 *)
+    CFP = CFPExpander["Export" -> False, "PhaseFunction"-> OptionValue["PhaseFunction"]];
+    If[OptionValue["Export"],
       Export[FileNameJoin[{moduleDir, "data", "CFPs.m"}], CFP];
     ];
     Return[CFP];
   )
 
-  AA::usage = "Given a list with the parts corresponding to the quasi-rational representation of a number, this function parses the result into a regular number.";
-  AA[quasinum_] :=
-  (radical = Product[Prime[nn - 1] ^ Part[quasinum, nn], {nn, 2, Length[quasinum]}];
-  (Part[quasinum, 1] * Sqrt[radical]) /. {A -> 10, B -> 11, C -> 12, D -> 13});
+  SquarePrimeToNormal::usage = "Given a list with the parts corresponding to the squared prime representation of a number, this function parses the result into a regular number.";
+  SquarePrimeToNormal[squarePrime_] :=
+  (radical = Product[Prime[nn - 1] ^ Part[squarePrime, nn], {nn, 2, Length[squarePrime]}];
+   radical = radical /. {"A" -> 10, "B" -> 11, "C" -> 12, "D" -> 13};
+   val = squarePrime[[1]] * Sqrt[radical];
+   Return[val];
+  );
+
+  JuddCFPPhase::usage="Phase between conjugate terms according to Velkov's thesis on page 40 of his thesis.";
+  JuddCFPPhase[parent_, parentS_, parentL_, daughterS_, daughterL_, parentSeniority_, daughterSeniority_] := (
+      orbitall = 3;
+      expo = (
+          (parentS + parentL + daughterS + daughterL) - 
+          (orbitall + 1/2) + 
+          1/2 * (parentSeniority + daughterSeniority - 1)
+      );
+      phase = (-1)^(-expo);
+      Return[phase];
+  )
+
+  NKCFPPhase::usage="Phase between conjugate terms according to Nielson and Koster page viii. Note that there is a typo on there the expression for zeta should be (-1)^((v-1)/2) instead of (-1)^( v-1/2 ).";
+  NKCFPPhase[parent_, parentS_, parentL_, daughterS_, daughterL_, parentSeniority_, daughterSeniority_] := (
+      orbitall = 3;
+      expo = (
+          (parentS + parentL + daughterS + daughterL) - 
+          (orbitall + 1/2)
+      );
+      phase = (-1)^(-expo);
+      If[parent == 2*orbitall,
+          phase = phase * (-1)^((daughterSeniority-1)/2)];
+      Return[phase];
+  )
+
+  Options[CFPExpander] = {"Export" -> True, "PhaseFunction" -> "NK"};
+  CFPExpander::usage="Using the coefficients of fractional parentage up to f7 this function calculates them up to f13.";
+  CFPExpander[OptionsPattern[]]:=(
+      orbitall   = 3;
+      halfFilled = 2 * orbitall + 1;
+      fullShell  = 2 * halfFilled;
+      parentMax = 2 * orbitall;
+
+      PhaseFun  = <|
+          "Judd" -> JuddCFPPhase,
+          "NK" -> NKCFPPhase|>[OptionValue["PhaseFunction"]];
+      PrintTemporary["Calculating CFPs using phase system from ", PhaseFun];
+      (* Initialize everything with lists to be filled in the next Do*)
+      complementaryCFPs = 
+          Table[
+          ({numE, term} -> {term}),
+          {numE, halfFilled + 1, fullShell - 1, 1},
+          {term, AllowedNKSLTerms[numE]
+          }];
+      complementaryCFPs = Association[Flatten[complementaryCFPs]];
+      Do[(
+          daughter          = parent + 1;
+          conjugateDaughter = fullShell - parent;
+          conjugateParent   = conjugateDaughter - 1;
+          parentTerms       = AllowedNKSLTerms[parent];
+          daughterTerms     = AllowedNKSLTerms[daughter];
+          Do[
+          (
+              parentCFPs             = Rest[CFP[{daughter, daughterTerm}]];
+              daughterSeniority      = Seniority[{daughter, daughterTerm}];
+              {daughterS, daughterL} = FindSL[daughterTerm];
+              Do[
+              (
+                  {parentTerm, parentCFPval} = parentCFP;
+                  {parentS, parentL}         = FindSL[parentTerm];
+                  parentSeniority            = Seniority[{parent, parentTerm}];
+                  phase = PhaseFun[parent, parentS, parentL, 
+                                  daughterS, daughterL,
+                                  parentSeniority, daughterSeniority];
+                  prefactor = (daughter * TPO[daughterS] * TPO[daughterL]) / 
+                              (conjugateDaughter * TPO[parentS] * TPO[parentL]);
+                  prefactor = Sqrt[prefactor];
+                  newCFPval = phase * prefactor * parentCFPval;
+                  key = {conjugateDaughter, parentTerm};
+                  complementaryCFPs[key] = Append[complementaryCFPs[key], {daughterTerm, newCFPval}]
+              ),
+              {parentCFP, parentCFPs}
+              ]
+          ),
+          {daughterTerm, daughterTerms}
+          ]
+          ),
+      {parent, 1, parentMax}
+      ];
+      
+      complementaryCFPs[{14, "1S"}] = {"1S", {"2F",1}};
+      extendedCFPs         = Join[CFP, complementaryCFPs];
+      If[OptionValue["Export"];,
+      (
+          exportFname = FileNameJoin[{moduleDir, "data", "CFPs_extended.m"}];
+          Print["Exporting to ", exportFname];
+          Export[exportFname, extendedCFPs];
+      )
+      ];
+      Return[extendedCFPs];
+  )
 
   GenerateCFPTable::usage = "GenerateCFPTable[] generates the table for the coefficients of fractional parentage. Results are exported to the file ./data/CFPTable.m";
-  GenerateCFPTable[export_:True]:= (
+  Options[GenerateCFPTable] = {"Export" -> True};
+  GenerateCFPTable[OptionsPattern[]]:= (
     CFPtextData = Import[FileNameJoin[{moduleDir, "data", "B1F_ALL.TXT"}]];
-    fConfigs = StringSplit[CFPtextData, 
-      "[ONE PARTICLE FRACTIONAL PARENTAGE COEFFICIENTS "];
+    fConfigs = StringSplit[CFPtextData, "[ONE PARTICLE FRACTIONAL PARENTAGE COEFFICIENTS "];
     CFPTable = {};
 
     (* This table parses the text file with the one-body coefficients of fractional parentage *)
     CFPTable = Table[
     (
-    fNx = StringReplace[Part[fConfigs, nn], "-" -> " -"];
-    daughterLabelSpots = 
-      StringPosition[fNx, 
-      Shortest[
-        StartOfLine ~~ DigitCharacter ~~ LetterCharacter ~~ ___ ~~ "["], 
-      Overlaps -> False];
-    daughterLabels = Map[StringDrop[#, -1] &, StringTake[fNx, daughterLabelSpots]];
-    daughterLabelLines = 
-      StringPosition[fNx, 
-      Shortest[
-        StartOfLine ~~ DigitCharacter ~~ LetterCharacter ~~ __ ~~ 
-        EndOfLine], Overlaps -> False];
-    startDaughters = Map[Last, daughterLabelLines + 2];
-    stopDaughters = 
-      Delete[Append[Map[First, daughterLabelLines - 2], 
-        StringLength[fNx]], 1];
-    daughterLines = 
-      Join[Partition[startDaughters, 1], Partition[stopDaughters, 1], 2];
-    testing = 
-      Map[StringSplit, 
-      StringSplit[StringTake[fNx, daughterLines], EndOfLine]];
-    testing2 = Map[DeleteCases[#, {}] &, testing];
-    CFPs = Table[(
-      tt = Part[testing2, mm];
-      pLabels = Map[Extract[#, 1] &, tt];
-      pValues = Map[AA, ToExpression[Map[Drop[#, 2] &, tt]]];
-      Join[Partition[pLabels, 1], Partition[pValues, 1], 2]
-    ),
-    {mm,1, Length[testing2]}];
-    CFPconfig = Join[Partition[daughterLabels, 1], CFPs, 2];
-    CFPconfig)
-    , {nn, 2, 7}
+      fNx = StringReplace[Part[fConfigs, nn], "-" -> " -"];
+      daughterLabelSpots = StringPosition[fNx, 
+        Shortest[StartOfLine ~~ DigitCharacter ~~ LetterCharacter ~~ ___ ~~ "["], 
+        Overlaps -> False];
+      daughterLabels = Map[StringDrop[#, -1] &, StringTake[fNx, daughterLabelSpots]];
+      daughterLabelLines = StringPosition[fNx, 
+        Shortest[StartOfLine ~~ DigitCharacter ~~ LetterCharacter ~~ __ ~~ 
+          EndOfLine], Overlaps -> False];
+      startDaughters = Map[Last, daughterLabelLines + 2];
+      stopDaughters = Delete[Append[Map[First, daughterLabelLines - 2], StringLength[fNx]], 1];
+      daughterLines = Join[Partition[startDaughters, 1], Partition[stopDaughters, 1], 2];
+      testing = Map[StringSplit, 
+        StringSplit[StringTake[fNx, daughterLines], EndOfLine]];
+      testing2 = Map[DeleteCases[#, {}] &, testing];
+      ToIntegerOrString[list_] := Map[If[StringMatchQ[#, NumberString], ToExpression[#], #] &, list];
+      CFPs = Table[(
+        tt = Part[testing2, mm];
+        pLabels = Map[Extract[#, 1] &, tt];
+        pValues = Map[SquarePrimeToNormal, Map[ToIntegerOrString[Drop[#, 2]] &, tt]];
+        Join[Partition[pLabels, 1], Partition[pValues, 1], 2]
+      ),
+      {mm,1, Length[testing2]}
+      ];
+      CFPconfig = Join[Partition[daughterLabels, 1], CFPs, 2];
+      CFPconfig
+    ), 
+    {nn, 2, 7}
     ];
     CFPTable = Join[{{{"2F", {"1S", 1}}}}, CFPTable];
-    If[export,
+    If[OptionValue["Export"],
       (
       CFPTablefname = FileNameJoin[{moduleDir, "data", "CFPTable.m"}];
       Export[CFPTablefname, CFPTable];
@@ -543,29 +663,30 @@ Begin["`Private`"]
     Return[CFPTable];
   )
 
-  GenerateCFPAssoc::usage = "GenerateCFPAssoc[export] converts the coefficients of fractional parentage into an association in which zero values are explicit. If export is True, the association is exported to the file CFPAssoc.m.";
-  GenerateCFPAssoc[export_:True]:= (
+  GenerateCFPAssoc::usage = "GenerateCFPAssoc[export] converts the coefficients of fractional parentage into an association in which zero values are explicit. If \"Export\" is set to True, the association is exported to the file /data/CFPAssoc.m.";
+  Options[GenerateCFPAssoc] = {"Export" -> True};
+  GenerateCFPAssoc[OptionsPattern[]]:= (
     CFPAssoc = Association[];
     Do[
-      (daughterTerms = AllowedNKSLTerms[\[CapitalNu]];
-      parentTerms    = AllowedNKSLTerms[\[CapitalNu] - 1];
+      (daughterTerms = AllowedNKSLTerms[numE];
+      parentTerms    = AllowedNKSLTerms[numE - 1];
       Do[
         (
-        cfps = CFP[{\[CapitalNu], daughter}];
+        cfps = CFP[{numE, daughter}];
         cfps = cfps[[2 ;;]];
         parents = First /@ cfps;
         Do[
           (
-          key = {\[CapitalNu], daughter, parent};
+          key = {numE, daughter, parent};
           cfp = If[
             MemberQ[parents, parent],
             (
               idx = Position[parents, parent][[1, 1]];
               cfps[[idx]][[2]]
-              ),
+            ),
             (
               0
-              )
+            )
             ];
           CFPAssoc[key] = cfp;
           ),
@@ -575,9 +696,9 @@ Begin["`Private`"]
         {daughter, daughterTerms}
         ]
       ),
-      {\[CapitalNu], 2, 7}
+      {numE, 2, 14}
       ];
-    If[export,
+    If[OptionValue["Export"],
       (
       CFPAssocfname = FileNameJoin[{moduleDir, "data", "CFPAssoc.m"}];
       Export[CFPAssocfname, CFPAssoc];
@@ -741,18 +862,18 @@ Begin["`Private`"]
     ]
     );
 
-  GenerateThreeBodyData::usage = "GenerateThreeBodyData[nmax, export] computes the matrix values for the three-body interaction for f^n configurations up to n = nmax. The function returns an Association whose keys are lists of the form {n, SL, SpLp}. By default the resulting data is not exported to disk, to do so set the option \"Export\" to True.";
-  Options[GenerateThreeBodyData] = {"Export" -> False};
-  GenerateThreeBodyData[nmax_ : 7, OptionsPattern[]] := (
-    tiKeys = {"t_{2}^{'}" , "t_{3}", 
+  GenerateThreeBodyTables::usage = "GenerateThreeBodyTables[nmax, export] computes the matrix values for the three-body interaction for f^n configurations up to n = nmax. The function returns an Association whose keys are lists of the form {n, SL, SpLp}. By default the resulting data is not exported to disk, to do so set the option \"Export\" to True.";
+  Options[GenerateThreeBodyTables] = {"Export" -> False};
+  GenerateThreeBodyTables[nmax_ : 7, OptionsPattern[]] := (
+    tiKeys = {"t_{2}"     ,"t_{2}^{'}",
+              "t_{3}", 
               "t_{4}"     , "t_{6}",
               "t_{7}"     , "t_{8}",
-              "t_{11}", "t_{12}",
+              "t_{11}"    , "t_{11}^{'}",
+              "t_{12}",
               "t_{14}"    , "t_{15}",
               "t_{16}"    , "t_{17}",
-              "t_{18}"    , "t_{19}",
-              "t_{2}"     , "t_{11}^{'}"};
-    export = OptionValue["Export"];
+              "t_{18}"    , "t_{19}"};
     TSymbolsAssoc = AssociationThread[tiKeys -> TSymbols];
     ParseJuddTab1[str_] := (
       strR = ToString[str];
@@ -827,13 +948,19 @@ Begin["`Private`"]
     ];
     
     (* Special case of t2 *)
+    numE     = 3;
+    e3Op     = juddOperators[{3, "e_{3}"}];
     t2prime  = juddOperators[{3, "t_{2}^{'}"}];
-    t2Op     = Association[(# -> (t2prime[#] + (3 - 2)/(70 Sqrt[2]) e3Op[#])) & /@ Keys[t2prime]];
+    prefactor = (
+                  (numE - 2)       /(70 Sqrt[2]) (1 + isE)/2 + 
+                  ((14 - numE) - 2)/(70 Sqrt[2]) (1 - isE)/2
+                );
+    prefactor = Simplify[prefactor];
+    t2Op      = Association[(# -> (t2prime[#] + prefactor * e3Op[#])) & /@ Keys[t2prime]];
     juddOperators[{3, "t_{2}"}] = t2Op;
 
     (* Special case of t11 *)
     t11             = juddOperators[{3, "t_{11}"}];
-    e3Op            = juddOperators[{3, "e_{3}"}];
     e\[Beta]primeOp = juddOperators[{3, "e_{\\beta}^{'}"}];
     t11primeOp      = Association[(# -> (t11[#] + Sqrt[3/385] e\[Beta]primeOp[#])) & /@ Keys[t11]];
     juddOperators[{3, "t_{11}^{'}"}] = t11primeOp;
@@ -842,12 +969,12 @@ Begin["`Private`"]
     exportFname = FileNameJoin[{moduleDir, "data", "juddOperators.m"}];
     Export[exportFname, juddOperators];
     
-    ti3MatrixElement::usage = 
-    "ti3MatrixElement[SL, SpLp, k] returns the value for the reduced matrix element of the three-body operator t_k for the terms {SL, SpLp} in the f^3 configuration.
+    op3MatrixElement::usage = 
+    "op3MatrixElement[SL, SpLp, opSymbol] returns the value for the reduced matrix element of the operator opSymbol for the terms {SL, SpLp} in the f^3 configuration.
 
   Data used here was taken from tables 1 and 2 from Judd, BR, and MA Suskin. \"Complete Set of Orthogonal Scalar Operators for the Configuration f^3\". JOSA B 1, no. 2 (1984): 261-65.\"";
-    ti3MatrixElement[SL_, SpLp_, tiKey_] := (
-      jOP = juddOperators[{3, tiKey}];
+    op3MatrixElement[SL_, SpLp_, opSymbol_] := (
+      jOP = juddOperators[{3, opSymbol}];
       key = {SL, SpLp};
       val = If[MemberQ[Keys[jOP], key],
               jOP[key],
@@ -856,7 +983,7 @@ Begin["`Private`"]
       );
     
     ti::usage = "This is the implementation of formula (2) in Judd & Suskin 1984.";
-    ti[n_, SL_, SpLp_, tiKey_] := Module[
+    ti[n_, SL_, SpLp_, tiKey_, opOrder_:3] := Module[
       {nn, S, L, Sp, Lp, cfpSL, cfpSpLp, parentSL, parentSpLp, tnk, tnks},
       {S, L} = FindSL[SL];
       {Sp, Lp} = FindSL[SpLp];
@@ -879,7 +1006,7 @@ Begin["`Private`"]
       ),
         tnk = 0;
       ];
-      Return[ n / (n - 3) * tnk];
+      Return[ n / (n - opOrder) * tnk];
       ];
     
     (*Calculate the matrix elements of t^i for n up to 7*)
@@ -888,51 +1015,91 @@ Begin["`Private`"]
       (
         Do[
           (
-            tktable[{n, SL, SpLp, tiKey}] = 
+            tkValue = 
               Which[
-                n <= 2, (* Initialize n=1,2 with zeros *)
+                numE <= 2, (* Initialize n=1,2 with zeros *)
                 0,
-                n == 3, (* Grab matrix elem in f^3 from Judd 1984 *)
-                SimplifyFun[ti3MatrixElement[SL, SpLp, tiKey]],
+                numE == 3, (* Grab matrix elem in f^3 from Judd 1984 *)
+                SimplifyFun[op3MatrixElement[SL, SpLp, opKey]],
                 True,
-                SimplifyFun[ti[n, SL, SpLp, tiKey]]
+                SimplifyFun[ti[numE, SL, SpLp, opKey, If[opKey == "e_{3}", 2, 3]]]
               ];
+            tktable[{numE, SL, SpLp, opKey}] = tkValue;
           ),
-        {SL,    AllowedNKSLTerms[n]},
-        {SpLp,  AllowedNKSLTerms[n]},
-        {tiKey, tiKeys}
+        {SL,    AllowedNKSLTerms[numE]},
+        {SpLp,  AllowedNKSLTerms[numE]},
+        {opKey, Append[tiKeys, "e_{3}"]}
         ];
-        PrintTemporary[StringJoin["\[ScriptF]", ToString[n], " configuration complete"]];
+        PrintTemporary[StringJoin["\[ScriptF]", ToString[numE], " configuration complete"]];
       ), 
-    {n, 1, nmax}
+    {numE, 1, nmax}
     ];
     (*Now use those matrix elements to determine their sum as weighted by their corresponding strengths Ti*)
+    partialTiKeys = {"t_{2}^{'}",
+          "t_{3}", 
+          "t_{4}"     , "t_{6}",
+          "t_{7}"     , "t_{8}",
+          "t_{11}"    , "t_{11}^{'}",
+          "t_{12}",
+          "t_{14}"    , "t_{15}",
+          "t_{16}"    , "t_{17}",
+          "t_{18}"    , "t_{19}"};
     ThreeBodyTable = <||>;
     Do[
-      Do[
-          ThreeBodyTable[{n, SL, SpLp}] = 
-            Sum[(tktable[{n, SL, SpLp, tiKey}] * TSymbolsAssoc[tiKey]),
-            {tiKey, tiKeys}];,
-      {SL, AllowedNKSLTerms[n]},
-      {SpLp, AllowedNKSLTerms[n]}
+      Do[(
+          (* braSeniority = Seniority[{numE, SL}];
+          ketSeniority = Seniority[{numE, SpLp}];
+          onePlus\[CapitalDelta]vHalf = Simplify[1 + (braSeniority - ketSeniority)/2];
+          flipSign     = If[EvenQ[onePlus\[CapitalDelta]vHalf], 1, -1]; *)
+          flipSign = -1;
+          holeElectronSelector          = ((1 + isE)/2 + (1 - isE)/2 * flipSign);
+          ThreeBodyTable[{numE, SL, SpLp}] = 
+            (
+              holeElectronSelector *
+              Sum[(tktable[{numE, SL, SpLp, tiKey}] * TSymbolsAssoc[tiKey]),
+              {tiKey, partialTiKeys}
+              ]
+            )
+        );,
+      {SL, AllowedNKSLTerms[numE]},
+      {SpLp, AllowedNKSLTerms[numE]}
       ];
-      PrintTemporary[StringJoin["\[ScriptF]", ToString[n], " matrix complete"]];,
-    {n, 1, nmax}
+      PrintTemporary[StringJoin["\[ScriptF]", ToString[numE], " matrix complete"]];,
+    {numE, 1, nmax}
     ];
 
-    (* Calculate the matrix elements of t2 in f^2*)
+    (* Calculate the matrix elements of t2 in f^n*)
     LoadUk[];
-    numE = 2;
-    terms = AllowedNKSLTerms[numE];
-    electro = 
-      Table[{numE, term1, term2} -> 
-        Simplify[Sqrt[2]/14*T2*ElectrostaticMatrix[numE, term1, term2]],
-      {term1, terms},
-      {term2, terms}
-      ];
-    electro = electro /. {E0 -> 0, E1 -> 0, E2 -> 0, E3 -> 1};
-    electro = Association[electro];
-    ThreeBodyTable = Join[ThreeBodyTable, electro];
+    Do[(
+      terms = AllowedNKSLTerms[numE];
+      Do[
+        (
+          electro = ElectrostaticMatrix[numE, term1, term2];
+          electro = electro /. {E0 -> 0, E1 -> 0, E2 -> 0, E3 -> 1};
+          prefactor = (
+            (numE - 2)/(70 Sqrt[2]) (1 + isE)/2 + 
+            ((14 - numE) - 2)/(70 Sqrt[2]) (1 - isE)/2
+          );
+          prefactor = Simplify[prefactor];
+          braSeniority = Seniority[{numE, SL}];
+          ketSeniority = Seniority[{numE, SpLp}];
+          onePlus\[CapitalDelta]vHalf = Simplify[1 + (braSeniority - ketSeniority)/2];
+          flipSign     = If[EvenQ[onePlus\[CapitalDelta]vHalf], 1, -1];
+          holeElectronSelector          = ((1 + isE)/2 + (1 - isE)/2 * flipSign);
+          t2primeVal = holeElectronSelector*tktable[{numE, term1, term2, "t_{2}^{'}"}];
+          t2value = If[numE==2,
+           prefactor * electro,
+           prefactor * electro + t2primeVal
+          ];
+          t2value   = T2 * Simplify[t2value];
+          ThreeBodyTable[{numE, term1, term2}] += t2value; 
+        ),
+        {term1, terms},
+        {term2, terms}
+        ];
+    ),
+    {numE, 2, nmax}
+    ];
 
     ThreeBodyTables = 
     Table[
@@ -962,7 +1129,7 @@ Begin["`Private`"]
     ];
     ThreeBodyTables = Association[ThreeBodyTables];
 
-    If[export, 
+    If[OptionValue["Export"], 
     (
       threeBodyTablefname = FileNameJoin[{moduleDir, "data", "ThreeBodyTable.m"}];
       Export[threeBodyTablefname, ThreeBodyTable];
@@ -972,6 +1139,238 @@ Begin["`Private`"]
     ];
     Return[{ThreeBodyTable, ThreeBodyTables}];
     )
+
+Options[ParseJudd1984] = {"Export" -> False};
+ParseJudd1984::usage="This function parses the data from tables 1 and 2 of Judd from Judd, BR, and MA Suskin. \"Complete Set of Orthogonal Scalar Operators for the Configuration f^3\". JOSA B 1, no. 2 (1984): 261-65.\"";
+ParseJudd1984[OptionsPattern[]]:=(
+  export = OptionValue["Export"];
+  ParseJuddTab1[str_] := (
+    strR = ToString[str];
+    strR = StringReplace[strR, ".5" -> "^(1/2)"];
+    num = ToExpression[strR];
+    sign = Sign[num];
+    num = sign*Simplify[Sqrt[num^2]];
+    If[Round[num] == num, num = Round[num]];
+    Return[num]);
+
+  (* Parse table 1 from Judd 1984 *)
+  judd1984Fname1 = FileNameJoin[{moduleDir, "data", "Judd1984-1.csv"}];
+  data = Import[judd1984Fname1, "CSV", "Numeric" -> False];
+  headers = data[[1]];
+  data = data[[2 ;;]];
+  data = Transpose[data];
+  \[Psi] = Select[data[[1]], # != "" &];
+  \[Psi]p = Select[data[[2]], # != "" &];
+  matrixKeys = Transpose[{\[Psi], \[Psi]p}];
+  data = data[[3 ;;]];
+  cols = Table[ParseJuddTab1 /@ Select[col, # != "" &], {col, data}];
+  cols = Select[cols, Length[#] == 21 &];
+  tab1 = Prepend[Prepend[cols, \[Psi]p], \[Psi]];
+  tab1 = Transpose[Prepend[Transpose[tab1], headers]];
+
+  (* Parse table 2 from Judd 1984 *)
+  judd1984Fname2 = FileNameJoin[{moduleDir, "data", "Judd1984-2.csv"}];
+  data = Import[judd1984Fname2, "CSV", "Numeric" -> False];
+  headers = data[[1]];
+  data = data[[2 ;;]];
+  data = Transpose[data];
+  {operatorLabels, WUlabels, multiFactorSymbols, multiFactorValues} = data[[;; 4]];
+  multiFactorValues = ParseJuddTab1 /@ multiFactorValues;
+  multiFactorValues = AssociationThread[multiFactorSymbols -> multiFactorValues];
+
+  (*scale values of table 1 given the values in table 2*)
+  oppyS = {};
+  normalTable = 
+    Table[header = col[[1]];
+      If[StringContainsQ[header, " "],
+        (
+          multiplierSymbol = StringSplit[header, " "][[1]];
+          multiplierValue = multiFactorValues[multiplierSymbol];
+          operatorSymbol = StringSplit[header, " "][[2]];
+          oppyS = Append[oppyS, operatorSymbol];
+        ), 
+        (
+          multiplierValue = 1;
+          operatorSymbol = header;
+        )
+      ];
+      normalValues = 1/multiplierValue*col[[2 ;;]];
+      Join[{operatorSymbol}, normalValues], {col, tab1[[3 ;;]]}
+    ];
+  
+  (*Create an association for the matrix elements in the f^3 config*)
+  juddOperators = Association[];
+  Do[(
+    col      = normalTable[[colIndex]];
+    opLabel  = col[[1]];
+    opValues = col[[2 ;;]];
+    opMatrix = AssociationThread[matrixKeys -> opValues];
+    Do[(
+      opMatrix[Reverse[mKey]] = opMatrix[mKey]
+      ), 
+    {mKey, matrixKeys}
+    ];
+    juddOperators[{3, opLabel}] = opMatrix),
+    {colIndex, 1, Length[normalTable]}
+  ];
+
+  (* special case of t2 in f3 *)
+  (* this is the same as getting the matrix elements from Judd 1966 *)
+  numE = 3;
+  e3Op      = juddOperators[{3, "e_{3}"}];
+  t2prime   = juddOperators[{3, "t_{2}^{'}"}];
+  prefactor = 1/(70 Sqrt[2]);
+  t2Op = (# -> (t2prime[#] + prefactor*e3Op[#])) & /@ Keys[t2prime];
+  t2Op = Association[t2Op];
+  juddOperators[{3, "t_{2}"}] = t2Op;
+
+  (*Special case of t11 in f3*)
+  t11 = juddOperators[{3, "t_{11}"}];
+  e\[Beta]primeOp = juddOperators[{3, "e_{\\beta}^{'}"}];
+  t11primeOp = (# -> (t11[#] + Sqrt[3/385] e\[Beta]primeOp[#])) & /@ Keys[t11];
+  t11primeOp = Association[t11primeOp];
+  juddOperators[{3, "t_{11}^{'}"}] = t11primeOp;
+  If[export,
+    (
+      (*export them*)
+      PrintTemporary["Exporting ..."];
+      exportFname = FileNameJoin[{moduleDir, "data", "juddOperators.m"}];
+      Export[exportFname, juddOperators];
+    )
+  ];
+  Return[juddOperators];
+)
+
+Options[GenerateThreeBodyTablesUsingCFP] = {"Export" -> False};
+GenerateThreeBodyTablesUsingCFP::usage="This function generates the matrix elements for the three body operators using the coefficients of fractional parentage, including those beyond f^7.";
+GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
+  tiKeys = {"t_{2}", "t_{2}^{'}", "t_{3}", "t_{4}", "t_{6}", "t_{7}", 
+    "t_{8}", "t_{11}", "t_{11}^{'}", "t_{12}", "t_{14}", "t_{15}", 
+    "t_{16}", "t_{17}", "t_{18}", "t_{19}"};
+  TSymbolsAssoc = AssociationThread[tiKeys -> TSymbols];
+  juddOperators = ParseJudd1984[];
+  op3MatrixElement::usage = "op3MatrixElement[SL, SpLp, opSymbol] returns the value for the reduced matrix element of the operator opSymbol for the terms {SL, SpLp} in the f^3 configuration.";
+  op3MatrixElement[SL_, SpLp_, opSymbol_] := (
+    jOP = juddOperators[{3, opSymbol}];
+    key = {SL, SpLp};
+    val = If[MemberQ[Keys[jOP], key],
+      jOP[key],
+      0];
+    Return[val];
+    );
+  ti::usage = "This is the implementation of formula (2) in Judd & Suskin 1984. It computes the matrix elements of ti in f^n by using the matrix elements in f3 and the coefficients of fractional parentage. If the option \"Fast\" is set to True then the values for n>7 are simply computed as the negatives of the values in the complementary configuration; this except for t2 and t11 which are treated as special cases.";
+  Options[ti] = {"Fast" -> True};
+  ti[nE_, SL_, SpLp_, tiKey_, opOrder_ : 3, OptionsPattern[]] := 
+   Module[{nn, S, L, Sp, Lp, 
+      cfpSL, cfpSpLp,
+      parentSL, parentSpLp, tnk, tnks},
+    {S, L}   = FindSL[SL];
+    {Sp, Lp} = FindSL[SpLp];
+    fast     = OptionValue["Fast"];
+    numH = 14 - nE;
+    If[fast && Not[MemberQ[{"t_{2}","t_{11}"},tiKey]] && nE > 7,
+      Return[-tktable[{numH, SL, SpLp, tiKey}]]
+    ];
+    If[(S == Sp && L == Lp),
+     (
+      cfpSL   = CFP[{nE, SL}];
+      cfpSpLp = CFP[{nE, SpLp}];
+      tnks = Table[(
+          parentSL   = cfpSL[[nn, 1]];
+          parentSpLp = cfpSpLp[[mm, 1]];
+          cfpSL[[nn, 2]] *
+          cfpSpLp[[mm, 2]] *
+          tktable[{nE - 1, parentSL, parentSpLp, tiKey}]
+          ),
+          {nn, 2, Length[cfpSL]},
+          {mm, 2, Length[cfpSpLp]}
+          ];
+      tnk = Total[Flatten[tnks]];
+      ),
+     tnk = 0;
+     ];
+    Return[ nE / (nE - opOrder) * tnk];];
+
+  (*Calculate the matrix elements of t^i for n up to nmax*)
+  tktable = <||>;
+  Do[(
+    Do[(
+      tkValue = Which[numE <= 2,
+        (*Initialize n=1,2 with zeros*)
+        0,
+        numE == 3,
+        (*Grab matrix elem in f^3 from Judd 1984*)
+        SimplifyFun[op3MatrixElement[SL, SpLp, opKey]],
+        True,
+        SimplifyFun[ti[numE, SL, SpLp, opKey, If[opKey == "e_{3}", 2, 3]]]
+        ];
+      tktable[{numE, SL, SpLp, opKey}] = tkValue;
+      ),
+    {SL, AllowedNKSLTerms[numE]},
+    {SpLp, AllowedNKSLTerms[numE]},
+    {opKey, Append[tiKeys, "e_{3}"]}
+    ];
+    PrintTemporary[StringJoin["\[ScriptF]", ToString[numE], " configuration complete"]];
+    ),
+  {numE, 1, nmax}
+  ];
+
+  (* Now use those matrix elements to determine their sum as weighted by their corresponding strengths Ti *)
+  ThreeBodyTable = <||>;
+  Do[
+    Do[
+    (
+      ThreeBodyTable[{numE, SL, SpLp}] = (
+        Sum[(
+          If[tiKey == "t_{2}", t2Switch, 1] * 
+          tktable[{numE, SL, SpLp, tiKey}] * 
+          TSymbolsAssoc[tiKey] +
+          If[tiKey == "t_{2}", 1 - t2Switch, 0] * 
+          (-tktable[{14 - numE, SL, SpLp, tiKey}]) * 
+          TSymbolsAssoc[tiKey]
+          ),
+        {tiKey, tiKeys}
+        ]
+      );
+    ),
+    {SL, AllowedNKSLTerms[numE]},
+    {SpLp, AllowedNKSLTerms[numE]}
+    ];
+  PrintTemporary[StringJoin["\[ScriptF]", ToString[numE], " matrix complete"]];,
+  {numE, 1, 7}
+  ];
+  
+  ThreeBodyTables = Table[(
+    terms = AllowedNKSLTerms[numE];
+    singleThreeBodyTable = 
+      Table[
+        {SL, SLp} -> ThreeBodyTable[{numE, SL, SLp}],
+        {SL, terms},
+        {SLp, terms}
+      ];
+    singleThreeBodyTable  = Flatten[singleThreeBodyTable];
+    singleThreeBodyTables = Table[(
+        notNullPosition = Position[TSymbols, notNullSymbol][[1, 1]];
+        reps = ConstantArray[0, Length[TSymbols]];
+        reps[[notNullPosition]] = 1;
+        rep = AssociationThread[TSymbols -> reps];
+        notNullSymbol -> Association[(singleThreeBodyTable /. rep)]
+        ),
+      {notNullSymbol, TSymbols}
+      ];
+    singleThreeBodyTables = Association[singleThreeBodyTables];
+    numE -> singleThreeBodyTables),
+    {numE, 1, 7}];
+  
+  ThreeBodyTables = Association[ThreeBodyTables];
+  If[OptionValue["Export"], (
+    threeBodyTablefname = FileNameJoin[{moduleDir, "data", "ThreeBodyTable.m"}];
+    Export[threeBodyTablefname, ThreeBodyTable];
+    threeBodyTablesfname = FileNameJoin[{moduleDir, "data", "ThreeBodyTables.m"}];
+    Export[threeBodyTablesfname, ThreeBodyTables];
+    )
+   ];
+  Return[{ThreeBodyTable, ThreeBodyTables}];)
 
   (* ############################# Spin Orbit ################################ *)
   (* ######################################################################### *)
@@ -1823,6 +2222,29 @@ Begin["`Private`"]
 
   MagneticInteractions[{n_, SLJ_, SLJp_, J_}, chenDelta_] := 
     (
+      key = {n, SLJ, SLJp, J};
+      ss = \[Sigma]SS * SpinSpinTable[key];
+      sooandecso = SOOandECSOTable[key];
+      total = ss + sooandecso;
+      If[MemberQ[Keys[chenDeltas], {n, SLJ, SLJp}],
+        (
+          {S, L} = FindSL[SLJ];
+          {Sp, Lp} = FindSL[SLJp];
+          phase = (-1)^(Sp + L + J);
+          Msixjay = SixJay[{Sp, Lp, J},{L, S, 2}];
+          Psixjay = SixJay[{Sp, Lp, J},{L, S, 1}];
+          {M0v, M2v, M4v, P2v, P4v, P6v} = chenDeltas[{n, SLJ, SLJp}]["wrong"];
+          total  = phase * Msixjay(M0v*M0 + M2v*M2 + M4v*M4);
+          total += phase * Psixjay(P2v*P2 + P4v*P4 + P6v*P6);
+          total  = total /. Prescaling;
+          total  = wChErr * total + (1 - wChErr) * (ss+sooandecso)
+        )
+      ];
+      Return[total];
+    )
+
+  (* MagneticInteractions[{n_, SLJ_, SLJp_, J_}, chenDelta_] := 
+    (
       ss = \[Sigma]SS * SpinSpinTable[{n, SLJ, SLJp, J}];
       sooandecso = SOOandECSOTable[{n, SLJ, SLJp, J}];
       total = ss + sooandecso;
@@ -1843,7 +2265,7 @@ Begin["`Private`"]
         ]
       ];
       Return[total];
-    )
+    ) *)
 
   Options[EnergyMatrix] = {"Sparse"->True, "ChenDeltas"->False};
   EnergyMatrix::usage = "EnergyMatrix[n, J, J', I, I'] provides the matrix element <J, I|H|J', I'> within the f^n configuration, it does this by adding the following interactions: Coulomb, spin-orbit, spin-other-orbit, electrostatically-correlated-spin-orbit, spin-spin, three-body interactions, and crystal-field.";
@@ -1926,12 +2348,13 @@ Begin["`Private`"]
     Return[{EnergyMatrixTable, EnergyStatesTable, AllowedM}];
   )
 
-  Options[TabulateManyEnergyMatrixTables] = {"Overwrite"->False, "Sparse"->True, "ChenDeltas"->False};
+  Options[TabulateManyEnergyMatrixTables] = {"Overwrite"->False, "Sparse"->True, "ChenDeltas"->False, "FilenameAppendix"-> ""};
   TabulateManyEnergyMatrixTables::usage = "TabulateManyEnergyMatrixTables[{n1, n2, ...}, {I1, I2, ...}] calculates the tables of matrix elements for the requested f^n_i configurations with the given nuclear spin I_i. The function does not return the matrices themselves. It instead returns an Association whose keys are lists of the form {n, I} and whose values are the filenames where the output of TabulateEnergyMatrixTables was saved to. When these files are loaded with Get, the following three symbols are thus defined: EnergyMatrixTable, EnergyStatesTable, and AllowedM.
   EnergyMatrixTable is an Association whose keys are of the form {n, J, Jp, Ii, Ii} and whose values are matrix elements.";
   TabulateManyEnergyMatrixTables[ns_, Iis_, OptionsPattern[]]:= (
     overwrite = OptionValue["Overwrite"];
     fNames = <||>;
+    fileApp = OptionValue["FilenameAppendix"];
     Do[
       (
         CFdataFilename = FileNameJoin[{moduleDir, "data", "CrystalFieldTable_f"<>ToString[n]<>".zip"}];
@@ -1940,12 +2363,12 @@ Begin["`Private`"]
         Do[
           (
             PrintTemporary["#------- n = ", n, " | I = ", Ii, " -------#"];
-            exportFname = EnergyMatrixFileName[n, Ii];
+            exportFname = EnergyMatrixFileName[n, Ii, "FilenameAppendix" -> fileApp];
             fNames[{n, Ii}] = exportFname;
             If[FileExistsQ[exportFname] && Not[overwrite],
               Continue[]
             ];
-            {EnergyMatrixTable, EnergyStatesTable, AllowedM} = TabulateEnergyMatrixTable[n, Ii, CrystalFieldTable, "Sparse"->OptionValue["Sparse"], "ChenDeltas"->OptionValue["ChenDeltas"]];
+            {EnergyMatrixTable, EnergyStatesTable, AllowedM} = TabulateEnergyMatrixTable[n, Ii, CrystalFieldTable, "Sparse"->OptionValue["Sparse"], "ChenDeltas" -> OptionValue["ChenDeltas"]];
             If[FileExistsQ[exportFname]&&overwrite,
               DeleteFile[exportFname]
             ];
@@ -1961,13 +2384,12 @@ Begin["`Private`"]
   )
 
   HamMatrixAssembly::usage="HamMatrixAssembly[n, IiN] returns the Hamiltonian matrix for the f^n_i configuration with nuclear spin I_i. The matrix is returned as a SparseArray."
-
-  HamMatrixAssembly[nf_, IiN_] := Module[
+  Options[HamMatrixAssembly] = {"FilenameAppendix"->""};
+  HamMatrixAssembly[nf_, IiN_, OptionsPattern[]] := Module[
     {n, ii, jj, JMvals},
     (*#####################################*)
     (*hole-particle equivalence enforcement*)
     n = nf;
-    numFittedLevels = Total[If[#, 1, 0] & /@ picker];
     allVars = {E0, E1, E2, E3, \[Zeta], F0, F2, F4, F6, M0, M2, M4, T2, T2p,
       T3, T4, T6, T7, T8, P0, P2, P4, P6, gs, 
       gI, \[Alpha], \[Beta], \[Gamma], B02, B04, B06, B12, B14, B16, 
@@ -1983,11 +2405,12 @@ Begin["`Private`"]
       params = params0;
     ];
     (*Load symbolic expressions for energy sub-matrices.*)
-    Get[EnergyMatrixFileName[n, IiN]];
+    emFname = EnergyMatrixFileName[n, IiN, "FilenameAppendix" -> OptionValue["FilenameAppendix"]];
+    Get[emFname];
     (*Patch together the entire matrix representation in block-diagonal form.*)
     PrintTemporary["Patching submatrices ..."];
     ThisEnergyMatrix = ConstantArray[0, {Length[AllowedJ[n]], Length[AllowedJ[n]]}];
-    Do[ThisEnergyMatrix[[jj, ii]] = qlanth`EnergyMatrixTable[{n, AllowedJ[n][[ii]], AllowedJ[n][[jj]], IiN, IiN}];,
+    Do[ThisEnergyMatrix[[jj, ii]] = EnergyMatrixTable[{n, AllowedJ[n][[ii]], AllowedJ[n][[jj]], IiN, IiN}];,
     {ii, 1, Length[AllowedJ[n]]},
     {jj, 1, Length[AllowedJ[n]]}
     ];
@@ -2206,43 +2629,37 @@ Begin["`Private`"]
   fNtextLabels = Import[LabelsTextData];
 
   NielsonKosterLabels = Partition[StringSplit[fNtextLabels], 3];
-  TermLabels = Map[Part[#, {1}] &, NielsonKosterLabels];
-  Seniority = Map[Part[# , {2}] &, NielsonKosterLabels];
+  termLabels = Map[Part[#, {1}] &, NielsonKosterLabels];
+  seniorities = Map[Part[# , {2}] &, NielsonKosterLabels];
   RacahW = 
-    Map[StringTake[
-      Flatten[StringCases[Part[# , {3}], 
-        "(" ~~ DigitCharacter ~~ DigitCharacter ~~ DigitCharacter ~~ 
-          ")"]], {2, 4}] &, NielsonKosterLabels];
+    Map[
+      StringTake[
+        Flatten[StringCases[Part[# , {3}], 
+          "(" ~~ DigitCharacter ~~ DigitCharacter ~~ DigitCharacter ~~ ")"]],
+        {2, 4}
+      ] &,
+    NielsonKosterLabels];
   RacahU = 
-    Map[StringTake[
-      Flatten[StringCases[Part[# , {3}], 
-        "(" ~~ DigitCharacter ~~ DigitCharacter ~~ ")"]], {2, 3}] &, 
+    Map[
+      StringTake[
+        Flatten[StringCases[Part[# , {3}], 
+          "(" ~~ DigitCharacter ~~ DigitCharacter ~~ ")"]], 
+        {2, 3}
+      ] &,
     NielsonKosterLabels];
 
-  fnTerms::usage = "This list contains the labels of f^n configurations. Each element of the list has four elements {LS, seniority, RacahW, RacahU}.";
-  fnTerms = Join[TermLabels, Seniority, RacahW, RacahU, 2];
-  fnTerms = Sort[fnTerms];
-  Clear[fNtextLabels, TermLabels, Seniority, RacahU, RacahW];
+  broadfnTerms::usage = "This list contains the labels of f^n configurations. Each element of the list has four elements {LS, seniority, RacahW, RacahU}. 
+  At first sight this seems to only include the labels for the configuration in f^6 and f^7, but the case is that terms in other configurations also figure in either of these two.";
+  broadfnTerms = Join[termLabels, seniorities, RacahW, RacahU, 2];
+  broadfnTerms = Sort[broadfnTerms];
 
-  NKLSTerms::usage = "NKLSTerms[n, L, S] give all the terms that correspond to the given number of electrons n, with total orbital angular momentum L, and total spin angular momentum S.";
-  NKLSTerms[n_, L_, S_] := 
-    Module[
-      {NKterms, SL},
-      SL = StringJoin[ToString[2 S + 1], PrintL[L]];
-      NKterms = {{}};
-      Map[
-        If[! StringFreeQ[First[#], SL], 
-          If[ToExpression[Part[#, 2]] <= n, 
-            NKterms = Join[NKterms, {#}, 1]
-          ]
-        ] &,
-      fnTerms
-      ];
-      NKterms = DeleteCases[NKterms, {}];
-      If[Length[NKterms]==1, 
-      NKterms[[1]][[1]] = StringTake[Part[NKterms, 1, 1], 2]];
-      NKterms
-    ]
+  Clear[fNtextLabels, termLabels, seniorities, RacahU, RacahW];
+
+  allTermLabels::usage = "This Association has keys equal to lists of the form {numE, LS_string} and as corresponding values list of three elements of the form {seniority, RacahW, RacahU}."
+  allTermLabels = Import["./data/all_term_labels.m"];
+
+  Seniority::usage="Seniority[{numE, LS}] returns the seniority of the given term."
+  Seniority[{numE_, LS_}] := (allTermLabels[{numE, LS}][[1]])
 
   FindNKLSTerm::usage = "FindNKLSTerm[SL] for a given string SL that only represent the LS part of a spectroscopic term, this function returns all the terms that are compatible with it. This is only for f^n configurations. The provided terms might belong to more than one configuration.";
   FindNKLSTerm[SL_] := Module[
@@ -2255,13 +2672,10 @@ Begin["`Private`"]
           NKterms = Join[NKterms, {#}, 1]
         ]
       ] &,
-    fnTerms
+    broadfnTerms
     ];
     NKterms = DeleteCases[NKterms, {}];
     NKterms]
-
-  LabelsTextData = FileNameJoin[{moduleDir, "data", "NielsonKosterLabels_f6_f7.txt"}];
-  fNtextLabels   = Import[LabelsTextData];
 
   (* ############################################################################################## *)
   (* ############################ Coefficients of Fractional Parentage ############################ *)
@@ -2319,6 +2733,8 @@ Begin["`Private`"]
 
   AllowedNKSLTerms::usage = "AllowedNKSLTerms[n] returns a list with the allowed terms in the f^n configuration, the terms are given as strings in spectroscopic notation. The integers in the last positions are used to distinguish cases with degeneracy.";
   AllowedNKSLTerms[n_] := (Map[First, CFPTerms[Min[n,14-n]]])
+  AllowedNKSLTerms[0] = {"1S"};
+  AllowedNKSLTerms[14] = {"1S"};
 
   MaxJ::usage = "MaxJ[n] gives the maximum J = S+L that corresponds to the configuration f^n.";
   MaxJ[n_] := Max[Map[Total, AllowedSLTerms[Min[n,14-n]]]]
@@ -2675,22 +3091,24 @@ Begin["`Private`"]
 
 
   EnergyMatrixFileName::usage = "EnergyMatrixFileName[nf, IiN] gives the filename for the energy matrix table for an atom with nf electrons and a nucleus of spin IiN.";
-  EnergyMatrixFileName[n_, IiN_] := (
+  Options[EnergyMatrixFileName] = {"FilenameAppendix" -> ""}
+  EnergyMatrixFileName[n_, IiN_, OptionsPattern[]] := (
+    fileApp = OptionValue["FilenameAppendix"];
     fname = FileNameJoin[{moduleDir,
         "hams",
-        StringJoin[{"f", ToString[n], "_I_", ToString[2*IiN + 1], "_EnergyMatrixTable.m"}]}];
+        StringJoin[{"f", ToString[n], "_I_", ToString[2*IiN + 1], "_EnergyMatrixTable", fileApp ,".m"}]}];
     Return[fname];
     );
 
-  HoleElectronConjugation::usage = "HoleElectronConjugation[params] takes the parameters (as an Association) that define a configuration and converts them so that they may be interpreted under its conjugate configuration.";
+  HoleElectronConjugation::usage = "HoleElectronConjugation[params] takes the parameters (as an Association) that define a configuration and converts them so that they may be interpreted as corresponding to a complentary hole configuration. Some of this can be simply done by changing the sign of the model parameters. In the case of the effective three body interaction the relationship is more complex and is controlled by the value of the isE variable.";
 
   HoleElectronConjugation[params_] := 
     Module[{newparams = params},
       (
-        flipSignsOf = {\[Zeta], T3, T4, T6, T7, T8};
+        flipSignsOf = {\[Zeta], T2, T3, T4, T6, T7, T8};
         flipSignsOf = Join[flipSignsOf, cfSymbols];
         flipped = 
-          Table[(flipper -> -newparams[flipper]), 
+          Table[(flipper -> - newparams[flipper]), 
           {flipper, flipSignsOf}
           ];
         nonflipped = 
@@ -2746,10 +3164,10 @@ Begin["`Private`"]
     (*hole-particle equivalence enforcement*)
     (*#####################################*)
     (*Load symbolic expressions for energy sub-matrices.*)
-    Get[EnergyMatrixFileName[n, IiN]];
+    Get[EnergyMatrixFileName[n, IiN, "FilenameAppendix" -> fileApp]];
     (*Patch together the entire matrix representation in block-diagonal form.*)
     ThisEnergyMatrix = ConstantArray[0, {Length[AllowedJ[n]], Length[AllowedJ[n]]}];
-    Do[ThisEnergyMatrix[[jj, ii]] = qlanth`EnergyMatrixTable[{n, AllowedJ[n][[ii]], AllowedJ[n][[jj]], IiN, IiN}];,
+    Do[ThisEnergyMatrix[[jj, ii]] = EnergyMatrixTable[{n, AllowedJ[n][[ii]], AllowedJ[n][[jj]], IiN, IiN}];,
     {ii, 1, Length[AllowedJ[n]]},
     {jj, 1, Length[AllowedJ[n]]}
     ];
@@ -2906,7 +3324,8 @@ Begin["`Private`"]
     "Sparse" -> True,
     "PrintFun" -> Print,
     "SaveData" -> True,
-    "paramFiddle" -> {} 
+    "paramFiddle" -> {},
+    "Append to Filename" -> ""
     }; 
   FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[{
     makeNotebook, eigenstateTruncationProbability, IiN, spinspin, host,
@@ -2937,17 +3356,19 @@ Begin["`Private`"]
     (*Load the parameters from Carnall*)
     PrintFun["> Loading the fit parameters from Carnall ..."];
     params = LoadParameters[ln, "Free Ion" -> False];
-
     If[numE>7,
       (
         PrintFun["> Conjugating the parameters accounting for the hole-particle equivalence ..."];
         params = HoleElectronConjugation[params];
-      )
+        params[t2Switch] = 0;
+      ),
+      params[t2Switch] = 1;
     ];
 
     Do[params[key] = paramFiddle[key], 
       {key, Keys[paramFiddle]}
     ];
+
     (*Import the symbolic Hamiltonian*)
     PrintFun["> Loading the symbolic Hamiltonian for this configuration ..."];
     startTime = Now;
@@ -2972,6 +3393,7 @@ Begin["`Private`"]
 
     (*Everything that is not given is set to zero*)
     params = ParamPad[params, "Print" -> False];
+    PrintFun[params];
     (* numHam = simpleHam /. params; *)
     numHam = ReplaceInSparseArray[simpleHam, params];
     If[Not[OptionValue["Sparse"]],
@@ -3013,16 +3435,20 @@ Begin["`Private`"]
     repetitions        = Length[lnData[#]["Calc (1/cm)"]] & /@ carnalKeys;
     carnallAssignments = First /@ Carnall["appendix:" <> ln <> ":RawTable"];
     carnalKey          = StringTemplate["appendix:`Ln`:Calculated"][<|"Ln" -> ln|>];
-    carnallEnergies    = Sort[Carnall[carnalKey]];
+    carnallEnergies    = Carnall[carnalKey];
 
     (* For the difference take as many energies as quoted by Bill*)
+    eigenEnergies = eigenEnergies + carnallEnergies[[1]];
     diffs = Sort[eigenEnergies][[;; Length[carnallEnergies]]] - carnallEnergies;
-    rmsDifference = Sqrt[Total[diffs^2/Length[diffs]]];
+    (* Remove the differences where the appendix tables have elided values*)
+    rmsDifference = Sqrt[Mean[(Select[diffs, FreeQ[#, Missing[]] &])^2]];
     titleTemplate = StringTemplate[
       "Energy Level Diagram of \!\(\*SuperscriptBox[\(`ion`\), \(\(3\)\(+\)\)]\)"];
     title = titleTemplate[<|"ion" -> ln|>];
     parsedStates = ParseStates[eigensys, basis];
-    If[OddQ[numE],parsedStates = parsedStates[[;; ;; 2]]];
+    If[OddQ[numE],
+      parsedStates = parsedStates[[;; ;; 2]]];
+    
     stateLabels = #[[-1]] & /@ parsedStates;
     simplerStateLabels = ((#[[2]] /. termSimplifier) <> ToString[#[[3]], InputForm]) & /@ parsedStates;
 
@@ -3042,7 +3468,7 @@ Begin["`Private`"]
           EnergyLevelDiagram[eigensys, "Title" -> title, 
           "Background" -> White]
           , Background -> White, FrameMargins -> 50];
-
+        appToFname = OptionValue["Append to Filename"];
         PrintFun[">> Comparing the term assignments between qlanth and Carnall ..."];
         assignmentMatches = 
         If[StringContainsQ[#[[1]], #[[2]]], "\[Checkmark]", "X"] & /@ 
@@ -3128,11 +3554,11 @@ Begin["`Private`"]
           TextCell[statesTable, "Output", TextAlignment -> Center]
           },
         WindowSelected -> True,
-        WindowTitle -> ln <> " in " <> "LaF3",
+        WindowTitle -> ln <> " in " <> "LaF3" <> appToFname,
         WindowSize -> {1600, 800}];
         If[OptionValue["SaveData"],
           (
-            exportFname = FileNameJoin[{moduleDir,"calcs", ln <> " in " <> "LaF3.m"}];
+            exportFname = FileNameJoin[{moduleDir,"calcs", ln <> " in " <> "LaF3" <> appToFname <> ".m"}];
             SelectionMove[nb, After, Notebook];
             NotebookWrite[nb, Cell["Reload Data", "Section", TextAlignment -> Center]];
             NotebookWrite[nb, Cell[(
@@ -3143,7 +3569,7 @@ Begin["`Private`"]
               ),"Input"]];
             SelectionMove[nb, Before, Notebook];
             Export[exportFname, {rmsDifference, carnallEnergies, eigenEnergies, ln, carnallAssignments, simplerStateLabels, eigensys, basis, truncatedStates}];
-            tinyexportFname = FileNameJoin[{moduleDir,"calcs", ln <> " in " <> "LaF3 - tiny.m"}];
+            tinyexportFname = FileNameJoin[{moduleDir,"calcs", ln <> " in " <> "LaF3" <> appToFname <> "- tiny.m"}];
             tinyExport = <|"ln"->ln,
                           "carnallEnergies"->carnallEnergies,
                           "rmsDifference"-> rmsDifference,
@@ -3155,14 +3581,14 @@ Begin["`Private`"]
         ];
         If[OptionValue["NotebookSave"],
           (
-            nbFname = FileNameJoin[{moduleDir,"calcs", ln <> " in " <> "LaF3.nb"}];
+            nbFname = FileNameJoin[{moduleDir,"calcs", ln <> " in " <> "LaF3" <> appToFname <> ".nb"}];
             PrintFun[">> Saving notebook to ", nbFname, " ..."];
             NotebookSave[nb, nbFname];
           )
         ];
         If[OptionValue["HTMLSave"],
           (
-            htmlFname = FileNameJoin[{moduleDir,"calcs", "html", ln <> " in " <> "LaF3.html"}];
+            htmlFname = FileNameJoin[{moduleDir,"calcs", "html", ln <> " in " <> "LaF3" <> appToFname <> ".html"}];
             PrintFun[">> Saving html version to ", htmlFname, " ..."];
             Export[htmlFname, nb];
           )
@@ -4555,34 +4981,35 @@ HamiltonianMatrixPlot[hamMatrix_, basisLabels_, opts : OptionsPattern[]] := (
   CFPAssoc::usage = " CFPAssoc is an association where keys are of lists of the form {num_electrons, daugherTerm, parentTerm} and values are the corresponding coefficients of fractional parentage. The terms given in string-spectroscopic notation. If a certain daughter term does not have a parent term, the value is 0. Loaded using LoadCFP[].";
   LoadCFP::usage="LoadCFP[] loads CFP, CFPAssoc, and CFPTable into the session.";
   LoadCFP[]:=(
-    If[And[ValueQ[CFP],ValueQ[CFPTable],ValueQ[CFPAssoc]],
+    If[And[ValueQ[CFP], ValueQ[CFPTable], ValueQ[CFPAssoc]],
       (
         Return[];
       )
       ];
-    PrintTemporary["Loading the association with coefficients of fractional parentage ..."];
-    CFPfname = FileNameJoin[{moduleDir, "data", "CFPs.m"}];
-    If[!FileExistsQ[CFPfname],
-      (PrintTemporary[">> CFPs.m not found, generating ..."];
-        CFP = GenerateCFP[];
-      ),
-      CFP = Import[CFPfname];
-    ];
 
     PrintTemporary["Loading CFPtable ..."];
     CFPTablefname = FileNameJoin[{moduleDir, "data", "CFPTable.m"}];
     If[!FileExistsQ[CFPTablefname],
       (PrintTemporary[">> CFPTable.m not found, generating ..."];
-        CFPTable = GenerateCFPTable[True];
+        CFPTable = GenerateCFPTable["Export"->True];
       ),
       CFPTable = Import[CFPTablefname];
     ];
 
-    PrintTemporary["Loading the association with coefficients of fractional parentage ..."];
+    PrintTemporary["Loading CFPs.m ..."];
+    CFPfname = FileNameJoin[{moduleDir, "data", "CFPs.m"}];
+    If[!FileExistsQ[CFPfname],
+      (PrintTemporary[">> CFPs.m not found, generating ..."];
+        CFP = GenerateCFP["Export"->True];
+      ),
+      CFP = Import[CFPfname];
+    ];
+
+    PrintTemporary["Loading CFPAssoc.m ..."];
     CFPAfname = FileNameJoin[{moduleDir, "data", "CFPAssoc.m"}];
     If[!FileExistsQ[CFPAfname],
       (PrintTemporary[">> CFPAssoc.m not found, generating ..."];
-        CFPAssoc = GenerateCFPAssoc[True];
+        CFPAssoc = GenerateCFPAssoc["Export"->True];
       ),
       CFPAssoc = Import[CFPAfname];
     ];
@@ -4654,7 +5081,7 @@ HamiltonianMatrixPlot[hamMatrix_, basisLabels_, opts : OptionsPattern[]] := (
   LoadSOOandECSO[]:=(
     PrintTemporary["Loading the association of matrix elements for spin-other-orbit and electrostatically-correlated-spin-orbit ..."];
     SOOandECSOTableFname = FileNameJoin[{moduleDir, "data", "SOOandECSOTable.m"}];
-    If[!FileExistsQ[SpinOrbitTableFname],
+    If[!FileExistsQ[SOOandECSOTableFname],
       (PrintTemporary[">> SOOandECSOTable.m not found, generating ..."];
         SOOandECSOTable = GenerateSOOandECSOTable[7, True];
       ),
@@ -4693,7 +5120,7 @@ HamiltonianMatrixPlot[hamMatrix_, basisLabels_, opts : OptionsPattern[]] := (
     ThreeBodiesFname = FileNameJoin[{moduleDir, "data", "ThreeBodyTables.m"}];
     If[!FileExistsQ[ThreeBodyFname],
       (PrintTemporary[">> ThreeBody.m not found, generating ..."];
-        {ThreeBodyTable, ThreeBodyTables} = GenerateThreeBodyData[7, "Export" -> True];
+        {ThreeBodyTable, ThreeBodyTables} = GenerateThreeBodyTables[7, "Export" -> True];
       ),
       ThreeBodyTable = Import[ThreeBodyFname];
       ThreeBodyTables = Import[ThreeBodiesFname];
@@ -4705,6 +5132,6 @@ HamiltonianMatrixPlot[hamMatrix_, basisLabels_, opts : OptionsPattern[]] := (
 
 End[]
 
-LoadCFP[];
+If[Not[ValueQ[Carnall]],LoadCFP[]];
 
 EndPackage[]
