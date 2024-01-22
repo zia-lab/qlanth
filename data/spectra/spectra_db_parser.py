@@ -4,10 +4,10 @@ import os
 import json
 import numpy as np
 
-spectra_dir = '/Users/juan/Downloads/spectra/Spectra'
-elst_fname = os.path.join(spectra_dir, 'elst.dbf')
-spin_fname = os.path.join(spectra_dir, 'spin.dbf')
-crystf_fname = os.path.join(spectra_dir, 'recr.dbf')
+elst_fname = 'elst.dbf'
+spin_fname = 'spin.dbf'
+crystf_fname = 'recr.dbf'
+export = True
 
 def parse_spectra_dbf():
     counter = 0
@@ -27,7 +27,7 @@ def parse_spectra_dbf():
     }
     with open(elst_fname,'rb') as file:
         while True:
-            bytes_to_read = [4,5,3,4][counter%4]
+            bytes_to_read = [4,6,2,4][counter%4]
             data = file.read(bytes_to_read)
             if data == b'':
                 break
@@ -36,6 +36,12 @@ def parse_spectra_dbf():
                 n = header[0]
                 op_index = op_index_to_name[header[2]]
             elif counter % 4 == 1:
+                # try:
+                #     deg = int(matrix_element[2])
+                #     print(deg)
+                # except:
+                #     extra = file.read(1)
+                #     print(extra)
                 matrix_element = data.decode('utf-8')
                 braterm, keterm = matrix_element[:3], matrix_element[3:]
                 braterm =  braterm.strip()
@@ -79,7 +85,6 @@ def parse_spectra_dbf():
                 keterm = keterm.strip()
             elif counter % 3 == 2:
                 matrix_value = float(np.frombuffer(data, dtype=np.float32)[0])
-            # print(data)
             if counter % 3 == 2:
                 matrix_elements.append(((braterm, keterm), (n, twoJay, op), matrix_value))
             counter += 1 
@@ -116,25 +121,27 @@ def parse_spectra_dbf():
 
 if __name__ == '__main__':
     magnetic_matrix_elements, crystal_field_uk_matrix_elements, electro_matrix_elements = parse_spectra_dbf()
-    with open('spectra_matrix_elements.py', 'w') as file:
-        file.write('''
-    # This file contains the matrix elements used in Spectra, an old code from Argonne National Lab.
+    if export:
+        print("exporting")
+        with open('spectra_matrix_elements.py', 'w') as file:
+            file.write('''
+# This file contains the matrix elements used in Spectra, an old code from Argonne National Lab.
 
-    # The matrix elements are stored in the following variables:
-    # magnetic_matrix_elements in the form of ((braTerm, ketTerm), (num_electrons, twoJay, operator_label), matrixElement)
-    # crystal_field_uk_matrix_elements in the form of ((braTerm, ketTerm), U2val, U4val, U6val)
-    # electro_matrix_elements in the form of ((braTerm, ketTerm), (num_electrons, operator_label), matrixElement)
+# The matrix elements are stored in the following variables:
+# magnetic_matrix_elements in the form of ((braTerm, ketTerm), (num_electrons, twoJay, operator_label), matrixElement)
+# crystal_field_uk_matrix_elements in the form of ((braTerm, ketTerm), U2val, U4val, U6val)
+# electro_matrix_elements in the form of ((braTerm, ketTerm), (num_electrons, operator_label), matrixElement)
 
-    # In all cases a missing element is implied to be zero.\n\n''')
-        file.write('magnetic_matrix_elements = [')
-        for line in magnetic_matrix_elements:
-            file.write(str(line) + ',\n')
-        file.write(']\n\n')
-        file.write('crystal_field_uk_matrix_elements = [')
-        for line in crystal_field_uk_matrix_elements:
-            file.write(str(line) + ',\n')
-        file.write(']\n\n')
-        file.write('electro_matrix_elements = [')
-        for line in electro_matrix_elements:
-            file.write(str(line) + ',\n')
-        file.write(']\n\n')
+# In all cases a missing element is implied to be zero.\n\n''')
+            file.write('magnetic_matrix_elements = [')
+            for line in magnetic_matrix_elements:
+                file.write(str(line) + ',\n')
+            file.write(']\n\n')
+            file.write('crystal_field_uk_matrix_elements = [')
+            for line in crystal_field_uk_matrix_elements:
+                file.write(str(line) + ',\n')
+            file.write(']\n\n')
+            file.write('electro_matrix_elements = [')
+            for line in electro_matrix_elements:
+                file.write(str(line) + ',\n')
+            file.write(']\n\n')

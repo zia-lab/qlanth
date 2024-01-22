@@ -11,6 +11,7 @@ HelperNotebook;
 StochasticMatching;
 ExtractSymbolNames;
 GetModificationDate;
+ToPythonSparseFunction;
 
 FirstOrderPerturbation;
 SecondOrderPerturbation;
@@ -29,17 +30,11 @@ SecondOrderPerturbation[eigenValues_, eigenVectors_, perMatrix_] := (
   dim = Length[perMatrix];
   eigenBras = Conjugate[eigenVectors];
   eigenKets = eigenVectors;
-  matV = Transpose[perMatrix . Transpose[eigenKets]];
-  Table[2 *
-    Sum[
-      If[i == j, 
-        0, 
-        Abs[(eigenBras[[j]] . matV[[i]])]^2 / 
-         (eigenValues[[j]] - eigenValues[[i]])
-      ],
-    {i, 1, dim}
-    ],
-  {j, 1, dim}]
+  matV = Abs[eigenBras . perMatrix . Transpose[eigenKets]]^2;
+  OneOver[x_, y_] := If[x == y, 0, 1/(x - y)];
+  eigenDiffs = Outer[OneOver, eigenValues, eigenValues, 1];
+  pProduct = Transpose[eigenDiffs]*matV;
+  Return[2*(Total /@ Transpose[pProduct])];
   )
 
 SuperIdentity::usage="SuperIdentity[args] returns the arguments passed to it. This is useful for defining a function that does nothing, but that can be used in a composition.";
