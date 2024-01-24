@@ -131,7 +131,8 @@ S66: crystal field parameter S_6^6
 
 \[Epsilon]: ground level baseline shift
 t2Switch: controls the usage of the t2 operator
-wChErr : If 1 then the errors in Chen are used, if 0 then not.
+wChErrA : If 1 then the type-A errors in Chen are used, if 0 then not.
+wChErrB : If 1 then the type-B errors in Chen are used, if 0 then not.
 ";
 paramSymbols = StringSplit[paramAtlas, "\n"];
 paramSymbols = Select[paramSymbols, # != ""& ];
@@ -205,6 +206,7 @@ TwoBodyNKSL;
 ParseStates;
 LoadCarnall;
 LabeledGrid;
+fnTermLabels;
 FindNKLSTerm;
 AllowedMforJ;
 
@@ -220,7 +222,6 @@ ShiftedLevels;
 IonSolverLaF3;
 LoadSpinOrbit;
 LoadThreeBody;
-allTermLabels;
 FindSL\[Gamma];
 AllowedSLTerms;
 RobustMissingQ;
@@ -228,12 +229,14 @@ LoadParameters;
 
 LoadSOOandECSO;
 LoadChenDeltas;
+LoadTermLabels;
 ThreeBodyTable;
 SOOandECSOTable;
 ThreeBodyTables;
 AllowedSLJTerms;
 OperatorsMatrix;
 HamiltonianForm;
+ParseTermLabels;
 
 AllowedSLJMTerms;
 AllowedNKSLTerms;
@@ -250,13 +253,13 @@ PrettySaundersSLJ;
 FastIonSolverLaF3;
 T222PsiPsipStates;
 T112PsiPsipStates;
-EnergyLevelDiagram;
-PrettySaundersSLJmJ;
 
 t112PsiPsipStates;
 GenerateAiZiTable;
 HamMatrixAssembly;
+EnergyLevelDiagram;
 AiZi2PsiPsipStates;
+PrettySaundersSLJmJ;
 ElectrostaticMatrix;
 SquarePrimeToNormal;
 
@@ -265,7 +268,6 @@ MagneticInteractions;
 ReplaceInSparseArray;
 symbolicHamiltonians;
 EnergyMatrixFileName;
-GenerateThreeBodyTables;
 LoadGuillotParameters;
 GenerateSpinSpinTable;
 HamiltonianMatrixPlot;
@@ -276,6 +278,7 @@ GenerateSpinOrbitTable;
 AllowedNKSLJMforJMTerms;
 GenerateSOOandECSOTable;
 HoleElectronConjugation;
+GenerateThreeBodyTables;
 
 ElectrostaticMatrixTable;
 LoadSymbolicHamiltonians;
@@ -348,7 +351,7 @@ Begin["`Private`"]
   (* ############################################################################################## *)
   (* ################################### Racah Algebra Goodies #################################### *)
 
-  ReducedUk::usage = "ReducedUk[n, l, SL, SpLp, k] gives the reduced matrix element of the spherical tensor U^(k).";
+  ReducedUk::usage = "ReducedUk[n, l, SL, SpLp, k] gives the reduced matrix element of the spherical tensor operator U^(k).";
   ReducedUk[n_, l_, SL_, SpLp_, k_]:= Module[
     {Uk, S, L, Sp, Lp, Sb, Lb, parentSL, cfpSL, cfpSpLp, Ukval},
     {S, L}   = FindSL[SL];
@@ -393,26 +396,23 @@ Begin["`Private`"]
     possibleStates = DeleteCases[possibleStates, {}];
     possibleStates = Flatten[possibleStates];
     possibleStates = If[{S, L}==FindSL[NKSLp],
-        (1/2 * 
-          Abs[Ck[l, k]]^2 *
+      (1/2 * Abs[Ck[l, k]]^2 *
+        (
+          1 / (2L+1) *
+          Sum[(
+                ReducedUkTable[{n, l, SL, NKSL , k}] *
+                ReducedUkTable[{n, l, SL, NKSLp, k}]
+              ),
+          {SL, possibleStates}
+          ] -
           (
-            1 / (2L+1) *
-            Sum[(
-                  ReducedUkTable[{n, l, SL, NKSL , k}] *
-                  ReducedUkTable[{n, l, SL, NKSLp, k}]
-                ),
-            {SL, possibleStates}
-            ] -
-            (
-              KroneckerDelta[NKSL, NKSLp] *
-              (n (4 l+2-n)) /
-              (2 l+1) /
-              (4 l+1)
-            )
+            KroneckerDelta[NKSL, NKSLp] *
+            (n (4 l+2-n)) / (2 l+1) / (4 l+1)
           )
-        ),
-        0
-      ]
+        )
+      ),
+      0
+    ]
   ]
 
   fK::usage = "Non-reduced Slater integral f^k = Subscript[f, k] * Subscript[D, k]";
@@ -446,7 +446,7 @@ Begin["`Private`"]
 
   ElectrostaticMatrix::usage = "See Wybourne (1965) section 2-9 'Electrostatic Interactions in f^n Configurations'";
   ElectrostaticMatrix[n_, NKSL_, NKSLp_]:= Module[
-    {f0, f2, f4, f6, e0, e1, e2, e3, EMatrix, l},
+    {f0, f2, f4, f6, e0, e1, e2, e3, eMatrix, l},
     l = 3;
     Ek = {E0, E1, E2, E3};
     f0 = fK[n, l, NKSL, NKSLp, 0];
@@ -457,8 +457,8 @@ Begin["`Private`"]
     e1 = 9/7*f0 + f2/42 + f4/77 + f6/462;
     e2 = 143/42*f2 - 130/77*f4 + 35/462*f6;
     e3 = 11/42*f2 + 4/77*f4 - 7/462*f6;
-    EMatrix = e0*E0 + e1*E1 + e2*E2 + e3*E3;
-    Return[EMatrix];
+    eMatrix = e0*E0 + e1*E1 + e2*E2 + e3*E3;
+    Return[eMatrix];
   ]
 
   (* ################################### Racah Algebra Goodies #################################### *)
@@ -577,13 +577,13 @@ Begin["`Private`"]
           Do[
           (
               parentCFPs             = Rest[CFP[{daughter, daughterTerm}]];
-              daughterSeniority      = Seniority[{daughter, daughterTerm}];
+              daughterSeniority      = Seniority[daughterTerm];
               {daughterS, daughterL} = FindSL[daughterTerm];
               Do[
               (
                   {parentTerm, parentCFPval} = parentCFP;
                   {parentS, parentL}         = FindSL[parentTerm];
-                  parentSeniority            = Seniority[{parent, parentTerm}];
+                  parentSeniority            = Seniority[parentTerm];
                   phase = PhaseFun[parent, parentS, parentL, 
                                   daughterS, daughterL,
                                   parentSeniority, daughterSeniority];
@@ -1047,10 +1047,6 @@ Begin["`Private`"]
     ThreeBodyTable = <||>;
     Do[
       Do[(
-          (* braSeniority = Seniority[{numE, SL}];
-          ketSeniority = Seniority[{numE, SpLp}];
-          onePlus\[CapitalDelta]vHalf = Simplify[1 + (braSeniority - ketSeniority)/2];
-          flipSign     = If[EvenQ[onePlus\[CapitalDelta]vHalf], 1, -1]; *)
           flipSign = -1;
           holeElectronSelector          = ((1 + isE)/2 + (1 - isE)/2 * flipSign);
           ThreeBodyTable[{numE, SL, SpLp}] = 
@@ -1081,8 +1077,8 @@ Begin["`Private`"]
             ((14 - numE) - 2)/(70 Sqrt[2]) (1 - isE)/2
           );
           prefactor = Simplify[prefactor];
-          braSeniority = Seniority[{numE, SL}];
-          ketSeniority = Seniority[{numE, SpLp}];
+          braSeniority = Seniority[SL];
+          ketSeniority = Seniority[SpLp];
           onePlus\[CapitalDelta]vHalf = Simplify[1 + (braSeniority - ketSeniority)/2];
           flipSign     = If[EvenQ[onePlus\[CapitalDelta]vHalf], 1, -1];
           holeElectronSelector          = ((1 + isE)/2 + (1 - isE)/2 * flipSign);
@@ -2226,18 +2222,34 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
       ss = \[Sigma]SS * SpinSpinTable[key];
       sooandecso = SOOandECSOTable[key];
       total = ss + sooandecso;
-      If[MemberQ[Keys[chenDeltas], {n, SLJ, SLJp}],
+      (* In the type A errors the wrong values are different *)
+      If[MemberQ[Keys[chenDeltas["A"]], {n, SLJ, SLJp}],
         (
           {S, L} = FindSL[SLJ];
           {Sp, Lp} = FindSL[SLJp];
           phase = (-1)^(Sp + L + J);
           Msixjay = SixJay[{Sp, Lp, J},{L, S, 2}];
           Psixjay = SixJay[{Sp, Lp, J},{L, S, 1}];
-          {M0v, M2v, M4v, P2v, P4v, P6v} = chenDeltas[{n, SLJ, SLJp}]["wrong"];
+          {M0v, M2v, M4v, P2v, P4v, P6v} = chenDeltas["A"][{n, SLJ, SLJp}]["wrong"];
           total  = phase * Msixjay(M0v*M0 + M2v*M2 + M4v*M4);
           total += phase * Psixjay(P2v*P2 + P4v*P4 + P6v*P6);
           total  = total /. Prescaling;
-          total  = wChErr * total + (1 - wChErr) * (ss+sooandecso)
+          total  = wChErrA * total + (1 - wChErrA) * (ss + sooandecso)
+        )
+      ];
+      (* In the type B errors the wrong values are zeros all around *)
+      If[MemberQ[chenDeltas["B"], {n, SLJ, SLJp}],
+        (
+          {S, L} = FindSL[SLJ];
+          {Sp, Lp} = FindSL[SLJp];
+          phase = (-1)^(Sp + L + J);
+          Msixjay = SixJay[{Sp, Lp, J},{L, S, 2}];
+          Psixjay = SixJay[{Sp, Lp, J},{L, S, 1}];
+          {M0v, M2v, M4v, P2v, P4v, P6v} = {0, 0, 0, 0, 0, 0};
+          total  = phase * Msixjay(M0v*M0 + M2v*M2 + M4v*M4);
+          total += phase * Psixjay(P2v*P2 + P4v*P4 + P6v*P6);
+          total  = total /. Prescaling;
+          total  = wChErrB * total + (1 - wChErrB) * (ss + sooandecso)
         )
       ];
       Return[total];
@@ -2625,43 +2637,48 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
   (* ############################################################################################## *)
   (* ############################ Coefficients of Fractional Parentage ############################ *)
 
-  LabelsTextData = FileNameJoin[{moduleDir, "data", "NielsonKosterLabels_f6_f7.txt"}];
-  fNtextLabels = Import[LabelsTextData];
+  Options[ParseTermLabels] = {"Export" -> True};
+  ParseTermLabels::usage="ParseTermLabels[] parses the labels for the terms in the f^n configurations based on the labels for the f6 and f7 configurations. The function returns a list whose elements are of the form {LS, seniority, W, U}.";
+  ParseTermLabels[OptionsPattern[]] := Module[
+    {labelsTextData, fNtextLabels, nielsonKosterLabels, seniorities, RacahW, RacahU},
+  (
+    labelsTextData = FileNameJoin[{moduleDir, "data", "NielsonKosterLabels_f6_f7.txt"}];
+    fNtextLabels   = Import[labelsTextData];
+    nielsonKosterLabels = Partition[StringSplit[fNtextLabels], 3];
+    termLabels = Map[Part[#, {1}] &, nielsonKosterLabels];
+    seniorities = Map[ToExpression[Part[# , {2}]] &, nielsonKosterLabels];
+    racahW = 
+      Map[
+        StringTake[
+          Flatten[StringCases[Part[# , {3}], 
+            "(" ~~ DigitCharacter ~~ DigitCharacter ~~ DigitCharacter ~~ ")"]],
+          {2, 4}
+        ] &,
+      nielsonKosterLabels];
+    racahU = 
+      Map[
+        StringTake[
+          Flatten[StringCases[Part[# , {3}], 
+            "(" ~~ DigitCharacter ~~ DigitCharacter ~~ ")"]], 
+          {2, 3}
+        ] &,
+      nielsonKosterLabels];
+    fnTermLabels = Join[termLabels, seniorities, racahW, racahU, 2];
+    fnTermLabels = Sort[fnTermLabels];
+    If[OptionValue["Export"],
+      (
+        broadFname = FileNameJoin[{moduleDir,"data","term_labels.m"}];
+        Export[broadFname, fnTermLabels];
+      )
+    ];
+    Return[fnTermLabels];
+  )
+  ]
 
-  NielsonKosterLabels = Partition[StringSplit[fNtextLabels], 3];
-  termLabels = Map[Part[#, {1}] &, NielsonKosterLabels];
-  seniorities = Map[Part[# , {2}] &, NielsonKosterLabels];
-  RacahW = 
-    Map[
-      StringTake[
-        Flatten[StringCases[Part[# , {3}], 
-          "(" ~~ DigitCharacter ~~ DigitCharacter ~~ DigitCharacter ~~ ")"]],
-        {2, 4}
-      ] &,
-    NielsonKosterLabels];
-  RacahU = 
-    Map[
-      StringTake[
-        Flatten[StringCases[Part[# , {3}], 
-          "(" ~~ DigitCharacter ~~ DigitCharacter ~~ ")"]], 
-        {2, 3}
-      ] &,
-    NielsonKosterLabels];
+  Seniority::usage="Seniority[LS] returns the seniority of the given term."
+  Seniority[LS_] := FindNKLSTerm[LS][[1, 2]]
 
-  broadfnTerms::usage = "This list contains the labels of f^n configurations. Each element of the list has four elements {LS, seniority, RacahW, RacahU}. 
-  At first sight this seems to only include the labels for the configuration in f^6 and f^7, but the case is that terms in other configurations also figure in either of these two.";
-  broadfnTerms = Join[termLabels, seniorities, RacahW, RacahU, 2];
-  broadfnTerms = Sort[broadfnTerms];
-
-  Clear[fNtextLabels, termLabels, seniorities, RacahU, RacahW];
-
-  allTermLabels::usage = "This Association has keys equal to lists of the form {numE, LS_string} and as corresponding values list of three elements of the form {seniority, RacahW, RacahU}."
-  allTermLabels = Import["./data/all_term_labels.m"];
-
-  Seniority::usage="Seniority[{numE, LS}] returns the seniority of the given term."
-  Seniority[{numE_, LS_}] := (allTermLabels[{numE, LS}][[1]])
-
-  FindNKLSTerm::usage = "FindNKLSTerm[SL] for a given string SL that only represent the LS part of a spectroscopic term, this function returns all the terms that are compatible with it. This is only for f^n configurations. The provided terms might belong to more than one configuration.";
+  FindNKLSTerm::usage = "FindNKLSTerm[SL] for a given string SL that only represents the LS part of a spectroscopic term, this function returns all the terms that are compatible with it. This is only for f^n configurations. The provided terms might belong to more than one configuration.";
   FindNKLSTerm[SL_] := Module[
     {NKterms, n},
     n = 7;
@@ -2672,13 +2689,10 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
           NKterms = Join[NKterms, {#}, 1]
         ]
       ] &,
-    broadfnTerms
+    fnTermLabels
     ];
     NKterms = DeleteCases[NKterms, {}];
     NKterms]
-
-  (* ############################################################################################## *)
-  (* ############################ Coefficients of Fractional Parentage ############################ *)
 
   CFPTerms::usage = "CFPTerms[n] gives all the daughter and parent terms, together with the corresponding coefficients of fractional parentage, that correspond to the the f^n configuration.
 
@@ -2689,8 +2703,7 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
   In all cases the output is in the shape of a list with enclosed lists having the format {daughter_term, {parent_term_1, CFP_1}, {parent_term_2, CFP_2}, ...}.
   Only the one-body coefficients for f-electrons are provided.
   In all cases it must be that 1 <= n <= 7.
-
-  Data for these was parsed from Velkov, \"Multi-electron coefficients of fractional parentage for the p, d, and f shells\".";
+  ";
   CFPTerms[n_] := Part[CFPTable, n]
   CFPTerms[n_, SL_] := 
     Module[
@@ -4897,6 +4910,7 @@ HamiltonianMatrixPlot[hamMatrix_, basisLabels_, opts : OptionsPattern[]] := (
   
   LoadAll::usage="LoadAll[] executes all Load* functions.";
   LoadAll[]:=(
+      LoadTermLabels[];
       LoadCarnall[];
       LoadCFP[];
       LoadElectrostatic[];
@@ -4910,6 +4924,19 @@ HamiltonianMatrixPlot[hamMatrix_, basisLabels_, opts : OptionsPattern[]] := (
       LoadThreeBody[];
       LoadChenDeltas[];
     )
+
+  LoadTermLabels::usage="";
+  LoadTermLabels[]:= (
+    PrintTemporary["Loading data for states labels in the f^n configurations..."];
+    fnTermsFname = FileNameJoin[{moduleDir, "data", "fnTerms.m"}];
+    fnTermLabels::usage = "This list contains the labels of f^n configurations. Each element of the list has four elements {LS, seniority, W, U}. At first sight this seems to only include the labels for the f^6 and f^7 configuration, however, all is included in these two.";
+    If[!FileExistsQ[fnTermsFname],
+      (PrintTemporary[">> fnTerms.m not found, generating ..."];
+        fnTermLabels = ParseTermLabels[];
+      ),
+      fnTermLabels = Import[fnTermsFname];
+    ];
+  )
 
   LoadCarnall::usage="LoadCarnall[] loads data for trivalent lanthanides in LaF3 using the data from Bill Carnall's 1989 paper.";
   LoadCarnall[]:=(
@@ -4932,9 +4959,10 @@ HamiltonianMatrixPlot[hamMatrix_, basisLabels_, opts : OptionsPattern[]] := (
   );
 
   ParseChenDeltas[export_:True]:=(
-    chenDeltasRaw = Import[FileNameJoin[{moduleDir, "data", "the-chen-deltas.csv"}]];
+    chenDeltasRaw = Import[FileNameJoin[{moduleDir, "data", "the-chen-deltas-A.csv"}]];
     chenDeltasRaw = chenDeltasRaw[[2 ;;]];
     chenDeltas = <||>;
+    chenDeltasA = <||>;
     Off[Power::infy];
     Do[
       ({right, wrong} = {chenDeltasRaw[[row]][[4 ;;]], 
@@ -4942,12 +4970,19 @@ HamiltonianMatrixPlot[hamMatrix_, basisLabels_, opts : OptionsPattern[]] := (
       key = chenDeltasRaw[[row]][[1 ;; 3]];
       repRule = (#[[1]] -> #[[2]]*#[[1]]) & /@ 
         Transpose[{{M0, M2, M4, P2, P4, P6}, right/wrong}];
-      chenDeltas[key] = <|"right" -> right, "wrong" -> wrong, 
+      chenDeltasA[key] = <|"right" -> right, "wrong" -> wrong, 
         "repRule" -> repRule|>;
-      chenDeltas[{key[[1]], key[[3]], key[[2]]}] = <|"right" -> right, 
+      chenDeltasA[{key[[1]], key[[3]], key[[2]]}] = <|"right" -> right, 
         "wrong" -> wrong, "repRule" -> repRule|>;
       ),
       {row, 1, Length[chenDeltasRaw], 2}];
+    chenDeltas["A"] = chenDeltasA;
+
+    chenDeltasRawB = Import[FileNameJoin[{moduleDir, "data", "the-chen-deltas-B.csv"}], "Text"];
+    chenDeltasB = StringSplit[chenDeltasRawB, "\n"];
+    chenDeltasB = StringSplit[#, ","] & /@ chenDeltasB;
+    chenDeltasB = {ToExpression[StringTake[#[[1]], {2}]], #[[2]], #[[3]]} & /@ chenDeltasB;
+    chenDeltas["B"] = chenDeltasB;
     On[Power::infy];
     If[export,
       (chenDeltasFname = FileNameJoin[{moduleDir, "data", "chenDeltas.m"}];
@@ -5133,5 +5168,6 @@ HamiltonianMatrixPlot[hamMatrix_, basisLabels_, opts : OptionsPattern[]] := (
 End[]
 
 If[Not[ValueQ[Carnall]],LoadCFP[]];
+If[Not[ValueQ[fnTermLabels]], LoadTermLabels[]];
 
 EndPackage[]
