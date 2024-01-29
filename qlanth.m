@@ -131,7 +131,6 @@ P4: 4th parameter for the two-body electrostatically correlated spin-orbit inter
 P6: 6th parameter for the two-body electrostatically correlated spin-orbit interaction
 
 gs: electronic gyromagnetic ratio
-gI: nuclear spin gyromagnetic ratio
 
 \[Alpha]: Trees' parameter \[Alpha] describing configuration interaction via the Casimir operator of SO(3)
 \[Beta]: Trees' parameter \[Beta] describing configuration interaction via the Casimir operator of G(2)
@@ -587,25 +586,26 @@ Begin["`Private`"]
   (* ############################################################################################## *)
   (* ########################################## Bases ############################################# *)
 
-  EnergyStatesTableGenerator::usage = "EnergyStatesTableGenerator[numE, IiN] returns an association whose keys are triples of the form {numE, J, IiN} and whose values are lists having the basis elements that correspond to {numE,J,IiN} one the 2*IiN+1 z-axis projections of the nuclear angular momentum are considered.";
-  EnergyStatesTableGenerator[numE_, IiN_] := Module[{energyStatesTable}, (
+  EnergyStatesTableGenerator::usage = "EnergyStatesTableGenerator[numE] returns an association whose keys are triples of the form {numE, J} and whose values are lists having the basis elements that correspond to {numE, J}.";
+  EnergyStatesTableGenerator[numE_] := Module[{energyStatesTable}, (
       energyStatesTable = <||>;
+      allowedJ = AllowedJ[numE];
       Do[
       (
-        energyStatesTable[{numE, J, IiN}] = EnergyStates[numE, J, IiN];
+        energyStatesTable[{numE, J}] = EnergyStates[numE, J];
         ),
-      {Jp, AllowedJ[numE]},
-      {J, AllowedJ[numE]}];
+      {Jp, allowedJ},
+      {J,  allowedJ}];
       Return[energyStatesTable]
       )
     ];
   
-  BasisLSJMJ::usage = "BasisLSJMJ[numE,IiN] returns the ordered basis in L-S-J-MJ with the total orbital angular momentum L and total spin angular momentum S coupled together to form J and with the nuclear angular momentum simply attached to these. The function returns a list with each element representing the quantum numbers for each basis vector. Each element is of the form {{{LS,J},MJ},MI} where LS is a string, J the total J of the basis state, MJ its projection along the z-axis, and MI the projection for the given nuclear angular momentum IiN.";
-  BasisLSJMJ[numE_, IiN_ : 0] := Module[{energyStatesTable, basis, idx1},
+  BasisLSJMJ::usage = "BasisLSJMJ[numE] returns the ordered basis in L-S-J-MJ with the total orbital angular momentum L and total spin angular momentum S coupled together to form J. The function returns a list with each element representing the quantum numbers for each basis vector. Each element is of the form {{LS,J},MJ} where LS is a string, J the total J of the basis state, MJ its projection along the z-axis.";
+  BasisLSJMJ[numE_] := Module[{energyStatesTable, basis, idx1},
     (
-      energyStatesTable = EnergyStatesTableGenerator[numE, IiN];
+      energyStatesTable = EnergyStatesTableGenerator[numE];
       basis = Table[
-        energyStatesTable[{numE, AllowedJ[numE][[idx1]], IiN}],
+        energyStatesTable[{numE, AllowedJ[numE][[idx1]]}],
         {idx1, 1, Length[AllowedJ[numE]]}];
       basis = Flatten[basis, 1];
       Return[basis]
@@ -2197,15 +2197,15 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
   (* ##################### Putting together all operators #################### *)
 
   Options[JJBlockMatrix] = {"Sparse"->True, "ChenDeltas"->False};
-  JJBlockMatrix::usage = "For given J, J', I, I' in the f^n configuration JJBlockMatrix[numE, J, J', I, I'] determines all the SL S'L' terms that may contribute to them and using those it provides the matrix elements <J, I, LS | H | J', I', LS'>. H having contributions from the following interactions: Coulomb, spin-orbit, spin-other-orbit, electrostatically-correlated-spin-orbit, spin-spin, three-body interactions, and crystal-field.";
-  JJBlockMatrix[numE_, J_, Jp_, Ii_, Ip_, CFTable_, OptionsPattern[]]:= Module[
+  JJBlockMatrix::usage = "For given J, J' in the f^n configuration JJBlockMatrix[numE, J, J'] determines all the SL S'L' terms that may contribute to them and using those it provides the matrix elements <J, LS | H | J', LS'>. H having contributions from the following interactions: Coulomb, spin-orbit, spin-other-orbit, electrostatically-correlated-spin-orbit, spin-spin, three-body interactions, and crystal-field.";
+  JJBlockMatrix[numE_, J_, Jp_, CFTable_, OptionsPattern[]]:= Module[
     {NKSLJMs, NKSLJMps, NKSLJM, NKSLJMp,
     SLterm, SpLpterm,
-    MJ, MJp, MI, MIp,
+    MJ, MJp,
     subKron, matValue, eMatrix},
     (
-      NKSLJMs  = AllowedNKSLJMIMforJITerms[numE, J,  Ii, "Flat" -> True];
-      NKSLJMps = AllowedNKSLJMIMforJITerms[numE, Jp, Ip, "Flat" -> True];
+      NKSLJMs  = AllowedNKSLJMforJTerms[numE, J];
+      NKSLJMps = AllowedNKSLJMforJTerms[numE, Jp];
       eMatrix = 
         Table[
           (*Condition for a scalar matrix op*)
@@ -2213,13 +2213,10 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
           SpLpterm = NKSLJMp[[1]];
           MJ       =  NKSLJM[[3]];
           MJp      = NKSLJMp[[3]];
-          MI       =  NKSLJM[[4]];
-          MIp      = NKSLJMp[[4]];
           subKron  = 
             (
               KroneckerDelta[J, Jp] *
-              KroneckerDelta[MJ, MJp] *
-              KroneckerDelta[MI, MIp]
+              KroneckerDelta[MJ, MJp]
             );
           matValue = 
             If[subKron==0,
@@ -2244,21 +2241,21 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
   )
   ];
 
-  EnergyStates[numE_, J_, Ii_]:= AllowedNKSLJMIMforJITerms[numE, J, Ii];
+  EnergyStates[numE_, J_]:= AllowedNKSLJMforJTerms[numE, J];
 
-  JJBlockMatrixFileName::usage = "JJBlockMatrixFileName[nf, IiN] gives the filename for the energy matrix table for an atom with nf electrons and a nucleus of spin IiN. The function admits an optional parameter \"FilenameAppendix\" which can be used to modify the filename.";
+  JJBlockMatrixFileName::usage = "JJBlockMatrixFileName[numE] gives the filename for the energy matrix table for an atom with numE f-electrons. The function admits an optional parameter \"FilenameAppendix\" which can be used to modify the filename.";
   Options[JJBlockMatrixFileName] = {"FilenameAppendix" -> ""}
-  JJBlockMatrixFileName[numE_Integer, IiN_Integer, OptionsPattern[]] := (
+  JJBlockMatrixFileName[numE_Integer, OptionsPattern[]] := (
     fileApp = OptionValue["FilenameAppendix"];
     fname = FileNameJoin[{moduleDir,
         "hams",
-        StringJoin[{"f", ToString[numE], "_I_", ToString[2*IiN + 1], "_JJBlockMatrixTable", fileApp ,".m"}]}];
+        StringJoin[{"f", ToString[numE], "_JJBlockMatrixTable", fileApp ,".m"}]}];
     Return[fname];
     );
 
   Options[TabulateJJBlockMatrixTable] = {"Sparse"->True, "ChenDeltas"->False};
-  TabulateJJBlockMatrixTable::usage = "TabulateJJBlockMatrixTable[numE, I] returns a list with three elements {JJBlockMatrixTable, EnergyStatesTable, AllowedM}. JJBlockMatrixTable is an association with keys equal to lists of the form {numE, J, Jp, Ii, Ii}. EnergyStatesTable is an association with keys equal to lists of the form {numE, J, Ii}. AllowedM is another association with keys equal to lists of the form {numE, J} and values equal to lists equal to the corresponding values of MJ. It's unnecessary (and it won't work in this implementation) to give numE > 7 given the equivalency between electron and hole configurations.";
-  TabulateJJBlockMatrixTable[numE_, Ii_, CFTable_, OptionsPattern[]]:= (
+  TabulateJJBlockMatrixTable::usage = "TabulateJJBlockMatrixTable[numE, I] returns a list with three elements {JJBlockMatrixTable, EnergyStatesTable, AllowedM}. JJBlockMatrixTable is an association with keys equal to lists of the form {numE, J, Jp}. EnergyStatesTable is an association with keys equal to lists of the form {numE, J}. AllowedM is another association with keys equal to lists of the form {numE, J} and values equal to lists equal to the corresponding values of MJ. It's unnecessary (and it won't work in this implementation) to give numE > 7 given the equivalency between electron and hole configurations.";
+  TabulateJJBlockMatrixTable[numE_, CFTable_, OptionsPattern[]]:= (
     JJBlockMatrixTable = <||>;
     EnergyStatesTable = <||>;
     AllowedM = <||>;
@@ -2286,8 +2283,8 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
     ];
     Do[
       (
-        JJBlockMatrixTable[{numE, J, Jp, Ii, Ii}] = JJBlockMatrix[numE, J, Jp, Ii, Ii, CFTable, "Sparse"->OptionValue["Sparse"], "ChenDeltas" -> OptionValue["ChenDeltas"]];
-        EnergyStatesTable[{numE, J, Ii}]  = EnergyStates[numE, J, Ii];
+        JJBlockMatrixTable[{numE, J, Jp}] = JJBlockMatrix[numE, J, Jp, CFTable, "Sparse"->OptionValue["Sparse"], "ChenDeltas" -> OptionValue["ChenDeltas"]];
+        EnergyStatesTable[{numE, J}]  = EnergyStates[numE, J];
         AllowedM[{numE, J}]               = Table[M, {J, MinJ[numE], MaxJ[numE]}, {M, -J, J}];
         numiter += 1;
       ),
@@ -2301,9 +2298,9 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
   )
 
   Options[TabulateManyJJBlockMatrixTables] = {"Overwrite"->False, "Sparse"->True, "ChenDeltas"->False, "FilenameAppendix"-> ""};
-  TabulateManyJJBlockMatrixTables::usage = "TabulateManyJJBlockMatrixTables[{n1, n2, ...}, {I1, I2, ...}] calculates the tables of matrix elements for the requested f^n_i configurations with the given nuclear spin I_i. The function does not return the matrices themselves. It instead returns an association whose keys are lists of the form {n, I} and whose values are the filenames where the output of TabulateJJBlockMatrixTables was saved to. When these files are loaded with Get, the following three symbols are thus defined: JJBlockMatrixTable, EnergyStatesTable, and AllowedM.
-  JJBlockMatrixTable is an association whose keys are of the form {n, J, Jp, Ii, Ii} and whose values are matrix elements.";
-  TabulateManyJJBlockMatrixTables[ns_, Iis_, OptionsPattern[]]:= (
+  TabulateManyJJBlockMatrixTables::usage = "TabulateManyJJBlockMatrixTables[{n1, n2, ...}] calculates the tables of matrix elements for the requested f^n_i configurations. The function does not return the matrices themselves. It instead returns an association whose keys are numE and whose values are the filenames where the output of TabulateJJBlockMatrixTables was saved to. When these files are loaded with Get, the following three symbols are thus defined: JJBlockMatrixTable, EnergyStatesTable, and AllowedM.
+  JJBlockMatrixTable is an association whose keys are of the form {n, J, Jp} and whose values are matrix elements.";
+  TabulateManyJJBlockMatrixTables[ns_, OptionsPattern[]]:= (
     overwrite = OptionValue["Overwrite"];
     fNames = <||>;
     fileApp = OptionValue["FilenameAppendix"];
@@ -2312,22 +2309,19 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
         CFdataFilename = FileNameJoin[{moduleDir, "data", "CrystalFieldTable_f"<>ToString[numE]<>".zip"}];
         PrintTemporary["Importing CrystalFieldTable from ", CFdataFilename, " ..."];
         CrystalFieldTable = ImportMZip[CFdataFilename];
-        Do[
-          (
-            PrintTemporary["#------- numE = ", numE, " | I = ", Ii, " -------#"];
-            exportFname = JJBlockMatrixFileName[numE, Ii, "FilenameAppendix" -> fileApp];
-            fNames[{numE, Ii}] = exportFname;
-            If[FileExistsQ[exportFname] && Not[overwrite],
-              Continue[]
-            ];
-            {JJBlockMatrixTable, EnergyStatesTable, AllowedM} = TabulateJJBlockMatrixTable[numE, Ii, CrystalFieldTable, "Sparse"->OptionValue["Sparse"], "ChenDeltas" -> OptionValue["ChenDeltas"]];
-            If[FileExistsQ[exportFname]&&overwrite,
-              DeleteFile[exportFname]
-            ];
-            Save[exportFname, {JJBlockMatrixTable, EnergyStatesTable, AllowedM}];
-          ),
-        {Ii, Iis}
+
+        PrintTemporary["#------- numE = ", numE, " -------#"];
+        exportFname = JJBlockMatrixFileName[numE, "FilenameAppendix" -> fileApp];
+        fNames[numE] = exportFname;
+        If[FileExistsQ[exportFname] && Not[overwrite],
+          Continue[]
         ];
+        {JJBlockMatrixTable, EnergyStatesTable, AllowedM} = TabulateJJBlockMatrixTable[numE, CrystalFieldTable, "Sparse"->OptionValue["Sparse"], "ChenDeltas" -> OptionValue["ChenDeltas"]];
+        If[FileExistsQ[exportFname]&&overwrite,
+          DeleteFile[exportFname]
+        ];
+        Save[exportFname, {JJBlockMatrixTable, EnergyStatesTable, AllowedM}];
+
         ClearAll[CrystalFieldTable];
       ),
     {numE, ns}
@@ -2335,16 +2329,16 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
   Return[fNames];
   )
 
-  HamMatrixAssembly::usage="HamMatrixAssembly[numE, IiN] returns the Hamiltonian matrix for the f^n_i configuration with nuclear spin I_i. The matrix is returned as a SparseArray."
+  HamMatrixAssembly::usage="HamMatrixAssembly[numE] returns the Hamiltonian matrix for the f^n_i configuration. The matrix is returned as a SparseArray."
   Options[HamMatrixAssembly] = {"FilenameAppendix"->""};
-  HamMatrixAssembly[nf_, IiN_, OptionsPattern[]] := Module[
+  HamMatrixAssembly[nf_, OptionsPattern[]] := Module[
     {numE, ii, jj, howManyJs, Js, blockHam},
     (*#####################################*)
     (*hole-particle equivalence enforcement*)
     numE = nf;
     allVars = {E0, E1, E2, E3, \[Zeta], F0, F2, F4, F6, M0, M2, M4, T2, T2p,
       T3, T4, T6, T7, T8, P0, P2, P4, P6, gs, 
-      gI, \[Alpha], \[Beta], \[Gamma], B02, B04, B06, B12, B14, B16, 
+      \[Alpha], \[Beta], \[Gamma], B02, B04, B06, B12, B14, B16, 
       B22, B24, B26, B34, B36, B44, B46, B56, B66, S12, S14, S16, S22, 
       S24, S26, S34, S36, S44, S46, S56, S66, T11, T11p, T12, T14, T15, T16, 
       T17, T18, T19};
@@ -2357,7 +2351,7 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
       params = params0;
     ];
     (* Load symbolic expressions for LS,J,J' energy sub-matrices. *)
-    emFname = JJBlockMatrixFileName[numE, IiN, "FilenameAppendix" -> OptionValue["FilenameAppendix"]];
+    emFname = JJBlockMatrixFileName[numE, "FilenameAppendix" -> OptionValue["FilenameAppendix"]];
     Get[emFname];
     (*Patch together the entire matrix representation using J,J' blocks.*)
     PrintTemporary["Patching JJ blocks ..."];
@@ -2365,7 +2359,7 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
     howManyJs = Length[Js];
     blockHam = ConstantArray[0, {howManyJs, howManyJs}];
     Do[
-      blockHam[[jj, ii]] = JJBlockMatrixTable[{numE, Js[[ii]], Js[[jj]], IiN, IiN}];,
+      blockHam[[jj, ii]] = JJBlockMatrixTable[{numE, Js[[ii]], Js[[jj]]}];,
     {ii, 1, howManyJs},
     {jj, 1, howManyJs}
     ];
@@ -2375,9 +2369,9 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
     Return[blockHam];
     ]
 
-  OperatorsMatrix::usage="OperatorsMatrix[n, Ii, ops] returns the matrix representation of the sum of the operators in the list ops for the f^n configuration with nuclear spin I_i.
+  OperatorsMatrix::usage="OperatorsMatrix[n, ops] returns the matrix representation of the sum of the operators in the list ops for the f^n configurationi.
   ops may be any subset of: {\"Electrostatic\", \"Two-body CI\", \"Spin-orbit\", \"Spin-other-orbit and electrostatically-correlated-spin-orbit\", \"Spin-spin\", \"Three-body CI\"}";
-  OperatorsMatrix[n_,Ii_,ops_]:=
+  OperatorsMatrix[n_,ops_]:=
   (
   operatorCalls=<|
       "Electrostatic"->"ElectrostaticMatrixTable[{"<>ToString[n]<>",NKSLJM[[1]],NKSLJMp[[1]]}]",
@@ -2439,9 +2433,7 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
       OperatorMatrix[J_,Jp_,Ip_,CFTable_:0]:=(
       tableExpression=opMatrixTemplate[<|"iteratorSum"->iteratorSum,
         "J"->ToString[J,InputForm],
-        "Jp"->ToString[Jp,InputForm],
-        "Ii"->ToString[Ii,InputForm],
-        "Ip"->ToString[Ip,InputForm]|>];
+        "Jp"->ToString[Jp,InputForm]|>];
       ToExpression[tableExpression];
       Return[opMatrix]
       );
@@ -2449,9 +2441,7 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
     (
       OperatorMatrix[J_,Jp_,Ip_,CFTable_:0]:=(
         tableExpression=opMatrixTemplate[<|"J"->ToString[J,InputForm],
-          "Jp"->ToString[Jp,InputForm],
-          "Ii"->ToString[Ii,InputForm],
-          "Ip"->ToString[Ip,InputForm]|>];
+          "Jp"->ToString[Jp,InputForm]|>];
         ToExpression[tableExpression];
         Return[opMatrix]
       );
@@ -2460,18 +2450,18 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
 
   Do[
     (
-      OperatorMatrixAssoc[{n,J,Jp,Ii,Ii}] = OperatorMatrix[J,Jp,Ii];
+      OperatorMatrixAssoc[{n,J,Jp}] = OperatorMatrix[J,Jp];
     ),
   {Jp,AllowedJ[n]},
   {J,AllowedJ[n]}
   ];
 
   operatorMatrix=ConstantArray[0,{Length[AllowedJ[n]],Length[AllowedJ[n]]}];
-  Do[operatorMatrix[[jj,ii]] = OperatorMatrixAssoc[{n,AllowedJ[n][[ii]],AllowedJ[n][[jj]],Ii,Ii}];,
+  Do[operatorMatrix[[jj,ii]] = OperatorMatrixAssoc[{n,AllowedJ[n][[ii]],AllowedJ[n][[jj]]}];,
   {ii,1,Length[AllowedJ[n]]},
   {jj,1,Length[AllowedJ[n]]}
   ];
-  operatorMatrix=ArrayFlatten[operatorMatrix];
+  operatorMatrix = ArrayFlatten[operatorMatrix];
   Return[operatorMatrix]
   )
 
@@ -2706,46 +2696,28 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
       Return[allowedSLJM];
     ]
 
-  AllowedNKSLJMforJTerms::usage = "AllowedNKSLJMforJTerms[numE, J] returns a list with all the states that have a total angular momentum J. The returned list has elements of the form {{SL (string in spectroscopic notation), J}, MJ}.";
-  AllowedNKSLJMforJTerms[numE_, J_] := Module[
-    {allowedSL, allowedNKSL, allowedSLJM, Mvals, nn, termSL, termNKSL, termsSLJ},
-    allowedNKSL = AllowedNKSLTerms[numE];
-    allowedSL   = AllowedSLTerms[numE];
-    allowedSLJM = {}; 
-    Mvals = Range[-J, J];
-    For[
-      nn = 1,
-      nn <= Length[allowedSL],
-      (
-        termSL = allowedSL[[nn]];
-        termNKSL = allowedNKSL[[nn]];
-        termsSLJ = 
-          If[Abs[termSL[[1]] - termSL[[2]]] <= J <= Total[termSL], 
-            {{termNKSL, J}},
-            {}
-          ];
-        allowedSLJM = Join[allowedSLJM, termsSLJ];
-        nn++;
-      )
-    ];
-    Return[Tuples[{allowedSLJM, Mvals}]];
+  AllowedNKSLJMforJTerms::usage = "AllowedNKSLJMforJTerms[numE, J] returns a list with all the states that have a total angular momentum J. The returned list has elements of the form {{SL (string in spectroscopic notation), J}, MJ}, and if the option \"Flat\" is set to True then the returned list has element of the form {SL (string in spectroscopic notation), J, MJ}.";
+  AllowedNKSLJMforJTerms[numE_, J_] := 
+  Module[{MJs, labelsAndMomenta, termsWithJ},
+    (
+    MJs = AllowedMforJ[J];
+    (* Pair LS labels and their {S,L} momenta *)
+    labelsAndMomenta = ({#, FindSL[#]}) & /@ AllowedNKSLTerms[numE];
+    (* A given term will contain J if |L-S|<=J<=L+S *)
+    ContainsJ[{SL_String, {S_, L_}}] := (Abs[S - L] <= J <= (S + L));
+    (* Keep just the terms that satisfy this condition *)
+    termsWithJ = Select[labelsAndMomenta, ContainsJ];
+    (* We don't want to keep the {S,L} *)
+    termsWithJ = {#[[1]], J} & /@ termsWithJ;
+    (* This is just a quick way of including up all the MJ values *)
+    Return[Flatten /@ Tuples[{termsWithJ, MJs}]]
+    )
     ]
 
-  AllowedMforJ::usage = "AllowedMforJ[j] is shorthand for Range[-j, j, 1].";
-  AllowedMforJ[j_] := Range[-j, j, 1];
-
-  AllowedNKSLJMIMforJITerms::usage = "AllowedNKSLJMIMforJITerms[numE, J, I] returns the states that belong to the f^n configuration with a total angular momentun L+S equal to J and with a nuclear angular momentum I. The returned list has elements of the form {{{SL (string in spectroscopic notation), J}, MJ}, MI}.";
-  Options[AllowedNKSLJMIMforJITerms] = {"Flat" -> False};
-  AllowedNKSLJMIMforJITerms[numE_, J_, \[CapitalIota]_, OptionsPattern[]] := 
-    (
-      stateTuples = Tuples[{AllowedNKSLJMforJTerms[numE, J], Table[MI, {MI, -\[CapitalIota], \[CapitalIota]}]}];
-      If[OptionValue["Flat"],
-        Return[Partition[Flatten[stateTuples],4]],
-        Return[stateTuples]
-        ];
-    );
+  AllowedMforJ::usage = "AllowedMforJ[J] is shorthand for Range[-J, J, 1].";
+  AllowedMforJ[J_] := Range[-J, J, 1];
   
-  AllowedJ::usage = "AllowedJ[numE] returns the total angular momenta J that appear in the f^n configuration.";
+  AllowedJ::usage = "AllowedJ[numE] returns the total angular momenta J that appear in the f^numE configuration.";
   AllowedJ[numE_] := Table[J, {J, MinJ[numE], MaxJ[numE]}];
 
   (* ############################### Allowed SL, SLJ, and SLJM Terms ############################## *)
@@ -3012,7 +2984,6 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
       M2 = 0.56 * M0; M4 = 0.31 * M0; 
       P0 = 0; P4 = 0.5 * P2; P6 = 0.1 * P2;
       gs = 2.002319304386;
-      gI = 0.987;
       eV2Icm = 1/8065.5439;
       \[Beta]BohrMag = 5.7883818012 * 10^-5 / eV2Icm;
       \[Beta]n = 3.1524512550 * 10^-8 / eV2Icm;
@@ -3023,10 +2994,9 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
   Options[LoadParameters] = {
       "Source"->"Carnall",
       "Free Ion"->False,
-      "gs"->2.002319304386,
-      "gI"->0.987
+      "gs"->2.002319304386
       };
-  LoadParameters::usage="LoadParameters[ln] takes a string with the symbol the element of a trivalent lanthanide ion and returns model parameters for it. It is based on the data for LaF3. If the option \"Free Ion\" is set to True then the function sets all crystal field parameters to zero. Through the options \"gs\" and \"gI\" it allows modyfing the electronic and nuclear gyromagnetic ratios.";
+  LoadParameters::usage="LoadParameters[ln] takes a string with the symbol the element of a trivalent lanthanide ion and returns model parameters for it. It is based on the data for LaF3. If the option \"Free Ion\" is set to True then the function sets all crystal field parameters to zero. Through the option \"gs\" it allows modyfing the electronic gyromagnetic ratio.";
   LoadParameters[Ln_String, OptionsPattern[]]:= 
     Module[{source, params},
     (
@@ -3047,7 +3017,6 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
       params[P4] = 0.5 * params[P2];  (* See Carnall 1989, Table I, caption, probably fixed based on HF values*)
       params[P6] = 0.1 * params[P2];  (* See Carnall 1989, Table I, caption, probably fixed based on HF values*)
       params[gs] = OptionValue["gs"];
-      params[gI] = OptionValue["gI"];
       {params[E0], params[E1], params[E2], params[E3]} = FtoE[params[F0], params[F2], params[F4], params[F6]];
       params[E0] = 0;
       Return[params];
@@ -3075,7 +3044,7 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
     ]
 
 
-  SolveStates::usage = "SolveStates[nf, IiN, params] solves the energy values and states for an atom with n f-electrons with a nucleus of spin IiN. params is an association with the parameters of the specific ion under study.
+  SolveStates::usage = "SolveStates[nf, params] solves the energy values and states for an atom with nf f-electrons. params is an association with the parameters of the specific ion under study.
   This function requires files for pre-computed energy matrix tables that provide the symbols JJBlockMatrixTable[_, _, _, _, _].
   The optional parameter \"maxEigenvalues\" (default: \"All\") specifies the number of eigenvalues to be returned. If maxE is \"All\" then all eigenvalues are returned. If maxE is positive then the k largest (in absolute value) eigenvalues are returned. If maxE is negative then the k smallest (in absolute value) eigenvalues are returned.
   To account for configurations f^n with n > 7, particle-hole dualities are enforced for \[Zeta] and T_i.
@@ -3084,7 +3053,6 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
   Parameters
   ----------
   nf (int) : Number of f-electrons.
-  IiN (int) : Nuclear spin.
   params (association) : Parameters of the ion under study.
 
   Returns
@@ -3102,7 +3070,7 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
 
   Options[SolveStates] = {"Return Symbolic Matrix" -> False,
                           "maxEigenvalues" -> "All"};
-  SolveStates[nf_, IiN_, params0_, OptionsPattern[]]:= Module[
+  SolveStates[nf_, params0_, OptionsPattern[]]:= Module[
     {n, ii, jj, JMvals},
     maxEigen = OptionValue["maxEigenvalues"];
     (*#####################################*)
@@ -3118,10 +3086,10 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
     (*hole-particle equivalence enforcement*)
     (*#####################################*)
     (*Load symbolic expressions for energy sub-matrices.*)
-    Get[JJBlockMatrixFileName[n, IiN, "FilenameAppendix" -> fileApp]];
+    Get[JJBlockMatrixFileName[n, "FilenameAppendix" -> fileApp]];
     (*Patch together the entire matrix representation in block-diagonal form.*)
     ThisEnergyMatrix = ConstantArray[0, {Length[AllowedJ[n]], Length[AllowedJ[n]]}];
-    Do[ThisEnergyMatrix[[jj, ii]] = JJBlockMatrixTable[{n, AllowedJ[n][[ii]], AllowedJ[n][[jj]], IiN, IiN}];,
+    Do[ThisEnergyMatrix[[jj, ii]] = JJBlockMatrixTable[{n, AllowedJ[n][[ii]], AllowedJ[n][[jj]]}];,
     {ii, 1, Length[AllowedJ[n]]},
     {jj, 1, Length[AllowedJ[n]]}
     ];
@@ -3145,7 +3113,7 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
     (*There might be a very small imaginary part.*)
     (*Parse the results for the eigenvectors in terms of the ordered basis being used.*)
     basis = {};
-    Do[basis = Join[basis, EnergyStatesTable[{n, AllowedJ[n][[nn]], IiN}]],
+    Do[basis = Join[basis, EnergyStatesTable[{n, AllowedJ[n][[nn]]}]],
     {nn, 1, Length[AllowedJ[n]]}
     ];
     levels = {};
@@ -3282,14 +3250,13 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
     "Append to Filename" -> ""
     }; 
   FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[{
-    makeNotebook, eigenstateTruncationProbability, IiN, spinspin, host,
+    makeNotebook, eigenstateTruncationProbability, spinspin, host,
     ln, terms, termNames, carnallEnergies, eigenEnergies,simplerStateLabels,
     eigensys, basis, assignmentMatches, stateLabels, carnallAssignments},
   (
     PrintFun = OptionValue["PrintFun"];
     makeNotebook = OptionValue["MakeNotebook"];
     eigenstateTruncationProbability = OptionValue["eigenstateTruncationProbability"];
-    IiN = 0;
     maxStatesInTable = OptionValue["Max Eigenstates in Table"];
     spinspin = OptionValue["Include spin-spin"];
     host = "LaF3";
@@ -3354,7 +3321,7 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
       numHam = Normal[numHam]
     ];
     PrintFun["> Calculating the SLJ basis ..."];
-    basis = BasisLSJMJ[numE, IiN];
+    basis = BasisLSJMJ[numE];
 
     (*Remove numerical noise*)
     PrintFun["> Diagonalizing the numerical Hamiltonian ..."];
@@ -3825,7 +3792,7 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
         BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]
       }] // DisplayForm])
 
-  PrettySaundersSLJmJ[{{SL_, J_}, mJ_}] := (If[
+  PrettySaundersSLJmJ[{SL_, J_, mJ_}] := (If[
     StringQ[SL], 
     ({S, L} = FindSL[SL];
       L = StringTake[SL, {2, -1}];
@@ -3840,9 +3807,9 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
         BoxBaselineShift -> 1, 
         BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}] // DisplayForm])
 
-  BasisVecInRusselSaunders::usage = "BasisVecInRusselSaunders[basisVec] takes a basis vector in the format {{{LSstring, Jval}, mJval}, nucSpin} and returns a human-readable symbol for the corresponding Russel-Saunders term. The nuclear spin is ignored."
+  BasisVecInRusselSaunders::usage = "BasisVecInRusselSaunders[basisVec] takes a basis vector in the format {LSstring, Jval, mJval} and returns a human-readable symbol for the corresponding Russel-Saunders term."
   BasisVecInRusselSaunders[basisVec_] := (
-    {{{LSstring, Jval}, mJval}, nucSpin} = basisVec;
+    {LSstring, Jval, mJval} = basisVec;
     Ket[PrettySaunders[LSstring, Jval], mJval]
     )
 
@@ -3851,9 +3818,9 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
     "\!\(\*TemplateBox[{\nRowBox[{\"`LS`\", \",\", \nRowBox[{\"J\", \
   \"=\", \"`J`\"}], \",\", \nRowBox[{\"mJ\", \"=\", \"`mJ`\"}]}]},\n\
   \"Ket\"]\)"];
-  BasisVecInLSJMJ::usage = "BasisVecInLSJMJ[basisVec] takes a basis vector in the format {{{LSstring, Jval}, mJval}, nucSpin} and returns a human-readable symbol for the corresponding LSJMJ term in the form |LS, J=..., mJ=...> The nuclear spin is ignored."
+  BasisVecInLSJMJ::usage = "BasisVecInLSJMJ[basisVec] takes a basis vector in the format {{{LSstring, Jval}, mJval}, nucSpin} and returns a human-readable symbol for the corresponding LSJMJ term in the form |LS, J=..., mJ=...>."
   BasisVecInLSJMJ[basisVec_] := (
-    {{{LSstring, Jval}, mJval}, nucSpin} = basisVec;
+    {LSstring, Jval, mJval} = basisVec;
     LSJMJTemplate[<|
       "LS" -> LSstring,
       "J" -> ToString[Jval, InputForm], 
@@ -3866,7 +3833,7 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
     parsedStates = Table[(
       {energy, eigenVec} = state;
       maxTermIndex = Ordering[Abs[eigenVec]][[-1]];
-      {{{LSstring, Jval}, mJval}, nucSpin} = basis[[maxTermIndex]];
+      {LSstring, Jval, mJval} = basis[[maxTermIndex]];
       LSJsymbol = Subscript[LSstring, {Jval, mJval}];
       LSJMJsymbol = LSstring <> ToString[Jval, InputForm];
       {S, L} = FindSL[LSstring];
@@ -3937,7 +3904,8 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
     absMajorAmplitudes = Abs[majorAmplitudes];
     (*Make sure that there are no effectively zero contributions*)
     notnullAmplitudes  = Flatten[Position[absMajorAmplitudes, x_ /; x != 0]];
-    majorComponents    = PrettySaundersSLJmJ[#[[1]]] & /@ majorComponents;
+    (* majorComponents    = PrettySaundersSLJmJ[{#[[1]],#[[2]],#[[3]]}] & /@ majorComponents; *)
+    majorComponents    = PrettySaundersSLJmJ /@ majorComponents;
     majorAmplitudes    = majorAmplitudes[[notnullAmplitudes]];
     (*Make them into Kets*)
     majorComponents    = Ket /@ majorComponents[[notnullAmplitudes]];
@@ -3985,7 +3953,8 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
       absMajorAmplitudes = Abs[majorAmplitudes];
       (*Make sure that there are no effectively zero contributions*)
       notnullAmplitudes  = Flatten[Position[absMajorAmplitudes, x_ /; x != 0]];
-      majorComponents    = PrettySaundersSLJmJ[#[[1]]] & /@ majorComponents;
+      (* majorComponents    = PrettySaundersSLJmJ[{#[[1]],#[[2]],#[[3]]}] & /@ majorComponents; *)
+      majorComponents    = PrettySaundersSLJmJ /@ majorComponents;
       majorAmplitudes    = majorAmplitudes[[notnullAmplitudes]];
       (*Make them into Kets*)
       majorComponents    = Ket /@ majorComponents[[notnullAmplitudes]];
