@@ -1,0 +1,57 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[paperwidth=8.5in,paperheight=11in]{geometry}
+\geometry{left=1cm, right=1cm, top=2cm, bottom=2cm}
+% Include the listings package for syntax highlighting
+\usepackage{listingsutf8}
+% Optional: include the xcolor package for more advanced color definitions
+\usepackage{xcolor}
+
+% Listing configuration
+\lstset{
+    language=Mathematica,                  % Set your language (you can change the language for each code-block optionally)
+    basicstyle=\ttfamily\small,       % The size of the fonts that are used for the code
+    literate=
+        {\\[Alpha]}{{$\alpha$}}{1}
+        {\\[Beta]}{{$\beta$}}{1}
+        {\\[Gamma]}{{$\gamma$}}{1}
+        {\\[Zeta]}{{$\zeta$}}{1}
+        {\\[VerticalSeparator]}{|}{1}
+        , 
+    keywordstyle=\color{blue},        % Keyword style
+    stringstyle=\color{red},          % String literal style
+    commentstyle=\color{cyan},       % Comment style
+    morecomment=[l][\color{magenta}]{\#},
+    breakatwhitespace=false,          % Sets if automatic breaks should only happen at whitespace
+    breaklines=true,                  % Sets automatic line breaking
+    captionpos=b,                     % Sets the caption-position to bottom
+    keepspaces=true,                  % Keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+    showspaces=false,                 % Show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+    showstringspaces=false,           % Underline spaces within strings only
+    showtabs=false,                   % Show tabs within strings adding particular underscores
+    tabsize=2,                        % Sets default tabsize to 2 spaces
+    frame=single,                     % Adds a frame around the code
+    numbers=left,                     % Where to put the line-numbers; possible values are (none, left, right)
+    numberstyle=\tiny\color{gray},    % Style used for line-numbers
+    stepnumber=1,                     % Step between two line-numbers. If it's 1, each line will be numbered
+    numbersep=5pt,                    % How far the line-numbers are from the code
+    xleftmargin=0.5cm,                % Margin from left
+    xrightmargin=0.5cm              % Margin from right
+}
+
+% \lstset{
+%     language=Mathematica,                  % Set your language (you can change the language for each code-block optionally)
+%     basicstyle=\ttfamily\small,       % The size of the fonts that are used for the code
+%     literate= {BeginPackage}{{$\alpha$}}{1}            % Margin from right
+% }
+
+\begin{document}
+
+\title{qlanth}
+\author{}
+\date{\today}
+\maketitle
+
+\lstinputlisting[language=Mathematica]{qlanth.m}
+
+\end{document}
