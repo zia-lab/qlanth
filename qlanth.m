@@ -27,10 +27,10 @@ of  configuration  interaction  terms as parametrized by the Casimir
 operators  of  SO(3),  G(2),  and SO(7), and by three-body effective
 operators ti.
 
-The  paremeters  included  in  this  model  are listed in the string
+The  parameters  included  in  this  model  are listed in the string
 paramAtlas.
 
-The  notebook  qlanth.nb  contains  a gallery with all the functions
+The  notebook  "qlanth.nb" contains a gallery with all the functions
 included in this module with some simple use cases.
 
 The notebook "The Lanthanides in LaF3.nb" is an example in which the
@@ -216,6 +216,7 @@ CFPTable;
 CFPTerms;
 Carnall;
 CasimirG2;
+CasimirSO3;
 CasimirSO7;
 
 Cqk;
@@ -229,6 +230,7 @@ EnergyLevelDiagram;
 EnergyStates;
 BasisTableGenerator;
 EtoF;
+fk;
 
 FastIonSolverLaF3;
 FindNKLSTerm;
@@ -319,6 +321,7 @@ Reducedt11inf2;
 
 ReplaceInSparseArray;
 RobustMissingQ;
+SimplerSymbolicHamMatrix;
 SOOandECSO;
 SOOandECSOTable;
 Seniority;
@@ -1426,29 +1429,7 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
   (* ######################################################################### *)
 
   (* ######################################################################### *)
-  (* ######################### Magnetic Interactions ######################### *)
-
-  ReducedT22inf2::usage="ReducedT22inf2[SL, SpLp] returns the reduced matrix element of the scalar component of the double tensor T22 for the terms SL, SpLp in f^2.
-  Data used here for m0, m2, m4 is from Table I of Judd, BR, HM Crosswhite, and Hannah Crosswhite. Intra-Atomic Magnetic Interactions for f Electrons. Physical Review 169, no. 1 (1968): 130.
-  ";
-  ReducedT22inf2[SL_, SpLp_] := 
-    Module[{statePosition, PsiPsipStates, m0, m2, m4, Tkk2m},
-    T22inf2 = <|
-    {"3P", "3P"} -> -12 M0 - 24 M2 - 300/11 M4,
-    {"3P", "3F"} -> 8/Sqrt[3] (3 M0 + M2 - 100/11 M4),
-    {"3F", "3F"} -> 4/3 Sqrt[14] (-M0 + 8 M2 - 200/11 M4),
-    {"3F", "3H"} -> 8/3 Sqrt[11/2] (2 M0 - 23/11 M2 - 325/121 M4),
-    {"3H", "3H"} -> 4/3 Sqrt[143] (M0 - 34/11 M2 - (1325/1573) M4)
-    |>;
-    Which[
-      MemberQ[Keys[T22inf2],{SL,SpLp}],
-        Return[T22inf2[{SL,SpLp}]],
-      MemberQ[Keys[T22inf2],{SpLp,SL}],
-        Return[T22inf2[{SpLp,SL}]],
-      True,
-        Return[0]
-    ]
-    ];
+  (* ######################### Reduced SOO and ECSO ########################## *)
 
   ReducedT11inf2::usage="ReducedT11inf2[SL, SpLp] returns the reduced matrix element of the scalar component of the double tensor T11 for the given SL terms SL, SpLp.
   Data used here for m0, m2, m4 is from Table II of Judd, BR, HM Crosswhite, and Hannah Crosswhite. Intra-Atomic Magnetic Interactions for f Electrons. Physical Review 169, no. 1 (1968): 130.
@@ -1475,51 +1456,6 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
         Return[0]
     ]
     ];
-
-  MagneticInteractions[{numE_, SLJ_, SLJp_, J_}, chenDelta_] := 
-    (
-      key = {numE, SLJ, SLJp, J};
-      ss = \[Sigma]SS * SpinSpinTable[key];
-      sooandecso = SOOandECSOTable[key];
-      total = ss + sooandecso;
-      (* In the type A errors the wrong values are different *)
-      If[MemberQ[Keys[chenDeltas["A"]], {numE, SLJ, SLJp}],
-        (
-          {S, L} = FindSL[SLJ];
-          {Sp, Lp} = FindSL[SLJp];
-          phase   = Phaser[Sp + L + J];
-          Msixjay = SixJay[{Sp, Lp, J},{L, S, 2}];
-          Psixjay = SixJay[{Sp, Lp, J},{L, S, 1}];
-          {M0v, M2v, M4v, P2v, P4v, P6v} = chenDeltas["A"][{numE, SLJ, SLJp}]["wrong"];
-          total  = phase * Msixjay(M0v*M0 + M2v*M2 + M4v*M4);
-          total += phase * Psixjay(P2v*P2 + P4v*P4 + P6v*P6);
-          total  = total /. Prescaling;
-          total  = wChErrA * total + (1 - wChErrA) * (ss + sooandecso)
-        )
-      ];
-      (* In the type B errors the wrong values are zeros all around *)
-      If[MemberQ[chenDeltas["B"], {numE, SLJ, SLJp}],
-        (
-          {S, L} = FindSL[SLJ];
-          {Sp, Lp} = FindSL[SLJp];
-          phase = Phaser[Sp + L + J];
-          Msixjay = SixJay[{Sp, Lp, J},{L, S, 2}];
-          Psixjay = SixJay[{Sp, Lp, J},{L, S, 1}];
-          {M0v, M2v, M4v, P2v, P4v, P6v} = {0, 0, 0, 0, 0, 0};
-          total  = phase * Msixjay(M0v*M0 + M2v*M2 + M4v*M4);
-          total += phase * Psixjay(P2v*P2 + P4v*P4 + P6v*P6);
-          total  = total /. Prescaling;
-          total  = wChErrB * total + (1 - wChErrB) * (ss + sooandecso)
-        )
-      ];
-      Return[total];
-    )
-
-  (* ######################### Magnetic Interactions ######################### *)
-  (* ######################################################################### *)
-
-  (* ######################################################################### *)
-  (* ######################### Reduced SOO and ECSO ########################## *)
 
   T11n::usage="T11n[n, SL, SpLp] calculate the reduced matrix element of the T11 operator for the f^n configuration corresponding to the terms SL and SpLp. It is essentially the same as T22n with a different value of t. This operator corresponds to the inter-electron interaction between the spin of one electron and the orbital angular momentum of another.
 
@@ -1661,6 +1597,7 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
     Return[funval];
   ];
 
+  GenerateSOOandECSOLSTable::usage="GenerateSOOandECSOLSTable[nmax] generates the LS reduced matrix elements of the spin-other-orbit + ECSO for the f^n configurations up to n=nmax. The values for n=1 and n=2 are taken from \"Judd, BR, HM Crosswhite, and Hannah Crosswhite. \"Intra-Atomic Magnetic Interactions for f Electrons.\" Physical Review 169, no. 1 (1968): 130.\", and the values for n>2 are calculated recursively using equation (4) of that same paper. The values are then exported to a file \"ReducedSOOandECSOLSTable.m\" in the data folder of this module. The values are also returned as an association.";
   Options[GenerateSOOandECSOLSTable] = {"Progress" -> True, "Export" -> True};
   GenerateSOOandECSOLSTable[nmax_Integer, OptionsPattern[]]:= (
     If[And[OptionValue["Progress"], frontEndAvailable],
@@ -1725,6 +1662,28 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
   (* ######################################################################### *)
   (* ############################# Spin-Spin ################################# *)
 
+  ReducedT22inf2::usage="ReducedT22inf2[SL, SpLp] returns the reduced matrix element of the scalar component of the double tensor T22 for the terms SL, SpLp in f^2.
+  Data used here for m0, m2, m4 is from Table I of Judd, BR, HM Crosswhite, and Hannah Crosswhite. Intra-Atomic Magnetic Interactions for f Electrons. Physical Review 169, no. 1 (1968): 130.
+  ";
+  ReducedT22inf2[SL_, SpLp_] := 
+    Module[{statePosition, PsiPsipStates, m0, m2, m4, Tkk2m},
+    T22inf2 = <|
+    {"3P", "3P"} -> -12 M0 - 24 M2 - 300/11 M4,
+    {"3P", "3F"} -> 8/Sqrt[3] (3 M0 + M2 - 100/11 M4),
+    {"3F", "3F"} -> 4/3 Sqrt[14] (-M0 + 8 M2 - 200/11 M4),
+    {"3F", "3H"} -> 8/3 Sqrt[11/2] (2 M0 - 23/11 M2 - 325/121 M4),
+    {"3H", "3H"} -> 4/3 Sqrt[143] (M0 - 34/11 M2 - (1325/1573) M4)
+    |>;
+    Which[
+      MemberQ[Keys[T22inf2],{SL,SpLp}],
+        Return[T22inf2[{SL,SpLp}]],
+      MemberQ[Keys[T22inf2],{SpLp,SL}],
+        Return[T22inf2[{SpLp,SL}]],
+      True,
+        Return[0]
+    ]
+    ];
+
   T22n::usage="T22n[n, SL, SpLp] calculates the reduced matrix element of the T22 operator for the f^n configuration corresponding to the terms SL and SpLp. This is the operator corresponding to the inter-electron between spin.
   It does this by using equation (4) of \"Judd, BR, HM Crosswhite, and Hannah Crosswhite. \"Intra-Atomic Magnetic Interactions for f Electrons.\" Physical Review 169, no. 1 (1968): 130.\"
   ";
@@ -1758,6 +1717,8 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
     Return[Tnkk];
     ];
 
+  GenerateT22Table::usage="GenerateT22Table[nmax] generates the LS reduced matrix elements for the double tensor operator T22 in f^n up to n=nmax. If the option \"Export\" is set to true then the resulting association is saved to the data folder. The values for n=1 and n=2 are taken from \"Judd, BR, HM Crosswhite, and Hannah Crosswhite. \"Intra-Atomic Magnetic Interactions for f Electrons.\" Physical Review 169, no. 1 (1968): 130.\", and the values for n>2 are calculated recursively using equation (4) of that same paper.
+  This is an intermediate step to the calculation of the reduced matrix elements of the spin-spin operator.";
   Options[GenerateT22Table] = {"Export" -> True, "Progress" -> True};
   GenerateT22Table[nmax_Integer, OptionsPattern[]]:= (
     If[And[OptionValue["Progress"], frontEndAvailable],
@@ -1902,6 +1863,52 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
   (* ######################################################################### *)
 
   (* ######################################################################### *)
+  (* ######################### Magnetic Interactions ######################### *)
+
+  MagneticInteractions::usage="MagneticInteractions[{numE, SLJ, SLJp, J}] returns the matrix element of the magnetic interaction between the terms SLJ and SLJp in the f^n configuration. The interaction is given by the sum of the spin-spin interaction and the SOO and ECSO interactions. The spin-spin interaction is given by the function SpinSpin[{numE, SLJ, SLJp, J}]. The SOO and ECSO interactions are given by the function SOOandECSO[{numE, SLJ, SLJp, J}]. The function requires chenDeltas to be loaded into the session.";
+  MagneticInteractions[{numE_, SLJ_, SLJp_, J_}] := 
+    (
+      key = {numE, SLJ, SLJp, J};
+      ss = \[Sigma]SS * SpinSpinTable[key];
+      sooandecso = SOOandECSOTable[key];
+      total = ss + sooandecso;
+      (* In the type A errors the wrong values are different *)
+      If[MemberQ[Keys[chenDeltas["A"]], {numE, SLJ, SLJp}],
+        (
+          {S, L} = FindSL[SLJ];
+          {Sp, Lp} = FindSL[SLJp];
+          phase   = Phaser[Sp + L + J];
+          Msixjay = SixJay[{Sp, Lp, J},{L, S, 2}];
+          Psixjay = SixJay[{Sp, Lp, J},{L, S, 1}];
+          {M0v, M2v, M4v, P2v, P4v, P6v} = chenDeltas["A"][{numE, SLJ, SLJp}]["wrong"];
+          total  = phase * Msixjay(M0v*M0 + M2v*M2 + M4v*M4);
+          total += phase * Psixjay(P2v*P2 + P4v*P4 + P6v*P6);
+          total  = total /. Prescaling;
+          total  = wChErrA * total + (1 - wChErrA) * (ss + sooandecso)
+        )
+      ];
+      (* In the type B errors the wrong values are zeros all around *)
+      If[MemberQ[chenDeltas["B"], {numE, SLJ, SLJp}],
+        (
+          {S, L} = FindSL[SLJ];
+          {Sp, Lp} = FindSL[SLJp];
+          phase = Phaser[Sp + L + J];
+          Msixjay = SixJay[{Sp, Lp, J},{L, S, 2}];
+          Psixjay = SixJay[{Sp, Lp, J},{L, S, 1}];
+          {M0v, M2v, M4v, P2v, P4v, P6v} = {0, 0, 0, 0, 0, 0};
+          total  = phase * Msixjay(M0v*M0 + M2v*M2 + M4v*M4);
+          total += phase * Psixjay(P2v*P2 + P4v*P4 + P6v*P6);
+          total  = total /. Prescaling;
+          total  = wChErrB * total + (1 - wChErrB) * (ss + sooandecso)
+        )
+      ];
+      Return[total];
+    )
+
+  (* ######################### Magnetic Interactions ######################### *)
+  (* ######################################################################### *)
+
+  (* ######################################################################### *)
   (* ############################ Crystal Field ############################## *)
 
   Cqk::usage = "Cqk[numE, q, k, NKSL, J, M, NKSLp, Jp, Mp].";
@@ -2009,7 +2016,6 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
       (
         exportFname = FileNameJoin[{moduleDir, "data", "CrystalFieldTable_f"<>ToString[numE]<>".zip"}];
         If[FileExistsQ[exportFname],
-          CrystalFieldTable        = Import[exportFname];
           Print["File exists, skipping ..."];
           numiter+=  TotalCFIters[numE, numE];
           freebies+= TotalCFIters[numE, numE];
@@ -2301,6 +2307,52 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
     blockHam = ReplaceInSparseArray[blockHam, params];
     Return[blockHam];
     ]
+
+Options[SimplerSymbolicHamMatrix]={
+  "Export"->True, 
+  "PrependToFilename"->"", 
+  "EorF"->"F",
+  "Overwrite" -> False,
+  "Return" -> True};
+SimplerSymbolicHamMatrix::usage="SimplerSymbolicHamMatrix[numE, simplifier] is a simple addition to HamMatrixAssembly that applies a given simplification to the full hamiltonian. Simplifier is a list of replacement rules. If the option \"Export\" is set to True, then the function also exports the resulting sparse array to the ./hams/ folder. The option \"EorF\" can be used to choose between E and F parameters for the electrostatic part of the Hamiltonian. The option \"PrependToFilename\" can be used to append a string to the filename to which the function may exports to. The option \"Return\" can be used to choose whether the function returns the matrix or not.";
+SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Module[
+  {thisHam,eTofs,fname},
+  (
+    fname=FileNameJoin[{moduleDir,"hams",OptionValue["PrependToFilename"]<>"SymbolicMatrix-f"<>ToString[numE]<>".m"}];
+    If[FileExistsQ[fname] && Not[OptionValue["Overwrite"]],
+      (
+        If[OptionValue["Return"],
+          (
+            Print["File ",fname," already exists, and option \"Overwrite\" is set to False, loading file ..."];
+            thisHam = Import[fname];
+            Return[thisHam];
+          ),
+          (
+            Print["File ",fname," already exists, skipping ..."];
+          Return[Null];
+          )
+        ]
+      )
+    ];
+    eTofs=(#[[1]]->#[[2]])&/@Transpose[{{E0,E1,E2,E3},FtoE[F0,F2,F4,F6]}];
+    eTofs=Expand[eTofs];
+    thisHam=HamMatrixAssembly[numE];
+    If[OptionValue["EorF"]=="F",
+      thisHam=ReplaceInSparseArray[thisHam,eTofs];
+    ];
+    thisHam=ReplaceInSparseArray[thisHam,simplifier];
+    If[OptionValue["Export"],
+    (
+      Print["Exporting to file ",fname];
+      Export[fname,thisHam]
+    )
+    ];
+    If[OptionValue["Return"],
+      Return[thisHam],
+      Return[Null]
+    ];
+  )
+]
 
   (* ############################ Block assembly ############################# *)
   (* ######################################################################### *)
@@ -2601,89 +2653,6 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
       )
     ]
 
-
-  SolveStates::usage = "SolveStates[nf, params] solves the energy values and states for an atom with nf f-electrons. params is an association with the parameters of the specific ion under study.
-  This function requires files for pre-computed energy matrix tables that provide the symbols JJBlockMatrixTable[_, _, _, _, _].
-  The optional parameter \"maxEigenvalues\" (default: \"All\") specifies the number of eigenvalues to be returned. If maxE is \"All\" then all eigenvalues are returned. If maxE is positive then the k largest (in absolute value) eigenvalues are returned. If maxE is negative then the k smallest (in absolute value) eigenvalues are returned.
-  To account for configurations f^n with n > 7, particle-hole dualities are enforced for \[Zeta] and T_i.
-  The unit for the returned energies is cm^-1.
-
-  Parameters
-  ----------
-  nf (int) : Number of f-electrons.
-  params (association) : Parameters of the ion under study.
-
-  Returns
-  -------
-  {eigenstates, basis} (list): eigenstates is a list wher each element is a list with two elements, the first element being the energy eigenvalue and the second being a list that represents the eigenvector in the computational basis. basis is a list of lists that represent the computational basis. The elements of the basis are lists of the form {{{SL, J}, mJ}, I}, where SL is given a string.
-
-  Options
-  -------
-  \"Return Symbolic Matrix\" (bool) : If True then the function returns instead a list with the three elements {levels, basis, symbolicMatrix}.
-  \"maxEigenvalues\" (int) : Number of eigenvalues to be returned. If \"All\" then all eigenvalues are returned. If positive then the k largest (in absolute value) eigenvalues are returned. If negative then the k smallest (in absolute value) eigenvalues are returned.
-  -----------------------
-  References:
-  1. Sign inversion for \[Zeta]: Wybourne, Spectroscopic Properties of Rare Earths. 
-  2. Sign inversion for {T2, T3, T4, T6, T7, T8}: Hansen and Judd, Matrix Elements of Scalar Three Electron Operators for the Atomic f Shell.";
-
-  Options[SolveStates] = {"Return Symbolic Matrix" -> False,
-                          "maxEigenvalues" -> "All"};
-  SolveStates[nf_, params0_, OptionsPattern[]]:= Module[
-    {n, ii, jj, JMvals},
-    maxEigen = OptionValue["maxEigenvalues"];
-    (*#####################################*)
-    (*hole-particle equivalence enforcement*)
-    n = nf;
-    If[nf>7, 
-      (
-        n = 14 - nf; 
-        params = HoleElectronConjugation[params0];
-      ),
-      params = params0;
-    ];
-    (*hole-particle equivalence enforcement*)
-    (*#####################################*)
-    (*Load symbolic expressions for energy sub-matrices.*)
-    Get[JJBlockMatrixFileName[n, "FilenameAppendix" -> fileApp]];
-    (*Patch together the entire matrix representation in block-diagonal form.*)
-    ThisEnergyMatrix = ConstantArray[0, {Length[AllowedJ[n]], Length[AllowedJ[n]]}];
-    Do[ThisEnergyMatrix[[jj, ii]] = JJBlockMatrixTable[{n, AllowedJ[n][[ii]], AllowedJ[n][[jj]]}];,
-    {ii, 1, Length[AllowedJ[n]]},
-    {jj, 1, Length[AllowedJ[n]]}
-    ];
-    ThisEnergyMatrix = ArrayFlatten[ThisEnergyMatrix];
-    symbolicMatrix = ThisEnergyMatrix;
-    ThisEnergyMatrix = ReplaceInSparseArray[ThisEnergyMatrix, params];
-    problemSize = Dimensions[ThisEnergyMatrix][[1]];
-    If[maxEigen!="All",
-      (
-        If[Abs[maxEigen]>problemSize, maxEigen="All"]
-      )
-    ];
-    PrintTemporary["The energy matrix has dimensions:", Dimensions[ThisEnergyMatrix]];
-    (*Solve for eigenvalues and eigenvectors.*)
-    {EigenvalueJM, EigenvectorJM} = 
-      If[maxEigen=="All",
-        Eigensystem[ThisEnergyMatrix],
-        Eigensystem[ThisEnergyMatrix, maxEigen]
-      ];
-    EigenvalueJM = Re[EigenvalueJM];
-    (*There might be a very small imaginary part.*)
-    (*Parse the results for the eigenvectors in terms of the ordered basis being used.*)
-    basis = {};
-    Do[basis = Join[basis, EnergyStatesTable[{n, AllowedJ[n][[nn]]}]],
-    {nn, 1, Length[AllowedJ[n]]}
-    ];
-    levels = {};
-    Do[levels = Join[levels, {{EigenvalueJM[[nn]], EigenvectorJM[[nn]]}}];,
-    {nn, 1, Length[EigenvalueJM]}
-    ];
-    If[OptionValue["Return Symbolic Matrix"],
-    Return[{levels, basis, symbolicMatrix}]
-    ];
-    Return[{levels, basis}];
-  ];
-
   IonSolverLaF3::usage="IonSolverLaF3[numE] solves the energy levels of a lanthanide ion with numE f-electrons in lanthanum fluoride. It does this by querying the fit parameters from Carnall's tables. This function is used to compare the calculated values as calculated with qlanth with the calculated values quoted by Carnall.
 
   Parameters
@@ -2809,7 +2778,7 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
     }; 
   FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[{
     makeNotebook, eigenstateTruncationProbability, spinspin, host,
-    ln, terms, termNames, carnallEnergies, eigenEnergies,simplerStateLabels,
+    ln, terms, termNames, carnallEnergies, eigenEnergies, simplerStateLabels,
     eigensys, basis, assignmentMatches, stateLabels, carnallAssignments},
   (
     PrintFun = OptionValue["PrintFun"];
@@ -2848,21 +2817,23 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
       {key, Keys[paramFiddle]}
     ];
 
-    (*Import the symbolic Hamiltonian*)
+    (* Import the symbolic Hamiltonian *)
     PrintFun["> Loading the symbolic Hamiltonian for this configuration ..."];
     startTime = Now;
     numH = 14 - numE;
     numEH = Min[numE, numH];
-    simpleHam = 
-      If[ValueQ[symbolicHamiltonians],
-        (
-          If[MemberQ[Keys[symbolicHamiltonians], numEH],
-            symbolicHamiltonians[numEH],
-            Import["./hams/SymbolicMatrix-f" <> ToString[numEH] <> ".m"]
-          ]
-        ),
-        Import["./hams/SymbolicMatrix-f" <> ToString[numEH] <> ".m"]
-      ];
+    C2vsimplifier = {B12 -> 0, B14 -> 0, B16 -> 0, B34 -> 0, B36 -> 0, 
+      B56 -> 0,
+      S12 -> 0, S14 -> 0, S16 -> 0, S22 -> 0, S24 -> 0, S26 -> 0, 
+      S34 -> 0, S36 -> 0,
+      S44 -> 0, S46 -> 0, S56 -> 0, S66 -> 0, T11p -> 0, T11 -> 0, 
+      T12 -> 0, T14 -> 0, T15 -> 0,
+      T16 -> 0, T18 -> 0, T17 -> 0, T19 -> 0};
+    simpleHam = If[
+      ValueQ[symbolicHamiltonians[numEH]],
+      symbolicHamiltonians[numEH],
+      SimplerSymbolicHamMatrix[numE, C2vsimplifier, "PrependToFilename" -> "C2v-", "Overwrite" -> False]
+    ];
     endTime  = Now; 
     loadTime = QuantityMagnitude[endTime - startTime, "Seconds"];
     PrintFun[">> Loading the symbolic Hamiltonian took ", loadTime, " seconds."];
@@ -3095,20 +3066,7 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
   (* ######################################################################### *)
   (* ######################### Eigensystem analysis ########################## *)
 
-  PrettySaunders::usage = "PrettySaunders[SL, J] produces a human-redeable symbol for the given Russel-Saunders term."
-  PrettySaundersSLJ[{{SL_, J_}, MJ_}] := (
-    If[StringQ[SL],
-    {S, L} = FindSL[SL],
-    {S, L} = SL
-    ];
-    Return[RowBox[
-      {AdjustmentBox[Style[2*S + 1, Smaller], BoxBaselineShift -> -1, 
-        BoxMargins -> 0], AdjustmentBox[PrintL[L], BoxMargins -> -0.2],
-      AdjustmentBox[
-        Style[InputForm[J], Small, FontTracking -> "Narrow"], 
-        BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]
-      }] // DisplayForm])
-
+  PrettySaundersSLJmJ::usage = "PrettySaundersSLJmJ[{SL, J, mJ}] produces a human-redeable symbol for the given basis vector {SL, J, mJ}."
   PrettySaundersSLJmJ[{SL_, J_, mJ_}] := (If[
     StringQ[SL], 
     ({S, L} = FindSL[SL];
@@ -3663,6 +3621,8 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
     ];
   )
 
+
+  Carnall::usage = "Association of data from Carnall et al (1989) with the following keys: {data, annotations, paramSymbols, elementNames, rawData, rawAnnotations, annnotatedData, appendix:Pr:Association, appendix:Pr:Calculated, appendix:Pr:RawTable, appendix:Headings}";
   LoadCarnall::usage="LoadCarnall[] loads data for trivalent lanthanides in LaF3 using the data from Bill Carnall's 1989 paper.";
   LoadCarnall[]:=(
     If[ValueQ[Carnall], Return[]];
@@ -3673,7 +3633,6 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
       ),
       Carnall = Import[carnallFname];
     ];
-    Carnall::usage = "Association of data from Carnall et al (1989) with the following keys: {data, annotations, paramSymbols, elementNames, rawData, rawAnnotations, annnotatedData, appendix:Pr:Association, appendix:Pr:Calculated, appendix:Pr:RawTable, appendix:Headings}";
   )
 
   LoadChenDeltas::usage="LoadChenDeltas[] loads the differences noted by Chen.";
@@ -3836,26 +3795,6 @@ GenerateThreeBodyTablesUsingCFP[nmax_Integer : 14, OptionsPattern[]] := (
       )
       ];
     Return[Carnall];
-  )
-
-  LoadSymbolicHamiltonians::usage="LoadSymbolicHamiltonians[numEs] loads into the session the symbolic Hamiltonians for the list numEs of given number of f-electrons. The default is All, which loads all of them from 2 to 7. It loads into session the symbolicHamiltonians symbol, which corresponds to an association that has keys equal to number of f-electrons and values equal to corresponding symbolic Hamiltonian matrices provided as SparseArray.";
-  Options[LoadSymbolicHamiltonians] = {"Reload" -> False};
-  LoadSymbolicHamiltonians[numEs_:All, OptionsPattern[]]:=(
-    If[numEs === All, 
-    numEs = {2, 3, 4, 5, 6, 7}];
-    If[Not[ValueQ[symbolicHamiltonians]],symbolicHamiltonians = <||>];
-    Do[
-      (
-      If[And[
-          MemberQ[Keys[symbolicHamiltonians], numE],
-          Not[OptionValue["Reload"]]],
-        Continue[]
-        ];
-      PrintTemporary["Loading symbolic Hamiltonian for f" <> ToString[numE] <> " ..." ];
-      symbolicHamiltonians[numE] = Import["./hams/SymbolicMatrix-f" <> ToString[numE] <> ".m"];
-      ),
-      {numE, numEs}
-    ]
   )
 
   CFP::usage = "CFP[{n, NKSL}] provides a list whose first element echoes NKSL and whose other elements are lists with two elements the first one being the symbol of a parent term and the second being the corresponding coefficient of fractional parentage. n must satisfy 1 <= n <= 7";

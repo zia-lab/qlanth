@@ -19,13 +19,13 @@
   <img alt="Single configuration effective Hamiltonian." src="./figs/hamiltonian-dark.png">
 </picture>
 
-This picture is one that developed and mostly matured in the second half of the last century from the efforts of Brian Judd, Hannah Crosswhite, Michael Reid, Bill Carnall, Brian Wybourne, and others. The goal of this code is to provide a modern implementation of the calculations that resulted from their work, with the aim of fixing some small errors that might have been included at the time these calculations were made. It also aims to provide useful electronic versions of the data these Hamiltonians may produce, including energies and eigenvectors.
+This picture is one that developed and mostly matured in the second half of the last century from the efforts of Brian Judd, Hannah Crosswhite, Michael Reid, Bill Carnall, Brian Wybourne, Katherine Rajnak, and others. The goal of this code is to provide a modern implementation of the calculations that resulted from their work, with the aim of fixing some small errors that might have been included at the time these calculations were made. It also aims to provide useful electronic versions of the data these Hamiltonians may produce, including energies and eigenvectors.
 
 `qlanth` also includes data that might be of use to those interested in the single-configuration description of lanthanide ions, separate to their specific use in this code. These data include the coefficients of fractional parentage (as calculated by Velkov and parsed here), and reduced matrix elements for all the operators listed above in the effective Hamiltonian. These are provided as standard Mathematica associations that should be simple to use elsewhere.
 
-The included Mathematica notebook `qlanth.nb` has examples of the capabilities that this package offers, and the `/examples` folder includes a series of notebook for most of the trivalent lanthanide ions in lanthanum fluoride. LaF3 is remarkable in that it was one of the systems in which a systematic study <a href="https://pubs.aip.org/aip/jcp/article-abstract/90/7/3443/220581"> [Carnall (1989)] </a> of all of the trivalent lanthanide ions were studied, and the fact that the parameters for different ions vary in regular fashion, provides additional validity to this effective Hamiltonian as a physically reasonable description.
+The included Mathematica notebook `qlanth.nb` has examples of the capabilities that this package offers, and the `/examples` folder includes a series of notebook for most of the trivalent lanthanide ions in lanthanum fluoride. LaF3 is remarkable in that it was one of the systems in which a systematic study <a href="https://pubs.aip.org/aip/jcp/article-abstract/90/7/3443/220581"> [Carnall (1989)] </a> of all of the trivalent lanthanide ions were studied. In them, the fact that the parameters for different ions vary in regular fashion, provides some validity to this effective Hamiltonian as a physically reasonable description.
 
-`qlanth` can calulate energy levels and accompanying eigenvectors in the LSJ basis.
+`qlanth` can calculate energy levels and accompanying eigenvectors in the LSJMJ basis.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./figs/Pr3plus-diffs-dark.png">
