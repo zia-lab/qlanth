@@ -5,20 +5,34 @@ FlattenBasis;
 RecoverBasis;
 FlowMatching;
 SuperIdentity;
+RobustMissingQ;
 
 GreedyMatching;
 HelperNotebook;
 StochasticMatching;
 ExtractSymbolNames;
 GetModificationDate;
+TextBasedProgressBar;
 ToPythonSparseFunction;
 
 FirstOrderPerturbation;
 SecondOrderPerturbation;
 
 ToPythonSymPyExpression;
+RobustMissingQ;
 
 Begin["`Private`"];
+
+RobustMissingQ[expr_] := (FreeQ[expr, _Missing] === False);
+
+TextBasedProgressBar[progress_, totalIterations_, prefix_:""] := Module[
+    {progMessage},
+    progMessage = ToString[progress] <> "/" <> ToString[totalIterations];
+    If[progress < totalIterations,
+        WriteString["stdout", StringJoin[prefix, progMessage, "\r"]],
+        WriteString["stdout", StringJoin[prefix, progMessage, "\n"]]
+    ];
+];
 
 FirstOrderPerturbation::usage="Given the eigenValues and eigenVectors of a matrix A (which doesn't need to be given) together with a corresponding perturbation matrix perMatrix, this function calculates the first derivative of the eigenvalues with respect to the scale factor of the perturbation matrix. In the sense that the eigenvalues of the matrix A + \[Beta] perMatrix are to first order equal to \[Lambda] + \[Delta]_i \[Beta], where the \[Delta]_i are the returned values. The eigenvalues and eigenvectors are assumed to be given in the same order, i.e. the ith eigenvalue corresponds to the ith eigenvector. This assuming that the eigenvalues are non-degenerate.";
 FirstOrderPerturbation[eigenValues_, eigenVectors_, 

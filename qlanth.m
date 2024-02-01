@@ -87,7 +87,7 @@ https://doi.org/10.1006/adnd.1996.0001.
 
 + Velkov,   Dobromir.  "Multi-Electron  Coefficients  of  Fractional
 Parentage  for  the  p,  d,  and f Shells." John Hopkins University,
-2000.
+2000. The B1F_ALL.TXT file is from this thesis.
 
 +  Dodson,  Christopher  M.,  and  Rashid  Zia. "Magnetic Dipole and
 Electric  Quadrupole Transitions in the Trivalent Lanthanide Series:
@@ -104,9 +104,9 @@ Needs["qplotter`"];
 
 paramAtlas = "
 E0: linear combination of F_k, see eqn. (2-80) in Wybourne 1965
-E1: linear combination of F_k
-E2: linear combination of F_k
-E3: linear combination of F_k, 
+E1: linear combination of F_k, see eqn. (2-80) in Wybourne 1965
+E2: linear combination of F_k, see eqn. (2-80) in Wybourne 1965
+E3: linear combination of F_k, see eqn. (2-80) in Wybourne 1965
 
 \[Zeta]: spin-orbit strength parameter.
 
@@ -118,10 +118,10 @@ F6: Direct Slater integral F^6, possibly constrained by ratio to F^2
 M0: 0th Marvin integral
 M2: 2nd Marvin integral
 M4: 4th Marvin integral
-\[Sigma]SS: spin-spin override, if 0 spin-spin omitted, and 1 if included
+\[Sigma]SS: spin-spin override, if 0 spin-spin is omitted, if 1 then spin-spin is included
 
-T2:  three-body effective operator parameter T^2
-T2p: three-body effective operator parameter T^2'
+T2:  three-body effective operator parameter T^2 (non-orthogonal)
+T2p: three-body effective operator parameter T^2' (orthogonalized T2)
 T3:  three-body effective operator parameter T^3
 T4:  three-body effective operator parameter T^4
 T6:  three-body effective operator parameter T^6
@@ -192,7 +192,7 @@ paramSymbols = Select[paramSymbols, # != ""& ];
 paramSymbols = ToExpression[StringSplit[#, ":"][[1]]] & /@ paramSymbols;
 Protect /@ paramSymbols;
 paramLines = Select[StringSplit[paramAtlas, "\n"], # != "" &];
-usageTemplate = StringTemplate["`paramSymbol`::usage=\"`paramUsage`\";"];
+usageTemplate = StringTemplate["`paramSymbol`::usage=\"`paramSymbol` : `paramUsage`\";"];
 Do[(
   {paramString, paramUsage} = StringSplit[paramLine, ":"];
   paramUsage = StringTrim[paramUsage];
@@ -339,7 +339,6 @@ ReducedV1kTable;
 Reducedt11inf2;
 
 ReplaceInSparseArray;
-RobustMissingQ;
 SimplerSymbolicHamMatrix;
 SOOandECSO;
 SOOandECSOTable;
@@ -353,13 +352,12 @@ SpinSpinTable;
 
 Sqk;
 SquarePrimeToNormal;
-T11n;
-T22n;
+ReducedT11infn;
+ReducedT22infn;
 TPO;
 
 TabulateJJBlockMatrixTable;
 TabulateManyJJBlockMatrixTables;
-TextBasedProgressBar;
 ScalarOperatorProduct;
 ThreeBodyTable;
 
@@ -385,26 +383,17 @@ Begin["`Private`"]
   (* ######################################################################### *)
   (* ################################# MISC ################################## *)
 
-  RobustMissingQ[expr_] := (FreeQ[expr, _Missing] === False);
-
   TPO::usage="Two plus one.";
   TPO[args__] := Times @@ ((2*# + 1) & /@ {args});
 
   Phaser::usage = "Phaser[x] returns (-1)^x";
   Phaser[exponent_] := ((-1)^exponent);
 
+  TriangleCondition::usage = "TriangleCondition[a, b, c] returns True if a, b, and c satisfy the triangle condition.";
   TriangleCondition[a_, b_, c_] := (Abs[b - c] <= a <= (b + c));
 
+  TriangleAndSumCondition::usage = "TriangleAndSumCondition[a, b, c] returns True if a, b, and c satisfy the triangle and sum conditions.";
   TriangleAndSumCondition[a_, b_, c_] := (And[Abs[b - c] <= a <= (b + c), IntegerQ[a + b + c]]);
-
-  TextBasedProgressBar[progress_, totalIterations_, prefix_:""] := Module[
-      {progMessage},
-      progMessage = ToString[progress] <> "/" <> ToString[totalIterations];
-      If[progress < totalIterations,
-          WriteString["stdout", StringJoin[prefix, progMessage, "\r"]],
-          WriteString["stdout", StringJoin[prefix, progMessage, "\n"]]
-      ];
-  ];
 
   SquarePrimeToNormal::usage = "Given a list with the parts corresponding to the squared prime representation of a number, this function parses the result into standard notation.";
   SquarePrimeToNormal[squarePrime_] :=
@@ -436,30 +425,32 @@ Begin["`Private`"]
 
   ReducedUk::usage = "ReducedUk[n, l, SL, SpLp, k] gives the reduced matrix element of the symmetric unit tensor operator U^(k). See equation 11.53 in TASS.";
   ReducedUk[numE_, l_, SL_, SpLp_, k_] := 
-    Module[{orbital, Uk, S, L, Sp, Lp, Sb, Lb, parentSL, cfpSL, cfpSpLp, Ukval, SLparents, SLpparents, commonParents, phase},
+    Module[{spin, orbital, Uk, 
+      S, L, Sp, Lp, Sb, Lb,
+      parentSL, cfpSL, cfpSpLp, Ukval, SLparents, SLpparents, commonParents, phase},
       {spin, orbital} = {1/2, 3};
-      {S, L} = FindSL[SL];
-      {Sp, Lp} = FindSL[SpLp];
+      {S, L}          = FindSL[SL];
+      {Sp, Lp}        = FindSL[SpLp];
       If[Not[S == Sp],
         Return[0]
       ];
-      cfpSL = CFP[{numE, SL}];
-      cfpSpLp = CFP[{numE, SpLp}];
-      SLparents = First /@ Rest[cfpSL];
+      cfpSL      = CFP[{numE, SL}];
+      cfpSpLp    = CFP[{numE, SpLp}];
+      SLparents  = First /@ Rest[cfpSL];
       SLpparents = First /@ Rest[cfpSpLp];
       commonParents = Intersection[SLparents, SLpparents];
       Uk = Sum[(
         {Sb, Lb} = FindSL[\[Psi]b];
         Phaser[Lb] *
-        CFPAssoc[{numE, SL, \[Psi]b}] *
-        CFPAssoc[{numE, SpLp, \[Psi]b}] *
-        SixJay[{orbital, k, orbital}, {L, Lb, Lp}]
+          CFPAssoc[{numE, SL, \[Psi]b}] *
+          CFPAssoc[{numE, SpLp, \[Psi]b}] *
+          SixJay[{orbital, k, orbital}, {L, Lb, Lp}]
       ),
       {\[Psi]b, commonParents}
       ];
-      phase = Phaser[orbital + L + k];
+      phase     = Phaser[orbital + L + k];
       prefactor = numE * phase * Sqrt[TPO[L,Lp]];
-      Ukval = prefactor*Uk;
+      Ukval     = prefactor*Uk;
       Return[Ukval];
   ]
 
@@ -607,7 +598,7 @@ Begin["`Private`"]
     termsWithSameSpin = StringCases[terms, ToString[spinMultiplicity] ~~ __];
     termsWithSameSpin = Flatten[termsWithSameSpin];
     If[Not[{S, L} == {Sp, Lp}],
-    Return[0]
+      Return[0]
     ];
     prefactor = 1/2 * Abs[Ck[orbital, k]]^2;
     summand1 = Sum[(
@@ -634,7 +625,7 @@ Begin["`Private`"]
 
   FtoE::usage = "FtoE[F0, F2, F4, F6] calculates the corresponding {E0, E1, E2, E3} values.
   See eqn. 2-80 in Wybourne. Note that in that equation the subscripted Slater integrals are used but since this function assumes the the input values are superscripted Slater integrals, it is necessary to convert them using Dk.";
-  FtoE[F0_, F2_, F4_, F6_] := (Module[ (*Necessary here since Ei are protected.*)
+  FtoE[F0_, F2_, F4_, F6_] := (Module[
     {E0, E1, E2, E3}, 
     E0 = (F0 - 10*F2/Dk[2] - 33*F4/Dk[4] - 286*F6/Dk[6]);
     E1 = (70*F2/Dk[2] + 231*F4/Dk[4] + 2002*F6/Dk[6])/9;
@@ -645,11 +636,11 @@ Begin["`Private`"]
   );
 
   EtoF::usage = "EtoF[E0, E1, E2, E3] calculates the corresponding {F0, F2, F4, F6} values. The inverse of FtoE.";
-  EtoF[E0_, E1_, E2_, E3_] := (Module[ (*Necessary here since Fi are protected.*)
+  EtoF[E0_, E1_, E2_, E3_] := (Module[
     {F0, F2, F4, F6},
-    F0 = 1/7 (7 E0 + 9 E1);
-    F2 = 75/14 (E1 + 143 E2 + 11 E3);
-    F4 = 99/7 (E1 - 130 E2 + 4 E3);
+    F0 = 1/7      (7 E0 + 9 E1);
+    F2 = 75/14    (E1 + 143 E2 + 11 E3);
+    F4 = 99/7     (E1 - 130 E2 + 4 E3);
     F6 = 5577/350 (E1 + 35 E2 - 7 E3);
     Return[{F0, F2, F4, F6}];
   ]
@@ -658,7 +649,8 @@ Begin["`Private`"]
   Options[Electrostatic] = {"Coefficients" -> "Slater"};
   Electrostatic::usage = "Electrostatic[{numE, NKSL, NKSLp}] returns the LS reduced matrix element for repulsion matrix element for equivalent electrons. See equation 2-79 in Wybourne (1965). The option \"Coefficients\" can be set to \"Slater\" or \"Racah\". If set to \"Racah\" then E_k parameters and e^k operators are assumed, otherwise the Slater integrals F^k and operators f_k. The default is \"Slater\".";
   Electrostatic[{numE_, NKSL_, NKSLp_}, OptionsPattern[]]:= Module[
-    {fsub0, fsub2, fsub4, fsub6, esub0, esub1, esub2, esub3, 
+    {fsub0, fsub2, fsub4, fsub6, 
+     esub0, esub1, esub2, esub3, 
      fsup0, fsup2, fsup4, fsup6, 
      eMatrixVal, orbital},
     orbital = 3;
@@ -711,17 +703,18 @@ Begin["`Private`"]
   (* ################################# Bases ################################# *)
 
   BasisTableGenerator::usage = "BasisTableGenerator[numE] returns an association whose keys are triples of the form {numE, J} and whose values are lists having the basis elements that correspond to {numE, J}.";
-  BasisTableGenerator[numE_] := Module[{energyStatesTable}, (
+  BasisTableGenerator[numE_] := Module[{energyStatesTable, allowedJ, J, Jp}, 
+    (
       energyStatesTable = <||>;
       allowedJ = AllowedJ[numE];
       Do[
       (
         energyStatesTable[{numE, J}] = EnergyStates[numE, J];
-        ),
+      ),
       {Jp, allowedJ},
       {J,  allowedJ}];
       Return[energyStatesTable]
-      )
+    )
     ];
   
   BasisLSJMJ::usage = "BasisLSJMJ[numE] returns the ordered basis in L-S-J-MJ with the total orbital angular momentum L and total spin angular momentum S coupled together to form J. The function returns a list with each element representing the quantum numbers for each basis vector. Each element is of the form {SL (string in spectroscopic notation),J,MJ}.";
@@ -733,7 +726,7 @@ Begin["`Private`"]
         {idx1, 1, Length[AllowedJ[numE]]}];
       basis = Flatten[basis, 1];
       Return[basis]
-      )
+    )
     ];
 
   (* ################################# Bases ################################# *)
@@ -759,7 +752,9 @@ Begin["`Private`"]
   )
 
   JuddCFPPhase::usage="Phase between conjugate coefficients of fractional parentage according to Velkov's thesis, page 40.";
-  JuddCFPPhase[parent_, parentS_, parentL_, daughterS_, daughterL_, parentSeniority_, daughterSeniority_] := (
+  JuddCFPPhase[parent_, parentS_, parentL_, daughterS_, daughterL_, parentSeniority_, daughterSeniority_] := Module[
+    {spin, orbital, expo, phase},
+  (
       {spin, orbital} = {1/2, 3};
       expo = (
           (parentS + parentL + daughterS + daughterL) - 
@@ -769,9 +764,11 @@ Begin["`Private`"]
       phase = Phaser[-expo];
       Return[phase];
   )
+  ]
 
   NKCFPPhase::usage="Phase between conjugate coefficients of fractional parentage according to Nielson and Koster page viii. Note that there is a typo on there the expression for zeta should be (-1)^((v-1)/2) instead of (-1)^(v - 1/2).";
-  NKCFPPhase[parent_, parentS_, parentL_, daughterS_, daughterL_, parentSeniority_, daughterSeniority_] := (
+  NKCFPPhase[parent_, parentS_, parentL_, daughterS_, daughterL_, parentSeniority_, daughterSeniority_] := Module[{spin, orbital, expo, phase},
+    (
       {spin, orbital} = {1/2, 3};
       expo = (
           (parentS + parentL + daughterS + daughterL) - 
@@ -781,13 +778,22 @@ Begin["`Private`"]
       If[parent == 2*orbital,
           phase = phase * Phaser[(daughterSeniority-1)/2]];
       Return[phase];
-  )
+    )
+  ]
 
   Options[CFPExpander] = {"Export" -> True, "PhaseFunction" -> "NK"};
   CFPExpander::usage="Using the coefficients of fractional parentage up to f7 this function calculates them up to f14. 
   
   The coefficients of fractional parentage are taken beyond the half-filled shell using the phase convention determined by the option \"PhaseFunction\". The default is \"NK\" which corresponds to the phase convention of Nielson and Koster. The other option is \"Judd\" which corresponds to the phase convention of Judd. The result is exported to the file ./data/CFPs_extended.m.";
-  CFPExpander[OptionsPattern[]]:=(
+  CFPExpander[OptionsPattern[]]:=Module[
+    {orbital, halfFilled, fullShell, parentMax, PhaseFun, 
+    complementaryCFPs, daughter, conjugateDaughter, 
+    conjugateParent, parentTerms, daughterTerms, 
+    parentCFPs, daughterSeniority, daughterS, daughterL, 
+    parentCFP, parentTerm, parentCFPval, 
+    parentS, parentL, parentSeniority, phase, prefactor, 
+    newCFPval, key, extendedCFPs, exportFname},
+  (
       orbital    = 3;
       halfFilled = 2 * orbital + 1;
       fullShell  = 2 * halfFilled;
@@ -851,46 +857,54 @@ Begin["`Private`"]
       ];
       Return[extendedCFPs];
   )
+  ]
 
-  GenerateCFPTable::usage = "GenerateCFPTable[] generates the table for the coefficients of fractional parentage. If the optional parameter \"Export\" is set to True then the resulting data is saved to ./data/CFPTable.m";
+  GenerateCFPTable::usage = "GenerateCFPTable[] generates the table for the coefficients of fractional parentage. If the optional parameter \"Export\" is set to True then the resulting data is saved to ./data/CFPTable.m.
+  
+  The data being parsed here is the file attachment B1F_ALL.TXT which comes from Velkov's thesis.";
   Options[GenerateCFPTable] = {"Export" -> True};
-  GenerateCFPTable[OptionsPattern[]]:= (
-    CFPtextData = Import[FileNameJoin[{moduleDir, "data", "B1F_ALL.TXT"}]];
-    fConfigs = StringSplit[CFPtextData, "[ONE PARTICLE FRACTIONAL PARENTAGE COEFFICIENTS "];
-    CFPTable = {};
+  GenerateCFPTable[OptionsPattern[]]:=Module[
+    {rawText, rawLines, leadChar, configIndex,
+    line, daughter, lineParts, numberCode, parsedNumber, toAppend, CFPTablefname},
+  (
+    CleanWhitespace[string_]     := StringReplace[string,RegularExpression["\\s+"]->" "];
+    AddSpaceBeforeMinus[string_] := StringReplace[string,RegularExpression["(?<!\\s)-"]->" -"];
+    ToIntegerOrString[list_]     := Map[If[StringMatchQ[#, NumberString], ToExpression[#], #] &, list];
+    CFPTable      = ConstantArray[{},7];
+    CFPTable[[1]] = {{"2F",{"1S",1}}};
 
-    (* This table parses the text file with the one-body coefficients of fractional parentage *)
-    CFPTable = Table[
-    (
-      fNx = StringReplace[Part[fConfigs, idx1], "-" -> " -"];
-      daughterLabelSpots = StringPosition[fNx, 
-        Shortest[StartOfLine ~~ DigitCharacter ~~ LetterCharacter ~~ ___ ~~ "["], 
-        Overlaps -> False];
-      daughterLabels = Map[StringDrop[#, -1] &, StringTake[fNx, daughterLabelSpots]];
-      daughterLabelLines = StringPosition[fNx, 
-        Shortest[StartOfLine ~~ DigitCharacter ~~ LetterCharacter ~~ __ ~~ 
-          EndOfLine], Overlaps -> False];
-      startDaughters = Map[Last, daughterLabelLines + 2];
-      stopDaughters = Delete[Append[Map[First, daughterLabelLines - 2], StringLength[fNx]], 1];
-      daughterLines = Join[Partition[startDaughters, 1], Partition[stopDaughters, 1], 2];
-      testing = Map[StringSplit, 
-        StringSplit[StringTake[fNx, daughterLines], EndOfLine]];
-      testing2 = Map[DeleteCases[#, {}] &, testing];
-      ToIntegerOrString[list_] := Map[If[StringMatchQ[#, NumberString], ToExpression[#], #] &, list];
-      CFPs = Table[(
-        tt = Part[testing2, mm];
-        pLabels = Map[Extract[#, 1] &, tt];
-        pValues = Map[SquarePrimeToNormal, Map[ToIntegerOrString[Drop[#, 2]] &, tt]];
-        Join[Partition[pLabels, 1], Partition[pValues, 1], 2]
-      ),
-      {mm,1, Length[testing2]}
+    (* Cleaning before processing is useful *)
+    rawText  = Import[FileNameJoin[{moduleDir, "data", "B1F_ALL.TXT"}]];
+    rawLines = StringTrim/@StringSplit[rawText,"\n"];
+    rawLines = Select[rawLines,#!=""&];
+    rawLines = CleanWhitespace/@rawLines;
+    rawLines = AddSpaceBeforeMinus/@rawLines;
+
+    Do[(
+      (* the first character can be used to identify the start of a block *)
+      leadChar=StringTake[line,{1}];
+      (* ..FN, N is at position 50 in that line *)
+      If[leadChar=="[",
+      (
+        configIndex=ToExpression[StringTake[line,{50}]];
+        Continue[];
+      )
       ];
-      CFPconfig = Join[Partition[daughterLabels, 1], CFPs, 2];
-      CFPconfig
-    ), 
-    {idx1, 2, 7}
-    ];
-    CFPTable = Join[{{{"2F", {"1S", 1}}}}, CFPTable];
+      (* Identify which daughter term is being listed *)
+      If[StringContainsQ[line,"[DAUGHTER TERM]"],
+        daughter=StringSplit[line,"["][[1]];
+        CFPTable[[configIndex]]=Append[CFPTable[[configIndex]],{daughter}];
+        Continue[];
+      ];
+      (* Once we get here we are already parsing a row with coefficient data *)
+      lineParts    = StringSplit[line," "];
+      parent       = lineParts[[1]];
+      numberCode   = ToIntegerOrString[lineParts[[3;;]]];
+      parsedNumber = SquarePrimeToNormal[numberCode];
+      toAppend     = {parent,parsedNumber};
+      CFPTable[[configIndex]][[-1]] = Append[CFPTable[[configIndex]][[-1]], toAppend]
+    ),
+    {line,rawLines}];
     If[OptionValue["Export"],
       (
       CFPTablefname = FileNameJoin[{moduleDir, "data", "CFPTable.m"}];
@@ -899,8 +913,9 @@ Begin["`Private`"]
     ];
     Return[CFPTable];
   )
+  ]
 
-  GenerateCFPAssoc::usage = "GenerateCFPAssoc[export] converts the coefficients of fractional parentage into an association in which zero values are explicit. If \"Export\" is set to True, the association is exported to the file /data/CFPAssoc.m.";
+  GenerateCFPAssoc::usage = "GenerateCFPAssoc[export] converts the coefficients of fractional parentage into an association in which zero values are explicit. If \"Export\" is set to True, the association is exported to the file /data/CFPAssoc.m. This function requires that the association CFP be defined.";
   Options[GenerateCFPAssoc] = {"Export" -> True};
   GenerateCFPAssoc[OptionsPattern[]]:= (
     CFPAssoc = Association[];
@@ -956,8 +971,8 @@ Begin["`Private`"]
   CFPTerms[numE_, SL_] := 
     Module[
       {NKterms, CFPconfig},
-      NKterms = {{}};
-      CFPconfig = Part[CFPTable, numE];
+      NKterms   = {{}};
+      CFPconfig = CFPTable[[numE]];
       Map[
         If[StringFreeQ[First[#], SL],
           Null, 
@@ -991,29 +1006,32 @@ Begin["`Private`"]
 
   SpinOrbit::usage = "SpinOrbit[numE, SL, SpLp, J] returns the LSJ reduced matrix element \[Zeta] <SL, J|L.S|SpLp, J>. These are given as a function of \[Zeta]. This function requires that the association ReducedV1kTable be defined.";
   SpinOrbit[numE_, SL_, SpLp_, J_]:= Module[
-    {S, L, Sp, Lp, orbital, sign, prefact},
-    orbital  = 3;
-    {S, L}   = FindSL[SL];
-    {Sp, Lp} = FindSL[SpLp];
-    prefact  = Sqrt[orbital*(orbital+1)*(2*orbital+1)] * SixJay[{L, Lp, 1}, {Sp, S, J}];
-    sign     = Phaser[J + L + Sp];
-    Return[sign * prefact * \[Zeta] * ReducedV1kTable[{numE, SL, SpLp, 1}]];
+    {S, L, Sp, Lp, orbital, sign, prefactor},
+    orbital   = 3;
+    {S, L}    = FindSL[SL];
+    {Sp, Lp}  = FindSL[SpLp];
+    prefactor = Sqrt[orbital*(orbital+1)*(2*orbital+1)] * SixJay[{L, Lp, 1}, {Sp, S, J}];
+    sign      = Phaser[J + L + Sp];
+    Return[sign * prefactor * \[Zeta] * ReducedV1kTable[{numE, SL, SpLp, 1}]];
   ]
 
-  GenerateSpinOrbitTable::usage = "GenerateSpinOrbitTable[nmax, export] computes the matrix values for the spin-orbit interaction for f^n configurations up to n = nmax. The function returns an association whose keys are lists of the form {n, SL, SpLp, J}. If export is set to True, then the result is exported to the data subfolder for the folder in which this package is in. It requires ReducedV1kTable to be defined.";
-  GenerateSpinOrbitTable[nmax_:7, export_:False]:= (
+  GenerateSpinOrbitTable::usage = "GenerateSpinOrbitTable[nmax] computes the matrix values for the spin-orbit interaction for f^n configurations up to n = nmax. The function returns an association whose keys are lists of the form {n, SL, SpLp, J}. If export is set to True, then the result is exported to the data subfolder for the folder in which this package is in. It requires ReducedV1kTable to be defined.";
+  Options[GenerateSpinOrbitTable] = {"Export" -> True};
+  GenerateSpinOrbitTable[nmax_Integer:7, OptionsPattern[]]:= Module[
+    {numE, J, SL, SpLp, exportFname},
+  (
     SpinOrbitTable = 
       Table[
         {numE, SL, SpLp, J} -> SpinOrbit[numE, SL, SpLp, J], 
       {numE, 1, nmax},
       {J, MinJ[numE], MaxJ[numE]},
-      {SL, Map[First, AllowedNKSLforJTerms[numE, J]]},
+      {SL,   Map[First, AllowedNKSLforJTerms[numE, J]]},
       {SpLp, Map[First, AllowedNKSLforJTerms[numE, J]]}
       ];
     SpinOrbitTable = Association[SpinOrbitTable];
 
     exportFname = FileNameJoin[{moduleDir, "data", "SpinOrbitTable.m"}];
-    If[export,
+    If[OptionValue["Export"],
       (
         Print["Exporting to file "<>ToString[exportFname]];
         Export[exportFname, SpinOrbitTable];
@@ -1021,6 +1039,7 @@ Begin["`Private`"]
     ];
     Return[SpinOrbitTable];
   )
+  ]
 
   (* ############################# Spin Orbit ################################ *)
   (* ######################################################################### *)
@@ -1031,7 +1050,6 @@ Begin["`Private`"]
   Options[ParseJudd1984] = {"Export" -> False};
   ParseJudd1984::usage="This function parses the data from tables 1 and 2 of Judd from Judd, BR, and MA Suskin. \"Complete Set of Orthogonal Scalar Operators for the Configuration f^3\". JOSA B 1, no. 2 (1984): 261-65.\"";
   ParseJudd1984[OptionsPattern[]]:=(
-    export = OptionValue["Export"];
     ParseJuddTab1[str_] := (
       strR = ToString[str];
       strR = StringReplace[strR, ".5" -> "^(1/2)"];
@@ -1118,7 +1136,7 @@ Begin["`Private`"]
     t11primeOp = (# -> (t11[#] + Sqrt[3/385] e\[Beta]primeOp[#])) & /@ Keys[t11];
     t11primeOp = Association[t11primeOp];
     juddOperators[{3, "t_{11}^{'}"}] = t11primeOp;
-    If[export,
+    If[OptionValue["Export"],
       (
         (*export them*)
         PrintTemporary["Exporting ..."];
@@ -1309,11 +1327,11 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
     ]
     ];
 
-  T11n::usage="T11n[n, SL, SpLp] calculate the reduced matrix element of the T11 operator for the f^n configuration corresponding to the terms SL and SpLp. It is essentially the same as T22n with a different value of t. This operator corresponds to the inter-electron interaction between the spin of one electron and the orbital angular momentum of another.
+  ReducedT11infn::usage="ReducedT11infn[n, SL, SpLp] calculate the reduced matrix element of the T11 operator for the f^n configuration corresponding to the terms SL and SpLp. This operator corresponds to the inter-electron interaction between the spin of one electron and the orbital angular momentum of another.
 
   It does this by using equation (4) of \"Judd, BR, HM Crosswhite, and Hannah Crosswhite. \"Intra-Atomic Magnetic Interactions for f Electrons.\" Physical Review 169, no. 1 (1968): 130.\"
   ";
-  T11n[numE_, SL_, SpLp_]:= Module[
+  ReducedT11infn[numE_, SL_, SpLp_]:= Module[
     {spin, orbital, t, idx1, idx2, S, L, Sp, Lp, cfpSL, cfpSpLp, parentSL, parentSpLp, Sb, Lb, Tnkk, phase, Sbp, Lbp}, 
     {spin, orbital} = {1/2, 3};
     {S, L}   = FindSL[SL];
@@ -1536,10 +1554,10 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
     ]
     ];
 
-  T22n::usage="T22n[n, SL, SpLp] calculates the reduced matrix element of the T22 operator for the f^n configuration corresponding to the terms SL and SpLp. This is the operator corresponding to the inter-electron between spin.
+  ReducedT22infn::usage="ReducedT22infn[n, SL, SpLp] calculates the reduced matrix element of the T22 operator for the f^n configuration corresponding to the terms SL and SpLp. This is the operator corresponding to the inter-electron between spin.
   It does this by using equation (4) of \"Judd, BR, HM Crosswhite, and Hannah Crosswhite. \"Intra-Atomic Magnetic Interactions for f Electrons.\" Physical Review 169, no. 1 (1968): 130.\"
   ";
-  T22n[numE_, SL_, SpLp_]:= Module[
+  ReducedT22infn[numE_, SL_, SpLp_]:= Module[
     {spin, orbital, t, idx1, idx2, S, L, Sp, Lp, cfpSL, cfpSpLp, parentSL, parentSpLp, Sb, Lb, Tnkk, phase, Sbp, Lbp}, 
     {spin, orbital} = {1/2, 3};
     {S, L}   = FindSL[SL];
@@ -1609,7 +1627,7 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
           numE==2,
           SimplifyFun[ReducedT22inf2[SL, SpLp]],
           True,
-          SimplifyFun[T22n[numE,  SL, SpLp]]
+          SimplifyFun[ReducedT22infn[numE,  SL, SpLp]]
         ];
       ),
     {numE, 1, nmax},
@@ -3544,7 +3562,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     Return[chenDeltas];
   )
 
-  ParseCarnall::usage="ParseCarnall[] parses the data found in ./data/Carnall.xls. If the option \"Export\" is set to True (True is the default), then the parsed data is saved to ./data/Carnall.m";
+  ParseCarnall::usage="ParseCarnall[] parses the data found in ./data/Carnall.xls. If the option \"Export\" is set to True (True is the default), then the parsed data is saved to ./data/Carnall. This data is from the tables and appendices of Carnall et al (1989).";
   Options[ParseCarnall] = {"Export" -> True};
   ParseCarnall[] := (
     ions         = {"Pr","Nd","Pm","Sm","Eu","Gd","Tb","Dy","Ho","Er","Tm"};
@@ -3739,7 +3757,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     SpinOrbitTableFname = FileNameJoin[{moduleDir, "data", "SpinOrbitTable.m"}];
     If[!FileExistsQ[SpinOrbitTableFname],
       (PrintTemporary[">> SpinOrbitTable.m not found, generating ..."];
-        SpinOrbitTable = GenerateSpinOrbitTable[7, True];
+        SpinOrbitTable = GenerateSpinOrbitTable[7, "Export" -> True];
       ),
       SpinOrbitTable = Import[SpinOrbitTableFname];
     ]
