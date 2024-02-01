@@ -1,0 +1,184 @@
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{qlanth}
+  [2020/09/14 v0.01 LaTeX package for my own purpose]
+
+\RequirePackage{multicol}
+\RequirePackage{mathrsfs}
+\RequirePackage{mathtools}
+\usepackage{cancel}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%% MISC %%%%%%%%%%%%
+
+\newcommand{\precite}[1]{[...]}
+\newcommand{\recite}[1]{\citep{#1}} % To customize citation style
+\newcommand{\citeref}[1]{Ref. \![\!\!\citenum{#1}]} % add Ref to citenum
+\newcommand{\citeeqn}[1]{eqn.~\ref{#1}}
+\newcommand{\figref}[1]{Fig.~\ref{#1}} % add Fig to cited figure
+\newcommand{\figrefsub}[2]{Fig.~\ref{#1}#2} % add Fig to cited figure with panels
+\newcommand{\latin}[1]{\textit{#1}}
+\newcommand{\lorb}{\underbar{$\ell$}}
+\newcommand{\forb}{\underbar{$\text{f}$}}
+\newcommand{\ql}{\texttt{qlanth }}
+\newcommand{\cowan}{{TASS }}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%% MISC %%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%% UNITS %%%%%%%%%%%
+
+\newcommand{\icm}{\text{cm}^{-1}}
+\newcommand{\SI}[2]{{#1}\text{#2}}
+
+%%%%%%%%%% UNITS %%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% Math Extras %%%%%%%%
+
+\newcommand{\DEF}{\coloneqq} % definition symbol
+\newcommand*\diff{\mathop{}\!\mathrm{d}} % upright d for integrals
+\newcommand{\paren}[1]{\left({#1}\right)} % nest a given expression in parenthesis
+\newcommand{\pardiff}[2]{\frac{\partial{#1}}{\partial{#2}}}
+\newcommand{\half}{\frac{1}{2}}
+
+\newcommand{\infinity}{\infty} % Infinity
+\providecommand{\abs}[1]{\lvert#1\rvert} % Absolute value
+\providecommand{\norm}[1]{\lVert#1\rVert} % Norm
+\newcommand{\anyGroup}{\mathcal{G}} % symbol for abstract group
+\providecommand{\ffrac}[2]{{#1}/{#2}}
+\newcommand{\tsuper}[2]{{#1}^{#2}\!}
+\newcommand{\funargs}[2]{#1\!\left[#2\right]}
+
+\newcommand{\vc}[2]{#1_{\!#2}}
+\newcommand{\gpt}[1]{{\color{cyan} #1}}
+\renewcommand{\exp}[1]{e^{#1}}
+
+
+%%%%%%% Math Extras %%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\eV}{\text{eV}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% Vector Algebra %%%%%%%
+
+\newcommand{\grad}{\mathbf{\nabla}}
+\renewcommand{\vector}[1]{\vec{\mathbf{#1}}} % vector
+\newcommand{\divergence}[1]{\grad \cdot \vector{#1}}
+\newcommand{\rotational}[1]{\grad \times \vector{#1}}
+
+%%%%%%% Vector Algebra %%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% Group Theory %%%%%%%
+\newcommand{\SO}[1]{\mathcal{S\!O}(#1)} % special orthogonal group in R^n
+%%%%%%% Group Theory %%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% Classical EM + Spectroscopy %%%%%%%
+
+\newcommand{\pl}{\mathscr{P\!}_\ell}
+\newcommand{\ktrans}{\vec{k}_\|}
+\newcommand{\FresnelTparallel}{\mathcal{F_T^\parallel}}
+\newcommand{\FresnelRparallel}{\mathcal{F_R^\parallel}}
+\newcommand{\FresnelTperp}{\mathcal{F_T^\perp}}
+\newcommand{\FresnelRperp}{\mathcal{F_R^\perp}}
+
+% Different kinds of spectra %
+\newcommand{\EMP}{\Gamma_\textrm{EMP}(\lambda,\ktrans,\vec{\hat{e}})}
+\newcommand{\EM}{\Gamma_\textrm{EM}(\lambda,\ktrans)}
+\newcommand{\EP}{\Gamma_\textrm{EP}(\lambda,\vec{\hat{e}})}
+\newcommand{\MP}{\Gamma_\textrm{MP}(\ktrans,\vec{\hat{e}})}
+\newcommand{\M}{\Gamma_\textrm{M}(\ktrans)}
+\newcommand{\E}{\Gamma_\textrm{E}(\lambda)}
+\newcommand{\PP}{\Gamma_\textrm{P}(\vec{\hat{e})}}
+\newcommand{\tpo}[1]{2#1+1}
+
+
+%%%%%%% Classical EM + Spectroscopy %%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% Quantum Mechanics %%%%%%%
+
+\newcommand{\bra}[1]{\langle #1|} % Bra
+\newcommand{\ket}[1]{|#1\rangle} % Ket
+\newcommand{\braket}[2]{\langle #1|#2\rangle} % BraKet
+\newcommand{\braopket}[3]{\langle #1|#2|#3\rangle} % BraKet with operator in the middle
+\newcommand{\op}[1]{\hat{#1}} % operator
+\newcommand{\redbraopket}[3]{\langle #1|\!|#2|\!|#3\rangle}
+\newcommand{\kronecker}[2]{\delta(#1,#2)} % Kronecker delta
+
+\newcommand{\fn}{$\underbar{f}^n$}
+\newcommand{\fourcornersymbol}[5]{{}_{#1}^{#2}{\kern-0.1em}{#3}_{#4}^{#5}}
+\newcommand{\LSterm}[2]{{}^{#1}{\kern-0.1em}{#2}}
+\newcommand{\cfp}[2]{\left(#1|\!\}#2\right)}
+
+% Hamiltonians:
+
+\newcommand{\ham}{\hat{\mathcal{H}}} % Main ham
+
+\newcommand{\hamKineticSymbol}{\ham_\text{k}}
+\newcommand{\hamKinetic}{\sum_{i=1}^N \frac{\op{p}_i^2}{2m}} % Kinetic energy
+
+\newcommand{\hamNuclearCoulombSymbol}{\ham_\text{e:sn}}
+\newcommand{\hamNuclearCoulomb}{\sum_{i=1}^N V_\textrm{sn}(\op{r}_i)} % Central potential of shielded nuclear charge
+
+\newcommand{\casimir}[1]{\,\mathcal{C}(#1)} % symbol use to represent the Casimir opertor of a group
+
+\newcommand{\hamCoulombEESymbol}{\ham_\text{e:e}}
+\newcommand{\hamCoulombEE}{\sum_{i>j}^{N,N} \frac{e^2}{\norm{\op{\vec{r}}_i-\op{\vec{r}}_j}}}
+
+\newcommand{\hamTreesSymbol}{\ham_{\SO{3}}}
+
+\newcommand{\hamSpinOrbitSymbol}{\ham_\text{s:o}}
+\newcommand{\hamSpinOrbit}{\sum_{i=1}^N \xi(r_i) \paren{\op{\vec{s_i}} \cdot \op{\vec{l_i}}} } 
+
+\newcommand{\hamCrystalFieldSymbol}{\ham_\text{cf}}
+\newcommand{\hamCrystalField}{\sum_{i=1}^N V_{\textrm{CF}}(\op{r}_i)}
+
+\newcommand{\hamEffectiveThreeBody}{\sum_{i=2,3,4,6,7,8}^N T^i \op{t_i}}
+
+\newcommand{\hamGTwoSymbol}{\ham_{\text{G}_2}}
+\newcommand{\hamSOSevenSymbol}{\ham_{\SO{7}}}
+
+\newcommand{\hamSpinSpinSpinOtherOrbitSymbol}{\ham_{\text{s:s-s:oo}}}
+\newcommand{\hamSpinSpinSpinOtherOrbit}{\sum_{i=0,2,4} M^i \op{m}_i} 
+
+\newcommand{\hamECSOSymbol}{\ham_\text{ec-s:o}}
+\newcommand{\hamECSO}{\sum_{i=2,4,6} P^i \op{p}_i} 
+
+
+%%%%%%% Quantum Mechanics %%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+%%%%%%% doc tweaks %%%%%%
+
+%\addtolength{\oddsidemargin}{-0.4in}
+%\addtolength{\evensidemargin}{-0.4in}
+%\addtolength{\textwidth}{0.8in}
+%\addtolength{\topmargin}{-0.4in}
+%\addtolength{\bottommargin}{-0.4in}
+%\addtolength{\textheight}{1.2in}
+
+
+\geometry{
+	left=3.3cm, % Inner margin
+	right=3.3cm, % Outer margin
+	top=3.3cm, % Top margin
+	bottom=3.3cm, % Bottom margin
+	%showframe, % Uncomment to show how the type block is set on the page
+}
+
+\newcommand{\gloss}[1]{%
+\marginpar{\color{blue}\tiny{#1}}}
+
+\endinput
