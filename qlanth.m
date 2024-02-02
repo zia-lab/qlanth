@@ -89,6 +89,10 @@ https://doi.org/10.1006/adnd.1996.0001.
 Parentage  for  the  p,  d,  and f Shells." John Hopkins University,
 2000. The B1F_ALL.TXT file is from this thesis.
 
++  Guillot-Noel,  O,  Ph Goldner, E Antic-Fidancev, and JL Le Gouet.
+"Analysis  of Magnetic Interactions in Rare-Earth-Doped Crystals for
+Quantum Manipulation." Physical Review B 71, no. 17 (2005): 174409.
+
 +  Dodson,  Christopher  M.,  and  Rashid  Zia. "Magnetic Dipole and
 Electric  Quadrupole Transitions in the Trivalent Lanthanide Series:
 Calculated Emission Rates and Oscillator Strengths." Physical Review
@@ -283,6 +287,7 @@ HoleElectronConjugation;
 IonSolverLaF3;
 ImportMZip;
 JJBlockMatrix;
+JJBlockMagDip;
 JJBlockMatrixFileName;
 
 JJBlockMatrixTable;
@@ -310,6 +315,7 @@ LoadUk;
 LoadV1k;
 
 MagneticInteractions;
+MagDipoleMatrixAssembly;
 MaxJ;
 MinJ;
 NKCFPPhase;
@@ -357,7 +363,9 @@ ReducedT22infn;
 TPO;
 
 TabulateJJBlockMatrixTable;
+TabulateJJBlockMagDipTable;
 TabulateManyJJBlockMatrixTables;
+TabulateManyJJBlockMagDipTables;
 ScalarOperatorProduct;
 ThreeBodyTable;
 
@@ -2227,6 +2235,120 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
 ]
 
   (* ############################ Block assembly ############################# *)
+  (* ######################################################################### *)
+
+  (* ######################################################################### *)
+  (* ########################### Optical Operators ########################### *)
+
+  Options[JJBlockMagDip]={"Sparse"->True};
+  JJBlockMadDip::usage="JJBlockMagDip[numE, J, Jp] returns the LSJ-reduced matrix element of the magnetic dipole operator between the states with given J and Jp. The option \"Sparse\" can be used to return a sparse matrix. The default is to return a sparse matrix.
+  See appendix of Guillot Noel 2005.
+  ";
+  JJBlockMagDip[numE_,J_,Jp_,OptionsPattern[]]:=Module[
+    {NKSLJMs,NKSLJMps,NKSLJM,NKSLJMp,SLterm,SpLpterm,MJ,MJp,matValue,magMatrix},(
+    NKSLJMs  = AllowedNKSLJMforJTerms[numE,J];
+    NKSLJMps = AllowedNKSLJMforJTerms[numE,Jp];
+    magMatrix  = Table[
+      SLterm   = NKSLJM[[1]];
+      SpLpterm = NKSLJMp[[1]];
+      {S,L}    = FindSL[SLterm];
+      {Sp,Lp}  = FindSL[SpLpterm];
+      MJ       = NKSLJM[[3]];
+      MJp      = NKSLJMp[[3]];
+      summand1 = If[Or[J!=Jp,
+                       L!=Lp,
+                       S!=Sp,
+                       SLterm!=SpLpterm,
+                       MJ!=MJp],
+        0,
+        Sqrt[J(J+1)TPO[J]]
+      ];
+      summand2 = If[Or[L!=Lp,
+                       S!=Sp,
+                       SLterm!=SpLpterm,
+                       MJ!=MJp],
+        0,
+        Phaser[S+L+Jp+1]*
+        Sqrt[TPO[J]*TPO[Jp]]*
+        SixJay[{J,1,Jp},{S,L,S}]*
+        (gs-1)*
+        Sqrt[S(S+1)TPO[S]]
+      ];
+      matValue = summand1 + summand2;
+      matValue,
+    {NKSLJMp,NKSLJMps},
+    {NKSLJM,NKSLJMs}
+    ];
+    If[OptionValue["Sparse"],
+      magMatrix=SparseArray[magMatrix]
+    ];
+    Return[magMatrix])
+  ]; 
+
+  Options[TabulateJJBlockMagDipTable]={"Sparse"->True};
+  TabulateJJBlockMagDipTable[numE_,OptionsPattern[]]:=(
+    JJBlockMagDipTable=<||>;
+    Js=AllowedJ[numE];
+    Do[
+      (
+        JJBlockMagDipTable[{numE,J,Jp}]=
+          JJBlockMagDip[numE,J,Jp,"Sparse"->OptionValue["Sparse"]]
+      ),
+    {Jp,Js},
+    {J,Js}
+    ];
+    Return[JJBlockMagDipTable]
+  );
+
+  Options[TabulateManyJJBlockMagDipTables]={"FilenameAppendix"->"",
+  "Overwrite"->False,"Compressed"->True};
+  TabulateManyJJBlockMagDipTables[ns_,OptionsPattern[]]:=(
+    fnames=<||>;
+    Do[
+    (
+      ExportFun=If[OptionValue["Compressed"],ExportMZip,Export];
+      PrintTemporary["#------- numE = ",numE," -------#"];
+      appendTo     = (OptionValue["FilenameAppendix"]<>"-magDip");
+      exportFname  = JJBlockMatrixFileName[numE,"FilenameAppendix"->appendTo];
+      fnames[numE] = exportFname;
+      If[FileExistsQ[exportFname]&&Not[OptionValue["Overwrite"]],
+        Continue[]
+      ];
+      JJBlockMatrixTable = TabulateJJBlockMagDipTable[numE];
+      If[FileExistsQ[exportFname]&&OptionValue["Overwrite"],
+        DeleteFile[exportFname]
+      ];
+      ExportFun[exportFname,  JJBlockMatrixTable];
+    ),
+    {numE,ns}
+    ];
+    Return[fnames];
+  )
+
+  Options[MagDipoleMatrixAssembly]={"FilenameAppendix"->""};
+  MagDipoleMatrixAssembly[nf_,OptionsPattern[]]:=Module[
+    {ImportFun, numE, appendTo, emFname, JJBlockMagDipTable, Js, howManyJs, blockOp},
+    (
+    ImportFun = ImportMZip;
+    numE      = nf;
+    appendTo  = (OptionValue["FilenameAppendix"]<>"-magDip");
+    emFname   = JJBlockMatrixFileName[numE,"FilenameAppendix"->appendTo];
+    JJBlockMagDipTable = ImportFun[emFname];
+    
+    Js        = AllowedJ[numE];
+    howManyJs = Length[Js];
+    blockOp   = ConstantArray[0,{howManyJs,howManyJs}];
+    Do[
+      blockOp[[jj,ii]] = JJBlockMagDipTable[{numE,Js[[ii]],Js[[jj]]}],
+      {ii,1,howManyJs},
+      {jj,1,howManyJs}
+    ];
+    blockOp = ArrayFlatten[blockOp];
+    Return[blockOp];
+  )
+  ];
+
+  (* ########################### Optical Operators ########################### *)
   (* ######################################################################### *)
 
   (* ######################################################################### *)

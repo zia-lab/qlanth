@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     31460,        694]
-NotebookOptionsPosition[     30166,        662]
-NotebookOutlinePosition[     30942,        686]
-CellTagsIndexPosition[     30899,        683]
+NotebookDataLength[     31460,        692]
+NotebookOptionsPosition[     30192,        661]
+NotebookOutlinePosition[     30968,        685]
+CellTagsIndexPosition[     30925,        682]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -71,8 +71,18 @@ Cell[BoxData[{
  RowBox[{
   RowBox[{"Get", "[", "\"\<misc.m\>\"", "]"}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"LoadAll", "[", "]"}], ";"}]}], "Input",
- InitializationCell->True,
+  RowBox[{"LoadElectrostatic", "[", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"LoadSpinOrbit", "[", "]"}], ";"}], " "}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"LoadChenDeltas", "[", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"LoadSOOandECSO", "[", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"LoadSpinSpin", "[", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"LoadThreeBody", "[", "]"}], ";"}]}], "Input",
  CellChangeTimes->{{3.866625158893896*^9, 3.8666251699518127`*^9}, {
    3.86662565468071*^9, 3.866625655065934*^9}, {3.867925727834807*^9, 
    3.867925730467511*^9}, {3.878673720338455*^9, 3.878673721191774*^9}, 
@@ -81,8 +91,9 @@ Cell[BoxData[{
    3.892029582337204*^9, 3.8920295889408827`*^9}, {3.892552302793804*^9, 
    3.892552311308173*^9}, 3.8980141354678907`*^9, {3.9067294207882433`*^9, 
    3.906729421016581*^9}, {3.913996149608245*^9, 3.9139961544992*^9}, 
-   3.9149401396091347`*^9, 3.915112303559952*^9},
- CellLabel->"In[1]:=",ExpressionUUID->"2539f139-b8a7-430c-b1c8-4ad556ecc2d0"],
+   3.9149401396091347`*^9, 3.915112303559952*^9, {3.915711047419332*^9, 
+   3.9157111519902563`*^9}, {3.915711233764082*^9, 3.915711245550816*^9}},
+ CellLabel->"In[42]:=",ExpressionUUID->"2539f139-b8a7-430c-b1c8-4ad556ecc2d0"],
 
 Cell[CellGroupData[{
 
@@ -90,7 +101,7 @@ Cell[BoxData[
  RowBox[{"?", "TabulateManyJJBlockMatrixTables"}]], "Input",
  CellChangeTimes->{{3.873904145403717*^9, 3.873904145591063*^9}, {
   3.915469311917368*^9, 3.91546931847964*^9}},
- CellLabel->"In[9]:=",ExpressionUUID->"5826bdff-cd17-4a32-9677-5e983098066e"],
+ CellLabel->"In[11]:=",ExpressionUUID->"5826bdff-cd17-4a32-9677-5e983098066e"],
 
 Cell[BoxData[
  InterpretationBox[
@@ -116,16 +127,15 @@ Cell[BoxData[
           ItemBox[
            PaneBox[
             
-            StyleBox["\<\"TabulateManyJJBlockMatrixTables[{n1, n2, ...}, {I1, \
-I2, ...}] calculates the tables of matrix elements for the requested f^n_i \
-configurations with the given nuclear spin I_i. The function does not return \
-the matrices themselves. It instead returns an association whose keys are \
-lists of the form {n, I} and whose values are the filenames where the output \
-of TabulateJJBlockMatrixTables was saved to. When these files are loaded with \
-Get, the following three symbols are thus defined: JJBlockMatrixTable, \
-EnergyStatesTable, and AllowedM.\\n  JJBlockMatrixTable is an association \
-whose keys are of the form {n, J, Jp, Ii, Ii} and whose values are matrix \
-elements.\"\>", "InformationUsageText",
+            StyleBox["\<\"TabulateManyJJBlockMatrixTables[{n1, n2, ...}] \
+calculates the tables of matrix elements for the requested f^n_i \
+configurations. The function does not return the matrices themselves. It \
+instead returns an association whose keys are numE and whose values are the \
+filenames where the output of TabulateJJBlockMatrixTables was saved to. When \
+these files are loaded with Get, the following three symbols are thus \
+defined: JJBlockMatrixTable, EnergyStatesTable, and AllowedM.\\n  \
+JJBlockMatrixTable is an association whose keys are of the form {n, J, Jp} \
+and whose values are matrix elements.\"\>", "InformationUsageText",
              StripOnInput->False,
              LineSpacing->{1.5, 1.5, 3.}],
             FrameMargins->{{10, 10}, {8, 10}}],
@@ -152,9 +162,7 @@ elements.\"\>", "InformationUsageText",
                  GridBox[{{
                     RowBox[{
                     RowBox[{"TabulateManyJJBlockMatrixTables", "[", 
-                    
-                    RowBox[{
-                    "qlanth`Private`ns_", ",", "qlanth`Private`Iis_", ",", 
+                    RowBox[{"qlanth`Private`ns_", ",", 
                     RowBox[{"OptionsPattern", "[", "]"}]}], "]"}], ":=", 
                     RowBox[{"(", 
                     RowBox[{
@@ -166,6 +174,11 @@ elements.\"\>", "InformationUsageText",
                     
                     RowBox[{"OptionValue", "[", "\"FilenameAppendix\"", 
                     "]"}]}], ";", 
+                    RowBox[{"qlanth`Private`ExportFun", "=", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"OptionValue", "[", "\"Compressed\"", "]"}], ",", 
+                    "ExportMZip", ",", "Export"}], "]"}]}], ";", 
                     RowBox[{"Do", "[", 
                     RowBox[{
                     RowBox[{
@@ -183,29 +196,23 @@ elements.\"\>", "InformationUsageText",
                      ";", 
                     RowBox[{"qlanth`Private`CrystalFieldTable", "=", 
                     
-                    RowBox[{"qlanth`Private`ImportMZip", "[", 
+                    RowBox[{"ImportMZip", "[", 
                     "qlanth`Private`CFdataFilename", "]"}]}], ";", 
-                    RowBox[{"Do", "[", 
-                    RowBox[{
-                    RowBox[{
                     RowBox[{"PrintTemporary", "[", 
                     
                     RowBox[{"\"#------- numE = \"", ",", 
-                    "qlanth`Private`numE", ",", "\" | I = \"", ",", 
-                    "qlanth`Private`Ii", ",", "\" -------#\""}], "]"}], ";", 
+                    "qlanth`Private`numE", ",", "\" -------#\""}], "]"}], ";", 
                     RowBox[{"qlanth`Private`exportFname", "=", 
                     RowBox[{"JJBlockMatrixFileName", "[", 
-                    
-                    RowBox[{"qlanth`Private`numE", ",", "qlanth`Private`Ii", 
-                    ",", 
+                    RowBox[{"qlanth`Private`numE", ",", 
                     
                     RowBox[{"\"FilenameAppendix\"", "\[Rule]", 
                     "qlanth`Private`fileApp"}]}], "]"}]}], ";", 
                     RowBox[{
+                    
                     RowBox[{"qlanth`Private`fNames", "[", 
-                    RowBox[{"{", 
-                    RowBox[{"qlanth`Private`numE", ",", "qlanth`Private`Ii"}],
-                     "}"}], "]"}], "=", "qlanth`Private`exportFname"}], ";", 
+                    "qlanth`Private`numE", "]"}], "=", 
+                    "qlanth`Private`exportFname"}], ";", 
                     RowBox[{"If", "[", 
                     RowBox[{
                     RowBox[{
@@ -214,16 +221,11 @@ elements.\"\>", "InformationUsageText",
                     "]"}], "&&", 
                     RowBox[{"!", "qlanth`Private`overwrite"}]}], ",", 
                     RowBox[{"Continue", "[", "]"}]}], "]"}], ";", 
-                    RowBox[{
-                    RowBox[{"{", 
-                    
-                    RowBox[{"JJBlockMatrixTable", ",", 
-                    "qlanth`Private`EnergyStatesTable", ",", 
-                    "qlanth`Private`AllowedM"}], "}"}], "=", 
+                    RowBox[{"JJBlockMatrixTable", "=", 
                     RowBox[{"TabulateJJBlockMatrixTable", "[", 
                     
-                    RowBox[{"qlanth`Private`numE", ",", "qlanth`Private`Ii", 
-                    ",", "qlanth`Private`CrystalFieldTable", ",", 
+                    RowBox[{"qlanth`Private`numE", ",", 
+                    "qlanth`Private`CrystalFieldTable", ",", 
                     RowBox[{"\"Sparse\"", "\[Rule]", 
                     RowBox[{"OptionValue", "[", "\"Sparse\"", "]"}]}], ",", 
                     RowBox[{"\"ChenDeltas\"", "\[Rule]", 
@@ -238,16 +240,10 @@ elements.\"\>", "InformationUsageText",
                     
                     RowBox[{"DeleteFile", "[", "qlanth`Private`exportFname", 
                     "]"}]}], "]"}], ";", 
-                    RowBox[{"Save", "[", 
-                    RowBox[{"qlanth`Private`exportFname", ",", 
-                    RowBox[{"{", 
+                    RowBox[{"qlanth`Private`ExportFun", "[", 
                     
-                    RowBox[{"JJBlockMatrixTable", ",", 
-                    "qlanth`Private`EnergyStatesTable", ",", 
-                    "qlanth`Private`AllowedM"}], "}"}]}], "]"}], ";"}], ",", 
-                    RowBox[{"{", 
-                    RowBox[{"qlanth`Private`Ii", ",", "qlanth`Private`Iis"}], 
-                    "}"}]}], "]"}], ";", 
+                    RowBox[{"qlanth`Private`exportFname", ",", 
+                    "JJBlockMatrixTable"}], "]"}], ";", 
                     
                     RowBox[{"ClearAll", "[", 
                     "qlanth`Private`CrystalFieldTable", "]"}], ";"}], ",", 
@@ -351,10 +347,12 @@ elements.\"\>", "InformationUsageText",
                     RowBox[{"\<\"FilenameAppendix\"\>", 
                     "\[Rule]", "\<\"\"\>"}]},
                     {
+                    RowBox[{"\<\"Compressed\"\>", "\[Rule]", "False"}]},
+                    {
                     StyleBox[
                     
                     TemplateBox[{
-                    "\"(\"", "\"\[InvisibleSpace]\"", "4", "\" total)\""},
+                    "\"(\"", "\"\[InvisibleSpace]\"", "5", "\" total)\""},
                     "RowDefault"], "InformationRowOpener",
                     StripOnInput->False]}
                     },
@@ -372,7 +370,7 @@ elements.\"\>", "InformationUsageText",
                     StyleBox[
                     
                     TemplateBox[{
-                    "\"(\"", "\"\[InvisibleSpace]\"", "4", "\" total)\""},
+                    "\"(\"", "\"\[InvisibleSpace]\"", "5", "\" total)\""},
                     "RowDefault"], "InformationRowOpener",
                     StripOnInput->False]}]}, Dynamic[
                     FEPrivate`Part[System`InformationDump`open$$, 3]],
@@ -477,16 +475,15 @@ elements.\"\>", "InformationUsageText",
           ItemBox[
            PaneBox[
             
-            StyleBox["\<\"TabulateManyJJBlockMatrixTables[{n1, n2, ...}, {I1, \
-I2, ...}] calculates the tables of matrix elements for the requested f^n_i \
-configurations with the given nuclear spin I_i. The function does not return \
-the matrices themselves. It instead returns an association whose keys are \
-lists of the form {n, I} and whose values are the filenames where the output \
-of TabulateJJBlockMatrixTables was saved to. When these files are loaded with \
-Get, the following three symbols are thus defined: JJBlockMatrixTable, \
-EnergyStatesTable, and AllowedM.\\n  JJBlockMatrixTable is an association \
-whose keys are of the form {n, J, Jp, Ii, Ii} and whose values are matrix \
-elements.\"\>", "InformationUsageText",
+            StyleBox["\<\"TabulateManyJJBlockMatrixTables[{n1, n2, ...}] \
+calculates the tables of matrix elements for the requested f^n_i \
+configurations. The function does not return the matrices themselves. It \
+instead returns an association whose keys are numE and whose values are the \
+filenames where the output of TabulateJJBlockMatrixTables was saved to. When \
+these files are loaded with Get, the following three symbols are thus \
+defined: JJBlockMatrixTable, EnergyStatesTable, and AllowedM.\\n  \
+JJBlockMatrixTable is an association whose keys are of the form {n, J, Jp} \
+and whose values are matrix elements.\"\>", "InformationUsageText",
              StripOnInput->False,
              LineSpacing->{1.5, 1.5, 3.}],
             FrameMargins->{{10, 10}, {8, 10}}],
@@ -549,28 +546,27 @@ elements.\"\>", "InformationUsageText",
    StripOnInput->False],
   InformationData[<|
    "ObjectType" -> "Symbol", "Usage" -> 
-    "TabulateManyJJBlockMatrixTables[{n1, n2, ...}, {I1, I2, ...}] calculates \
-the tables of matrix elements for the requested f^n_i configurations with the \
-given nuclear spin I_i. The function does not return the matrices themselves. \
-It instead returns an association whose keys are lists of the form {n, I} and \
-whose values are the filenames where the output of \
+    "TabulateManyJJBlockMatrixTables[{n1, n2, ...}] calculates the tables of \
+matrix elements for the requested f^n_i configurations. The function does not \
+return the matrices themselves. It instead returns an association whose keys \
+are numE and whose values are the filenames where the output of \
 TabulateJJBlockMatrixTables was saved to. When these files are loaded with \
 Get, the following three symbols are thus defined: JJBlockMatrixTable, \
 EnergyStatesTable, and AllowedM.\n  JJBlockMatrixTable is an association \
-whose keys are of the form {n, J, Jp, Ii, Ii} and whose values are matrix \
-elements.", "Documentation" -> None, "OwnValues" -> None, "UpValues" -> None, 
+whose keys are of the form {n, J, Jp} and whose values are matrix elements.", 
+    "Documentation" -> None, "OwnValues" -> None, "UpValues" -> None, 
     "DownValues" -> 
     Information`InformationValueForm[
      DownValues, qlanth`TabulateManyJJBlockMatrixTables, {
       qlanth`TabulateManyJJBlockMatrixTables[
          Pattern[qlanth`Private`ns, 
           Blank[]], 
-         Pattern[qlanth`Private`Iis, 
-          Blank[]], 
          OptionsPattern[]] :> (
         qlanth`Private`overwrite = OptionValue["Overwrite"]; 
         qlanth`Private`fNames = <||>; 
         qlanth`Private`fileApp = OptionValue["FilenameAppendix"]; 
+        qlanth`Private`ExportFun = If[
+           OptionValue["Compressed"], qlanth`ExportMZip, Export]; 
         Do[qlanth`Private`CFdataFilename = 
            FileNameJoin[{
              qlanth`moduleDir, "data", "CrystalFieldTable_f" <> 
@@ -579,43 +575,39 @@ elements.", "Documentation" -> None, "OwnValues" -> None, "UpValues" -> None,
            "Importing CrystalFieldTable from ", qlanth`Private`CFdataFilename,
              " ..."]; 
           qlanth`Private`CrystalFieldTable = 
-           qlanth`Private`ImportMZip[qlanth`Private`CFdataFilename]; 
-          Do[PrintTemporary[
-             "#------- numE = ", qlanth`Private`numE, " | I = ", 
-              qlanth`Private`Ii, " -------#"]; 
-            qlanth`Private`exportFname = 
-             qlanth`JJBlockMatrixFileName[
-              qlanth`Private`numE, qlanth`Private`Ii, "FilenameAppendix" -> 
-               qlanth`Private`fileApp]; 
-            qlanth`Private`fNames[{qlanth`Private`numE, qlanth`Private`Ii}] = 
-             qlanth`Private`exportFname; If[
-              And[
-               FileExistsQ[qlanth`Private`exportFname], 
-               Not[qlanth`Private`overwrite]], 
-              Continue[]]; {
-              qlanth`JJBlockMatrixTable, qlanth`Private`EnergyStatesTable, 
-               qlanth`Private`AllowedM} = 
-             qlanth`TabulateJJBlockMatrixTable[
-              qlanth`Private`numE, qlanth`Private`Ii, 
-               qlanth`Private`CrystalFieldTable, "Sparse" -> 
-               OptionValue["Sparse"], "ChenDeltas" -> 
-               OptionValue["ChenDeltas"]]; If[
-              And[
-               FileExistsQ[qlanth`Private`exportFname], 
-               qlanth`Private`overwrite], 
-              DeleteFile[qlanth`Private`exportFname]]; 
-            Save[qlanth`Private`exportFname, {
-              qlanth`JJBlockMatrixTable, qlanth`Private`EnergyStatesTable, 
-               qlanth`Private`AllowedM}]; Null, {
-            qlanth`Private`Ii, qlanth`Private`Iis}]; 
+           qlanth`ImportMZip[qlanth`Private`CFdataFilename]; 
+          PrintTemporary[
+           "#------- numE = ", qlanth`Private`numE, " -------#"]; 
+          qlanth`Private`exportFname = 
+           qlanth`JJBlockMatrixFileName[
+            qlanth`Private`numE, "FilenameAppendix" -> 
+             qlanth`Private`fileApp]; 
+          qlanth`Private`fNames[qlanth`Private`numE] = 
+           qlanth`Private`exportFname; If[
+            And[
+             FileExistsQ[qlanth`Private`exportFname], 
+             Not[qlanth`Private`overwrite]], 
+            Continue[]]; 
+          qlanth`JJBlockMatrixTable = 
+           qlanth`TabulateJJBlockMatrixTable[
+            qlanth`Private`numE, qlanth`Private`CrystalFieldTable, "Sparse" -> 
+             OptionValue["Sparse"], "ChenDeltas" -> 
+             OptionValue["ChenDeltas"]]; If[
+            And[
+             FileExistsQ[qlanth`Private`exportFname], 
+             qlanth`Private`overwrite], 
+            DeleteFile[qlanth`Private`exportFname]]; 
+          qlanth`Private`ExportFun[
+           qlanth`Private`exportFname, qlanth`JJBlockMatrixTable]; 
           ClearAll[qlanth`Private`CrystalFieldTable]; Null, {
           qlanth`Private`numE, qlanth`Private`ns}]; 
         Return[qlanth`Private`fNames]; Null)}], "SubValues" -> None, 
     "DefaultValues" -> None, "NValues" -> None, "FormatValues" -> None, 
     "Options" -> {
      "Overwrite" -> False, "Sparse" -> True, "ChenDeltas" -> False, 
-      "FilenameAppendix" -> ""}, "Attributes" -> {}, "FullName" -> 
-    "qlanth`TabulateManyJJBlockMatrixTables"|>, False]]], "Output",
+      "FilenameAppendix" -> "", "Compressed" -> False}, "Attributes" -> {}, 
+    "FullName" -> "qlanth`TabulateManyJJBlockMatrixTables"|>, 
+   False]]], "Output",
  CellChangeTimes->{
   3.873904145877635*^9, 3.875697444802656*^9, 3.875697516087777*^9, 
    3.879332487158946*^9, 3.879333086733549*^9, 3.879343366707439*^9, 
@@ -625,8 +617,9 @@ elements.", "Documentation" -> None, "OwnValues" -> None, "UpValues" -> None,
    3.914191127699278*^9, 3.914191337085896*^9, 3.914191374137095*^9, 
    3.9141915171828957`*^9, 3.914195355569181*^9, 3.9144149291503057`*^9, 
    3.91492664954255*^9, 3.914927814069437*^9, 3.915011617895249*^9, 
-   3.915011713208353*^9, {3.915469308091572*^9, 3.915469318741729*^9}},
- CellLabel->"Out[9]=",ExpressionUUID->"91329fb1-9eca-4442-acc2-022c0a8f956a"]
+   3.915011713208353*^9, {3.915469308091572*^9, 3.915469318741729*^9}, 
+   3.9156522556405907`*^9, 3.915708548913213*^9, 3.915711260786894*^9},
+ CellLabel->"Out[11]=",ExpressionUUID->"ed080384-d246-44fa-8d74-eb6ecfcc01b4"]
 }, Open  ]],
 
 Cell[BoxData[{
@@ -640,7 +633,8 @@ Cell[BoxData[{
    RowBox[{"doThese", ",", "\[IndentingNewLine]", 
     RowBox[{"\"\<Overwrite\>\"", "->", "True"}], ",", "\[IndentingNewLine]", 
     RowBox[{"\"\<Sparse\>\"", "->", "True"}], ",", "\[IndentingNewLine]", 
-    RowBox[{"\"\<ChenDeltas\>\"", "->", "True"}]}], "\[IndentingNewLine]", 
+    RowBox[{"\"\<ChenDeltas\>\"", "->", "False"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"\"\<Compressed\>\"", "->", "True"}]}], "\[IndentingNewLine]", 
    "]"}], ";"}]}], "Input",
  CellChangeTimes->{{3.914415167394353*^9, 3.9144151736446257`*^9}, 
    3.9144248806074*^9, {3.914424932918448*^9, 3.914424933287858*^9}, {
@@ -655,9 +649,14 @@ Cell[BoxData[{
    3.915469322039455*^9, {3.915531792045342*^9, 3.915531792356843*^9}, {
    3.9155325916535997`*^9, 3.915532592173555*^9}, {3.915534173103706*^9, 
    3.915534174795642*^9}, {3.915566909430855*^9, 3.915566910027603*^9}, {
-   3.915567522856555*^9, 
-   3.915567524919497*^9}},ExpressionUUID->"a9e26d40-488e-4c1f-9208-\
-a7d7f0787290"]
+   3.915567522856555*^9, 3.915567524919497*^9}, {3.915652261581292*^9, 
+   3.9156522769781837`*^9}, 3.915708344360358*^9, {3.915708901029767*^9, 
+   3.915708929848227*^9}, {3.915710182339744*^9, 3.915710205969385*^9}, {
+   3.9157105548324537`*^9, 3.9157105550365753`*^9}, {3.915710983333453*^9, 
+   3.915710984267219*^9}, {3.9157111615567923`*^9, 3.915711161686943*^9}, {
+   3.915711327561455*^9, 3.9157113518608103`*^9}, {3.915744012112834*^9, 
+   3.915744013200865*^9}},
+ CellLabel->"In[27]:=",ExpressionUUID->"a9e26d40-488e-4c1f-9208-a7d7f0787290"]
 }, Open  ]]
 },
 WindowSize->{864, 1057},
@@ -688,13 +687,12 @@ Notebook[{
 Cell[CellGroupData[{
 Cell[580, 22, 330, 4, 97, "Title",ExpressionUUID->"f3dab00c-756e-4b1f-9a29-d532363347ff"],
 Cell[913, 28, 1522, 28, 310, "Text",ExpressionUUID->"47503aaa-7b50-458a-bffb-5f91a3d860bc"],
-Cell[2438, 58, 1271, 26, 126, "Input",ExpressionUUID->"2539f139-b8a7-430c-b1c8-4ad556ecc2d0",
- InitializationCell->True],
+Cell[2438, 58, 1773, 37, 231, "Input",ExpressionUUID->"2539f139-b8a7-430c-b1c8-4ad556ecc2d0"],
 Cell[CellGroupData[{
-Cell[3734, 88, 266, 4, 41, "Input",ExpressionUUID->"5826bdff-cd17-4a32-9677-5e983098066e"],
-Cell[4003, 94, 24493, 534, 222, "Output",ExpressionUUID->"91329fb1-9eca-4442-acc2-022c0a8f956a"]
+Cell[4236, 99, 267, 4, 41, "Input",ExpressionUUID->"5826bdff-cd17-4a32-9677-5e983098066e"],
+Cell[4506, 105, 23494, 516, 222, "Output",ExpressionUUID->"ed080384-d246-44fa-8d74-eb6ecfcc01b4"]
 }, Open  ]],
-Cell[28511, 631, 1639, 28, 168, "Input",ExpressionUUID->"a9e26d40-488e-4c1f-9208-a7d7f0787290"]
+Cell[28015, 624, 2161, 34, 189, "Input",ExpressionUUID->"a9e26d40-488e-4c1f-9208-a7d7f0787290"]
 }, Open  ]]
 }
 ]
