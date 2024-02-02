@@ -238,6 +238,7 @@ CasimirG2;
 CasimirSO3;
 CasimirSO7;
 
+ClebshG;
 Cqk;
 CrystalField;
 Dk;
@@ -2240,11 +2241,15 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   (* ######################################################################### *)
   (* ########################### Optical Operators ########################### *)
 
+  ClebshG[{j_,m_},{j1_,m1_},{j2_,m2_}]:=(
+    Phaser[j-j1+m2]*
+    ThreeJay[{j,m},{j1,m1},{j2,-m2}]);
+
   Options[JJBlockMagDip]={"Sparse"->True};
   JJBlockMadDip::usage="JJBlockMagDip[numE, J, Jp] returns the LSJ-reduced matrix element of the magnetic dipole operator between the states with given J and Jp. The option \"Sparse\" can be used to return a sparse matrix. The default is to return a sparse matrix.
   See appendix of Guillot Noel 2005.
   ";
-  JJBlockMagDip[numE_,J_,Jp_,OptionsPattern[]]:=Module[
+  JJBlockMagDip[numE_, J_, Jp_, OptionsPattern[]]:=Module[
     {NKSLJMs,NKSLJMps,NKSLJM,NKSLJMp,SLterm,SpLpterm,MJ,MJp,matValue,magMatrix},(
     NKSLJMs  = AllowedNKSLJMforJTerms[numE,J];
     NKSLJMps = AllowedNKSLJMforJTerms[numE,Jp];
@@ -2258,15 +2263,13 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
       summand1 = If[Or[J!=Jp,
                        L!=Lp,
                        S!=Sp,
-                       SLterm!=SpLpterm,
-                       MJ!=MJp],
+                       SLterm!=SpLpterm],
         0,
         Sqrt[J(J+1)TPO[J]]
       ];
       summand2 = If[Or[L!=Lp,
                        S!=Sp,
-                       SLterm!=SpLpterm,
-                       MJ!=MJp],
+                       SLterm!=SpLpterm],
         0,
         Phaser[S+L+Jp+1]*
         Sqrt[TPO[J]*TPO[Jp]]*
@@ -2275,10 +2278,15 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
         Sqrt[S(S+1)TPO[S]]
       ];
       matValue = summand1 + summand2;
+      cg = {ClebshG[{Jp,MJp},{1,-1},{J,MJ}],
+            ClebshG[{Jp,MJp},{1, 0},{J,MJ}],
+            ClebshG[{Jp,MJp},{1, 1},{J,MJ}]};
+      matValue = cg * matValue;
       matValue,
     {NKSLJMp,NKSLJMps},
     {NKSLJM,NKSLJMs}
     ];
+    (* magMatrix = Reverse[magMatrix]; *)
     If[OptionValue["Sparse"],
       magMatrix=SparseArray[magMatrix]
     ];
@@ -2326,6 +2334,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   )
 
   Options[MagDipoleMatrixAssembly]={"FilenameAppendix"->""};
+  MagDipoleMatrixAssembly::usage="MagDipoleMatrixAssembly[numE] returns the matrix representation of the operator (L + gs S) in the f^numE configuration. The function returns a list with three elements corresponding to the x,y,z components of this operator. The option \"FilenameAppendix\" can be used to append a string to the filename from which the function imports from in order to patch together the array.";
   MagDipoleMatrixAssembly[nf_,OptionsPattern[]]:=Module[
     {ImportFun, numE, appendTo, emFname, JJBlockMagDipTable, Js, howManyJs, blockOp},
     (
@@ -2344,7 +2353,13 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
       {jj,1,howManyJs}
     ];
     blockOp = ArrayFlatten[blockOp];
-    Return[blockOp];
+    opMinus = blockOp[[;; , ;; , 1]];
+    opZero =  blockOp[[;; , ;; , 2]];
+    opPlus =  blockOp[[;; , ;; , 3]];
+    opX = I (opPlus + opMinus)/Sqrt[2];
+    opY =   (opMinus - opPlus)/Sqrt[2];
+    opZ = opZero;
+    Return[{opX, opY, opZ}];
   )
   ];
 
