@@ -10,9 +10,10 @@
 |                                                                  |
 |                                                                  |
 +------------------------------------------------------------------+
-This  code  was  initially  authored  by Christopher Dodson and then
-rewritten  by  David  Lizarazo  in  the years 2022-2024. It has also
-benefited from the discussions with Tharnier Puel.
+This  code  was  initially authored by Christopher Dodson and Rashid
+Zia  and  then  rewritten  by  David Lizarazo in the years 2022-2024
+under  the  advisory  of  Dr.  Zia.  It  has also benefited from the
+discussions with Tharnier Puel.
 
 It   uses  an  effective  Hamiltonian  to  describe  the  electronic
 structure of lanthanide ions in crystals. This effective Hamiltonian
@@ -2248,43 +2249,47 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   Options[JJBlockMagDip]={"Sparse"->True};
   JJBlockMadDip::usage="JJBlockMagDip[numE, J, Jp] returns the LSJ-reduced matrix element of the magnetic dipole operator between the states with given J and Jp. The option \"Sparse\" can be used to return a sparse matrix. The default is to return a sparse matrix.
   See appendix of Guillot Noel 2005.
+  Here it is provided in atomic units in which the Bohr magneton is 1/2.
   ";
-  JJBlockMagDip[numE_, J_, Jp_, OptionsPattern[]]:=Module[
-    {NKSLJMs,NKSLJMps,NKSLJM,NKSLJMp,SLterm,SpLpterm,MJ,MJp,matValue,magMatrix},(
-    NKSLJMs  = AllowedNKSLJMforJTerms[numE,J];
-    NKSLJMps = AllowedNKSLJMforJTerms[numE,Jp];
+  JJBlockMagDip[numE_, braJ_, ketJ_, OptionsPattern[]]:=Module[
+    {braSLJs,ketSLJs,
+    braSLJ,ketSLJ,
+    braSL,ketSL,
+    braS, braL,
+    braMJ, ketMJ,
+    matValue,magMatrix},(
+    braSLJs  = AllowedNKSLJMforJTerms[numE,braJ];
+    ketSLJs  = AllowedNKSLJMforJTerms[numE,ketJ];
     magMatrix  = Table[
-      SLterm   = NKSLJM[[1]];
-      SpLpterm = NKSLJMp[[1]];
-      {S,L}    = FindSL[SLterm];
-      {Sp,Lp}  = FindSL[SpLpterm];
-      MJ       = NKSLJM[[3]];
-      MJp      = NKSLJMp[[3]];
-      summand1 = If[Or[J!=Jp,
-                       L!=Lp,
-                       S!=Sp,
-                       SLterm!=SpLpterm],
+      braSL     = braSLJ[[1]];
+      ketSL     = ketSLJ[[1]];
+      {braS, braL}   = FindSL[braSL];
+      {ketS, ketL}   = FindSL[ketSL];
+      braMJ       = braSLJ[[3]];
+      ketMJ       = ketSLJ[[3]];
+      summand1    = If[Or[braJ  != ketJ,
+                          braL  != ketL,
+                          braS  != ketS,
+                          braSL != ketSL],
         0,
-        Sqrt[J(J+1)TPO[J]]
+        Sqrt[braJ(braJ+1)TPO[braJ]]
       ];
-      summand2 = If[Or[L!=Lp,
-                       S!=Sp,
-                       SLterm!=SpLpterm],
+      summand2 = If[Or[braL != ketL,
+                       braS != ketS,
+                       braSL!= ketSL],
         0,
-        Phaser[S+L+Jp+1]*
-        Sqrt[TPO[J]*TPO[Jp]]*
-        SixJay[{J,1,Jp},{S,L,S}]*
+        Phaser[braS+braL+ketJ+1]*
+        Sqrt[TPO[braJ]*TPO[ketJ]]*
+        SixJay[{braJ,1,ketJ},{braS,braL,braS}]*
         (gs-1)*
-        Sqrt[S(S+1)TPO[S]]
+        Sqrt[braS(braS+1)TPO[braS]]
       ];
       matValue = summand1 + summand2;
-      cg = {ClebshG[{Jp,MJp},{1,-1},{J,MJ}],
-            ClebshG[{Jp,MJp},{1, 0},{J,MJ}],
-            ClebshG[{Jp,MJp},{1, 1},{J,MJ}]};
-      matValue = cg * matValue;
+      cg =(ClebshG[{ketJ,ketMJ},{1,#},{braJ,braMJ}] &) /@ {-1,0,1};
+      matValue = 1/2 * cg * matValue;
       matValue,
-    {NKSLJMp,NKSLJMps},
-    {NKSLJM,NKSLJMs}
+    {braSLJ, braSLJs},
+    {ketSLJ, ketSLJs}
     ];
     (* magMatrix = Reverse[magMatrix]; *)
     If[OptionValue["Sparse"],
@@ -2299,11 +2304,11 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     Js=AllowedJ[numE];
     Do[
       (
-        JJBlockMagDipTable[{numE,J,Jp}]=
-          JJBlockMagDip[numE,J,Jp,"Sparse"->OptionValue["Sparse"]]
+        JJBlockMagDipTable[{numE,braJ,ketJ}]=
+          JJBlockMagDip[numE,braJ,ketJ,"Sparse"->OptionValue["Sparse"]]
       ),
-    {Jp,Js},
-    {J,Js}
+    {braJ, Js},
+    {ketJ, Js}
     ];
     Return[JJBlockMagDipTable]
   );
@@ -2336,7 +2341,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   Options[MagDipoleMatrixAssembly]={"FilenameAppendix"->""};
   MagDipoleMatrixAssembly::usage="MagDipoleMatrixAssembly[numE] returns the matrix representation of the operator (L + gs S) in the f^numE configuration. The function returns a list with three elements corresponding to the x,y,z components of this operator. The option \"FilenameAppendix\" can be used to append a string to the filename from which the function imports from in order to patch together the array.";
   MagDipoleMatrixAssembly[nf_,OptionsPattern[]]:=Module[
-    {ImportFun, numE, appendTo, emFname, JJBlockMagDipTable, Js, howManyJs, blockOp},
+    {ImportFun, numE, appendTo, emFname, JJBlockMagDipTable, Js, howManyJs, blockOp, rowIdx, colIdx},
     (
     ImportFun = ImportMZip;
     numE      = nf;
@@ -2348,16 +2353,16 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     howManyJs = Length[Js];
     blockOp   = ConstantArray[0,{howManyJs,howManyJs}];
     Do[
-      blockOp[[jj,ii]] = JJBlockMagDipTable[{numE,Js[[ii]],Js[[jj]]}],
-      {ii,1,howManyJs},
-      {jj,1,howManyJs}
+      blockOp[[rowIdx,colIdx]] = JJBlockMagDipTable[{numE,Js[[rowIdx]],Js[[colIdx]]}],
+      {rowIdx,1,howManyJs},
+      {colIdx,1,howManyJs}
     ];
     blockOp = ArrayFlatten[blockOp];
     opMinus = blockOp[[;; , ;; , 1]];
     opZero =  blockOp[[;; , ;; , 2]];
     opPlus =  blockOp[[;; , ;; , 3]];
-    opX = I (opPlus + opMinus)/Sqrt[2];
-    opY =   (opMinus - opPlus)/Sqrt[2];
+    opX =   (opMinus - opPlus)/Sqrt[2];
+    opY = I (opPlus + opMinus)/Sqrt[2];
     opZ = opZero;
     Return[{opX, opY, opZ}];
   )
