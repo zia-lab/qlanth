@@ -2761,21 +2761,26 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   FastIonSolverLaF3::usage = 
     "This function solves the energy levels of the given trivalent lanthanide in LaF3. The values for the Hamiltonian are simply taken from the values quoted by Carnall. It uses precomputed symbolic matrices for the Hamiltonian so it's faster than the previous alternatives.
     
-    The function returns a list with seven elements {rmsDifference, carnallEnergies, eigenEnergies, ln, carnallAssignments, eigensys, basis}. Where:
+    The function returns a list with seven elements 
+    {rmsDifference, carnallEnergies, eigenEnergies, ln, carnallAssignments, eigensys, basis}.
+    
+    Where:
     
     rmsDifference is the root mean squared difference between the calculated values and those quoted by Carnall
     
     carnallEnergies are the quoted calculated values from Carnall;
     
-    eigenEnergies are the calculated energies (in the case of an odd number of electrons the kramers degeneracy has been elided from this list);
+    eigenEnergies are the calculated energies (in the case of an odd number of electrons the Kramers degeneracy has been removed from this list);
     
     ln is simply a string labelling the corresponding lanthanide;
     
-    carnallAssignments is a list of strings providing the term assignments that Carnall assumed,
+    carnallAssignments is a list of strings providing the multiplet assignments that Carnall assumed;
+
+    simplerStateLabels is a list of strings providing the multiplet assignments that this function assumes;
     
-    eigensys is a list of tuples where the first element is the energy corresponding to the eigenvector given as the second element;
+    eigensys is a list of tuples where the first element is the energy corresponding to the eigenvector given as the second element (in the case of an odd number of electrons, Kramers degeneracy has been removed from this list by picking every other value);
     
-    basis a list that specifies the basis in which the Hamiltonian was constructed and diagonalized.
+    basis is a list that specifies the basis in which the Hamiltonian was constructed and diagonalized.
   ";
   Options[FastIonSolverLaF3] = {
     "MakeNotebook" -> True,
@@ -2788,7 +2793,10 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     "PrintFun" -> Print,
     "SaveData" -> True,
     "paramFiddle" -> {},
-    "Append to Filename" -> ""
+    "Append to Filename" -> "",
+    "Remove Kramers" -> True,
+    "OutputDirectory" -> "calcs",
+    "Explorer" -> False
     }; 
   FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[{
     makeNotebook, eigenstateTruncationProbability, spinspin, host,
@@ -2800,6 +2808,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     eigenstateTruncationProbability = OptionValue["eigenstateTruncationProbability"];
     maxStatesInTable = OptionValue["Max Eigenstates in Table"];
     spinspin = OptionValue["Include spin-spin"];
+    Duplicator[aList_] := Flatten[{#, #} & /@ aList];
     host = "LaF3";
     paramFiddle = OptionValue["paramFiddle"];
     ln = theLanthanides[[numE]];
@@ -2884,7 +2893,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     eigenEnergies = First /@ eigensys;
 
     (*Energies are doubly degenerate in the case of odd number of electrons, keep only one*)
-    If[OddQ[numE], 
+    If[And[OddQ[numE], OptionValue["Remove Kramers"]], 
       (
         PrintFun["> Since there's an odd number of electrons energies come in pairs, taking just one for each pair ..."];
         eigenEnergies = eigenEnergies[[;; ;; 2]];
@@ -2900,6 +2909,13 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     carnallAssignments = First /@ Carnall["appendix:" <> ln <> ":RawTable"];
     carnalKey          = StringTemplate["appendix:`Ln`:Calculated"][<|"Ln" -> ln|>];
     carnallEnergies    = Carnall[carnalKey];
+    If[And[OddQ[numE], Not[OptionValue["Remove Kramers"]]],
+      (
+        PrintFun[">> The number of eigenstates and the number of quoted states don't match, removing the last state ..."];
+        carnallAssignments = Duplicator[carnallAssignments];
+        carnallEnergies    = Duplicator[carnallEnergies];
+      )
+    ];
 
     (* For the difference take as many energies as quoted by Bill*)
     eigenEnergies = eigenEnergies + carnallEnergies[[1]];
@@ -2910,8 +2926,9 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
       "Energy Level Diagram of \!\(\*SuperscriptBox[\(`ion`\), \(\(3\)\(+\)\)]\)"];
     title = titleTemplate[<|"ion" -> ln|>];
     parsedStates = ParseStates[eigensys, basis];
-    If[OddQ[numE],
-      parsedStates = parsedStates[[;; ;; 2]]];
+    If[And[OddQ[numE],OptionValue["Remove Kramers"]], 
+      parsedStates = parsedStates[[;; ;; 2]]
+    ];
     
     stateLabels = #[[-1]] & /@ parsedStates;
     simplerStateLabels = ((#[[2]] /. termSimplifier) <> ToString[#[[3]], InputForm]) & /@ parsedStates;
@@ -2930,6 +2947,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
         PrintFun["> Putting together results in a notebook ..."];
         energyDiagram = Framed[
           EnergyLevelDiagram[eigensys, "Title" -> title, 
+          "Explorer" -> OptionValue["Explorer"],
           "Background" -> White]
           , Background -> White, FrameMargins -> 50];
         appToFname = OptionValue["Append to Filename"];
@@ -3005,7 +3023,9 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
           FrameMargins -> 50
           ];
         nb = CreateDocument[{
-          TextCell[Style[DisplayForm[SuperscriptBox[host <> ":" <> ln, "3+"]]], "Title", TextAlignment -> Center],
+          TextCell[Style[
+            DisplayForm[RowBox[{SuperscriptBox[host <> ":" <> ln, "3+"], "(", SuperscriptBox["f", numE], ")"}]]
+            ], "Title", TextAlignment -> Center],
           TextCell["Energy Diagram", "Section", TextAlignment -> Center],
           TextCell[energyDiagram, TextAlignment -> Center],
           TextCell["Multiplet Assignments & Energy Levels", "Section", TextAlignment -> Center],
@@ -3022,7 +3042,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
         WindowSize -> {1600, 800}];
         If[OptionValue["SaveData"],
           (
-            exportFname = FileNameJoin[{moduleDir,"calcs", ln <> " in " <> "LaF3" <> appToFname <> ".m"}];
+            exportFname = FileNameJoin[{moduleDir,OptionValue["OutputDirectory"], ln <> " in " <> "LaF3" <> appToFname <> ".m"}];
             SelectionMove[nb, After, Notebook];
             NotebookWrite[nb, Cell["Reload Data", "Section", TextAlignment -> Center]];
             NotebookWrite[nb, Cell[(
@@ -3033,7 +3053,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
               ),"Input"]];
             SelectionMove[nb, Before, Notebook];
             Export[exportFname, {rmsDifference, carnallEnergies, eigenEnergies, ln, carnallAssignments, simplerStateLabels, eigensys, basis, truncatedStates}];
-            tinyexportFname = FileNameJoin[{moduleDir,"calcs", ln <> " in " <> "LaF3" <> appToFname <> "- tiny.m"}];
+            tinyexportFname = FileNameJoin[{moduleDir,OptionValue["OutputDirectory"], ln <> " in " <> "LaF3" <> appToFname <> "- tiny.m"}];
             tinyExport = <|"ln"->ln,
                           "carnallEnergies"->carnallEnergies,
                           "rmsDifference"-> rmsDifference,
@@ -3045,14 +3065,14 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
         ];
         If[OptionValue["NotebookSave"],
           (
-            nbFname = FileNameJoin[{moduleDir,"calcs", ln <> " in " <> "LaF3" <> appToFname <> ".nb"}];
+            nbFname = FileNameJoin[{moduleDir,OptionValue["OutputDirectory"], ln <> " in " <> "LaF3" <> appToFname <> ".nb"}];
             PrintFun[">> Saving notebook to ", nbFname, " ..."];
             NotebookSave[nb, nbFname];
           )
         ];
         If[OptionValue["HTMLSave"],
           (
-            htmlFname = FileNameJoin[{moduleDir,"calcs", "html", ln <> " in " <> "LaF3" <> appToFname <> ".html"}];
+            htmlFname = FileNameJoin[{moduleDir,OptionValue["OutputDirectory"], "html", ln <> " in " <> "LaF3" <> appToFname <> ".html"}];
             PrintFun[">> Saving html version to ", htmlFname, " ..."];
             Export[htmlFname, nb];
           )
@@ -3080,26 +3100,32 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   (* ######################################################################### *)
   (* ######################### Eigensystem analysis ########################## *)
 
+  Options[PrettySaundersSLJmJ] = {"Representation" -> "Ket"};
   PrettySaundersSLJmJ::usage = "PrettySaundersSLJmJ[{SL, J, mJ}] produces a human-redeable symbol for the given basis vector {SL, J, mJ}."
-  PrettySaundersSLJmJ[{SL_, J_, mJ_}] := (If[
+  PrettySaundersSLJmJ[{SL_, J_, mJ_}, OptionsPattern[]] := (If[
     StringQ[SL], 
     ({S, L} = FindSL[SL];
       L = StringTake[SL, {2, -1}];
       ), 
     {S, L} = SL];
-    Return[
-    RowBox[{AdjustmentBox[Style[2*S + 1, Smaller], 
+    pretty = RowBox[{AdjustmentBox[Style[2*S + 1, Smaller], 
         BoxBaselineShift -> -1, BoxMargins -> 0], 
         AdjustmentBox[PrintL[L], BoxMargins -> -0.2], 
         AdjustmentBox[
         Style[{InputForm[J], mJ}, Small, FontTracking -> "Narrow"], 
         BoxBaselineShift -> 1, 
-        BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}] // DisplayForm])
+        BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}];
+    pretty = DisplayForm[pretty];
+    If[OptionValue["Representation"] == "Ket",
+      pretty = Ket[pretty]
+    ];
+    Return[pretty]
+    )
 
   BasisVecInRusselSaunders::usage = "BasisVecInRusselSaunders[basisVec] takes a basis vector in the format {LSstring, Jval, mJval} and returns a human-readable symbol for the corresponding Russel-Saunders term."
   BasisVecInRusselSaunders[basisVec_] := (
     {LSstring, Jval, mJval} = basisVec;
-    Ket[PrettySaunders[LSstring, Jval], mJval]
+    Ket[PrettySaundersSLJmJ[basisVec]]
     )
 
   LSJMJTemplate = 
@@ -3120,37 +3146,62 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   ParseStates[states_, basis_, OptionsPattern[]] := Module[{parsedStates},
   (
     parsedStates = Table[(
-      {energy, eigenVec} = state;
-      maxTermIndex = Ordering[Abs[eigenVec]][[-1]];
+      {energy, eigenVec}      = state;
+      maxTermIndex            = Ordering[Abs[eigenVec]][[-1]];
       {LSstring, Jval, mJval} = basis[[maxTermIndex]];
-      LSJsymbol = Subscript[LSstring, {Jval, mJval}];
-      LSJMJsymbol = LSstring <> ToString[Jval, InputForm];
-      {S, L} = FindSL[LSstring];
+      LSJsymbol               = Subscript[LSstring, {Jval, mJval}];
+      LSJMJsymbol             = LSstring <> ToString[Jval, InputForm];
+      {S, L}                  = FindSL[LSstring];
       {energy, LSstring, Jval, mJval, S, L, LSJsymbol, LSJMJsymbol}
-      ),
-      {state, states}];
+    ),
+    {state, states}
+    ];
     Return[parsedStates]
     )
   ]
 
-  ParseStatesByNumBasisVecs::usage = "ParseStatesByNumBasisVecs[states, basis, numBasisVecs] takes a list of eigenstates in terms of their coefficients in the given basis and returns a list of the same states in terms of their energy and the coefficients of the numBasisVecs most significant basis vectors.";
-  ParseStatesByNumBasisVecs[states_, basis_, numBasisVecs_, roundTo_ : 0.01] := (
+  Options[ParseStatesByNumBasisVecs] = {"Coefficients" -> "Amplitudes", "Representation" -> "Ket"};
+  ParseStatesByNumBasisVecs::usage = "ParseStatesByNumBasisVecs[states, basis, numBasisVecs, roundTo] takes a list of eigenstates in terms of their coefficients in the given basis and returns a list of the same states in terms of their energy and the coefficients at most numBasisVecs basis vectors. By default roundTo is 0.01 and this is the value used to round the amplitude coefficients.
+  The option \"Coefficients\" can be used to specify whether the coefficients are given as \"Amplitudes\" or \"Probabilities\". The default is \"Amplitudes\".
+  ";
+  ParseStatesByNumBasisVecs[eigensys_List, basis_List, numBasisVecs_Integer, roundTo_Real : 0.01, OptionsPattern[]] := Module[
+    {parsedStates, energy, eigenVec, 
+    probs, amplitudes, ordering, 
+    chosenIndices, majorComponents, 
+    majorAmplitudes, majorRep},
+  (
     parsedStates = Table[(
       {energy, eigenVec} = state;
-      energy = Chop[energy];
-      probs = Round[Abs[eigenVec^2], roundTo];
-      amplitudes = Round[eigenVec, roundTo];
-      ordering = Ordering[probs];
-      chosenIndices = ordering[[-numBasisVecs ;;]];
-      majorComponents = basis[[chosenIndices]];
-      majorProbabilities = amplitudes[[chosenIndices]];
-      majorComponents = BasisVecInLSJMJ /@ majorComponents;
-      majorRep = majorProbabilities . majorComponents;
+      energy             = Chop[energy];
+      probs              = Round[Abs[eigenVec^2], roundTo];
+      amplitudes         = Round[eigenVec, roundTo];
+      ordering           = Ordering[probs];
+      chosenIndices      = ordering[[-numBasisVecs ;;]];
+      majorComponents    = basis[[chosenIndices]];
+      majorThings = If[OptionValue["Coefficients"] == "Probabilities",
+        (
+          probs[[chosenIndices]]
+        ),
+        (
+          amplitudes[[chosenIndices]]
+        )
+      ];
+      majorComponents    = PrettySaundersSLJmJ[#, "Representation" -> OptionValue["Representation"]] & /@ majorComponents;
+      nonZ               = (# != 0.) & /@ majorThings;
+      majorThings        = Pick[majorThings, nonZ];
+      majorComponents    = Pick[majorComponents, nonZ];
+      majorThings = If[OptionValue["Coefficients"] == "Probabilities",
+        (
+          majorThings * 100*"%"
+        )
+      ];
+      majorRep           = majorThings . majorComponents;
       {energy, majorRep}
       ),
-      {state, fstates}];
+      {state, eigensys}];
     Return[parsedStates]
     )
+  ];
 
   FindThresholdPosition::usage = "FindThresholdPosition[list, threshold] returns the position of the first element in list that is greater than threshold. If no such element exists, it returns the length of list. The elements of the given list must be in ascending order.";
   FindThresholdPosition[list_, threshold_] := 
@@ -3245,8 +3296,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
       (* majorComponents    = PrettySaundersSLJmJ[{#[[1]],#[[2]],#[[3]]}] & /@ majorComponents; *)
       majorComponents    = PrettySaundersSLJmJ /@ majorComponents;
       majorAmplitudes    = majorAmplitudes[[notnullAmplitudes]];
-      (*Make them into Kets*)
-      majorComponents    = Ket /@ majorComponents[[notnullAmplitudes]];
+      majorComponents    = majorComponents[[notnullAmplitudes]];
       (*Multiply and add to build the final Ket*)
       majorRep           = majorAmplitudes . majorComponents;
       {energy, majorRep}
@@ -3403,12 +3453,17 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     "ImageSize"->1000, 
     "AspectRatio" -> 1/8, 
     "Background"->"Automatic",
-    "Epilog"->{}
+    "Epilog"->{},
+    "Explorer"->True
     };
   EnergyLevelDiagram[states_, OptionsPattern[]]:= (
     energies = First/@states;
     epi = OptionValue["Epilog"];
-    ExploreGraphics@ListPlot[Tooltip[{{#, 0}, {#, 1}}, {Quantity[#/8065.54429, "eV"], Quantity[#, 1/"Centimeters"]}] &/@ energies,
+    explora = If[OptionValue["Explorer"],
+      ExploreGraphics,
+      Identity
+    ];
+    explora@ListPlot[Tooltip[{{#, 0}, {#, 1}}, {Quantity[#/8065.54429, "eV"], Quantity[#, 1/"Centimeters"]}] &/@ energies,
       Joined       -> True,
       PlotStyle    -> Black,
       AspectRatio  -> OptionValue["AspectRatio"],
