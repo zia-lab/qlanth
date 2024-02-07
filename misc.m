@@ -6,6 +6,7 @@ RecoverBasis;
 FlowMatching;
 SuperIdentity;
 RobustMissingQ;
+ReplaceDiagonal;
 
 GreedyMatching;
 HelperNotebook;
@@ -24,6 +25,12 @@ RoundToSignificantFigures;
 RobustMissingQ;
 
 Begin["`Private`"];
+
+  ReplaceDiagonal::usage = 
+    "ReplaceDiagonal[matrix, repValue] replaces all the diagonal of the given array to the given value. The array is assumed to be square and the replacement value is assumed to be a number. The returned value is the array with the diagonal replaced. This function is useful for setting the diagonal of an array to a given value. The original array is not modified. The given array may be sparse.";
+  ReplaceDiagonal[matrix_, repValue_] := 
+    ReplacePart[matrix, 
+      Table[{i, i} -> repValue, {i, 1, Length[matrix]}]];
 
   Options[RoundValueWithUncertainty] = {"SetPrecision" -> False};
   RoundValueWithUncertainty::usage = 

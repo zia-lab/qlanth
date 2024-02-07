@@ -277,6 +277,7 @@ GenerateT22Table;
 GenerateThreeBodyTables;
 GenerateThreeBodyTables;
 Generator;
+GroundStateOscillatorStrength;
 HamMatrixAssembly;
 HamiltonianForm;
 
@@ -371,7 +372,7 @@ ThreeBodyTable;
 ThreeBodyTables;
 ThreeJay;
 TotalCFIters;
-TransitionRater;
+MagDipoleRates;
 chenDeltas;
 fK;
 
@@ -2239,6 +2240,8 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   (* ######################################################################### *)
   (* ########################### Optical Operators ########################### *)
 
+  magOp = <||>;
+
   Options[JJBlockMagDip]={"Sparse"->True};
   JJBlockMagDip::usage="JJBlockMagDip[numE, J, Jp] returns the LSJ-reduced matrix element of the magnetic dipole operator between the states with given J and Jp. The option \"Sparse\" can be used to return a sparse matrix. The default is to return a sparse matrix.
   See eqn 15.7 in TASS.
@@ -2363,49 +2366,73 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   )
   ];
 
-  Options[MagDipLineStrength]={"Reload MagOp" -> False,"Units"->"SI"};
+  Options[MagDipLineStrength]={"Reload MagOp" -> False, "Units"->"SI", "States" -> All};
   MagDipLineStrength::usage="MagDipLineStrength[theEigensys, numE] takes the eigensystem of an ion and the number numE of f-electrons that correspond to it and it calculates the line strength array Stot.
-  The option \"Units\" can be set to either \"SI\" (so that the units of the returned array are A/m^2) or to \"Atomic\".
-  The elements returned array should be interpreted in the standard LSJMJ basis as returned by BasisLSJMJ[numE]. As such the element Stot[[i,i]] corresponds to the line strength states |i> and |j>.";
-  MagDipLineStrength[theEigensys_List,numE_Integer,OptionsPattern[]]:=Module[
-    {allEigenvecs,Sx,Sy,Sz,Stot ,factor},
+  The option \"Units\" can be set to either \"SI\" (so that the units of the returned array are A/m^2) or to \"Hartree\".
+  The option \"States\" can be used to limit the states for which the line strength is calculated. The default, All, calculates the line strength for all states. A second option for this is to provide an index labelling a specific state, in which case only the line strengths between that state and all the others are computed.
+  The returned array should be interpreted in the eigenbasis of the Hamiltonian. As such the element Stot[[i,i]] corresponds to the line strength states |i> and |j>.";
+  MagDipLineStrength[theEigensys_List, numE_Integer, OptionsPattern[]]:=Module[
+    {allEigenvecs, Sx, Sy, Sz, Stot ,factor},
   (
     (*If not loaded then load it, *)
-    If[Or[Not[ValueQ[magOp]],OptionValue["Reload MagOp"]],
+    If[Or[Not[MemberQ[Keys[magOp], numE]], OptionValue["Reload MagOp"]],
     (
-      magOp=ReplaceInSparseArray[#,{gs->2}]&/@MagDipoleMatrixAssembly[numE];
+      magOp[numE] = ReplaceInSparseArray[#,{gs->2}]& /@ MagDipoleMatrixAssembly[numE];
     )
     ];
     allEigenvecs = Transpose[Last/@theEigensys];
-    {Sx,Sy,Sz}   = (ConjugateTranspose[allEigenvecs].#.allEigenvecs)&/@{magx,magy,magz};
-    Stot         = Abs[Sx]^2+Abs[Sy]^2+Abs[Sz]^2;
+    Which[OptionValue["States"] === All,
+      (
+        {Sx,Sy,Sz}   = (ConjugateTranspose[allEigenvecs].#.allEigenvecs) & /@ magOp[numE];
+        Stot         = Abs[Sx]^2+Abs[Sy]^2+Abs[Sz]^2;
+      ),
+      IntegerQ[OptionValue["States"]],
+      (
+        singleState  = theEigensys[[OptionValue["States"],2]];
+        {Sx,Sy,Sz}   = (ConjugateTranspose[allEigenvecs].#.singleState) & /@ magOp[numE];
+        Stot         = Abs[Sx]^2+Abs[Sy]^2+Abs[Sz]^2;
+      )
+    ];
     Which[
       OptionValue["Units"] == "SI",
-      Return[4 \[Mu]B^2 * Stot],
-      OptionValue["Units"] == "Atomic",
-      Return[Stot]
+        Return[4 \[Mu]B^2 * Stot],
+      OptionValue["Units"] == "Hartree",
+        Return[Stot],
+      True,
+      (
+        Print["Invalid option for \"Units\". Options are \"SI\" and \"Hartree\"."];
+        Abort[];
+      )
     ];
   )
   ]
 
-  TransitionRater::usage="TransitionRater[eigenSys, numE] calculates the magnetic dipole transition rate array for the provided eigensystem. The option \"Units\" can be set to \"SI\" or to \"Atomic\". If the option \"Natural Radiative Lifetimes\" is set to true then the reciprocal of the rate is returned instead.";
-  Options[TransitionRater]={"Units"->"SI","Lifetime"->False};
-  TransitionRater[eigenSys_List,numE_Integer,OptionsPattern[]]:=Module[
+  MagDipoleRates::usage="MagDipoleRates[eigenSys, numE] calculates the magnetic dipole transition rate array for the provided eigensystem. The option \"Units\" can be set to \"SI\" or to \"Hartree\". If the option \"Natural Radiative Lifetimes\" is set to true then the reciprocal of the rate is returned instead. The energy unit assumed in eigenSys is kayser. The returned array should be interpreted in the eigenbasis of the Hamiltonian. As such the element AMD[[i,i]] corresponds to the transition rate (or the radiative lifetime, depending on options) between eigenstates |i> and |j>.";
+  Options[MagDipoleRates]={"Units"->"SI", "Lifetime"->False};
+  MagDipoleRates[eigenSys_List,numE_Integer,OptionsPattern[]]:=Module[
     {AMD,gKramers,Stot,eigenEnergies,transitionWaveLengthsInMeters},(
     gKramers      = If[OddQ[numE],2,1];
-    Stot          = MagDipLineStrength[eigenSys,numE,"Units"->OptionValue["Units"]];
+    Stot          = MagDipLineStrength[eigenSys, numE, "Units"->OptionValue["Units"]];
     eigenEnergies = First/@eigenSys;
-    transitionWaveLengthsInMeters=0.01/Outer[Subtract,eigenEnergies,eigenEnergies];
+    energyDiffs   = Outer[Subtract,eigenEnergies,eigenEnergies];
+    energyDiffs   = ReplaceDiagonal[energyDiffs, Indeterminate];
+    (* Energies assumed in pseudo-energy unit kayser.*)
+    transitionWaveLengthsInMeters = 0.01/energyDiffs;
+
     unitFactor    = Which[
-    OptionValue["Units"]=="Atomic",
+    OptionValue["Units"]=="Hartree",
     (
-      \[Mu]0Fine=\[Alpha]Fine^2;
-      hPlanckFine=2.*\[Pi];
-      16 \[Pi]^3 (\[Mu]0Fine * bohrRadius^3)/(3 hPlanckFine)
+      (* The bohrRadius factor in SI neede to convert the wavelengths which are assumed in m*)
+      16 \[Pi]^3 (\[Mu]0Hartree /(3 hPlanckFine)) * bohrRadius^3
     ),
     OptionValue["Units"]=="SI",
     (
       16 \[Pi]^3 \[Mu]0/(3 hPlanck)
+    ),
+    True,
+    (
+      Print["Invalid option for \"Units\". Options are \"SI\" and \"Hartree\"."];
+      Abort[];
     )
     ];
     AMD = unitFactor/gKramers (1/transitionWaveLengthsInMeters^3)*Stot;
@@ -2415,6 +2442,23 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
       Return[AMD]
     ]
     )
+  ]
+
+  GroundStateOscillatorStrength::usage="GroundStateOscillatorStrength[eigenSys, numE] calculates the oscillator strength between the ground state and the excited states as given by eigenSys. The energy unit assumed in eigenSys is kayser. The returned array should be interpreted in the eigenbasis of the Hamiltonian. As such the element fMDGS[[i]] corresponds to the oscillator strength between ground state and eigenstate |i>.";
+  GroundStateOscillatorStrength[eigenSys_, numE_, OptionsPattern[]]:=Module[
+  {eigenEnergies, SMDGS, GSEnergy, gKramers, energyDiffs, transitionWaveLengthsInMeters, factor},
+  (
+    eigenEnergies    = First/@eigenSys;
+    SMDGS            = MagDipLineStrength[eigenSys,numE, "Units"->"SI"];
+    GSEnergy         = eigenSys[[1,1]];
+    gKramers         = If[OddQ[numE],2,1];
+    energyDiffs      = eigenEnergies-GSEnergy;
+    energyDiffs[[1]] = Indeterminate;
+    transitionWaveLengthsInMeters = 0.01/energyDiffs;
+    factor = (8\[Pi]^2 me)       /(3 hPlanck eCharge^2 cLight);
+    fMDGS=unitFactor/gKramers/transitionWaveLengthsInMeters*SMDGS;
+    Return[fMDGS];
+  )
   ]
 
   (* ########################### Optical Operators ########################### *)
