@@ -90,10 +90,6 @@ https://doi.org/10.1006/adnd.1996.0001.
 Parentage  for  the  p,  d,  and f Shells." John Hopkins University,
 2000. The B1F_ALL.TXT file is from this thesis.
 
-+  Guillot-Noel,  O,  Ph Goldner, E Antic-Fidancev, and JL Le Gouet.
-"Analysis  of Magnetic Interactions in Rare-Earth-Doped Crystals for
-Quantum Manipulation." Physical Review B 71, no. 17 (2005): 174409.
-
 +  Dodson,  Christopher  M.,  and  Rashid  Zia. "Magnetic Dipole and
 Electric  Quadrupole Transitions in the Trivalent Lanthanide Series:
 Calculated Emission Rates and Oscillator Strengths." Physical Review
@@ -106,6 +102,7 @@ https://doi.org/10.1103/PhysRevB.86.125102.
 BeginPackage["qlanth`"];
 Needs["qonstants`"];
 Needs["qplotter`"];
+Needs["misc`"];
 
 paramAtlas = "
 E0: linear combination of F_k, see eqn. (2-80) in Wybourne 1965
@@ -239,7 +236,6 @@ CasimirG2;
 CasimirSO3;
 CasimirSO7;
 
-ClebshG;
 Cqk;
 CrystalField;
 Dk;
@@ -318,6 +314,7 @@ LoadV1k;
 
 MagneticInteractions;
 MagDipoleMatrixAssembly;
+MagDipLineStrength;
 MaxJ;
 MinJ;
 NKCFPPhase;
@@ -374,6 +371,7 @@ ThreeBodyTable;
 ThreeBodyTables;
 ThreeJay;
 TotalCFIters;
+TransitionRater;
 chenDeltas;
 fK;
 
@@ -2121,8 +2119,7 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
   )
 
   Options[TabulateManyJJBlockMatrixTables] = {"Overwrite"->False, "Sparse"->True, "ChenDeltas"->False, "FilenameAppendix"-> "", "Compressed" -> False};
-  TabulateManyJJBlockMatrixTables::usage = "TabulateManyJJBlockMatrixTables[{n1, n2, ...}] calculates the tables of matrix elements for the requested f^n_i configurations. The function does not return the matrices themselves. It instead returns an association whose keys are numE and whose values are the filenames where the output of TabulateJJBlockMatrixTables was saved to. When these files are loaded with Get, the following three symbols are thus defined: JJBlockMatrixTable, EnergyStatesTable, and AllowedM.
-  JJBlockMatrixTable is an association whose keys are of the form {n, J, Jp} and whose values are matrix elements.";
+  TabulateManyJJBlockMatrixTables::usage = "TabulateManyJJBlockMatrixTables[{n1, n2, ...}] calculates the tables of matrix elements for the requested f^n_i configurations. The function does not return the matrices themselves. It instead returns an association whose keys are numE and whose values are the filenames where the output of TabulateJJBlockMatrixTables was saved to.The output consists of an association whose keys are of the form {n, J, Jp} and whose values are rectangular arrays given the values of <|LSJMJa|H|L'S'J'MJ'a'|>.";
   TabulateManyJJBlockMatrixTables[ns_, OptionsPattern[]]:= (
     overwrite = OptionValue["Overwrite"];
     fNames = <||>;
@@ -2242,14 +2239,12 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   (* ######################################################################### *)
   (* ########################### Optical Operators ########################### *)
 
-  ClebshG[{j_,m_},{j1_,m1_},{j2_,m2_}]:=(
-    Phaser[j-j1+m2]*
-    ThreeJay[{j,m},{j1,m1},{j2,-m2}]);
-
   Options[JJBlockMagDip]={"Sparse"->True};
-  JJBlockMadDip::usage="JJBlockMagDip[numE, J, Jp] returns the LSJ-reduced matrix element of the magnetic dipole operator between the states with given J and Jp. The option \"Sparse\" can be used to return a sparse matrix. The default is to return a sparse matrix.
-  See appendix of Guillot Noel 2005.
+  JJBlockMagDip::usage="JJBlockMagDip[numE, J, Jp] returns the LSJ-reduced matrix element of the magnetic dipole operator between the states with given J and Jp. The option \"Sparse\" can be used to return a sparse matrix. The default is to return a sparse matrix.
+  See eqn 15.7 in TASS.
   Here it is provided in atomic units in which the Bohr magneton is 1/2.
+  \[Mu] = -(1/2) (L + gs S)
+  We are using the Racah convention for the reduced matrix elements in the Wigner-Eckart theorem. See TASS eqn 11.15.
   ";
   JJBlockMagDip[numE_, braJ_, ketJ_, OptionsPattern[]]:=Module[
     {braSLJs,ketSLJs,
@@ -2268,32 +2263,31 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
       braMJ       = braSLJ[[3]];
       ketMJ       = ketSLJ[[3]];
       summand1    = If[Or[braJ  != ketJ,
-                          braL  != ketL,
-                          braS  != ketS,
                           braSL != ketSL],
         0,
         Sqrt[braJ(braJ+1)TPO[braJ]]
       ];
-      summand2 = If[Or[braL != ketL,
-                       braS != ketS,
-                       braSL!= ketSL],
+      (* looking at the string includes checking L=L' S=S' \alpha=\alpha'*)
+      summand2 = If[braSL!= ketSL,
         0,
-        Phaser[braS+braL+ketJ+1]*
-        Sqrt[TPO[braJ]*TPO[ketJ]]*
-        SixJay[{braJ,1,ketJ},{braS,braL,braS}]*
-        (gs-1)*
-        Sqrt[braS(braS+1)TPO[braS]]
+        (gs-1) *
+          Phaser[braS+braL+ketJ+1] *
+            Sqrt[TPO[braJ]*TPO[ketJ]] *
+              SixJay[{braJ,1,ketJ},{braS,braL,braS}] *
+                Sqrt[braS(braS+1)TPO[braS]]
       ];
       matValue = summand1 + summand2;
-      cg =(ClebshG[{ketJ,ketMJ},{1,#},{braJ,braMJ}] &) /@ {-1,0,1};
-      matValue = 1/2 * cg * matValue;
+      (* We are using the Racah convention for red matrix elements in Wigner-Eckart *)
+      threejays = (ThreeJay[{braJ, -braMJ}, {1, #}, {ketJ, ketMJ}] &) /@ {-1,0,1};
+      threejays *= Phaser[braJ-braMJ];
+      matValue  = - 1/2 * threejays * matValue;
       matValue,
     {braSLJ, braSLJs},
     {ketSLJ, ketSLJs}
     ];
     (* magMatrix = Reverse[magMatrix]; *)
     If[OptionValue["Sparse"],
-      magMatrix=SparseArray[magMatrix]
+      magMatrix= SparseArray[magMatrix]
     ];
     Return[magMatrix])
   ]; 
@@ -2315,6 +2309,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
 
   Options[TabulateManyJJBlockMagDipTables]={"FilenameAppendix"->"",
   "Overwrite"->False,"Compressed"->True};
+  TabulateManyJJBlockMagDipTables::usage = "TabulateManyJJBlockMagDipTables[{n1, n2, ...}] calculates the tables of matrix elements for the requested f^n_i configurations. The function does not return the matrices themselves. It instead returns an association whose keys are numE and whose values are the filenames where the output of TabulateManyJJBlockMagDipTables was saved to. The output consists of an association whose keys are of the form {n, J, Jp} and whose values are rectangular arrays given the values of <|LSJMJa|H_dip|L'S'J'MJ'a'|>.";
   TabulateManyJJBlockMagDipTables[ns_,OptionsPattern[]]:=(
     fnames=<||>;
     Do[
@@ -2339,7 +2334,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   )
 
   Options[MagDipoleMatrixAssembly]={"FilenameAppendix"->""};
-  MagDipoleMatrixAssembly::usage="MagDipoleMatrixAssembly[numE] returns the matrix representation of the operator (L + gs S) in the f^numE configuration. The function returns a list with three elements corresponding to the x,y,z components of this operator. The option \"FilenameAppendix\" can be used to append a string to the filename from which the function imports from in order to patch together the array.";
+  MagDipoleMatrixAssembly::usage="MagDipoleMatrixAssembly[numE] returns the matrix representation of the operator - 1/2 (L + gs S) in the f^numE configuration. The function returns a list with three elements corresponding to the x,y,z components of this operator. The option \"FilenameAppendix\" can be used to append a string to the filename from which the function imports from in order to patch together the array.";
   MagDipoleMatrixAssembly[nf_,OptionsPattern[]]:=Module[
     {ImportFun, numE, appendTo, emFname, JJBlockMagDipTable, Js, howManyJs, blockOp, rowIdx, colIdx},
     (
@@ -2367,6 +2362,60 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     Return[{opX, opY, opZ}];
   )
   ];
+
+  Options[MagDipLineStrength]={"Reload MagOp" -> False,"Units"->"SI"};
+  MagDipLineStrength::usage="MagDipLineStrength[theEigensys, numE] takes the eigensystem of an ion and the number numE of f-electrons that correspond to it and it calculates the line strength array Stot.
+  The option \"Units\" can be set to either \"SI\" (so that the units of the returned array are A/m^2) or to \"Atomic\".
+  The elements returned array should be interpreted in the standard LSJMJ basis as returned by BasisLSJMJ[numE]. As such the element Stot[[i,i]] corresponds to the line strength states |i> and |j>.";
+  MagDipLineStrength[theEigensys_List,numE_Integer,OptionsPattern[]]:=Module[
+    {allEigenvecs,Sx,Sy,Sz,Stot ,factor},
+  (
+    (*If not loaded then load it, *)
+    If[Or[Not[ValueQ[magOp]],OptionValue["Reload MagOp"]],
+    (
+      magOp=ReplaceInSparseArray[#,{gs->2}]&/@MagDipoleMatrixAssembly[numE];
+    )
+    ];
+    allEigenvecs = Transpose[Last/@theEigensys];
+    {Sx,Sy,Sz}   = (ConjugateTranspose[allEigenvecs].#.allEigenvecs)&/@{magx,magy,magz};
+    Stot         = Abs[Sx]^2+Abs[Sy]^2+Abs[Sz]^2;
+    Which[
+      OptionValue["Units"] == "SI",
+      Return[4 \[Mu]B^2 * Stot],
+      OptionValue["Units"] == "Atomic",
+      Return[Stot]
+    ];
+  )
+  ]
+
+  TransitionRater::usage="TransitionRater[eigenSys, numE] calculates the magnetic dipole transition rate array for the provided eigensystem. The option \"Units\" can be set to \"SI\" or to \"Atomic\". If the option \"Natural Radiative Lifetimes\" is set to true then the reciprocal of the rate is returned instead.";
+  Options[TransitionRater]={"Units"->"SI","Lifetime"->False};
+  TransitionRater[eigenSys_List,numE_Integer,OptionsPattern[]]:=Module[
+    {AMD,gKramers,Stot,eigenEnergies,transitionWaveLengthsInMeters},(
+    gKramers      = If[OddQ[numE],2,1];
+    Stot          = MagDipLineStrength[eigenSys,numE,"Units"->OptionValue["Units"]];
+    eigenEnergies = First/@eigenSys;
+    transitionWaveLengthsInMeters=0.01/Outer[Subtract,eigenEnergies,eigenEnergies];
+    unitFactor    = Which[
+    OptionValue["Units"]=="Atomic",
+    (
+      \[Mu]0Fine=\[Alpha]Fine^2;
+      hPlanckFine=2.*\[Pi];
+      16 \[Pi]^3 (\[Mu]0Fine * bohrRadius^3)/(3 hPlanckFine)
+    ),
+    OptionValue["Units"]=="SI",
+    (
+      16 \[Pi]^3 \[Mu]0/(3 hPlanck)
+    )
+    ];
+    AMD = unitFactor/gKramers (1/transitionWaveLengthsInMeters^3)*Stot;
+    Which[OptionValue["Lifetime"],
+      Return[1/AMD],
+      True,
+      Return[AMD]
+    ]
+    )
+  ]
 
   (* ########################### Optical Operators ########################### *)
   (* ######################################################################### *)
@@ -3190,9 +3239,9 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
       nonZ               = (# != 0.) & /@ majorThings;
       majorThings        = Pick[majorThings, nonZ];
       majorComponents    = Pick[majorComponents, nonZ];
-      majorThings = If[OptionValue["Coefficients"] == "Probabilities",
+      If[OptionValue["Coefficients"] == "Probabilities",
         (
-          majorThings * 100*"%"
+          majorThings = majorThings * 100*"%"
         )
       ];
       majorRep           = majorThings . majorComponents;
@@ -3304,6 +3353,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   Return[parsedByProb]
   )
   ];
+
 
   (* ######################### Eigensystem analysis ########################## *)
   (* ######################################################################### *)
