@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     72873,       1621]
-NotebookOptionsPosition[     67683,       1544]
-NotebookOutlinePosition[     68459,       1568]
-CellTagsIndexPosition[     68416,       1565]
+NotebookDataLength[     64064,       1463]
+NotebookOptionsPosition[     58982,       1387]
+NotebookOutlinePosition[     59758,       1411]
+CellTagsIndexPosition[     59715,       1408]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -1380,164 +1380,7 @@ Cell[BoxData[
  ShowCellLabel->True,
  CellChangeTimes->{3.91625826152457*^9},
  CellLabel->
-  "(kernel 7)",ExpressionUUID->"7081aea0-88ea-4a89-a152-3f127b6925d2"],
-
-Cell[BoxData[
- DynamicModuleBox[{Progress`ProgressDump`forceRedraw$$ = {{}, {}}, 
-  Progress`ProgressDump`open$$ = True, Progress`ProgressDump`clock$$ = 2, 
-  Progress`ProgressDump`maxTime$$ = DirectedInfinity[1]}, 
-  OverlayBox[{
-   AnimatorBox[Dynamic[Progress`ProgressDump`clock$$], {2., 
-     DirectedInfinity[1], 1.},
-    AnimationRate->1,
-    AnimationRunTime->0.,
-    AppearanceElements->None,
-    ImageSize->{1, 1}], 
-   DynamicWrapperBox[
-    DynamicBox[ToBoxes[
-      Progress`GenerateProgressPanel[{
-       "Progress" :> (Parallel`Combine`Private`nreceived + 
-          Min[10, 7 - Parallel`Combine`Private`nreceived]/2)/7, "Results" :> 
-        StringTemplate["`1`/`2` evaluations of `3` items each (`4` kernels)"][
-         Parallel`Combine`Private`nreceived, 7, 1, 10], "Times" :> 
-        With[{Parallel`Combine`Private`elapsed$ = 
-           AbsoluteTime[] - Parallel`Combine`Private`start}, {
-          Parallel`Combine`Private`remaining$ = (
-             1./((Parallel`Combine`Private`nreceived + 
-               Min[10, 7 - Parallel`Combine`Private`nreceived]/2)/7) - 1) 
-            Parallel`Combine`Private`elapsed$}, 
-          StringTemplate["Elapsed: `1`, remaining: `2`, ETA: `3`"][
-           Parallel`Protected`ProgressTimeFormat[
-           Parallel`Combine`Private`elapsed$], 
-           Parallel`Protected`ProgressTimeFormat[
-           Parallel`Combine`Private`remaining$], 
-           DateString[
-           Parallel`Combine`Private`remaining$ + AbsoluteTime[]]]]}, <|{
-        "DelayedTask" -> ScheduledTaskObject[10, 
-           HoldForm[AppendTo[Progress`ProgressDump`this$state$12912, 
-              Progress`ProgressDump`CreateProgressState[
-              Progress`ProgressDump`parameters$12912, 
-               Progress`ProgressDump`info$12912, ProgressReporting -> 
-               Automatic, "Title" -> "ParallelDo", UpdateInterval -> 1, 
-               "ConsoleSupport" -> False, "TimeEstimate" -> None]]; 
-            Progress`ProgressDump`ProgressInit[
-             Progress`ProgressDump`this$state$12912]; Null], {2, 1}, 
-           Automatic, True, "AutoRemove" -> False, "EpilogFunction" :> Null, 
-           "TaskGroup" -> "Global`"], "State" :> 
-         Progress`ProgressDump`this$state$12912, "Title" -> "ParallelDo", 
-         "Type" -> "Grid", "Environment" -> "Notebook", 
-         "Parameters" -> {
-          "Progress" :> (Parallel`Combine`Private`nreceived + 
-             Min[10, 7 - Parallel`Combine`Private`nreceived]/2)/7, "Results" :> 
-           StringTemplate[
-            "`1`/`2` evaluations of `3` items each (`4` kernels)"][
-            Parallel`Combine`Private`nreceived, 7, 1, 10], "Times" :> 
-           With[{Parallel`Combine`Private`elapsed$ = 
-              AbsoluteTime[] - Parallel`Combine`Private`start}, {
-             Parallel`Combine`Private`remaining$ = (
-                1./((Parallel`Combine`Private`nreceived + 
-                  Min[10, 7 - Parallel`Combine`Private`nreceived]/2)/7) - 1) 
-               Parallel`Combine`Private`elapsed$}, 
-             StringTemplate["Elapsed: `1`, remaining: `2`, ETA: `3`"][
-              Parallel`Protected`ProgressTimeFormat[
-              Parallel`Combine`Private`elapsed$], 
-              Parallel`Protected`ProgressTimeFormat[
-              Parallel`Combine`Private`remaining$], 
-              DateString[
-              Parallel`Combine`Private`remaining$ + AbsoluteTime[]]]]}, 
-         "PreemptibleQ" -> True, "ConsoleQ" -> False, "Evaluator" -> "Local", 
-         "EvaluationCell" -> 
-         CellObject[
-          "56653428-3709-4eb1-8b79-bdd94b339174", 
-           "6ee2d177-603c-42db-8f36-27de653edecf"], "TimeStart" -> 
-         3.916240259487042`16.345444316869365*^9, "TimeStartLocal" -> 
-         3.916240259487042`16.345444316869365*^9, "InitialTimeEstimate" -> 
-         Indeterminate, "UpdateInterval" -> 1, "OuterUpdateInterval" -> 1, 
-         "Buttons" -> None, "Optional" -> {}, "ContainerQ" -> False, 
-         "CreateContainerQ" -> False, "CurrentContainer" -> None, 
-         "PreviousContainer" -> None, "ContainerName" -> None, "Cell" -> 
-         Hold[Progress`ProgressDump`cell$12923], "Clock" :> 
-         Dynamic[Progress`ProgressDump`clock$$], "Redraw" -> 
-         Progress`ProgressDump`forceRedraw$$, "Open" :> 
-         Dynamic[Progress`ProgressDump`open$$]}|>], StandardForm],
-     ImageSizeCache->{434., {44., 51.}},
-     TrackedSymbols:>{Progress`ProgressDump`forceRedraw$$}], Refresh[
-    Progress`ProgressDump`forceRedraw$$ = 
-     With[{Progress`ProgressDump`values = Quiet[
-          Values[{
-           "Progress" :> (Parallel`Combine`Private`nreceived + 
-              Min[10, 7 - Parallel`Combine`Private`nreceived]/2)/7, "Results" :> 
-            StringTemplate[
-             "`1`/`2` evaluations of `3` items each (`4` kernels)"][
-             Parallel`Combine`Private`nreceived, 7, 1, 10], "Times" :> 
-            With[{Parallel`Combine`Private`elapsed$ = 
-               AbsoluteTime[] - Parallel`Combine`Private`start}, {
-              Parallel`Combine`Private`remaining$ = (
-                 1./((Parallel`Combine`Private`nreceived + 
-                   Min[10, 7 - Parallel`Combine`Private`nreceived]/2)/7) - 1) 
-                Parallel`Combine`Private`elapsed$}, 
-              StringTemplate["Elapsed: `1`, remaining: `2`, ETA: `3`"][
-               Parallel`Protected`ProgressTimeFormat[
-               Parallel`Combine`Private`elapsed$], 
-               Parallel`Protected`ProgressTimeFormat[
-               Parallel`Combine`Private`remaining$], 
-               DateString[
-               Parallel`Combine`Private`remaining$ + AbsoluteTime[]]]]}]]}, 
-       Map[
-       Position[Progress`ProgressDump`values, #, Infinity]& , {
-        None, Automatic}]], UpdateInterval -> 
-     Lookup[<|"DelayedTask" -> ScheduledTaskObject[10, 
-          HoldForm[AppendTo[Progress`ProgressDump`this$state$12912, 
-             Progress`ProgressDump`CreateProgressState[
-             Progress`ProgressDump`parameters$12912, 
-              Progress`ProgressDump`info$12912, ProgressReporting -> 
-              Automatic, "Title" -> "ParallelDo", UpdateInterval -> 1, 
-              "ConsoleSupport" -> False, "TimeEstimate" -> None]]; 
-           Progress`ProgressDump`ProgressInit[
-            Progress`ProgressDump`this$state$12912]; Null], {2, 1}, Automatic,
-           True, "AutoRemove" -> False, "EpilogFunction" :> Null, "TaskGroup" -> 
-          "Global`"], "State" :> Progress`ProgressDump`this$state$12912, 
-        "Title" -> "ParallelDo", "Type" -> "Grid", "Environment" -> 
-        "Notebook", 
-        "Parameters" -> {
-         "Progress" :> (Parallel`Combine`Private`nreceived + 
-            Min[10, 7 - Parallel`Combine`Private`nreceived]/2)/7, "Results" :> 
-          StringTemplate[
-           "`1`/`2` evaluations of `3` items each (`4` kernels)"][
-           Parallel`Combine`Private`nreceived, 7, 1, 10], "Times" :> 
-          With[{Parallel`Combine`Private`elapsed$ = 
-             AbsoluteTime[] - Parallel`Combine`Private`start}, {
-            Parallel`Combine`Private`remaining$ = (
-               1./((Parallel`Combine`Private`nreceived + 
-                 Min[10, 7 - Parallel`Combine`Private`nreceived]/2)/7) - 1) 
-              Parallel`Combine`Private`elapsed$}, 
-            StringTemplate["Elapsed: `1`, remaining: `2`, ETA: `3`"][
-             Parallel`Protected`ProgressTimeFormat[
-             Parallel`Combine`Private`elapsed$], 
-             Parallel`Protected`ProgressTimeFormat[
-             Parallel`Combine`Private`remaining$], 
-             DateString[
-             Parallel`Combine`Private`remaining$ + AbsoluteTime[]]]]}, 
-        "PreemptibleQ" -> True, "ConsoleQ" -> False, "Evaluator" -> "Local", 
-        "EvaluationCell" -> 
-        CellObject[
-         "56653428-3709-4eb1-8b79-bdd94b339174", 
-          "6ee2d177-603c-42db-8f36-27de653edecf"], "TimeStart" -> 
-        3.916240259487042`16.345444316869365*^9, "TimeStartLocal" -> 
-        3.916240259487042`16.345444316869365*^9, "InitialTimeEstimate" -> 
-        Indeterminate, "UpdateInterval" -> 1, "OuterUpdateInterval" -> 1, 
-        "Buttons" -> None, "Optional" -> {}, "ContainerQ" -> False, 
-        "CreateContainerQ" -> False, "CurrentContainer" -> None, 
-        "PreviousContainer" -> None, "ContainerName" -> None, "Cell" -> 
-        Hold[Progress`ProgressDump`cell$12923], "Clock" -> Dynamic[None]|>, 
-       "OuterUpdateInterval"], TrackedSymbols :> {}],
-    ImageSizeCache->{434., {44., 51.}}]}, All, 2],
-  DynamicModuleValues:>{}]], "PrintTemporary",
- ShowCellLabel->True,
- CellChangeTimes->{3.916258261567383*^9},
- CellLabel->
-  "During evaluation of \
-In[95]:=",ExpressionUUID->"3a45737e-868c-4bf0-9e72-03602bd5328f"]
+  "(kernel 7)",ExpressionUUID->"7081aea0-88ea-4a89-a152-3f127b6925d2"]
 }, Open  ]]
 }, Open  ]]
 }, Open  ]]
@@ -1618,8 +1461,7 @@ Cell[57054, 1329, 375, 9, 38, "Print",ExpressionUUID->"ec696d13-00c0-4b56-9ebc-3
 Cell[57432, 1340, 375, 9, 38, "Print",ExpressionUUID->"b4615f73-f391-476f-81d8-14310977f1f5"],
 Cell[57810, 1351, 377, 9, 38, "Print",ExpressionUUID->"c63beca9-41e7-4521-a9fd-43d42537c00d"],
 Cell[58190, 1362, 375, 9, 38, "Print",ExpressionUUID->"2455423f-94e5-4d61-b2bb-640b3244e1bd"],
-Cell[58568, 1373, 374, 9, 38, "Print",ExpressionUUID->"7081aea0-88ea-4a89-a152-3f127b6925d2"],
-Cell[58945, 1384, 8698, 155, 105, "PrintTemporary",ExpressionUUID->"3a45737e-868c-4bf0-9e72-03602bd5328f"]
+Cell[58568, 1373, 374, 9, 38, "Print",ExpressionUUID->"7081aea0-88ea-4a89-a152-3f127b6925d2"]
 }, Open  ]]
 }, Open  ]]
 }, Open  ]]

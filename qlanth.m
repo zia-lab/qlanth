@@ -252,7 +252,6 @@ ExportmZip;
 fsubk;
 fsupk;
 
-FastIonSolverLaF3;
 FindNKLSTerm;
 FindSL;
 
@@ -283,7 +282,7 @@ HamiltonianForm;
 
 HamiltonianMatrixPlot;
 HoleElectronConjugation;
-IonSolverLaF3;
+IonSolver;
 ImportMZip;
 JJBlockMatrix;
 JJBlockMagDip;
@@ -419,7 +418,7 @@ Begin["`Private`"]
   ParamPad[params_, OptionsPattern[]] := (
     notPresentSymbols = Complement[paramSymbols, Keys[params]];
     If[OptionValue["Print"], 
-      Print["Symbols not in given params: ",
+      Print["Following symbols were not given and are being set to 0: ",
       notPresentSymbols]
     ];
     newParams = Transpose[{paramSymbols, ConstantArray[0, Length[paramSymbols]]}];
@@ -2203,6 +2202,22 @@ SimplerSymbolicHamMatrix::usage="SimplerSymbolicHamMatrix[numE, simplifier] is a
 SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Module[
   {thisHam,eTofs,fname},
   (
+    If[Not[ValueQ[ElectrostaticTable]],
+      LoadElectrostatic[]
+      ];
+    If[Not[ValueQ[SOOandECSOTable]],
+      LoadSOOandECSO[]
+    ];
+    If[Not[ValueQ[SpinOrbitTable]],
+      LoadSpinOrbit[]
+    ];
+    If[Not[ValueQ[SpinSpinTable]],
+      LoadSpinSpin[]
+    ];
+    If[Not[ValueQ[ThreeBodyTable]],
+      LoadThreeBody[]
+    ];
+    
     fname=FileNameJoin[{moduleDir,"hams",OptionValue["PrependToFilename"]<>"SymbolicMatrix-f"<>ToString[numE]<>".m"}];
     If[FileExistsQ[fname] && Not[OptionValue["Overwrite"]],
       (
@@ -2337,12 +2352,15 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   )
 
   Options[MagDipoleMatrixAssembly]={"FilenameAppendix"->""};
-  MagDipoleMatrixAssembly::usage="MagDipoleMatrixAssembly[numE] returns the matrix representation of the operator - 1/2 (L + gs S) in the f^numE configuration. The function returns a list with three elements corresponding to the x,y,z components of this operator. The option \"FilenameAppendix\" can be used to append a string to the filename from which the function imports from in order to patch together the array.";
+  MagDipoleMatrixAssembly::usage="MagDipoleMatrixAssembly[numE] returns the matrix representation of the operator - 1/2 (L + gs S) in the f^numE configuration. The function returns a list with three elements corresponding to the x,y,z components of this operator. The option \"FilenameAppendix\" can be used to append a string to the filename from which the function imports from in order to patch together the array. For numE beyond 7 the function returns the same as for the complementary configuration.";
   MagDipoleMatrixAssembly[nf_,OptionsPattern[]]:=Module[
     {ImportFun, numE, appendTo, emFname, JJBlockMagDipTable, Js, howManyJs, blockOp, rowIdx, colIdx},
     (
     ImportFun = ImportMZip;
     numE      = nf;
+    numH      = 14 - numE;
+    numE      = Min[numE,numH];
+
     appendTo  = (OptionValue["FilenameAppendix"]<>"-magDip");
     emFname   = JJBlockMatrixFileName[numE,"FilenameAppendix"->appendTo];
     JJBlockMagDipTable = ImportFun[emFname];
@@ -2371,11 +2389,14 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   The option \"Units\" can be set to either \"SI\" (so that the units of the returned array are A/m^2) or to \"Hartree\".
   The option \"States\" can be used to limit the states for which the line strength is calculated. The default, All, calculates the line strength for all states. A second option for this is to provide an index labelling a specific state, in which case only the line strengths between that state and all the others are computed.
   The returned array should be interpreted in the eigenbasis of the Hamiltonian. As such the element Stot[[i,i]] corresponds to the line strength states |i> and |j>.";
-  MagDipLineStrength[theEigensys_List, numE_Integer, OptionsPattern[]]:=Module[
+  MagDipLineStrength[theEigensys_List, numE0_Integer, OptionsPattern[]]:=Module[
     {allEigenvecs, Sx, Sy, Sz, Stot ,factor},
   (
+    numE = Min[14-numE0, numE0];
     (*If not loaded then load it, *)
-    If[Or[Not[MemberQ[Keys[magOp], numE]], OptionValue["Reload MagOp"]],
+    If[Or[
+        Not[MemberQ[Keys[magOp], numE]],
+        OptionValue["Reload MagOp"]],
     (
       magOp[numE] = ReplaceInSparseArray[#,{gs->2}]& /@ MagDipoleMatrixAssembly[numE];
     )
@@ -2409,11 +2430,12 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
 
   MagDipoleRates::usage="MagDipoleRates[eigenSys, numE] calculates the magnetic dipole transition rate array for the provided eigensystem. The option \"Units\" can be set to \"SI\" or to \"Hartree\". If the option \"Natural Radiative Lifetimes\" is set to true then the reciprocal of the rate is returned instead. The energy unit assumed in eigenSys is kayser. The returned array should be interpreted in the eigenbasis of the Hamiltonian. As such the element AMD[[i,i]] corresponds to the transition rate (or the radiative lifetime, depending on options) between eigenstates |i> and |j>.";
   Options[MagDipoleRates]={"Units"->"SI", "Lifetime"->False};
-  MagDipoleRates[eigenSys_List,numE_Integer,OptionsPattern[]]:=Module[
+  MagDipoleRates[eigenSys_List, numE0_Integer,OptionsPattern[]]:=Module[
     {AMD,gKramers,Stot,eigenEnergies,transitionWaveLengthsInMeters},(
+    numE          = Min[14-numE0, numE0];
     gKramers      = If[OddQ[numE],2,1];
     Stot          = MagDipLineStrength[eigenSys, numE, "Units"->OptionValue["Units"]];
-    eigenEnergies = First/@eigenSys;
+    eigenEnergies = Chop[First/@eigenSys];
     energyDiffs   = Outer[Subtract,eigenEnergies,eigenEnergies];
     energyDiffs   = ReplaceDiagonal[energyDiffs, Indeterminate];
     (* Energies assumed in pseudo-energy unit kayser.*)
@@ -2445,11 +2467,11 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   ]
 
   GroundStateOscillatorStrength::usage="GroundStateOscillatorStrength[eigenSys, numE] calculates the oscillator strength between the ground state and the excited states as given by eigenSys. The energy unit assumed in eigenSys is kayser. The returned array should be interpreted in the eigenbasis of the Hamiltonian. As such the element fMDGS[[i]] corresponds to the oscillator strength between ground state and eigenstate |i>.";
-  GroundStateOscillatorStrength[eigenSys_, numE_, OptionsPattern[]]:=Module[
+  GroundStateOscillatorStrength[eigenSys_, numE_]:=Module[
   {eigenEnergies, SMDGS, GSEnergy, gKramers, energyDiffs, transitionWaveLengthsInMeters, factor},
   (
     eigenEnergies    = First/@eigenSys;
-    SMDGS            = MagDipLineStrength[eigenSys,numE, "Units"->"SI"];
+    SMDGS            = MagDipLineStrength[eigenSys,numE, "Units"->"SI", "States"->1];
     GSEnergy         = eigenSys[[1,1]];
     gKramers         = If[OddQ[numE],2,1];
     energyDiffs      = eigenEnergies-GSEnergy;
@@ -2741,7 +2763,6 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   ];
 
   HoleElectronConjugation::usage = "HoleElectronConjugation[params] takes the parameters (as an association) that define a configuration and converts them so that they may be interpreted as corresponding to a complentary hole configuration. Some of this can be simply done by changing the sign of the model parameters. In the case of the effective three body interaction the relationship is more complex and is controlled by the value of the isE variable.";
-
   HoleElectronConjugation[params_] := 
     Module[{newparams = params},
       (
@@ -2756,219 +2777,53 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
           {flipper, Complement[Keys[newparams], flipSignsOf]}
           ];
         flippedParams = Association[Join[nonflipped, flipped]];
+        flippedParams = Select[flippedParams, FreeQ[#, Missing]&];
         Return[flippedParams];
       )
     ]
 
-  IonSolverLaF3::usage="IonSolverLaF3[numE] solves the energy levels of a lanthanide ion with numE f-electrons in lanthanum fluoride. It does this by querying the fit parameters from Carnall's tables. This function is used to compare the calculated values as calculated with qlanth with the calculated values quoted by Carnall.
-
-  Parameters
-  ----------
-  numE (int) : Number of f-electrons.
-
-  Options
-  -------
+  Options[IonSolver] = {"Include Spin-Spin" -> True,
+    "Overwrite Hamiltonian" -> False,
+    "Zeroes" -> {}};
+  IonSolver::usage="IonSolver[numE, params, host] puts together (or retrieves from disk) the symbolic Hamiltonian for the f^numE configuration and solves it for the given params. 
+  params is an Association with keys equal to parameter symbols and values their numerical values. The function will replace the symbols in the symbolic Hamiltonian with their numerical values and then diagonalize the resulting matrix. Any parameter that is not defined in the params Association is assumed to be zero.
+  host is an optional string that may be used to prepend the filename of the symbolic Hamiltonian that is saved to disk. The default is \"Ln\".
+  The function returns the eigensystem as a list of lists where in each list the first element is the energy and the second element the corresponding eigenvector.
+  Tha ordered basis in which this eigenvector is to be interpreted is the one corresponding to BasisLSJMJ[numE].
+  The function admits the following options:
   \"Include Spin-Spin\" (bool) : If True then the spin-spin interaction is included as a contribution to the m_k operators. The default is True.
-
-  Returns
-  -------
-  {rmsDifference, gtEnergies, cfenergies, ln, carnallAssignments, {fstates, basis, symbolicMatrix}} (list): with
-    rmsDifference (float) : The root-mean-square difference between the calculated values from Carnall and the ones computed here.
-    gtEnergies (list) : The calculated values for the energy levels as quoted by Carnall.
-    cfenergies (list) : The calculated values for the energy levels as calculated here.
-    ln (string) : The symbol of the lanthanide ion.
-    carnallAssignments (list) : The assignments of the energy levels as quoted by Carnall.
-    {fstates, basis, symbolicMatrix} (list) : The eigenstates, basis and symbolic matrix as calculated here.
+  \"Overwrite Hamiltonian\" (bool) : If True then the function will overwrite the symbolic Hamiltonian that is saved to disk to expedite calculations. The default is False. The symbolic Hamiltonian is saved to disk to the ./hams/ folder preceded by the string host.
+  \"Zeroes\" (list) : A list with symbols assumed to be zero.
   "; 
-  Options[IonSolverLaF3] = {"Include Spin-Spin" -> True};
-  IonSolverLaF3[numE_, OptionsPattern[]] := (
-    spinspin = OptionValue["Include Spin-Spin"];
-    host = "LaF3";
-    ln = StringSplit["Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb"][[numE]];
-    terms = AllowedNKSLJTerms[Min[numE, 14 - numE]];
-    expData = Flatten[#["Exp (1/cm)"] & /@ Values[Carnall["appendix:" <> ln <> ":Association"]]];
-    
-    (*In Carnall's approach the crystal field is assumed to have C_{2v} symmetry, which is a simplification from the actual point symmetry of C_2*)
-    simplifier = {
-      B12 -> 0, B14 -> 0, B16 -> 0, B34 -> 0, B36 -> 0, B56 -> 0,
-      S12 -> 0, S14 -> 0, S16 -> 0, S22 -> 0, S24 -> 0, S26 -> 0, 
-      S34 -> 0, S36 -> 0, S44 -> 0, S46 -> 0, S56 -> 0, S66 -> 0, 
-      T11 -> 0, T12 -> 0, T14 -> 0, T15 -> 0, T16 -> 0, T18 -> 0, T11p -> 0,
-      T17 -> 0, T19 -> 0
-      };
-    eTofs = (#[[1]] -> #[[2]]) & /@ Transpose[{{E0, E1, E2, E3}, FtoE[F0, F2, F4, F6]}];
-    ham = Normal[HamMatrixAssembly[numE, 0]];
-    simpleHam = ham /. simplifier;
-    simpleHam = simpleHam /. eTofs;
-    hamParams = DeleteDuplicates[Flatten[Variables /@ simpleHam]];
-    ham = Normal[HamMatrixAssembly[numE, 0]];
-    termNames = First /@ terms;
-    termSimplifier = 
-      Table[
-        termN -> If[StringLength[termN] == 3,
-          StringTake[termN, {1, 2}],
-          termN
-          ],
-      {termN, termNames}
-      ];
-    
-    (*Load the parameters from Carnall*)
-    params = LoadParameters[ln, "Free Ion" -> False];
-    (*Enforce the override to the spin-spin contribution to the magnetic interactions*)
-    params[\[Sigma]SS] = If[spinspin, 1, 0];
-    (*Everything that is not given is set to zero*)
-    params = ParamPad[params, "Print" -> True];
-
-    {fstates, basis, symbolicMatrix} = 
-    SolveStates[params[nf], 0, params, "Return Symbolic Matrix" -> True];
-    symbolicMatrix = 
-      If[spinspin, 
-        ReplaceInSparseArray[symbolicMatrix, {\[Sigma]SS -> 1}],
-        ReplaceInSparseArray[symbolicMatrix, {\[Sigma]SS -> 0}]
-      ];
-    fstates = ShiftedLevels[fstates];
-    fstates = SortBy[fstates, First];
-    cfenergies = First /@ fstates;
-    cfenergies = Chop[cfenergies];
-    If[OddQ[numE],
-    (
-      cfenergies = cfenergies[[;; ;; 2]];
-    )
-    ];
-
-    mainKey = StringTemplate["appendix:`Ln`:Association"][<|"Ln" -> ln|>];
-    lnData  = Carnall[mainKey];
-    carnalKeys = lnData // Keys;
-    repetitions = Length[lnData[#]["Calc (1/cm)"]] & /@ carnalKeys;
-    carnallAssignments = 
-    First /@ Carnall["appendix:" <> ln <> ":RawTable"];
-    
-    carnalKey  = StringTemplate["appendix:`Ln`:Calculated"][<|"Ln" -> ln|>];
-    gtEnergies = Sort[Carnall[carnalKey]];
-    diffs = Sort[cfenergies][[;; Length[gtEnergies]]] - gtEnergies;
-    rmsDifference = Sqrt[Total[diffs^2/Length[diffs]]];
-    
-    Return[{rmsDifference, gtEnergies, cfenergies, ln, carnallAssignments, {fstates, basis, symbolicMatrix}}]
-    )
-
-  FastIonSolverLaF3::usage = 
-    "This function solves the energy levels of the given trivalent lanthanide in LaF3. The values for the Hamiltonian are simply taken from the values quoted by Carnall. It uses precomputed symbolic matrices for the Hamiltonian so it's faster than the previous alternatives.
-    
-    The function returns a list with seven elements 
-    {rmsDifference, carnallEnergies, eigenEnergies, ln, carnallAssignments, eigensys, basis}.
-    
-    Where:
-    
-    rmsDifference is the root mean squared difference between the calculated values and those quoted by Carnall
-    
-    carnallEnergies are the quoted calculated values from Carnall;
-    
-    eigenEnergies are the calculated energies (in the case of an odd number of electrons the Kramers degeneracy has been removed from this list);
-    
-    ln is simply a string labelling the corresponding lanthanide;
-    
-    carnallAssignments is a list of strings providing the multiplet assignments that Carnall assumed;
-
-    simplerStateLabels is a list of strings providing the multiplet assignments that this function assumes;
-    
-    eigensys is a list of tuples where the first element is the energy corresponding to the eigenvector given as the second element (in the case of an odd number of electrons, Kramers degeneracy has been removed from this list by picking every other value);
-    
-    basis is a list that specifies the basis in which the Hamiltonian was constructed and diagonalized.
-  ";
-  Options[FastIonSolverLaF3] = {
-    "MakeNotebook" -> True,
-    "NotebookSave" -> True,
-    "HTMLSave" -> False,
-    "eigenstateTruncationProbability" -> 0.9,
-    "Include spin-spin" -> True,
-    "Max Eigenstates in Table" -> 100,
-    "Sparse" -> True,
-    "PrintFun" -> Print,
-    "SaveData" -> True,
-    "paramFiddle" -> {},
-    "Append to Filename" -> "",
-    "Remove Kramers" -> True,
-    "OutputDirectory" -> "calcs",
-    "Explorer" -> False
-    }; 
-  FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[{
-    makeNotebook, eigenstateTruncationProbability, spinspin, host,
-    ln, terms, termNames, carnallEnergies, eigenEnergies, simplerStateLabels,
-    eigensys, basis, assignmentMatches, stateLabels, carnallAssignments},
+  IonSolver[numE_Integer, params0_Association, host_String:"Ln", OptionsPattern[]] := Module[
+    {ln, simplifier, simpleHam, numHam, eigensys,
+    startTime, endTime, diagonalTime, params=params0, zeroSymbols},
   (
-    PrintFun = OptionValue["PrintFun"];
-    makeNotebook = OptionValue["MakeNotebook"];
-    eigenstateTruncationProbability = OptionValue["eigenstateTruncationProbability"];
-    maxStatesInTable = OptionValue["Max Eigenstates in Table"];
-    spinspin = OptionValue["Include spin-spin"];
-    Duplicator[aList_] := Flatten[{#, #} & /@ aList];
-    host = "LaF3";
-    paramFiddle = OptionValue["paramFiddle"];
-    ln = theLanthanides[[numE]];
-    terms = AllowedNKSLJTerms[Min[numE, 14 - numE]];
-    termNames = First /@ terms;
-    (* For labeling the states, the degeneracy in some of the terms is elided *)
-    PrintFun["> Calculating simpler term labels ..."];
-    termSimplifier = 
-      Table[termN -> If[StringLength[termN] == 3,
-        StringTake[termN, {1, 2}],
-        termN
-        ],
-      {termN, termNames}
-      ];
-
-    (*Load the parameters from Carnall*)
-    PrintFun["> Loading the fit parameters from Carnall ..."];
-    params = LoadParameters[ln, "Free Ion" -> False];
-    If[numE>7,
-      (
-        PrintFun["> Conjugating the parameters accounting for the hole-particle equivalence ..."];
-        params = HoleElectronConjugation[params];
-        params[t2Switch] = 0;
-      ),
-      params[t2Switch] = 1;
+    ln = StringSplit["Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb"][[numE]];
+    
+    (* This could be done when replacing values, but this produces smaller saved arrays. *)
+    simplifier = (#-> 0) & /@ OptionValue["Zeroes"];
+    simpleHam = SimplerSymbolicHamMatrix[numE, 
+      simplifier,
+      "PrependToFilename" -> host,
+      "Overwrite" -> OptionValue["Overwrite Hamiltonian"]
     ];
 
-    Do[params[key] = paramFiddle[key], 
-      {key, Keys[paramFiddle]}
-    ];
+    (* Note that we don't have to flip signs of parameters for fn beyond f7 since the matrix produced
+    by SimplerSymbolicHamMatrix has already accounted for this. *)
 
-    (* Import the symbolic Hamiltonian *)
-    PrintFun["> Loading the symbolic Hamiltonian for this configuration ..."];
-    startTime = Now;
-    numH = 14 - numE;
-    numEH = Min[numE, numH];
-    C2vsimplifier = {B12 -> 0, B14 -> 0, B16 -> 0, B34 -> 0, B36 -> 0, 
-      B56 -> 0,
-      S12 -> 0, S14 -> 0, S16 -> 0, S22 -> 0, S24 -> 0, S26 -> 0, 
-      S34 -> 0, S36 -> 0,
-      S44 -> 0, S46 -> 0, S56 -> 0, S66 -> 0, T11p -> 0, T11 -> 0, 
-      T12 -> 0, T14 -> 0, T15 -> 0,
-      T16 -> 0, T18 -> 0, T17 -> 0, T19 -> 0};
-    simpleHam = If[
-      ValueQ[symbolicHamiltonians[numEH]],
-      symbolicHamiltonians[numEH],
-      SimplerSymbolicHamMatrix[numE, C2vsimplifier, "PrependToFilename" -> "C2v-", "Overwrite" -> False]
-    ];
-    endTime  = Now; 
-    loadTime = QuantityMagnitude[endTime - startTime, "Seconds"];
-    PrintFun[">> Loading the symbolic Hamiltonian took ", loadTime, " seconds."];
-
-    (*Enforce the override to the spin-spin contribution to the magnetic interactions*)
-    params[\[Sigma]SS] = If[spinspin, 1, 0];
-
-    (*Everything that is not given is set to zero*)
-    params = ParamPad[params, "Print" -> False];
+    (* Everything that is not given is set to zero *)
+    params = ParamPad[params, "Print" -> True];
     PrintFun[params];
-    (* numHam = simpleHam /. params; *)
-    numHam = ReplaceInSparseArray[simpleHam, params];
-    If[Not[OptionValue["Sparse"]],
-      numHam = Normal[numHam]
-    ];
-    PrintFun["> Calculating the SLJ basis ..."];
-    basis = BasisLSJMJ[numE];
 
-    (*Remove numerical noise*)
+    (* Enforce the override to the spin-spin contribution to the magnetic interactions *)
+    params[\[Sigma]SS] = If[OptionValue["Include Spin-Spin"], 1, 0];
+
+    (* Create the numeric hamiltonian *)
+    numHam = ReplaceInSparseArray[simpleHam, params];
+    Clear[simpleHam];
+
+    (* Eigensolver *)
     PrintFun["> Diagonalizing the numerical Hamiltonian ..."];
     startTime = Now;
     eigensys  = Eigensystem[numHam];
@@ -2978,204 +2833,14 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     eigensys = Chop[eigensys];
     eigensys = Transpose[eigensys];
 
-    (*Shift the baseline energy*)
+    (* Shift the baseline energy *)
     eigensys = ShiftedLevels[eigensys];
-    (*Sort according to energy*)
+    (* Sort according to energy *)
     eigensys = SortBy[eigensys, First];
-    (*Grab just the energies*)
-    eigenEnergies = First /@ eigensys;
-
-    (*Energies are doubly degenerate in the case of odd number of electrons, keep only one*)
-    If[And[OddQ[numE], OptionValue["Remove Kramers"]], 
-      (
-        PrintFun["> Since there's an odd number of electrons energies come in pairs, taking just one for each pair ..."];
-        eigenEnergies = eigenEnergies[[;; ;; 2]];
-      )
-    ];
-    
-    (*Compare against the data quoted by Bill Carnall*)
-    PrintFun["> Comparing against the data from Carnall ..."];
-    mainKey            = StringTemplate["appendix:`Ln`:Association"][<|"Ln" -> ln|>];
-    lnData             = Carnall[mainKey];
-    carnalKeys         = lnData // Keys;
-    repetitions        = Length[lnData[#]["Calc (1/cm)"]] & /@ carnalKeys;
-    carnallAssignments = First /@ Carnall["appendix:" <> ln <> ":RawTable"];
-    carnalKey          = StringTemplate["appendix:`Ln`:Calculated"][<|"Ln" -> ln|>];
-    carnallEnergies    = Carnall[carnalKey];
-    If[And[OddQ[numE], Not[OptionValue["Remove Kramers"]]],
-      (
-        PrintFun[">> The number of eigenstates and the number of quoted states don't match, removing the last state ..."];
-        carnallAssignments = Duplicator[carnallAssignments];
-        carnallEnergies    = Duplicator[carnallEnergies];
-      )
-    ];
-
-    (* For the difference take as many energies as quoted by Bill*)
-    eigenEnergies = eigenEnergies + carnallEnergies[[1]];
-    diffs = Sort[eigenEnergies][[;; Length[carnallEnergies]]] - carnallEnergies;
-    (* Remove the differences where the appendix tables have elided values*)
-    rmsDifference = Sqrt[Mean[(Select[diffs, FreeQ[#, Missing[]] &])^2]];
-    titleTemplate = StringTemplate[
-      "Energy Level Diagram of \!\(\*SuperscriptBox[\(`ion`\), \(\(3\)\(+\)\)]\)"];
-    title = titleTemplate[<|"ion" -> ln|>];
-    parsedStates = ParseStates[eigensys, basis];
-    If[And[OddQ[numE],OptionValue["Remove Kramers"]], 
-      parsedStates = parsedStates[[;; ;; 2]]
-    ];
-    
-    stateLabels = #[[-1]] & /@ parsedStates;
-    simplerStateLabels = ((#[[2]] /. termSimplifier) <> ToString[#[[3]], InputForm]) & /@ parsedStates;
-
-    PrintFun[">> Truncating eigenvectors to given probability ..."];
-    startTime = Now;
-    truncatedStates = ParseStatesByProbabilitySum[eigensys, basis, 
-        eigenstateTruncationProbability, 
-        0.01];
-    endTime = Now;
-    truncationTime = QuantityMagnitude[endTime - startTime, "Seconds"];
-    PrintFun[">>> Truncation took ", truncationTime, " seconds."];
-
-    If[makeNotebook,
-      (
-        PrintFun["> Putting together results in a notebook ..."];
-        energyDiagram = Framed[
-          EnergyLevelDiagram[eigensys, "Title" -> title, 
-          "Explorer" -> OptionValue["Explorer"],
-          "Background" -> White]
-          , Background -> White, FrameMargins -> 50];
-        appToFname = OptionValue["Append to Filename"];
-        PrintFun[">> Comparing the term assignments between qlanth and Carnall ..."];
-        assignmentMatches = 
-        If[StringContainsQ[#[[1]], #[[2]]], "\[Checkmark]", "X"] & /@ 
-          Transpose[{carnallAssignments, simplerStateLabels[[;; Length[carnallAssignments]]]}];
-        assignmentMatches = {{"\[Checkmark]", 
-          Count[assignmentMatches, "\[Checkmark]"]}, {"X", 
-          Count[assignmentMatches, "X"]}};
-        labelComparison = (If[StringContainsQ[#[[1]], #[[2]]], "\[Checkmark]", "X"] & /@ 
-          Transpose[{carnallAssignments, 
-            simplerStateLabels[[;; Length[carnallAssignments]]]}]);
-        labelComparison = 
-        PadRight[labelComparison, Length[simplerStateLabels], "-"];
-    
-        statesTable = 
-        Grid[Prepend[{Round[#[[1]]], #[[2]]} & /@ 
-            truncatedStates[[;;Min[Length[eigensys],maxStatesInTable]]], {"Energy/\!\(\*SuperscriptBox[\(cm\), \(-1\)]\)", 
-            "\[Psi]"}], Frame -> All, Spacings -> {2, 2}, 
-          FrameStyle -> Blue, 
-          Dividers -> {{False, True, False}, {True, True}}];
-        DefaultIfMissing[expr_]:= If[FreeQ[expr, Missing[]], expr,"NA"];
-        PrintFun[">> Rounding the energy differences for table presentation ..."];
-        roundedDiffs = Round[diffs, 0.1];
-        roundedDiffs = PadRight[roundedDiffs, Length[simplerStateLabels], "-"];
-        roundedDiffs = DefaultIfMissing /@ roundedDiffs;
-        diffs = PadRight[diffs, Length[simplerStateLabels], "-"];
-        diffs = DefaultIfMissing /@ diffs;
-        diffTableData = Transpose[{simplerStateLabels, eigenEnergies,
-            labelComparison,
-            PadRight[carnallAssignments, Length[simplerStateLabels], "-"],
-            DefaultIfMissing/@PadRight[carnallEnergies, Length[simplerStateLabels], "-"], 
-            roundedDiffs}];
-        diffTable = 
-        TableForm[diffTableData, 
-          TableHeadings -> {None, {"qlanth", 
-            "E/\!\(\*SuperscriptBox[\(cm\), \(-1\)]\)", "", "Carnall", 
-            "E/\!\(\*SuperscriptBox[\(cm\), \(-1\)]\)", 
-            "\[CapitalDelta]E/\!\(\*SuperscriptBox[\(cm\), \(-1\)]\)"}}];
-        
-        diffs = Sort[eigenEnergies][[;; Length[carnallEnergies]]] - carnallEnergies;
-        notBad = FreeQ[#,Missing[]]&/@diffs;
-        diffs = Pick[diffs,notBad];
-        diffHistogram = 
-        Histogram[diffs, Frame -> True, ImageSize -> 800, 
-          AspectRatio -> 1/3, FrameStyle -> Directive[16], 
-          FrameLabel -> {"(qlanth-carnall)/Ky", "Freq"}];
-        rmsDifference = Sqrt[Total[diffs^2/Length[diffs]]];
-        labelTempate = 
-        StringTemplate[
-          "\!\(\*SuperscriptBox[\(`ln`\), \(\(3\)\(+\)\)]\)"];
-        diffData = diffs;
-        diffLabels = simplerStateLabels[[;;Length[notBad]]];
-        diffLabels = Pick[diffLabels, notBad];
-        diffPlot = Framed[
-          ListLabelPlot[diffData,
-          diffLabels,
-          Frame -> True,
-          PlotRange -> All,
-          ImageSize -> 1200,
-          AspectRatio -> 1/3,
-          FrameLabel -> {"", 
-            "(qlanth-carnall) / \!\(\*SuperscriptBox[\(cm\), \(-1\)]\)"},
-          PlotMarkers -> "OpenMarkers",
-          PlotLabel -> 
-            Style[labelTempate[<|"ln" -> ln|>] <> " | " <> "\[Sigma]=" <> 
-              ToString[Round[rmsDifference, 0.01]] <> 
-              " \!\(\*SuperscriptBox[\(cm\), \(-1\)]\)\n", 20],
-          Background -> White
-          ],
-          Background -> White,
-          FrameMargins -> 50
-          ];
-        nb = CreateDocument[{
-          TextCell[Style[
-            DisplayForm[RowBox[{SuperscriptBox[host <> ":" <> ln, "3+"], "(", SuperscriptBox["f", numE], ")"}]]
-            ], "Title", TextAlignment -> Center],
-          TextCell["Energy Diagram", "Section", TextAlignment -> Center],
-          TextCell[energyDiagram, TextAlignment -> Center],
-          TextCell["Multiplet Assignments & Energy Levels", "Section", TextAlignment -> Center],
-          TextCell[diffHistogram, TextAlignment -> Center],
-          TextCell[diffPlot, "Output", TextAlignment -> Center],
-          TextCell[assignmentMatches, "Output", TextAlignment -> Center],
-          TextCell[diffTable, "Output", TextAlignment -> Center],
-          TextCell["Truncated Eigenstates", "Section", TextAlignment -> Center],
-          TextCell["These are some of the resultant eigenstates which add up to at least a total probability of " <> ToString[eigenstateTruncationProbability] <> ".", "Text", TextAlignment -> Center],
-          TextCell[statesTable, "Output", TextAlignment -> Center]
-          },
-        WindowSelected -> True,
-        WindowTitle -> ln <> " in " <> "LaF3" <> appToFname,
-        WindowSize -> {1600, 800}];
-        If[OptionValue["SaveData"],
-          (
-            exportFname = FileNameJoin[{moduleDir,OptionValue["OutputDirectory"], ln <> " in " <> "LaF3" <> appToFname <> ".m"}];
-            SelectionMove[nb, After, Notebook];
-            NotebookWrite[nb, Cell["Reload Data", "Section", TextAlignment -> Center]];
-            NotebookWrite[nb, Cell[(
-              "{rmsDifference, carnallEnergies, eigenEnergies, ln, carnallAssignments, simplerStateLabels, eigensys, basis, truncatedStates} = Import[FileNameJoin[{NotebookDirectory[],\"" <> StringSplit[exportFname,"/"][[-1]] <> "\"}]];"
-              ),"Input"]];
-            NotebookWrite[nb, Cell[(
-              "Manipulate[First[MinimalBy[truncatedStates, Abs[First[#] - energy] &]], {energy,0}]"
-              ),"Input"]];
-            SelectionMove[nb, Before, Notebook];
-            Export[exportFname, {rmsDifference, carnallEnergies, eigenEnergies, ln, carnallAssignments, simplerStateLabels, eigensys, basis, truncatedStates}];
-            tinyexportFname = FileNameJoin[{moduleDir,OptionValue["OutputDirectory"], ln <> " in " <> "LaF3" <> appToFname <> "- tiny.m"}];
-            tinyExport = <|"ln"->ln,
-                          "carnallEnergies"->carnallEnergies,
-                          "rmsDifference"-> rmsDifference,
-                          "eigenEnergies"-> eigenEnergies,
-                          "carnallAssignments"-> carnallAssignments,
-                          "simplerStateLabels" -> simplerStateLabels|>;
-            Export[tinyexportFname, tinyExport];
-          )
-        ];
-        If[OptionValue["NotebookSave"],
-          (
-            nbFname = FileNameJoin[{moduleDir,OptionValue["OutputDirectory"], ln <> " in " <> "LaF3" <> appToFname <> ".nb"}];
-            PrintFun[">> Saving notebook to ", nbFname, " ..."];
-            NotebookSave[nb, nbFname];
-          )
-        ];
-        If[OptionValue["HTMLSave"],
-          (
-            htmlFname = FileNameJoin[{moduleDir,OptionValue["OutputDirectory"], "html", ln <> " in " <> "LaF3" <> appToFname <> ".html"}];
-            PrintFun[">> Saving html version to ", htmlFname, " ..."];
-            Export[htmlFname, nb];
-          )
-        ];
-      )
-    ];
-    
-    Return[{rmsDifference, carnallEnergies, eigenEnergies, ln, carnallAssignments, simplerStateLabels, eigensys, basis, truncatedStates}];
+    Return[eigensys];
     )
-  ];
+  ]
+
 
   ShiftedLevels::usage = "
   ShiftedLevels[originalLevels] takes a list of levels of the form
