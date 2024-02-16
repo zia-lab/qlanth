@@ -6,11 +6,47 @@
 \RequirePackage{mathrsfs}
 \RequirePackage{mathtools}
 \usepackage{cancel}
+\usepackage{dutchcal}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{scalerel}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%% CUSTOM SYMBOLS %%%%%%%%%%%%
+
+\newcommand{\trispoke}{
+    \mathord{
+        \begin{tikzpicture}[baseline=0ex, scale=0.2]
+            % Calculate the height of an equilateral triangle
+            \pgfmathsetmacro{\equitriheight}{sqrt(3)/2}
+            \pgfmathsetmacro{\equitriheighthalf}{sqrt(3)/4}
+            % Draw the triangle and dots, scaled down
+            \draw (0,0) -- (0.5,\equitriheighthalf) -- (1,0) -- (0.5,\equitriheighthalf) -- (0.5,\equitriheight) ;
+            \fill (0,0) circle (0.15);
+            \fill (1,0) circle (0.15);
+            \fill (0.5,\equitriheight) circle (0.15);
+        \end{tikzpicture}
+    }
+}
+
+% this is a 4, 6, 7 triangle
+\newcommand{\scalene}{
+	\mathord{
+		\begin{tikzpicture}[baseline=0ex, scale=0.07]
+			\draw (1.14062, -2.97619) -- (1.14062, 4.02381) -- (-2.28125, 1.95238) -- cycle; % Draw a scalene triangle
+		\end{tikzpicture}
+	}
+}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%% MISC %%%%%%%%%%%%
 
-\newcommand{\precite}[1]{[...]}
+\newcommand{\colora}[1]{\opcolor{#1}}
+\newcommand{\colorb}[1]{\textcolor{red}{#1}}
+\newcommand{\colorc}[1]{\textcolor{green}{#1}}
+\newcommand{\qlanth}{\texttt{qlanth }}
+\newcommand{\precite}[1]{[...]} 
 \newcommand{\recite}[1]{\citep{#1}} % To customize citation style
 \newcommand{\citeref}[1]{Ref. \![\!\!\citenum{#1}]} % add Ref to citenum
 \newcommand{\citeeqn}[1]{eqn.~\ref{#1}}
@@ -18,6 +54,7 @@
 \newcommand{\figrefsub}[2]{Fig.~\ref{#1}#2} % add Fig to cited figure with panels
 \newcommand{\latin}[1]{\textit{#1}}
 \newcommand{\lorb}{\underbar{$\ell$}}
+\newcommand{\sspin}{\underbar{$\mathcal{s}$}}
 \newcommand{\forb}{\underbar{$\text{f}$}}
 \newcommand{\ql}{\texttt{qlanth }}
 \newcommand{\cowan}{{TASS }}
@@ -55,12 +92,14 @@
 \newcommand{\vc}[2]{#1_{\!#2}}
 \newcommand{\gpt}[1]{{\color{cyan} #1}}
 \renewcommand{\exp}[1]{e^{#1}}
+\newcommand{\dotp}[2]{#1{\cdot}#2}
 
 
 %%%%%%% Math Extras %%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newcommand{\eV}{\text{eV}}
+\newcommand{\numE}{\mathcal{n}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%% Vector Algebra %%%%%%%
@@ -98,6 +137,7 @@
 \newcommand{\E}{\Gamma_\textrm{E}(\lambda)}
 \newcommand{\PP}{\Gamma_\textrm{P}(\vec{\hat{e})}}
 \newcommand{\tpo}[1]{2#1+1}
+\newcommand{\tpobraket}[1]{\left[\!\left[#1\right]\!\right]}
 
 
 %%%%%%% Classical EM + Spectroscopy %%%%%%%
@@ -106,6 +146,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%% Quantum Mechanics %%%%%%%
 
+\newcommand{\me}{\mathrm{m}_e}
+
 \newcommand{\bra}[1]{\langle #1|} % Bra
 \newcommand{\ket}[1]{|#1\rangle} % Ket
 \newcommand{\braket}[2]{\langle #1|#2\rangle} % BraKet
@@ -113,45 +155,77 @@
 \newcommand{\op}[1]{\hat{#1}} % operator
 \newcommand{\redbraopket}[3]{\langle #1|\!|#2|\!|#3\rangle}
 \newcommand{\kronecker}[2]{\delta(#1,#2)} % Kronecker delta
+\newcommand{\Msub}[1]{M_{\!{#1}}}
+\newcommand{\phaser}[1]{{(-1)}^{#1}}
+\newcommand{\tricondition}[1]{\scalene(#1)}
+\newcommand{\LSJMbasis}{\ket{LSJ\Msub{J}}}
+
+\newcommand{\Ckq}{\mathcal{C}^{(k)}_q}
+\newcommand{\Ck}[1]{\mathcal{C}^{(#1)}}
+\newcommand{\Cktwo}{\mathcal{C}^{(k+2)}}
+\newcommand{\wdouble}[3]{\op{w}_{#1}^{({#2},{#3})}}
+\newcommand{\Ykq}{\textrm{Y}^{(k)}_q}
+\newcommand{\Akq}{\mathcal{A}^{(k)}_q}
+
+\newcommand{\opcolor}{\textcolor{blue}}
+
+\newcommand{\Bkq}{\opcolor{B^{(k)}_q}}
+\newcommand{\Skq}{\opcolor{S^{(k)}_q}}
+\newcommand{\Mk}[1]{\opcolor{M^{(#1)}}}
+\newcommand{\Tk}[1]{\opcolor{T^{(#1)}}}
+\newcommand{\Pk}[1]{\opcolor{P^{(#1)}}}
+\newcommand{\Fk}{\opcolor{{F^k}}}
+\newcommand{\Ek}{\opcolor{{E_k}}}
+\newcommand{\spinZeta}{\opcolor{{\zeta}}}
+\newcommand{\casimirAlpha}{\opcolor{{\alpha}}}
+\newcommand{\casimirBeta}{\opcolor{{\beta}}}
+\newcommand{\casimirGamma}{\opcolor{{\gamma}}}
+
+\newcommand{\sixj}[6]{\begin{Bmatrix} #1 & #2 & #3 \\ #4 & #5 & #6 \end{Bmatrix}}
+\newcommand{\threej}[6]{\begin{pmatrix} #1 & #2 & #3 \\ #4 & #5 & #6 \end{pmatrix}}
 
 \newcommand{\fn}{$\underbar{f}^n$}
 \newcommand{\fourcornersymbol}[5]{{}_{#1}^{#2}{\kern-0.1em}{#3}_{#4}^{#5}}
 \newcommand{\LSterm}[2]{{}^{#1}{\kern-0.1em}{#2}}
-\newcommand{\cfp}[2]{\left(#1|\!\}#2\right)}
+% \newcommand{\cfp}[2]{\opcolor{\left(#1|\!\}#2\right)}}
+% \newcommand{\cfpinv}[2]{\textcolor{red}{\left(#1\{\!|#2\right)}}
+\newcommand{\cfp}[2]{\textcolor{purple}{\left(#1\stretchrel*{|\!\{}{\rule[-0.55em]{0em}{1.5em}}#2\right)}}
+\newcommand{\cfpinv}[2]{\textcolor{purple}{\left(#1\stretchrel*{\{\!|}{\rule[-0.55em]{0em}{1.5em}}#2\right)}}
 
 % Hamiltonians:
 
 \newcommand{\ham}{\hat{\mathcal{H}}} % Main ham
 
 \newcommand{\hamKineticSymbol}{\ham_\text{k}}
-\newcommand{\hamKinetic}{\sum_{i=1}^N \frac{\op{p}_i^2}{2m}} % Kinetic energy
+\newcommand{\hamKinetic}{\sum_{i=1}^\numE \frac{\op{p}_i^2}{2m}} % Kinetic energy
 
 \newcommand{\hamNuclearCoulombSymbol}{\ham_\text{e:sn}}
-\newcommand{\hamNuclearCoulomb}{\sum_{i=1}^N V_\textrm{sn}(\op{r}_i)} % Central potential of shielded nuclear charge
+\newcommand{\hamNuclearCoulomb}{\sum_{i=1}^\numE V_\textrm{sn}(\op{r}_i)} % Central potential of shielded nuclear charge
 
 \newcommand{\casimir}[1]{\,\mathcal{C}(#1)} % symbol use to represent the Casimir opertor of a group
 
 \newcommand{\hamCoulombEESymbol}{\ham_\text{e:e}}
-\newcommand{\hamCoulombEE}{\sum_{i>j}^{N,N} \frac{e^2}{\norm{\op{\vec{r}}_i-\op{\vec{r}}_j}}}
+\newcommand{\hamCoulombEE}{\sum_{i>j}^{\numE,\numE} \frac{e^2}{\norm{\op{\vec{r}}_i-\op{\vec{r}}_j}} = \sum_{k=0,2,4,6} \Fk\op{f}_k } 
 
 \newcommand{\hamTreesSymbol}{\ham_{\SO{3}}}
 
 \newcommand{\hamSpinOrbitSymbol}{\ham_\text{s:o}}
-\newcommand{\hamSpinOrbit}{\sum_{i=1}^N \xi(r_i) \paren{\op{\vec{s_i}} \cdot \op{\vec{l_i}}} } 
+\newcommand{\hamSpinOrbit}{\sum_{i=1}^\numE \xi(r_i) \paren{\op{\sspin}_i \cdot \op{\lorb}_i} } 
 
 \newcommand{\hamCrystalFieldSymbol}{\ham_\text{cf}}
-\newcommand{\hamCrystalField}{\sum_{i=1}^N V_{\textrm{CF}}(\op{r}_i)}
+\newcommand{\hamCrystalField}{\sum_{i=1}^\numE V_{\textrm{CF}}(\op{r}_i) = \sum_i \sum_{k=0,2,4,6}\sum_{q=-k}^{k} \Bkq \Ckq(i)}
 
-\newcommand{\hamEffectiveThreeBody}{\sum_{i=2,3,4,6,7,8}^N T^i \op{t_i}}
+
+\newcommand{\hamEffectiveThreeBody}{\sum_{k=2,3,4,6,7,8}^\numE \Tk{k} \op{t}_k}
 
 \newcommand{\hamGTwoSymbol}{\ham_{\text{G}_2}}
 \newcommand{\hamSOSevenSymbol}{\ham_{\SO{7}}}
 
 \newcommand{\hamSpinSpinSpinOtherOrbitSymbol}{\ham_{\text{s:s-s:oo}}}
-\newcommand{\hamSpinSpinSpinOtherOrbit}{\sum_{i=0,2,4} M^i \op{m}_i} 
+\newcommand{\hamSpinSpinSpinOtherOrbit}{\sum_{k=0,2,4} \Mk{k} \op{m}_k} 
 
 \newcommand{\hamECSOSymbol}{\ham_\text{ec-s:o}}
-\newcommand{\hamECSO}{\sum_{i=2,4,6} P^i \op{p}_i} 
+\newcommand{\hamECSO}{\sum_{k=2,4,6} \Pk{k} \op{p}_k} 
 
 
 %%%%%%% Quantum Mechanics %%%%%%%

@@ -9,7 +9,12 @@
 \usepackage{multicol}
 \usepackage{amssymb,
 			amsmath}
+\usepackage{dutchcal}
 \usepackage{qlanth} 
+\usepackage{scalerel} 
+\usepackage[backend=biber, style=numeric]{biblatex}
+\addbibresource{qlanth.bib}
+
 
 % Listing configuration
 \lstset{
@@ -59,22 +64,34 @@
 \section{Notation}
 
 \begin{gather}
-    \overbracket{\Lambda}^{\text{Shorthand for all other quantum numbers}} \\ 
-    \overbracket{\lorb}^{\text{orbital angular momentum}} \\
+    \overbracket{\,\,\mathcal{m}\,\,}^{\text{mass of the electron}} \\
+    \overbracket{\,\,\,\,\,\op{l}\,\,\,\,\,}^{\text{orbital angular momentum operator of a single electron}} \\
+    \overbracket{\,\,\op{L}\,\,}^{\text{total orbital angular momentum  operator}} \\
+    \overbracket{\,\,\op{s}\,\,}^{\text{spin angular momentum  operator of a single electron}} \\
+    \overbracket{\,\,\op{S}\,\,}^{\text{total spin angular momentum operator}} \\
+    \overbracket{\,\,\Lambda\,\,}^{\text{Shorthand for all other quantum numbers}} \\ 
+    \overbracket{\,\,\lorb\,\,}^{\text{angular momentum number}} \\
     \overbracket{\redbraopket{\Lambda LS}{\op{O}}{\Lambda' L'S'}}^{\text{LS-reduced matrix element of operator }\hat{O}\text{ between }{\Lambda LS} \text{ and } {\Lambda' L'S'}} \\
     \overbracket{\redbraopket{\Lambda LSJ}{\op{O}}{\Lambda' L'S'J'}}^{\text{LSJ-reduced matrix element of operator }\hat{O}\text{ between }{\Lambda LSJ} \text{ and } {\Lambda' L'S'J'}} \\
-    \overbracket{\op{X}^{(k)}}^{\text{spherical tensor operator of rank k}} \\
     \overbracket{\LSterm{2 S + 1}{\alpha{L}}\equiv \ket{\alpha{LS}}}^{\text{Spectroscopic term } {\alpha{LS}} \text{ in Russel-Saunders notation }} \\
+    \overbracket{\op{X}^{(k)}}^{\text{spherical tensor operator of rank k}} \\
     \overbracket{\op{X}_q^{(k)}}^{\text{q-component of the spherical tensor operator }\op{X}^{(k)}} \\
     \overbracket{\cfp{\lorb^{n-1}\alpha'L'S'}{\lorb^n\alpha{L}{S}}}^{\text{The coefficient of fractional parentage from the parent term }\ket{\lorb^{n-1}\alpha'{L'S'}}\text{ for the daughter term }\ket{\lorb^{n}\alpha{LS}}}  
 \end{gather}
 
-\section{Definitions}
+\section{Definitions}  
 
-\begin{gather}
-    \overbracket{\op{u}^{(k)}}^{\text{irreducible unit tensor operator of rank k}} \\
-    \overbracket{\op{U}^{(k)} \DEF \sum_{i=1}^{n} \op{u}^{k} }^{\text{symmetric unit tensor operator for n equivalent electrons}} \\
-    \overbracket{\cfp{\lorb^{n-1}\alpha'L'S'}{\lorb^n\alpha{L}{S}}}^{\text{The coefficient of fractional parentage from the parent term }\ket{\lorb^{n-1}\alpha'{L'S'}}\text{ for the daughter term }\ket{\lorb^{n}\alpha{LS}}}
+\begin{gather} 
+    \overbracket{\tpobraket{x} \DEF 2x+1}^{\text{two plus one}} \\
+    \overbracket{\op{u}^{(k)}}^{\text{irreducible unit tensor operator of rank k}} \\ 
+    \overbracket{\op{U}^{(k)} \DEF \sum_{i=1}^{n} \op{u}^{(k)} }^{\text{symmetric unit tensor operator for n equivalent electrons}} \\
+    \overbracket{\cfp{\lorb^{n-1}\alpha'L'S'}{\lorb^n\alpha{L}{S}}}^{\text{The coefficient of fractional parentage from the parent term }\ket{\lorb^{n-1}\alpha'{L'S'}}\text{ for the daughter term }\ket{\lorb^{n}\alpha{LS}}} \\
+    \overbracket{\Ckq \DEF \sqrt{\frac{4\pi}{2k+1}} \Ykq}^{\text{Renormalized spherical harmonics}} \\
+    \overbracket{\tricondition{j_1,j_2,j_3} \DEF
+    \begin{cases} 
+        1 & \text{if } j_1 = (j_2 + j_3), (j_2 + j_3 - 1), \ldots, |j_2-j_3|\\
+        0 & \text{otherwise}
+        \end{cases}}^{\text{Triangle ``delta'' between $j_1,j_2,j_3$}} 
 \end{gather}
 
 \section{The Effective Hamiltonian} 
@@ -116,40 +133,42 @@ Putting all of this together leads to the following Hamiltonian. In there, ``v-e
 		 & + \underbracket{\hamTreesSymbol}_\text{Trees effective op} 
 		 + \underbracket{\hamGTwoSymbol}_\text{G${}_2$ effective op} 
 		 + \underbracket{\hamSOSevenSymbol}_\text{$\SO{7}$ effective op} 
-		 + \underbracket{\ham_\text{f3}}_{\substack{
+		 + \underbracket{\ham_{\trispoke}}_{\substack{
 		 \text{effective} \\
 		 \text{three-body}}} 
 		 + \underbracket{\hamECSOSymbol}_{
 		 		\substack{
 		 			\text{electrostatically} \\
 		 			\text{correlated spin:orbit}
-		 			}
+		 			} 
 		 			} \\
-	\hamKineticSymbol &= -\frac{\hbar^2}{2m_e}\sum_{i=1}^N \nabla_i^2 \text{ (kinetic energy of N v-electrons)}\\
+	\hamKineticSymbol &= -\frac{\hbar^2}{2m_e}\sum_{i=1}^\numE \nabla_i^2 \text{ (kinetic energy of $\numE$ v-electrons)}\\
 	\hamNuclearCoulombSymbol &= \hamNuclearCoulomb \text{ (interaction of v-electrons with shielded nuclear charge)} \\
-	\ham_\text{e:e} &= \hamCoulombEE \text{ (v-electron:v-electron repulsion)} \\
+	\ham_\text{e:e} &= \hamCoulombEE \text{ (v-electron:v-electron repulsion)} \\  
 	\hamSpinOrbitSymbol &= \begin{cases} 
 			\hamSpinOrbit \text{ with } \xi{(r_i)} = \frac{\hbar^2}{2 m^2 c^2 r_i} \frac{\diff{V_\text{sn}(r_i)}}{\diff{r_i}} \\
-			\sum_{i=1}^N \zeta \paren{\op{\vec{s}_i} \cdot \op{\vec{l}_i}} {{\substack{
-						\text{ with $\zeta$ the radial average of $\xi(r_i)$} \\ 
-						\text{ or used as phenomenological parameter}
+			\sum_{i=1}^\numE \spinZeta \paren{\op{\sspin}_i \cdot \op{\lorb}_i} {{\substack{
+						\text{ with $\spinZeta$ the radial average of $\xi(r_i)$} \\ 
+						\text{ or used as phenomenological parameter}  
 						}
-					}}
-			\end{cases} \\
-	\hamCrystalFieldSymbol &= \hamCrystalField {
+					}}    
+			\end{cases} \\  
+	\hamCrystalFieldSymbol &= \hamCrystalField {   
 		\substack{
 			\text{ (crystal field interaction of v-electrons with} \\
 			\text{electrostatic field due to surroundings)}
 			}
-			}\\
-	\hamSpinSpinSpinOtherOrbitSymbol &= \hamSpinSpinSpinOtherOrbit \\
-	\casimir{\anyGroup} &\DEF \text{The Casimir operator of group $\anyGroup$.}\\
-	\hamTreesSymbol &= \alpha\casimir{\mathbb{R}^3} = \alpha \op{L}^2 = \underbrace{\alpha L (L+1)}_\text{in LS coupling} \text{ (Trees effective operator\footnotemark)} \\
-	\hamGTwoSymbol      &= \beta\casimir{\text{G}_2} \\
-	\hamSOSevenSymbol   &= \gamma\casimir{\SO{7}} \\
-	\ham_\text{f3} &= T'^{2}t'_2 + \hamEffectiveThreeBody \text{ (effective three-body operators $\op{t_i}$ with strengths $T_i$)\footnotemark} \\
+			}\\  
+	\hamSpinSpinSpinOtherOrbitSymbol &= \hamSpinSpinSpinOtherOrbit \\ 
+	\nonumber \casimir{\anyGroup} &\DEF \text{The Casimir operator of group $\anyGroup$.}\\ 
+	\hamTreesSymbol &= \casimirAlpha\casimir{\mathbb{R}^3} = \casimirAlpha \op{L}^2 = \underbrace{\casimirAlpha L (L+1)}_\text{in LS coupling} \text{ (Trees effective operator)} \\
+	\hamGTwoSymbol      &= \casimirBeta\casimir{\text{G}_2} \\
+	\hamSOSevenSymbol   &= \casimirGamma\casimir{\SO{7}} \\
+	\ham_{\trispoke} &= {\opcolor{T'^{(2)}}}t'_2 + \hamEffectiveThreeBody \text{ (effective 3-body operators $\op{t}_k$ with strengths $\Tk{k}$)} \\
 	\hamECSOSymbol &= \hamECSO
 \end{align}
+
+It is of some importance to note that the eigenstates that we'll end up with have shoved under the rug all the radial dependence of the wavefunctions. This dependence has been already integrated in the parameters that the Hamiltonian has. 
 
 \subsection{$\hamKineticSymbol$: kinetic energy}
 
@@ -172,8 +191,8 @@ Then again, this term also contributes a common energy shift to all the energies
 \subsection{$\hamCoulombEESymbol$: e:e repulsion}
  
 \begin{equation}
-    \hamCoulombEESymbol = \hamCoulombEE = \sum_{k=0,2,4,6} F^k \hat{f}_k = \sum_{k=0,1,2,3} E_k \hat{e}^k
-\end{equation} 
+    \hamCoulombEESymbol = \hamCoulombEE = \sum_{k=0,1,2,3} \Ek \hat{e}^k 
+\end{equation}  
 
 This term is the first we will not discard. Calculating this term for the \fn configurations was one of the contribution from Slater, as such the parameters we use to write it up are called \textit{Slater integrals}. After the analysis from Slater, Giulio Racah contributed further to the analysis of this term. The insight that Racah had was that if in a given operator one identified the parts in it that transformed nicely according to the different symmetry groups present in the problem, then calculating the necessary matrix element in all \fn configurations can   be greatly simplified.
 
@@ -182,7 +201,7 @@ The functions used in \ql to compute these LS-reduced matrix elements are \textt
 \begin{equation}
 \redbraopket{\forb^n\alpha\LSterm{2S+1}{L}}
     {\hamCoulombEESymbol}
-    {\forb^n\alpha'\LSterm{2S'+1}{L'}} = \sum_{k=0,2,4,6} f_k(n,\alpha{LS},\alpha'{L'S'}) F^k 
+    {\forb^n\alpha'\LSterm{2S'+1}{L'}} = \sum_{k=0,2,4,6} \Fk f_k(n,\alpha{LS},\alpha'{L'S'})
 \end{equation} 
 where
 \begin{multline}
@@ -194,34 +213,293 @@ where
             {\forb}^2 \times \\
         \left\{ 
             \frac{1}{\tpo{L}} \sum_{\alpha''L''} 
-                \redbraopket{\forb^n \alpha'' L'' S}
+                \redbraopket{\forb^\numE \alpha'' L'' S}
                     {\op{U}^{(k)}}
-                    {\forb^n \alpha L S} 
-            \redbraopket{\forb^n \alpha'' L'' S}
+                    {\forb^\numE \alpha L S} 
+            \redbraopket{\forb^\numE \alpha'' L'' S}
                 {\op{U}^{(k)}} 
-                {\forb^n \alpha' L S}
+                {\forb^\numE \alpha' L S}
             - \kronecker{\alpha}{\alpha'}
-                \frac{n \left(4 \forb + 2 - n\right)}
+                \frac{\numE \left(4 \forb + 2 - \numE\right)}
                     {(\tpo{\forb})(4 \forb + 1)} 
         \right\}
 \end{multline}      
 
+\subsection{$\hamSpinOrbitSymbol$: The spin-orbit interaction}
 
-\newpage
-\section{qlanth.m}
+Here one can be of two minds, one can either start from a relativistic description, only including the interaction of charged particles. Then when descending to the non-relativistic description one will notice a term that involves both the orbital angular momentum and the spin angular momentum. In this view the spin-orbit term arises as a relativistic correction to the non-relativistic Schrodinger equation.
 
-\lstinputlisting[language=Mathematica]{../qlanth.m}
+From the non-relativistic viewpoint one may also take it as a given that the electron has an associated magnetic moment. From this one would then continue to consider the effect that magnetic fields have on it. One of those fields that one due to the motion of the electron around the nucleus, one would then conclude a term that involves both the spin and the orbital motion of the electron.
 
-\section{qonstants.m} 
+More generally one may picture an electron in a radial electrostatic potential $V(r)$, in which case the energy associated to the spin-orbit is
+\begin{equation}
+    \hat{\mathcal{h}}_{\text{s:o}} = \frac{\hbar^2}{2\me^2 c^2} \left(\frac{1}{r}\frac{\mathrm{d}V}{\mathrm{d}r}\right)\op{l}\cdot{\op{s}} \DEF \zeta{(r)} \op{l}\cdot\op{s}.
+\end{equation}
+And adding up for all the $\numE$ valence electrons
+\begin{equation}
+\hamSpinOrbitSymbol = \sum_i^{\numE} \zeta(r_i) \dotp{\op{l}_i}{\op{s}_i}.
+\end{equation}
 
-\lstinputlisting[language=Mathematica]{../qonstants.m}
+The matrix elements that we then require are  
+\begin{multline} 
+    \braopket{\alpha LSJ \Msub{J} }{\hamSpinOrbitSymbol}{\alpha' L'S'J'\Msub{J'}} = 
+    \spinZeta
+    \kronecker{J}{J'}
+    \kronecker{\Msub{J}}{\Msub{J'}}
+    \braopket{\alpha LSJ \Msub{J} }{\sum_i^{\numE} \dotp{\op{l}_i}{\op{s}_i}}{\alpha' L'S'J\Msub{J}} \\ 
+    = \spinZeta \phaser{J+L+S'} 
+        \sixj{L}{L'}{1}{S'}{S}{J} 
+        \braopket{\alpha LS}{\sum_i^{\numE} \dotp{\op{l}_i}{\op{s}_i}}{\alpha' L'S'} \\
+    = \spinZeta \phaser{J+L+S'} 
+        \sixj{L}{L'}{1}{S'}{S}{J} 
+        \sqrt{\lorb (\lorb + 1)(2\lorb + 1)} 
+        \redbraopket{\alpha{LS}}{\op{V}^{(11)}}{\alpha'L'S'} 
+\end{multline}
 
-\section{qplotter.m}
+Where $\hat{V}^{(11)}$ is a double tensor operator of rank one over spin and orbital parts defined as 
+\begin{equation}
+    \op{V}^{(11)} = \sum_{i=1}^\numE \left( \op{s}\op{u}^{(1)} \right)_i,
+\end{equation}
+where the rank on the spin operator $\op{s}$ has been omitted, and the rank of the tensor operator shown explicitly as 1.
 
-\lstinputlisting[language=Mathematica]{../qplotter.m}
+In \qlanth the reduced matrix elements for this double tensor operator are calculated by \texttt{ReducedV1k} and aggregated in a static association called \texttt{ReducedV1kTable}. The reduced matrix elements of this operator are calculated using equation 2-101 from Wybourne (1965):
+\begin{multline} 
+    \redbraopket{\lorb^\numE \psi}{\op{V}^{(1k)}}{\lorb^\numE \psi'} = 
+        \redbraopket{\lorb^\numE \alpha L S}
+            {\op{V}^{(1k)}}
+            {\lorb^\numE \alpha'L'S'} =
+        \numE 
+            \sqrt{\sspin (\sspin + 1) (2\sspin + 1)}
+            \sqrt{\tpobraket{S}\tpobraket{L}\tpobraket{S'}\tpobraket{L'}} \times \\
+    \sum_{\bar{\psi}}
+        \phaser{\bar{S} + \bar{L} + S + L + \lorb + \sspin + k + 1}
+        \cfpinv{\psi}{\bar{\psi}}
+        \cfp{\bar{\psi}}{\psi'}
+        \sixj{S}     {S'}     {1}
+            {\sspin} {\sspin} {\bar{S}}
+        \sixj{L}     {L'}    {k}
+             {\lorb} {\lorb} {\bar{L}} 
+\end{multline}
 
-\section{misc.m}
+In this expression the sum over $\bar{\psi}$ depends on $(\psi,\psi')$ and is over all the states in $\lorb^{n-1}$ which are common parents to both $\psi$ and $\psi'$. Also note that in the equation above, since our concern are f-electron configurations, we have $\lorb = 3$ and $\sspin = \frac{1}{2}$ as is due to the electron.
 
-\lstinputlisting[language=Mathematica]{../misc.m}
+We also calculate $V^{(1k)}$ since they are useful for calculating the matrix elements of XXXXX.  
+ 
+\subsection{$\hamCrystalFieldSymbol$: A crystal-field}
 
-\end{document}
+The picture of an ion inside of a crystal is lacking in at least two respects. First, we are imagining that the ion and the lattice can be neatly separated, in that the electrons in the ion are not shared with bonds to the surrounding lattice. Second we
+
+Within this view we would like to add in some manner the influence of the surrounding lattice. The simplest way of doing this considers the lattice as a static aggregate of charges. For this aggregate of charges we could associate an electrostatic potential descibed as a multipolar sum of the form:  
+\begin{equation}   
+V(r_i, \theta_i, \phi_i) = \sum_{k=1}^\infty \Akq r^k \Ckq(\theta_i, \phi_i) 
+\end{equation}  
+
+Where we have chosen a coordinate system with its origin at the position of the nucleus, and in which we only have positive powers of the distance $r_i$ since here we have expanded the contributions from all the surrounding ions as a sum over spherical harmonics centered at the position of the nucleus, without $r$ ever large enough to reach any of the positions of the lattice ions. 
+
+Furthermore, since we have $\numE$ valence electrons, then the total crystal field potential is 
+\begin{equation}
+    \hamCrystalFieldSymbol(\vec{r}) = \sum_{i=1}^\numE \sum_{k=0}^\infty \sum_{q=-k}^{(k)} \Akq r_i^k \Ckq(\theta_i,\phi_i).
+\end{equation}
+
+And if we average the radial coordinate,
+\begin{equation}
+    \hamCrystalFieldSymbol = \sum_{i=1}^\numE \sum_{k=1}^\infty \sum_{q=-k}^{k} \Bkq {\Ckq}\!(i) 
+\end{equation}
+where the radial average is included as
+\begin{equation}
+\Bkq \DEF \Akq {\langle r^k \rangle}.
+\end{equation}
+In principle the value for $\Bkq$ could have both real an imaginary parts, in \qlanth this is taken into account by separating out the real and imaginary parts with the replacement in terms of two real-valued parameters
+\begin{equation}
+\Bkq \rightarrow \Bkq + i \Skq.
+\end{equation}
+
+A staple of the Wigner-Racah algebra is writing up operators on interest in terms of standard ones for which the matrix elements are straightforward.  One such operator is the unit tensor operator $\hat{u}^{(k)}$ for a single electron. The Wigner-Eckart theorem --on which all of this algebra is an elaboration-- effectively separates the dynamical and geometrical parts of a given interaction; the unit tensor operators isolate the geometric contributions. This irreducible tensor operator $\hat{u}^{(k)}$ is defined as the tensor operator having the following reduced matrix elements (written in terms of the triangular delta, see section on notation):
+\begin{equation}
+\redbraopket{\ell}{\hat{u}^{(k)}}{\ell'} = \tricondition{\ell,k,\ell'}.
+\end{equation}
+
+In terms of this tensor one may then define the symmetric (in the sense that the resulting operator is equitable among all electrons) unit tensor operator for $\numE$ particles as
+\begin{equation}
+    \hat{U}^{(k)} = \sum_{i}^{\numE} \op{u}^{(k)}_i.
+\end{equation}
+
+This tensor is relevant to the calculation of the above matrix elements since 
+\begin{equation}
+    \Ckq = \redbraopket{\lorb}
+                {\Ck{k}}
+                {\lorb{'}} \op{u}^{(k)}_q 
+        = \phaser{\lorb}
+          \sqrt{\tpobraket{\lorb}\tpobraket{\lorb{'}}}
+          \threej{\lorb}{k}{\lorb'}{0}{0}{0} \op{u}^{(k)}_q.
+\end{equation}
+
+With this the matrix elements of $\hamCrystalFieldSymbol$ in the $\LSJMbasis$ basis are: 
+\begin{align}
+    \overbracket{\braopket{\lorb^\numE \alpha SLJ \Msub{J}}{\hamCrystalFieldSymbol}{\lorb^\numE \alpha'S L' J' \Msub{J'}}}^{\text{Wybourne eqn. 6-3}} &= \sum_{k=1}^\infty\sum_{q=-k}^k    
+    \Bkq 
+        \braopket{\lorb^\numE \alpha SLJ\Msub{J}}
+            {\op{U}^{(k)}_q}
+            {\lorb^\numE \alpha'SL'J'\Msub{J'}} 
+        \redbraopket{\lorb}
+            {\op{C}^{(k)}}
+            {\lorb} 
+\label{HCFsum}
+\end{align}
+
+where the matrix elements of $\op{U}^{(k)}_q$ can be resolved with a 3j symbol as
+\begin{align}
+    \overbracket{\braopket{\lorb^\numE \alpha S L J \Msub{J}}
+        {\op{U}^{(k)}_q}
+        {\lorb^\numE \alpha' S' L' J' \Msub{J'}}}^
+        {\text{Wybourne eqn. 6-4}}
+        &= 
+        \phaser{J-\Msub{J}}
+        \threej{J}{k}{J'}
+               {-\Msub{J}}{q}{\Msub{J'}}
+    \redbraopket{\lorb^\numE \alpha S L J}
+            {\op{U}^{(k)}}
+            {\lorb^\numE \alpha' S' L'}
+\end{align}
+and reduced a second time with the inclusion of a 6j symbol resulting in
+\begin{align}
+    \nonumber \overbracket{\redbraopket{\lorb^\numE \alpha S L J}
+        {\op{U}^{(k)}}
+        {\lorb^\numE \alpha' S' L'}}^
+        {\text{Wybourne eqn. 6-5}}
+    &= 
+    \phaser{S+L+J'+k} 
+    \sqrt{\tpobraket{J}\tpobraket{J'}} \times \\
+    & \sixj{J}{J'}{k}{L'}{L}{S}
+    \redbraopket{\lorb^\numE \alpha S L}
+        {\op{U}^{(k)}}
+        {\lorb^\numE \alpha' S' L'}.
+\end{align}
+
+This last reduced matrix element is finally computed with a sum over $\bar{\alpha}\bar{L}\bar{S}$ which are the parents in configuration $\forb^{\numE-1}$ which are common to $\ket{\alpha L S}$ and $\ket{\alpha' L' S'}$ from configuration $\forb^{\numE}$:
+\begin{align}
+\overbracket{\redbraopket{\lorb^\numE \alpha S L} 
+    {\op{U}^{(k)}}
+    {\lorb^\numE \alpha' S' L'}}^{\text{Cowan eqn. 11.53}} &= \kronecker{S}{S'} \numE \phaser{\lorb + L + k}
+         \sqrt{\tpobraket{L}\tpobraket{L'}} \times \\
+\nonumber \sum_{\bar{\alpha}\bar{L}\bar{S}} 
+    \phaser{\bar{L}} & \sixj{\lorb}{k}{\lorb}{L}{\bar{L}}{L'}
+    \cfpinv{\lorb^\numE \alpha L S}
+        {\lorb^{\numE - 1}\bar{\alpha}\bar{L}\bar{S}}
+    \cfp{\lorb^{\numE -1}\bar{\alpha}\bar{L}\bar{S}}{\lorb^\numE\alpha'L'S'}.
+\end{align}
+
+From the $\redbraopket{\lorb}{\op{C}^{(k)}}{\lorb}$, and given that we are using $\lorb = \forb = 3$ we can see that by the triangular condition $\tricondition{3,k,3}$ the non-zero contributions only come from $k=0,1,2,3,4,5,6$. An additional selection rule on $k$ comes from considerations of parity. Since both the bra and the ket in $\braopket{\lorb^\numE \alpha SLJ \Msub{J}}{\hamCrystalFieldSymbol}{\lorb^\numE \alpha'S L' J' \Msub{J'}}$ have the same parity, then the overall parity of the braket is determined by the parity of $\Ckq$, and since the parity of $\Ckq$ is $\phaser{k}$ then for the braket to be non-zero we require that $k$ should also be even. In view of this, in all the above equations for the crystal field the values for $k$ should be limited to $2,4,6$. The value of $k=0$ having been omitted from the start since this only contributes a common energy shift.
+
+The above equations are implemented in \qlanth by the function \texttt{CrystalField}. This function puts together the symbolic sum in eqn.~\eqref{HCFsum} by using the function \texttt{Cqk}. \texttt{Cqk} then uses the diagonal reduced matrix elements of $\Ckq$ and the precomputed values for \texttt{Uk} (stored in \texttt{ReducedUkTable}).
+
+The required reduced matrix elements of $\hat{U}^{(k)}$ are calculated by the function \texttt{ReducedUk}, which is used by \texttt{GenerateReducedUkTable} to precompute its values.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{ion_in_lattice.jpg}
+\end{figure}
+
+\subsection{$\hamTreesSymbol, \hamGTwoSymbol, \hamSOSevenSymbol$: Electrostatic configuration interaction}
+
+This is a first term where we take into account the very important contributions from configuration interaction. When the interaction with configurations ?? and ?? it was realized that the way the omission of these configurations in the single configuration description was to relax the previous restriction that $\Fk$ should only have even values for k. Parallel to this Trees noticed an interesting fact which is that a fair amount of correction to the calculated spectrum of would benefit if one added to all of the LS energies a term quadratic in L. Soon after this it was acknowledged that the inclusion of odd $\Fk$ was equivalent to adding three terms related to the Casimir operators of the groups $SO(3)$, $G_2$, and $SO(7)$. In addition to this, the configuration interaction analysis, also showed that the contributions from other configuration would also overlap with the already allowed even $\Fk$.
+
+Of these Casimir operators one of them is familiar to us as the Casimir operator of $SO(3)$ is $\op{L}^2$. The way in which this operator is included in the overall Hamiltonian is the following.
+
+\begin{equation}
+\braopket{\lorb^\numE \alpha S L J \Msub{J}}{\casimir{SO(3)}}{\lorb^\numE \alpha' S' L' J' \Msub{J'}} = \casimirAlpha \kronecker{S}{S'}\kronecker{L}{L'}\kronecker{\alpha}{\alpha'}\kronecker{\Msub{J}}{\Msub{J'}} L(L+1)
+\end{equation}
+
+\subsection{$\hamSpinSpinSpinOtherOrbitSymbol$: Spin other orbit interaction}
+
+The calculation of the $\hamSpinSpinSpinOtherOrbitSymbol$, $\ham_{\trispoke}$ is qualitatively different from the previous ones. The previous ones were self-contained in the sense that the reduced matrix elements that we require we could also compute. In the case of the interactions that follow from here, we need to take precomputed values for reduced matrix elements either in $\forb^2$ or in $\forb^3$ and then we ``pull'' the for all $\forb^{\numE}$ configuration with the help of the standar formulae involving coefficients of fractional parentage.
+
+The spin-other-orbit, and the spin-spin contributions were examined by Judd, Crosswhite and Crosswhite in 1968. If the spin-orbit correction arrived from the influence that the orbital motion of an electron has on its own magnetic moment, the spin-other-orbit reflects the interaction that the motion of one electron has on the magnetic moment of another. Much as the spin-orbit effect can be extracted as a relativistic correction with the Dirac equation as the starting point. The multi-electron spin-orbit effects can be derived from the Breit Hamiltonian \cite{bethe_quantum_1957}, which is a relativistic equation for several electrons.
+\begin{equation}
+\ham_B = -\frac{1}{2}e^2 \sum_{i>j} \left[ \left(\alpha_i\cdot\alpha_j\right)\frac{1}{r_{ij}} + \left(\alpha_i\cdot{\vec{r}_{ij}}\right)\left(\alpha_j\cdot\vec{r}_{ij}\right) \frac{1}{r_{ij}^3} \right]
+\end{equation}
+Where $\alpha_i$ are Dirac matrices.
+
+When this relativistic equation is expanded in powers of $v/c$, a number of inter-electron interactions appear. Two of them being the spin-other-orbit and spin-spin interactions.
+
+As usual we average the radial part of the Hamiltonian, which in this case gives appearance to the Marvin integrals
+\begin{equation} 
+\Mk{k} \DEF \frac{e^2\hbar^2}{8m^2c^2} \braopket{(nl)^2}{\frac{r_<^k}{r_>^{k+3}}}{(nl)^2}
+\end{equation}
+
+With these the expression for the spin-spin term being
+\begin{multline}
+\ham_{s:s} = -2 \sum_{i\neq{j}}
+    \sum_k \Mk{k}
+        \sqrt{(k+1)(k+2)(2k+3)} 
+        \redbraopket{\lorb}{\Ck{k}}{\lorb} 
+        \redbraopket{\lorb}{\Ck{k+2}}{\lorb}
+        \left\{
+            \wdouble{i}{1}{k}
+            \wdouble{j}{1}{k+2}
+        \right\}^{(2,2)0}
+\end{multline}
+and the one for spin-other-orbit 
+\begin{multline}
+    \ham_{s:oo} = \sum_{i\neq{j}} 
+        \sum_k 
+            \sqrt{(k+1)(2\lorb+k+2)(2\lorb-k)}  \times \\ 
+    \left[ \left\{ \wdouble{i}{0}{k+1} \wdouble{j}{1}{k} \right\}^{(11)0} 
+    \left\{ \Mk{k-1}
+        \redbraopket{\lorb}
+            {\Ck{k+1}}
+            {\lorb}^2
+        +
+        2 \Mk{k} \redbraopket{\lorb}{\Ck{k}}{\lorb}^2
+    \right\} + \right. \\
+    \left.
+        \left\{ \wdouble{i}{0}{k}\wdouble{j}{1}{k+1} \right\}^{(11)0} 
+            \left\{ \Mk{k} 
+                \redbraopket{\lorb}{\Ck{k}}{\lorb}^2
+                + 2 \Mk{k-1}
+                \redbraopket{\lorb}{\Ck{k+1}}{\lorb}^2
+            \right\}
+    \right].
+\end{multline}
+
+In the expressions above $\wdouble{i}{\kappa}{k}$ is a double tensor operator of rank $\kappa$ over spin, of rank $k$ over orbit, and acting on electron $i$. It is defined by its reduced matrix elements as
+\begin{equation}
+\redbraopket{\lorb}
+    {\wdouble{}{\kappa}{k}}
+    {\lorb}
+    = \sqrt{\tpobraket{\kappa}
+        \tpobraket{k}
+    } \tricondition{l,\kappa,l}\tricondition{l,k,l}
+\end{equation} 
+
+
+
+\subsection{$\hamECSOSymbol$: Electrostatically correlated spin orbit}
+
+Wassup? \cite{cowan_theory_1981}
+
+% \newpage
+% \section{qlanth.m}
+
+% \lstinputlisting[language=Mathematica]{../qlanth.m}
+
+% \section{qonstants.m} 
+
+% \lstinputlisting[language=Mathematica]{../qonstants.m}
+
+% \section{qplotter.m}
+
+% \lstinputlisting[language=Mathematica]{../qplotter.m}
+
+% \section{misc.m}
+
+% \lstinputlisting[language=Mathematica]{../misc.m}
+
+
+% \section{qalculations.m}
+
+% \lstinputlisting[language=Mathematica]{../qalculations.m}
+
+\printbibliography
+
+\end{document} 

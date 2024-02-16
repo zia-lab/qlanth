@@ -188,6 +188,10 @@ S66: crystal field parameter S_6^6 (real)
 t2Switch: controls the usage of the t2 operator beyond f7
 wChErrA: If 1 then the type-A errors in Chen are used, if 0 then not.
 wChErrB: If 1 then the type-B errors in Chen are used, if 0 then not.
+
+Bx : x component of external magnetic field (in T)
+By : y component of external magnetic field (in T)
+Bz : z component of external magnetic field (in T)
 ";
 paramSymbols = StringSplit[paramAtlas, "\n"];
 paramSymbols = Select[paramSymbols, # != ""& ];
@@ -315,6 +319,7 @@ LoadV1k;
 MagneticInteractions;
 MagDipoleMatrixAssembly;
 MagDipLineStrength;
+MapToSparseArray;
 MaxJ;
 MinJ;
 NKCFPPhase;
@@ -654,8 +659,8 @@ Begin["`Private`"]
   ]
   );
 
-  Options[Electrostatic] = {"Coefficients" -> "Slater"};
   Electrostatic::usage = "Electrostatic[{numE, NKSL, NKSLp}] returns the LS reduced matrix element for repulsion matrix element for equivalent electrons. See equation 2-79 in Wybourne (1965). The option \"Coefficients\" can be set to \"Slater\" or \"Racah\". If set to \"Racah\" then E_k parameters and e^k operators are assumed, otherwise the Slater integrals F^k and operators f_k. The default is \"Slater\".";
+  Options[Electrostatic] = {"Coefficients" -> "Slater"};
   Electrostatic[{numE_, NKSL_, NKSLp_}, OptionsPattern[]]:= Module[
     {fsub0, fsub2, fsub4, fsub6, 
      esub0, esub1, esub2, esub3, 
@@ -791,7 +796,6 @@ Begin["`Private`"]
 
   Options[CFPExpander] = {"Export" -> True, "PhaseFunction" -> "NK"};
   CFPExpander::usage="Using the coefficients of fractional parentage up to f7 this function calculates them up to f14. 
-  
   The coefficients of fractional parentage are taken beyond the half-filled shell using the phase convention determined by the option \"PhaseFunction\". The default is \"NK\" which corresponds to the phase convention of Nielson and Koster. The other option is \"Judd\" which corresponds to the phase convention of Judd. The result is exported to the file ./data/CFPs_extended.m.";
   CFPExpander[OptionsPattern[]]:=Module[
     {orbital, halfFilled, fullShell, parentMax, PhaseFun, 
@@ -868,7 +872,6 @@ Begin["`Private`"]
   ]
 
   GenerateCFPTable::usage = "GenerateCFPTable[] generates the table for the coefficients of fractional parentage. If the optional parameter \"Export\" is set to True then the resulting data is saved to ./data/CFPTable.m.
-  
   The data being parsed here is the file attachment B1F_ALL.TXT which comes from Velkov's thesis.";
   Options[GenerateCFPTable] = {"Export" -> True};
   GenerateCFPTable[OptionsPattern[]]:=Module[
@@ -966,11 +969,8 @@ Begin["`Private`"]
   )
 
   CFPTerms::usage = "CFPTerms[numE] gives all the daughter and parent terms, together with the corresponding coefficients of fractional parentage, that correspond to the the f^n configuration.
-
   CFPTerms[numE, SL] gives all the daughter and parent terms, together with the corresponding coefficients of fractional parentage, that are compatible with the given string SL in the f^n configuration.
-
   CFPTerms[numE, L, S] gives all the daughter and parent terms, together with the corresponding coefficients of fractional parentage, that correspond to the given total orbital angular momentum L and total spin S n the f^n configuration. L being an integer, and S being integer or half-integer.
-
   In all cases the output is in the shape of a list with enclosed lists having the format {daughter_term, {parent_term_1, CFP_1}, {parent_term_2, CFP_2}, ...}.
   Only the one-body coefficients for f-electrons are provided.
   In all cases it must be that 1 <= n <= 7.
@@ -1012,15 +1012,18 @@ Begin["`Private`"]
   (* ######################################################################### *)
   (* ############################# Spin Orbit ################################ *)
 
-  SpinOrbit::usage = "SpinOrbit[numE, SL, SpLp, J] returns the LSJ reduced matrix element \[Zeta] <SL, J|L.S|SpLp, J>. These are given as a function of \[Zeta]. This function requires that the association ReducedV1kTable be defined.";
+  SpinOrbit::usage = "SpinOrbit[numE, SL, SpLp, J] returns the LSJ reduced matrix element \[Zeta] <SL, J|L.S|SpLp, J>. These are given as a function of \[Zeta]. This function requires that the association ReducedV1kTable be defined. 
+  See equations 2-106 and 2-109 in Wybourne (1965). Equivalently see eqn. 12.43 in TASS.";
   SpinOrbit[numE_, SL_, SpLp_, J_]:= Module[
-    {S, L, Sp, Lp, orbital, sign, prefactor},
+    {S, L, Sp, Lp, orbital, sign, prefactor, val},
     orbital   = 3;
     {S, L}    = FindSL[SL];
     {Sp, Lp}  = FindSL[SpLp];
-    prefactor = Sqrt[orbital*(orbital+1)*(2*orbital+1)] * SixJay[{L, Lp, 1}, {Sp, S, J}];
+    prefactor = Sqrt[orbital * (orbital+1) * (2*orbital+1)] *
+                SixJay[{L, Lp, 1}, {Sp, S, J}];
     sign      = Phaser[J + L + Sp];
-    Return[sign * prefactor * \[Zeta] * ReducedV1kTable[{numE, SL, SpLp, 1}]];
+    val       = sign * prefactor * \[Zeta] * ReducedV1kTable[{numE, SL, SpLp, 1}];
+    Return[val];
   ]
 
   GenerateSpinOrbitTable::usage = "GenerateSpinOrbitTable[nmax] computes the matrix values for the spin-orbit interaction for f^n configurations up to n = nmax. The function returns an association whose keys are lists of the form {n, SL, SpLp, J}. If export is set to True, then the result is exported to the data subfolder for the folder in which this package is in. It requires ReducedV1kTable to be defined.";
@@ -1055,8 +1058,8 @@ Begin["`Private`"]
   (* ######################################################################### *)
   (* ######################## Three Body Operators ########################### *)
 
-  Options[ParseJudd1984] = {"Export" -> False};
   ParseJudd1984::usage="This function parses the data from tables 1 and 2 of Judd from Judd, BR, and MA Suskin. \"Complete Set of Orthogonal Scalar Operators for the Configuration f^3\". JOSA B 1, no. 2 (1984): 261-65.\"";
+  Options[ParseJudd1984] = {"Export" -> False};
   ParseJudd1984[OptionsPattern[]]:=(
     ParseJuddTab1[str_] := (
       strR = ToString[str];
@@ -1155,15 +1158,15 @@ Begin["`Private`"]
     Return[juddOperators];
   )
 
-Options[GenerateThreeBodyTables] = {"Export" -> False};
 GenerateThreeBodyTables::usage="This function generates the matrix elements for the three body operators using the coefficients of fractional parentage, including those beyond f^7.";
+Options[GenerateThreeBodyTables] = {"Export" -> False};
 GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
   tiKeys = {"t_{2}", "t_{2}^{'}", "t_{3}", "t_{4}", "t_{6}", "t_{7}", 
     "t_{8}", "t_{11}", "t_{11}^{'}", "t_{12}", "t_{14}", "t_{15}", 
     "t_{16}", "t_{17}", "t_{18}", "t_{19}"};
   TSymbolsAssoc = AssociationThread[tiKeys -> TSymbols];
   juddOperators = ParseJudd1984[];
-  op3MatrixElement::usage = "op3MatrixElement[SL, SpLp, opSymbol] returns the value for the reduced matrix element of the operator opSymbol for the terms {SL, SpLp} in the f^3 configuration.";
+  (* op3MatrixElement[SL, SpLp, opSymbol] returns the value for the reduced matrix element of the operator opSymbol for the terms {SL, SpLp} in the f^3 configuration. *)
   op3MatrixElement[SL_, SpLp_, opSymbol_] := (
     jOP = juddOperators[{3, opSymbol}];
     key = {SL, SpLp};
@@ -1172,7 +1175,7 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
       0];
     Return[val];
     );
-  ti::usage = "This is the implementation of formula (2) in Judd & Suskin 1984. It computes the matrix elements of ti in f^n by using the matrix elements in f3 and the coefficients of fractional parentage. If the option \"Fast\" is set to True then the values for n>7 are simply computed as the negatives of the values in the complementary configuration; this except for t2 and t11 which are treated as special cases.";
+  (*ti: This is the implementation of formula (2) in Judd & Suskin 1984. It computes the matrix elements of ti in f^n by using the matrix elements in f3 and the coefficients of fractional parentage. If the option \"Fast\" is set to True then the values for n>7 are simply computed as the negatives of the values in the complementary configuration; this except for t2 and t11 which are treated as special cases. *)
   Options[ti] = {"Fast" -> True};
   ti[nE_, SL_, SpLp_, tiKey_, opOrder_ : 3, OptionsPattern[]] := 
    Module[{nn, S, L, Sp, Lp, 
@@ -1336,7 +1339,6 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
     ];
 
   ReducedT11infn::usage="ReducedT11infn[n, SL, SpLp] calculate the reduced matrix element of the T11 operator for the f^n configuration corresponding to the terms SL and SpLp. This operator corresponds to the inter-electron interaction between the spin of one electron and the orbital angular momentum of another.
-
   It does this by using equation (4) of \"Judd, BR, HM Crosswhite, and Hannah Crosswhite. \"Intra-Atomic Magnetic Interactions for f Electrons.\" Physical Review 169, no. 1 (1968): 130.\"
   ";
   ReducedT11infn[numE_, SL_, SpLp_]:= Module[
@@ -1396,7 +1398,6 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
   ]
 
   ReducedSOOandECSOinf2::usage="ReducedSOOandECSOinf2[SL, SpLp] returns the reduced matrix element corresponding to the operator (T11 + t11 - a13 * z13 / 6) for the terms {SL, SpLp}. This combination of operators corresponds to the spin-other-orbit plus ECSO interaction.
-
   The T11 operator corresponds to the spin-other-orbit interaction, and the t11 operator (associated with electrostatically-correlated spin-orbit) originates from configuration interaction analysis. To their sum the a facor proportional to operator z13 is subtracted since its effect is seen as redundant to the spin-orbit interaction. The factor of 1/6 is not on Judd's 1966 paper, but it is on \"Chen, Xueyuan, Guokui Liu, Jean Margerie, and Michael F Reid. \"A Few Mistakes in Widely Used Data Files for Fn Configurations Calculations.\" Journal of Luminescence 128, no. 3 (2008): 421-27\".
 
   The values for the reduced matrix elements of z13 are obtained from Table IX of the same paper. The value for a13 is also from that paper.";
@@ -1655,7 +1656,6 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
   );
 
   SpinSpin::usage="SpinSpin[n, SL, SpLp, J] returns the matrix element <|SL,J|spin-spin|SpLp,J|> for the spin-spin operator within the configuration f^n. This matrix element is independent of MJ. This is obtained by querying the relevant reduced matrix element by querying the association T22Table and putting in the adequate phase and 6-j symbol.
-
   This is calculated according to equation (3) in \"Judd, BR, HM Crosswhite, and Hannah Crosswhite. \"Intra-Atomic Magnetic Interactions for f Electrons.\" Physical Review 169, no. 1 (1968): 130.\"
   \".
   ";
@@ -1700,7 +1700,6 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
   (* ##### Spin-Other-Orbit and Electrostatically-Correlated-Spin-Orbit ###### *)
 
   SOOandECSO::usage="SOOandECSO[n, SL, SpLp, J] returns the matrix element <|SL,J|spin-spin|SpLp,J|> for the combined effects of the spin-other-orbit interaction and the electrostatically-correlated-spin-orbit (which originates from configuration interaction effects) within the configuration f^n. This matrix element is independent of MJ. This is obtained by querying the relevant reduced matrix element by querying the association SOOandECSOLSTable and putting in the adequate phase and 6-j symbol. The SOOandECSOLSTable puts together the reduced matrix elements from three operators.
-
   This is calculated according to equation (3) in \"Judd, BR, HM Crosswhite, and Hannah Crosswhite. \"Intra-Atomic Magnetic Interactions for f Electrons.\" Physical Review 169, no. 1 (1968): 130.\".
   ";
   SOOandECSO[numE_, SL_, SpLp_, J_]:= Module[
@@ -1717,6 +1716,7 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
   ]
 
   Prescaling = {P2 -> P2/225, P4 -> P4/1089, P6 -> 25 * P6 / 184041};
+
   GenerateSOOandECSOTable::usage="GenerateSOOandECSOTable[nmax] generates the matrix elements in the |LSJ> basis for the (spin-other-orbit + electrostatically-correlated-spin-orbit) operator. It returns an association where the keys are of the form {n, SL, SpLp, J}. If the option \"Export\" is set to True then the resulting object is saved to the data folder. Since this is a scalar operator, there is no MJ dependence. This dependence only comes into play when the crystal field contribution is taken into account.";
   Options[GenerateSOOandECSOTable] = {"Export"->False}
   GenerateSOOandECSOTable[nmax_, OptionsPattern[]]:= (
@@ -1795,7 +1795,7 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
   (* ######################################################################### *)
   (* ############################ Crystal Field ############################## *)
 
-  Cqk::usage = "Cqk[numE, q, k, NKSL, J, M, NKSLp, Jp, Mp].";
+  Cqk::usage = "Cqk[numE, q, k, NKSL, J, M, NKSLp, Jp, Mp]. In Wybourne (1965) see equations 6-3, 6-4, and 6-5. Also in TASS see equation 11.53.";
   Cqk[numE_, q_, k_, NKSL_, J_, M_, NKSLp_, Jp_, Mp_] := Module[
     {S, Sp, L, Lp, orbital, val},
     orbital = 3;
@@ -1840,7 +1840,6 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
   Sqk[q_, 6] := {Sm66, Sm56, Sm46, Sm36, Sm26, Sm16, S06, S16, S26, S36, S46, S56, S66}[[q + 7]];
 
   CrystalField::usage = "CrystalField[n, NKSL, J, M, NKSLp, Jp, Mp] gives the general expression for the matrix element of the crystal field Hamiltonian parametrized with Bqk and Sqk coefficients as a sum over spherical harmonics Cqk. 
-  
   Sometimes this expression only includes Bqk coefficients, see for example eqn 6-2 in Wybourne (1965), but one may also split the coefficient into real and imaginary parts as is done here, in an expression that is patently Hermitian.";
   CrystalField[numE_, NKSL_, J_, M_, NKSLp_, Jp_, Mp_] := (
     Sum[
@@ -2020,8 +2019,8 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
   (* ######################################################################### *)
   (* ############################ Block assembly ############################# *)
 
-  Options[JJBlockMatrix] = {"Sparse"->True, "ChenDeltas"->False};
   JJBlockMatrix::usage = "For given J, J' in the f^n configuration JJBlockMatrix[numE, J, J'] determines all the SL S'L' terms that may contribute to them and using those it provides the matrix elements <J, LS | H | J', LS'>. H having contributions from the following interactions: Coulomb, spin-orbit, spin-other-orbit, electrostatically-correlated-spin-orbit, spin-spin, three-body interactions, and crystal-field.";
+  Options[JJBlockMatrix] = {"Sparse"->True, "ChenDeltas"->False};
   JJBlockMatrix[numE_, J_, Jp_, CFTable_, OptionsPattern[]]:= Module[
     {NKSLJMs, NKSLJMps, NKSLJM, NKSLJMp,
     SLterm, SpLpterm,
@@ -2078,8 +2077,8 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
     Return[fname];
     );
 
-  Options[TabulateJJBlockMatrixTable] = {"Sparse"->True, "ChenDeltas"->False};
   TabulateJJBlockMatrixTable::usage = "TabulateJJBlockMatrixTable[numE, I] returns a list with three elements {JJBlockMatrixTable, EnergyStatesTable, AllowedM}. JJBlockMatrixTable is an association with keys equal to lists of the form {numE, J, Jp}. EnergyStatesTable is an association with keys equal to lists of the form {numE, J}. AllowedM is another association with keys equal to lists of the form {numE, J} and values equal to lists equal to the corresponding values of MJ. It's unnecessary (and it won't work in this implementation) to give numE > 7 given the equivalency between electron and hole configurations.";
+  Options[TabulateJJBlockMatrixTable] = {"Sparse"->True, "ChenDeltas"->False};
   TabulateJJBlockMatrixTable[numE_, CFTable_, OptionsPattern[]]:= (
     JJBlockMatrixTable = <||>;
     totalIterations = Length[AllowedJ[numE]]^2;
@@ -2118,8 +2117,8 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
     Return[JJBlockMatrixTable];
   )
 
-  Options[TabulateManyJJBlockMatrixTables] = {"Overwrite"->False, "Sparse"->True, "ChenDeltas"->False, "FilenameAppendix"-> "", "Compressed" -> False};
   TabulateManyJJBlockMatrixTables::usage = "TabulateManyJJBlockMatrixTables[{n1, n2, ...}] calculates the tables of matrix elements for the requested f^n_i configurations. The function does not return the matrices themselves. It instead returns an association whose keys are numE and whose values are the filenames where the output of TabulateJJBlockMatrixTables was saved to.The output consists of an association whose keys are of the form {n, J, Jp} and whose values are rectangular arrays given the values of <|LSJMJa|H|L'S'J'MJ'a'|>.";
+  Options[TabulateManyJJBlockMatrixTables] = {"Overwrite"->False, "Sparse"->True, "ChenDeltas"->False, "FilenameAppendix"-> "", "Compressed" -> False};
   TabulateManyJJBlockMatrixTables[ns_, OptionsPattern[]]:= (
     overwrite = OptionValue["Overwrite"];
     fNames = <||>;
@@ -2150,8 +2149,8 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
   Return[fNames];
   )
 
-  HamMatrixAssembly::usage="HamMatrixAssembly[numE] returns the Hamiltonian matrix for the f^n_i configuration. The matrix is returned as a SparseArray."
-  Options[HamMatrixAssembly] = {"FilenameAppendix"->""};
+  HamMatrixAssembly::usage="HamMatrixAssembly[numE] returns the Hamiltonian matrix for the f^n_i configuration. The matrix is returned as a SparseArray. The function admits an optional parameter \"FilenameAppendix\" which can be used to modify the filename to which the resulting array is exported to. It also admits an optional parameter \"IncludeZeeman\" which can be used to include the Zeeman interaction;";
+  Options[HamMatrixAssembly] = {"FilenameAppendix"->"","IncludeZeeman"->False};
   HamMatrixAssembly[nf_, OptionsPattern[]] := Module[
     {numE, ii, jj, howManyJs, Js, blockHam},
     (*#####################################*)
@@ -2164,7 +2163,7 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
       \[Alpha], \[Beta], \[Gamma], B02, B04, B06, B12, B14, B16, 
       B22, B24, B26, B34, B36, B44, B46, B56, B66, S12, S14, S16, S22, 
       S24, S26, S34, S36, S44, S46, S56, S66, T11, T11p, T12, T14, T15, T16, 
-      T17, T18, T19};
+      T17, T18, T19, Bx, By, Bz};
     params0 = AssociationThread[allVars, allVars];
     If[nf > 7, 
       (
@@ -2189,16 +2188,25 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
     (* Once the block form is created flatten it *)
     blockHam = ArrayFlatten[blockHam];
     blockHam = ReplaceInSparseArray[blockHam, params];
+    If[OptionValue["IncludeZeeman"],
+      (
+        PrintTemporary["Including Zeeman terms ..."];
+        {magx, magy, magz} = MagDipoleMatrixAssembly[numE];
+        blockHam += - TeslaToKayser * (Bx * magx + By * magy + Bz * magz);
+      )
+    ];
+    blockHam = MapToSparseArray[blockHam, Expand];
     Return[blockHam];
     ]
 
+SimplerSymbolicHamMatrix::usage="SimplerSymbolicHamMatrix[numE, simplifier] is a simple addition to HamMatrixAssembly that applies a given simplification to the full hamiltonian. Simplifier is a list of replacement rules. If the option \"Export\" is set to True, then the function also exports the resulting sparse array to the ./hams/ folder. The option \"PrependToFilename\" can be used to append a string to the filename to which the function may exports to. The option \"Return\" can be used to choose whether the function returns the matrix or not. The option \"Overwrite\" can be used to overwrite the file if it already exists. The option \"IncludeZeeman\" can be used to toggle the inclusion of the Zeeman interaction with an external magnetic field.";
 Options[SimplerSymbolicHamMatrix]={
   "Export"->True, 
   "PrependToFilename"->"", 
   "EorF"->"F",
   "Overwrite" -> False,
-  "Return" -> True};
-SimplerSymbolicHamMatrix::usage="SimplerSymbolicHamMatrix[numE, simplifier] is a simple addition to HamMatrixAssembly that applies a given simplification to the full hamiltonian. Simplifier is a list of replacement rules. If the option \"Export\" is set to True, then the function also exports the resulting sparse array to the ./hams/ folder. The option \"PrependToFilename\" can be used to append a string to the filename to which the function may exports to. The option \"Return\" can be used to choose whether the function returns the matrix or not.";
+  "Return" -> True,
+  "IncludeZeeman" -> False};
 SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Module[
   {thisHam,eTofs,fname},
   (
@@ -2234,8 +2242,9 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
         ]
       )
     ];
-    thisHam=HamMatrixAssembly[numE];
-    thisHam=ReplaceInSparseArray[thisHam,simplifier];
+
+    thisHam=HamMatrixAssembly[numE, "IncludeZeeman"->OptionValue["IncludeZeeman"]];
+    thisHam=ReplaceInSparseArray[thisHam, simplifier];
     If[OptionValue["Export"],
     (
       Print["Exporting to file ",fname];
@@ -2257,13 +2266,13 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
 
   magOp = <||>;
 
-  Options[JJBlockMagDip]={"Sparse"->True};
   JJBlockMagDip::usage="JJBlockMagDip[numE, J, Jp] returns the LSJ-reduced matrix element of the magnetic dipole operator between the states with given J and Jp. The option \"Sparse\" can be used to return a sparse matrix. The default is to return a sparse matrix.
   See eqn 15.7 in TASS.
   Here it is provided in atomic units in which the Bohr magneton is 1/2.
   \[Mu] = -(1/2) (L + gs S)
   We are using the Racah convention for the reduced matrix elements in the Wigner-Eckart theorem. See TASS eqn 11.15.
   ";
+  Options[JJBlockMagDip]={"Sparse"->True};
   JJBlockMagDip[numE_, braJ_, ketJ_, OptionsPattern[]]:=Module[
     {braSLJs,ketSLJs,
     braSLJ,ketSLJ,
@@ -2325,9 +2334,8 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     Return[JJBlockMagDipTable]
   );
 
-  Options[TabulateManyJJBlockMagDipTables]={"FilenameAppendix"->"",
-  "Overwrite"->False,"Compressed"->True};
   TabulateManyJJBlockMagDipTables::usage = "TabulateManyJJBlockMagDipTables[{n1, n2, ...}] calculates the tables of matrix elements for the requested f^n_i configurations. The function does not return the matrices themselves. It instead returns an association whose keys are numE and whose values are the filenames where the output of TabulateManyJJBlockMagDipTables was saved to. The output consists of an association whose keys are of the form {n, J, Jp} and whose values are rectangular arrays given the values of <|LSJMJa|H_dip|L'S'J'MJ'a'|>.";
+  Options[TabulateManyJJBlockMagDipTables]={"FilenameAppendix"->"","Overwrite"->False,"Compressed"->True};
   TabulateManyJJBlockMagDipTables[ns_,OptionsPattern[]]:=(
     fnames=<||>;
     Do[
@@ -2351,8 +2359,8 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     Return[fnames];
   )
 
-  Options[MagDipoleMatrixAssembly]={"FilenameAppendix"->""};
   MagDipoleMatrixAssembly::usage="MagDipoleMatrixAssembly[numE] returns the matrix representation of the operator - 1/2 (L + gs S) in the f^numE configuration. The function returns a list with three elements corresponding to the x,y,z components of this operator. The option \"FilenameAppendix\" can be used to append a string to the filename from which the function imports from in order to patch together the array. For numE beyond 7 the function returns the same as for the complementary configuration.";
+  Options[MagDipoleMatrixAssembly]={"FilenameAppendix"->""};
   MagDipoleMatrixAssembly[nf_,OptionsPattern[]]:=Module[
     {ImportFun, numE, appendTo, emFname, JJBlockMagDipTable, Js, howManyJs, blockOp, rowIdx, colIdx},
     (
@@ -2384,11 +2392,11 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   )
   ];
 
-  Options[MagDipLineStrength]={"Reload MagOp" -> False, "Units"->"SI", "States" -> All};
   MagDipLineStrength::usage="MagDipLineStrength[theEigensys, numE] takes the eigensystem of an ion and the number numE of f-electrons that correspond to it and it calculates the line strength array Stot.
   The option \"Units\" can be set to either \"SI\" (so that the units of the returned array are A/m^2) or to \"Hartree\".
   The option \"States\" can be used to limit the states for which the line strength is calculated. The default, All, calculates the line strength for all states. A second option for this is to provide an index labelling a specific state, in which case only the line strengths between that state and all the others are computed.
   The returned array should be interpreted in the eigenbasis of the Hamiltonian. As such the element Stot[[i,i]] corresponds to the line strength states |i> and |j>.";
+  Options[MagDipLineStrength]={"Reload MagOp" -> False, "Units"->"SI", "States" -> All};
   MagDipLineStrength[theEigensys_List, numE0_Integer, OptionsPattern[]]:=Module[
     {allEigenvecs, Sx, Sy, Sz, Stot ,factor},
   (
@@ -2689,8 +2697,8 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     NKterms = DeleteCases[NKterms, {}];
     NKterms]
 
-  Options[ParseTermLabels] = {"Export" -> True};
   ParseTermLabels::usage="ParseTermLabels[] parses the labels for the terms in the f^n configurations based on the labels for the f6 and f7 configurations. The function returns a list whose elements are of the form {LS, seniority, W, U}.";
+  Options[ParseTermLabels] = {"Export" -> True};
   ParseTermLabels[OptionsPattern[]] := Module[
     {labelsTextData, fNtextLabels, nielsonKosterLabels, seniorities, RacahW, RacahU},
   (
@@ -2730,12 +2738,12 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   (* ############################ Term management ############################ *)
   (* ######################################################################### *)
 
+  LoadParameters::usage="LoadParameters[ln] takes a string with the symbol the element of a trivalent lanthanide ion and returns model parameters for it. It is based on the data for LaF3. If the option \"Free Ion\" is set to True then the function sets all crystal field parameters to zero. Through the option \"gs\" it allows modyfing the electronic gyromagnetic ratio. For completeness this function also computes the E parameters using the F parameters quoted on Carnall.";
   Options[LoadParameters] = {
       "Source"->"Carnall",
       "Free Ion"->False,
       "gs"->2.002319304386
       };
-  LoadParameters::usage="LoadParameters[ln] takes a string with the symbol the element of a trivalent lanthanide ion and returns model parameters for it. It is based on the data for LaF3. If the option \"Free Ion\" is set to True then the function sets all crystal field parameters to zero. Through the option \"gs\" it allows modyfing the electronic gyromagnetic ratio. For completeness this function also computes the E parameters using the F parameters quoted on Carnall.";
   LoadParameters[Ln_String, OptionsPattern[]]:= 
     Module[{source, params},
     (
@@ -2782,9 +2790,6 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
       )
     ]
 
-  Options[IonSolver] = {"Include Spin-Spin" -> True,
-    "Overwrite Hamiltonian" -> False,
-    "Zeroes" -> {}};
   IonSolver::usage="IonSolver[numE, params, host] puts together (or retrieves from disk) the symbolic Hamiltonian for the f^numE configuration and solves it for the given params. 
   params is an Association with keys equal to parameter symbols and values their numerical values. The function will replace the symbols in the symbolic Hamiltonian with their numerical values and then diagonalize the resulting matrix. Any parameter that is not defined in the params Association is assumed to be zero.
   host is an optional string that may be used to prepend the filename of the symbolic Hamiltonian that is saved to disk. The default is \"Ln\".
@@ -2795,6 +2800,9 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   \"Overwrite Hamiltonian\" (bool) : If True then the function will overwrite the symbolic Hamiltonian that is saved to disk to expedite calculations. The default is False. The symbolic Hamiltonian is saved to disk to the ./hams/ folder preceded by the string host.
   \"Zeroes\" (list) : A list with symbols assumed to be zero.
   "; 
+  Options[IonSolver] = {"Include Spin-Spin" -> True,
+    "Overwrite Hamiltonian" -> False,
+    "Zeroes" -> {}};
   IonSolver[numE_Integer, params0_Association, host_String:"Ln", OptionsPattern[]] := Module[
     {ln, simplifier, simpleHam, numHam, eigensys,
     startTime, endTime, diagonalTime, params=params0, zeroSymbols},
@@ -2858,8 +2866,8 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   (* ######################################################################### *)
   (* ######################### Eigensystem analysis ########################## *)
 
-  Options[PrettySaundersSLJmJ] = {"Representation" -> "Ket"};
   PrettySaundersSLJmJ::usage = "PrettySaundersSLJmJ[{SL, J, mJ}] produces a human-redeable symbol for the given basis vector {SL, J, mJ}."
+  Options[PrettySaundersSLJmJ] = {"Representation" -> "Ket"};
   PrettySaundersSLJmJ[{SL_, J_, mJ_}, OptionsPattern[]] := (If[
     StringQ[SL], 
     ({S, L} = FindSL[SL];
@@ -2891,6 +2899,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     "\!\(\*TemplateBox[{\nRowBox[{\"`LS`\", \",\", \nRowBox[{\"J\", \
   \"=\", \"`J`\"}], \",\", \nRowBox[{\"mJ\", \"=\", \"`mJ`\"}]}]},\n\
   \"Ket\"]\)"];
+
   BasisVecInLSJMJ::usage = "BasisVecInLSJMJ[basisVec] takes a basis vector in the format {{{LSstring, Jval}, mJval}, nucSpin} and returns a human-readable symbol for the corresponding LSJMJ term in the form |LS, J=..., mJ=...>."
   BasisVecInLSJMJ[basisVec_] := (
     {LSstring, Jval, mJval} = basisVec;
@@ -2918,10 +2927,10 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     )
   ]
 
-  Options[ParseStatesByNumBasisVecs] = {"Coefficients" -> "Amplitudes", "Representation" -> "Ket"};
   ParseStatesByNumBasisVecs::usage = "ParseStatesByNumBasisVecs[states, basis, numBasisVecs, roundTo] takes a list of eigenstates in terms of their coefficients in the given basis and returns a list of the same states in terms of their energy and the coefficients at most numBasisVecs basis vectors. By default roundTo is 0.01 and this is the value used to round the amplitude coefficients.
   The option \"Coefficients\" can be used to specify whether the coefficients are given as \"Amplitudes\" or \"Probabilities\". The default is \"Amplitudes\".
   ";
+  Options[ParseStatesByNumBasisVecs] = {"Coefficients" -> "Amplitudes", "Representation" -> "Ket"};
   ParseStatesByNumBasisVecs[eigensys_List, basis_List, numBasisVecs_Integer, roundTo_Real : 0.01, OptionsPattern[]] := Module[
     {parsedStates, energy, eigenVec, 
     probs, amplitudes, ordering, 
@@ -3104,8 +3113,8 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   )
   ];
 
-  Options[ImportMZip]={"Leave Uncompressed" -> True};
   ImportMZip::usage="ImportMZip[filename] imports a .m file inside a .zip file with corresponding filename. If the Option \"Leave Uncompressed\" is set to True (the default) then this function also leaves an umcompressed version of the object in the same folder of filename";
+  Options[ImportMZip]={"Leave Uncompressed" -> True};
   ImportMZip[filename_String, OptionsPattern[]] := Module[
     {baseName, importKey, zipImportName, mImportName, imported},
   (
@@ -3133,7 +3142,6 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
       elem = s["NonzeroValues"]/.rule,
       def  = s["Background"]/.rule
       },
-      (* Return[{elem,def}]; *)
       srep = SparseArray[Automatic, 
         s["Dimensions"], 
         def, 
@@ -3143,8 +3151,24 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     Return[srep];
     );
 
-  Options[ParseTeXLikeSymbol] = {"Form" -> "List"};
+  MapToSparseArray::usage = "MapToSparseArray[sparseArray, function] takes a sparse array and returns a sparse array after the function has been applied to it.";
+  MapToSparseArray[sparsey_SparseArray, func_] := Module[{
+      nonZ, backg, mapped
+      },
+     (
+      nonZ   = func/@ sparsey["NonzeroValues"];
+      backg  = func[sparsey["Background"]];
+      mapped = SparseArray[Automatic, 
+        sparsey["Dimensions"], 
+        backg, 
+        {1, {sparsey["RowPointers"], sparsey["ColumnIndices"]}, nonZ}
+        ];
+      Return[mapped];
+     )
+    ];
+
   ParseTeXLikeSymbol::usage = "ParseTeXLikeSymbol[string] parses a string for a symbol given in LaTeX notation and returns a corresponding mathematica symbol. The string may have expressions for several symbols, they need to be separated by single spaces. In addition the _ and ^ symbols used in LaTeX notation need to have arguments that are enclosed in parenthesis, for example \"x_2\" is invalid, instead \"x_{2}\" should have been given.";
+  Options[ParseTeXLikeSymbol] = {"Form" -> "List"};
   ParseTeXLikeSymbol[bigString_, OptionsPattern[]] := (
     form = OptionValue["Form"];
     (*parse greek*)
@@ -3339,8 +3363,8 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   )
   ]
 
-  Options[HamiltonianForm]={"Separator"->"","Pivot"->""}
   HamiltonianForm::usage="HamiltonianForm[hamMatrix, basisLabels] takes the matrix representation of a hamiltonian together with a set of symbols representing the ordered basis in which the operator is represented. With this it creates a displayed form that has adequately labeled row and columns together with informative values when hovering over the matrix elements using the mouse cursor.";
+  Options[HamiltonianForm]={"Separator"->"","Pivot"->""}
   HamiltonianForm[hamMatrix_, basisLabels_List, OptionsPattern[]]:=(
       braLabels=DisplayForm[RowBox[{"\[LeftAngleBracket]",#,"\[RightBracketingBar]"}]]& /@ basisLabels;
       ketLabels=DisplayForm[RowBox[{"\[LeftBracketingBar]",#,"\[RightAngleBracket]"}]]& /@ basisLabels;
@@ -3441,12 +3465,14 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
       LoadCarnall[];
     )
 
+  fnTermLabels::usage = "This list contains the labels of f^n configurations. Each element of the list has four elements {LS, seniority, W, U}. At first sight this seems to only include the labels for the f^6 and f^7 configuration, however, all is included in these two.";
+
   LoadTermLabels::usage="LoadTermLabels[] loads into the session the labels for the terms in the f^n configurations.";
   LoadTermLabels[]:= (
     If[ValueQ[fnTermLabels], Return[]];
     PrintTemporary["Loading data for state labels in the f^n configurations..."];
     fnTermsFname = FileNameJoin[{moduleDir, "data", "fnTerms.m"}];
-    fnTermLabels::usage = "This list contains the labels of f^n configurations. Each element of the list has four elements {LS, seniority, W, U}. At first sight this seems to only include the labels for the f^6 and f^7 configuration, however, all is included in these two.";
+
     If[!FileExistsQ[fnTermsFname],
       (PrintTemporary[">> fnTerms.m not found, generating ..."];
         fnTermLabels = ParseTermLabels["Export"->True];
@@ -3632,7 +3658,9 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   )
 
   CFP::usage = "CFP[{n, NKSL}] provides a list whose first element echoes NKSL and whose other elements are lists with two elements the first one being the symbol of a parent term and the second being the corresponding coefficient of fractional parentage. n must satisfy 1 <= n <= 7";
+
   CFPAssoc::usage = " CFPAssoc is an association where keys are of lists of the form {num_electrons, daugherTerm, parentTerm} and values are the corresponding coefficients of fractional parentage. The terms given in string-spectroscopic notation. If a certain daughter term does not have a parent term, the value is 0. Loaded using LoadCFP[].";
+
   LoadCFP::usage="LoadCFP[] loads CFP, CFPAssoc, and CFPTable into the session.";
   LoadCFP[]:=(
     If[And[ValueQ[CFP], ValueQ[CFPTable], ValueQ[CFPAssoc]],Return[]];
@@ -3666,6 +3694,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   );
 
   ReducedUkTable::usage = "ReducedUkTable[{n, l = 3, SL, SpLp, k}] provides reduced matrix elements of the spherical tensor operator Uk. See TASS section 11-9 \"Unit Tensor Operators\". Loaded using LoadUk[].";
+
   LoadUk::usage="LoadUk[] loads into session the reduced matrix elements for unit tensor operators.";
   LoadUk[]:=(
     If[ValueQ[ReducedUkTable], Return[]];
@@ -3680,6 +3709,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   );
 
   ElectrostaticTable::usage = "ElectrostaticTable[{n, SL, SpLp}] provides the calculated result of Electrostatic[{n, SL, SpLp}]. Load using LoadElectrostatic[].";
+
   LoadElectrostatic::usage="LoadElectrostatic[] loads the reduced matrix elements for the electrostatic interaction.";
   LoadElectrostatic[]:=(
     If[ValueQ[ElectrostaticTable], Return[]];
