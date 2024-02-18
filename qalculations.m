@@ -49,7 +49,7 @@ Options[FastIonSolverLaF3] = {
   "Explorer" -> False
 }; 
 FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[
-  {makeNotebook, eigenstateTruncationProbability, spinspin, host,
+  {makeNotebook, eigenstateTruncationProbability, host,
   ln, terms, termNames, carnallEnergies, eigenEnergies, simplerStateLabels,
   eigensys, basis, assignmentMatches, stateLabels, carnallAssignments},
   (
@@ -57,7 +57,6 @@ FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[
     makeNotebook = OptionValue["MakeNotebook"];
     eigenstateTruncationProbability = OptionValue["eigenstateTruncationProbability"];
     maxStatesInTable = OptionValue["Max Eigenstates in Table"];
-    spinspin = OptionValue["Include spin-spin"];
     Duplicator[aList_] := Flatten[{#, #} & /@ aList];
     host = "LaF3";
     paramFiddle = OptionValue["paramFiddle"];
@@ -111,7 +110,7 @@ FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[
     PrintFun[">> Loading the symbolic Hamiltonian took ", loadTime, " seconds."];
 
     (*Enforce the override to the spin-spin contribution to the magnetic interactions*)
-    params[\[Sigma]SS] = If[spinspin, 1, 0];
+    params[\[Sigma]SS] = If[OptionValue["Include spin-spin"], 1, 0];
 
     (*Everything that is not given is set to zero*)
     params = ParamPad[params, "Print" -> False];

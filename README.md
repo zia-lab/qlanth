@@ -23,7 +23,7 @@ This picture is one that developed and mostly matured in the second half of the 
 
 `qlanth` also includes data that might be of use to those interested in the single-configuration description of lanthanide ions, separate to their specific use in this code. These data include the coefficients of fractional parentage (as calculated by Velkov and parsed here), and reduced matrix elements for all the operators listed above in the effective Hamiltonian. These are provided as standard Mathematica associations that should be simple to use elsewhere.
 
-The included Mathematica notebook `qlanth.nb` has examples of the capabilities that this package offers, and the `/examples` folder includes a series of notebook for most of the trivalent lanthanide ions in lanthanum fluoride. LaF3 is remarkable in that it was one of the systems in which a systematic study <a href="https://pubs.aip.org/aip/jcp/article-abstract/90/7/3443/220581"> [Carnall (1989)] </a> of all of the trivalent lanthanide ions were studied. In them, the fact that the parameters for different ions vary in regular fashion, provides some validity to this effective Hamiltonian as a physically reasonable description.
+The included Mathematica notebook `qlanth.nb` has examples of the capabilities that this package offers, and the `/examples` folder includes a series of notebooks for most of the trivalent lanthanide ions in lanthanum fluoride. LaF3 is remarkable in that it was one of the systems in which a systematic study <a href="https://pubs.aip.org/aip/jcp/article-abstract/90/7/3443/220581"> [Carnall (1989)] </a> of all of the trivalent lanthanide ions were studied. In them, the fact that the parameters for different ions vary in regular fashion, provides some validity to this effective Hamiltonian as a physically reasonable description.
 
 `qlanth` can calculate energy levels and accompanying eigenvectors in the LSJMJ basis.
 
@@ -50,6 +50,6 @@ The included Mathematica notebook `qlanth.nb` has examples of the capabilities t
 
 ## Acknowledgements
 
-- This code was originally authored by Christopher Dodson, and is currently being maintained and expanded by David Lizarazo at Brown University. It has also benefited from the helpful discussions with Tharnier Puel at the University of Iowa.
+- This code was originally authored by Christopher Dodson and Rashid Zia, and is currently being maintained and expanded by David Lizarazo at Brown University. It has also benefited from the helpful discussions with Tharnier Puel at the University of Iowa.
 
 - This work is suppported by the National Sicence Foundation Grant No. 1922278.

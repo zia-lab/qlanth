@@ -159,6 +159,7 @@
 \newcommand{\phaser}[1]{{(-1)}^{#1}}
 \newcommand{\tricondition}[1]{\scalene(#1)}
 \newcommand{\LSJMbasis}{\ket{LSJ\Msub{J}}}
+\newcommand{\LSJbasis}{\ket{LSJ}}
 
 \newcommand{\Ckq}{\mathcal{C}^{(k)}_q}
 \newcommand{\Ck}[1]{\mathcal{C}^{(#1)}}
@@ -180,6 +181,9 @@
 \newcommand{\casimirAlpha}{\opcolor{{\alpha}}}
 \newcommand{\casimirBeta}{\opcolor{{\beta}}}
 \newcommand{\casimirGamma}{\opcolor{{\gamma}}}
+\newcommand{\Txyz}[3]{\hat{\mathcal{T}}^{(#1#2)}_{#3}}
+\newcommand{\txyz}[3]{\hat{\mathcal{t}}^{(#1#2)}_{#3}}
+\newcommand{\CoulombNonCentral}{\hat{\mathfrak{C}}}
 
 \newcommand{\sixj}[6]{\begin{Bmatrix} #1 & #2 & #3 \\ #4 & #5 & #6 \end{Bmatrix}}
 \newcommand{\threej}[6]{\begin{pmatrix} #1 & #2 & #3 \\ #4 & #5 & #6 \end{pmatrix}}
@@ -187,9 +191,7 @@
 \newcommand{\fn}{$\underbar{f}^n$}
 \newcommand{\fourcornersymbol}[5]{{}_{#1}^{#2}{\kern-0.1em}{#3}_{#4}^{#5}}
 \newcommand{\LSterm}[2]{{}^{#1}{\kern-0.1em}{#2}}
-% \newcommand{\cfp}[2]{\opcolor{\left(#1|\!\}#2\right)}}
-% \newcommand{\cfpinv}[2]{\textcolor{red}{\left(#1\{\!|#2\right)}}
-\newcommand{\cfp}[2]{\textcolor{purple}{\left(#1\stretchrel*{|\!\{}{\rule[-0.55em]{0em}{1.5em}}#2\right)}}
+\newcommand{\cfp}[2]{\textcolor{purple}{\left(#1\stretchrel*{|\!\}}{\rule[-0.55em]{0em}{1.5em}}#2\right)}}
 \newcommand{\cfpinv}[2]{\textcolor{purple}{\left(#1\stretchrel*{\{\!|}{\rule[-0.55em]{0em}{1.5em}}#2\right)}}
 
 % Hamiltonians:
@@ -213,7 +215,7 @@
 \newcommand{\hamSpinOrbit}{\sum_{i=1}^\numE \xi(r_i) \paren{\op{\sspin}_i \cdot \op{\lorb}_i} } 
 
 \newcommand{\hamCrystalFieldSymbol}{\ham_\text{cf}}
-\newcommand{\hamCrystalField}{\sum_{i=1}^\numE V_{\textrm{CF}}(\op{r}_i) = \sum_i \sum_{k=0,2,4,6}\sum_{q=-k}^{k} \Bkq \Ckq(i)}
+\newcommand{\hamCrystalField}{\sum_{i=1}^\numE V_{\textrm{CF}}(\op{r}_i) = \sum_{i=1}^{\numE} \sum_{k=2,4,6}\sum_{q=-k}^{k} \Bkq \Ckq(i)}
 
 
 \newcommand{\hamEffectiveThreeBody}{\sum_{k=2,3,4,6,7,8}^\numE \Tk{k} \op{t}_k}
@@ -224,8 +226,14 @@
 \newcommand{\hamSpinSpinSpinOtherOrbitSymbol}{\ham_{\text{s:s-s:oo}}}
 \newcommand{\hamSpinSpinSpinOtherOrbit}{\sum_{k=0,2,4} \Mk{k} \op{m}_k} 
 
-\newcommand{\hamECSOSymbol}{\ham_\text{ec-s:o}}
-\newcommand{\hamECSO}{\sum_{k=2,4,6} \Pk{k} \op{p}_k} 
+\newcommand{\hamSpinSpinSymbol}{\ham_{\text{s:s}}}
+\newcommand{\hamECSOSymbol}{\ham_{\text{ecs:o}}}
+\newcommand{\hamSpinSpin}{\sum_{k=0,2,4} \Mk{k} \op{m}^{ss}_k} 
+
+\newcommand{\hamSpinOtherOrbitSymbol}{\ham_\text{s:oo}}
+
+\newcommand{\hamSOOplusECSOSymbol}{\ham_\text{s:oo{$\oplus$}ecs:o}}
+\newcommand{\hamSOOplusECSO}{\sum_{k=2,4,6} \Pk{k} \op{p}_k + \sum_{k=0,2,4} \Mk{k} \op{m}_k } 
 
 
 %%%%%%% Quantum Mechanics %%%%%%%

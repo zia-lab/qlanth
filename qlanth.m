@@ -189,9 +189,9 @@ t2Switch: controls the usage of the t2 operator beyond f7
 wChErrA: If 1 then the type-A errors in Chen are used, if 0 then not.
 wChErrB: If 1 then the type-B errors in Chen are used, if 0 then not.
 
-Bx : x component of external magnetic field (in T)
-By : y component of external magnetic field (in T)
-Bz : z component of external magnetic field (in T)
+Bx: x component of external magnetic field (in T)
+By: y component of external magnetic field (in T)
+Bz: z component of external magnetic field (in T)
 ";
 paramSymbols = StringSplit[paramAtlas, "\n"];
 paramSymbols = Select[paramSymbols, # != ""& ];
@@ -362,7 +362,6 @@ SpinSpinTable;
 
 Sqk;
 SquarePrimeToNormal;
-ReducedT11infn;
 ReducedT22infn;
 TPO;
 
@@ -393,8 +392,8 @@ Begin["`Private`"]
   moduleDir = DirectoryName[$InputFileName];
   frontEndAvailable = (Head[$FrontEnd] === FrontEndObject);
 
-  (* ######################################################################### *)
-  (* ################################# MISC ################################## *)
+  (* ########################################################### *)
+  (* ########################## MISC ########################### *)
 
   TPO::usage="Two plus one.";
   TPO[args__] := Times @@ ((2*# + 1) & /@ {args});
@@ -433,8 +432,8 @@ Begin["`Private`"]
     Return[newParams];
     )
 
-  (* ######################################################################### *)
-  (* ############################# Racah Algebra ############################# *)
+  (* ########################################################### *)
+  (* ###################### Racah Algebra ###################### *)
 
   ReducedUk::usage = "ReducedUk[n, l, SL, SpLp, k] gives the reduced matrix element of the symmetric unit tensor operator U^(k). See equation 11.53 in TASS.";
   ReducedUk[numE_, l_, SL_, SpLp_, k_] := 
@@ -593,11 +592,11 @@ Begin["`Private`"]
     Return[ReducedV1kTable];
   )
 
-  (* ############################# Racah Algebra ############################# *)
-  (* ######################################################################### *)
+  (* ###################### Racah Algebra ###################### *)
+  (* ########################################################### *)
 
-  (* ######################################################################### *)
-  (* ############################# Electrostatic ############################# *)
+  (* ########################################################### *)
+  (* ###################### Electrostatic ###################### *)
 
   fsubk::usage = "Slater integral f_k. See equation 12.17 in TASS.";
   fsubk[numE_, orbital_, NKSL_, NKSLp_, k_] := Module[
@@ -709,11 +708,11 @@ Begin["`Private`"]
     Return[ElectrostaticTable];
   )
 
-  (* ############################# Electrostatic ############################# *)
-  (* ######################################################################### *)
+  (* ###################### Electrostatic ###################### *)
+  (* ########################################################### *)
 
-  (* ######################################################################### *)
-  (* ################################# Bases ################################# *)
+  (* ########################################################### *)
+  (* ########################## Bases ########################## *)
 
   BasisTableGenerator::usage = "BasisTableGenerator[numE] returns an association whose keys are triples of the form {numE, J} and whose values are lists having the basis elements that correspond to {numE, J}.";
   BasisTableGenerator[numE_] := Module[{energyStatesTable, allowedJ, J, Jp}, 
@@ -742,11 +741,11 @@ Begin["`Private`"]
     )
     ];
 
-  (* ################################# Bases ################################# *)
-  (* ######################################################################### *)
+  (* ########################## Bases ########################## *)
+  (* ########################################################### *)
 
-  (* ######################################################################### *)
-  (* ################## Coefficients of Fracional Parentage ################## *)
+  (* ########################################################### *)
+  (* ########### Coefficients of Fracional Parentage ########### *)
 
   GenerateCFP::usage = "GenerateCFP[] generates the association for the coefficients of fractional parentage. Result is exported to the file ./data/CFP.m. The coefficients of fractional parentage are taken beyond the half-filled shell using the phase convention determined by the option \"PhaseFunction\". The default is \"NK\" which corresponds to the phase convention of Nielson and Koster. The other option is \"Judd\" which corresponds to the phase convention of Judd.";
   Options[GenerateCFP] = {"Export" -> True, "PhaseFunction"-> "NK"};
@@ -1006,11 +1005,11 @@ Begin["`Private`"]
     NKterms = DeleteCases[NKterms, {}]
   ]
 
-  (* ################## Coefficients of Fracional Parentage ################## *)
-  (* ######################################################################### *)
+  (* ########### Coefficients of Fracional Parentage ########### *)
+  (* ########################################################### *)
 
-  (* ######################################################################### *)
-  (* ############################# Spin Orbit ################################ *)
+  (* ########################################################### *)
+  (* ###################### Spin Orbit ######################### *)
 
   SpinOrbit::usage = "SpinOrbit[numE, SL, SpLp, J] returns the LSJ reduced matrix element \[Zeta] <SL, J|L.S|SpLp, J>. These are given as a function of \[Zeta]. This function requires that the association ReducedV1kTable be defined. 
   See equations 2-106 and 2-109 in Wybourne (1965). Equivalently see eqn. 12.43 in TASS.";
@@ -1052,11 +1051,11 @@ Begin["`Private`"]
   )
   ]
 
-  (* ############################# Spin Orbit ################################ *)
-  (* ######################################################################### *)
+  (* ###################### Spin Orbit ######################### *)
+  (* ########################################################### *)
 
-  (* ######################################################################### *)
-  (* ######################## Three Body Operators ########################### *)
+  (* ########################################################### *)
+  (* ################# Three Body Operators #################### *)
 
   ParseJudd1984::usage="This function parses the data from tables 1 and 2 of Judd from Judd, BR, and MA Suskin. \"Complete Set of Orthogonal Scalar Operators for the Configuration f^3\". JOSA B 1, no. 2 (1984): 261-65.\"";
   Options[ParseJudd1984] = {"Export" -> False};
@@ -1306,11 +1305,11 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
     )
   ];
 
-  (* ######################## Three Body Operators ########################### *)
-  (* ######################################################################### *)
+  (* ################# Three Body Operators #################### *)
+  (* ########################################################### *)
 
-  (* ######################################################################### *)
-  (* ######################### Reduced SOO and ECSO ########################## *)
+  (* ########################################################### *)
+  (* ################## Reduced SOO and ECSO ################### *)
 
   ReducedT11inf2::usage="ReducedT11inf2[SL, SpLp] returns the reduced matrix element of the scalar component of the double tensor T11 for the given SL terms SL, SpLp.
   Data used here for m0, m2, m4 is from Table II of Judd, BR, HM Crosswhite, and Hannah Crosswhite. Intra-Atomic Magnetic Interactions for f Electrons. Physical Review 169, no. 1 (1968): 130.
@@ -1336,39 +1335,6 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
       True,
         Return[0]
     ]
-    ];
-
-  ReducedT11infn::usage="ReducedT11infn[n, SL, SpLp] calculate the reduced matrix element of the T11 operator for the f^n configuration corresponding to the terms SL and SpLp. This operator corresponds to the inter-electron interaction between the spin of one electron and the orbital angular momentum of another.
-  It does this by using equation (4) of \"Judd, BR, HM Crosswhite, and Hannah Crosswhite. \"Intra-Atomic Magnetic Interactions for f Electrons.\" Physical Review 169, no. 1 (1968): 130.\"
-  ";
-  ReducedT11infn[numE_, SL_, SpLp_]:= Module[
-    {spin, orbital, t, idx1, idx2, S, L, Sp, Lp, cfpSL, cfpSpLp, parentSL, parentSpLp, Sb, Lb, Tnkk, phase, Sbp, Lbp}, 
-    {spin, orbital} = {1/2, 3};
-    {S, L}   = FindSL[SL];
-    {Sp, Lp} = FindSL[SpLp];
-    t = 1;
-    cfpSL    = CFP[{numE, SL}];
-    cfpSpLp  = CFP[{numE, SpLp}];
-    Tnkk = 
-      Sum[(
-        parentSL = cfpSL[[idx2, 1]]; 
-        parentSpLp = cfpSpLp[[idx1, 1]];
-        {Sb, Lb} = FindSL[parentSL];
-        {Sbp, Lbp} = FindSL[parentSpLp];
-        phase = Phaser[Sb + Lb + spin + orbital + Sp + Lp];
-        (
-          phase *
-          cfpSpLp[[idx1, 2]] * cfpSL[[idx2, 2]] *
-          SixJay[{S, t, Sp}, {Sbp, spin, Sb}] *
-          SixJay[{L, t, Lp}, {Lbp, orbital, Lb}] *
-          T11Table[{numE - 1, parentSL, parentSpLp}]
-        )
-      ),
-      {idx1, 2, Length[cfpSpLp]},
-      {idx2, 2, Length[cfpSL]}
-      ];
-    Tnkk *= numE / (numE - 2) * Sqrt[TPO[S, Sp, L, Lp]];
-    Return[Tnkk];
     ];
 
   Reducedt11inf2::usage="Reducedt11inf2[SL, SpLp] returns the reduced matrix element in f^2 of the double tensor operator t11 for the corresponding given terms {SL, SpLp}.
@@ -1400,44 +1366,34 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
   ReducedSOOandECSOinf2::usage="ReducedSOOandECSOinf2[SL, SpLp] returns the reduced matrix element corresponding to the operator (T11 + t11 - a13 * z13 / 6) for the terms {SL, SpLp}. This combination of operators corresponds to the spin-other-orbit plus ECSO interaction.
   The T11 operator corresponds to the spin-other-orbit interaction, and the t11 operator (associated with electrostatically-correlated spin-orbit) originates from configuration interaction analysis. To their sum the a facor proportional to operator z13 is subtracted since its effect is seen as redundant to the spin-orbit interaction. The factor of 1/6 is not on Judd's 1966 paper, but it is on \"Chen, Xueyuan, Guokui Liu, Jean Margerie, and Michael F Reid. \"A Few Mistakes in Widely Used Data Files for Fn Configurations Calculations.\" Journal of Luminescence 128, no. 3 (2008): 421-27\".
 
-  The values for the reduced matrix elements of z13 are obtained from Table IX of the same paper. The value for a13 is also from that paper.";
+  The values for the reduced matrix elements of z13 are obtained from Table IX of the same paper. The value for a13 is from table VIII.";
   ReducedSOOandECSOinf2[SL_, SpLp_] :=
-  Module[{pairPosition, f2TermPairs, a13, z13, redSOOandECSOinf2}, 
-    f2TermPairs = {
-      {"1S", "3P"}, {"3P", "1S"}, 
-      {"3P", "3P"}, {"3P", "1D"}, 
-      {"1D", "3P"}, {"1D", "3F"}, 
-      {"3F", "1D"}, {"3F", "3F"}, 
-      {"3F", "1G"}, {"1G", "3F"}, 
-      {"1G", "3H"}, {"3H", "1G"}, 
-      {"3H", "3H"}, {"3H", "1I"}, 
-      {"1I", "3H"}};
+  Module[{a13, z13, z13inf2, matElement, redSOOandECSOinf2}, 
     a13 = (-33 M0 + 3 M2 + 15/11 M4 -
-          6 P0 + 3/2 (35 P2 + 77 P4 + 143 P6));
-    z13 = {2, 2, 
-      1, 
-      1/Sqrt[1080] (-90), 
-      1/Sqrt[1080] (-90), 
-      Sqrt[2/405] 45,
-      Sqrt[2/405] 45,
-      Sqrt[14],
-      1/Sqrt[891] (-99),
-      1/Sqrt[891] (-99), 
-      990/Sqrt[98010],
-      990/Sqrt[98010], 
-      55/Sqrt[55],
-      -2574/Sqrt[1019304],
-      -2574/Sqrt[1019304]};
-    pairPosition = Position[f2TermPairs, {SL, SpLp}];
-    If[Length[pairPosition] == 0,
-      Return[0],
-      pairPosition = pairPosition[[1, 1]]
+          6 P0 + 3/2 (35 P2 + 77 P4 + 143 P6));    
+    z13inf2 = <|
+        {"1S","3P"} -> 2,
+        {"3P","3P"} -> 1,
+        {"3P","1D"} -> -Sqrt[(15/2)],
+        {"1D","3F"} -> Sqrt[10],
+        {"3F","3F"} -> Sqrt[14],
+        {"3F","1G"} -> -Sqrt[11],
+        {"1G","3H"} -> Sqrt[10],
+        {"3H","3H"} -> Sqrt[55],
+        {"3H","1I"} -> -Sqrt[(13/2)]
+        |>;
+    matElement = Which[
+      MemberQ[Keys[z13inf2],{SL,SpLp}],
+        z13inf2[{SL,SpLp}],
+      MemberQ[Keys[z13inf2],{SpLp,SL}],
+        z13inf2[{SpLp,SL}],
+      True,
+        0
     ];
-    
     redSOOandECSOinf2 = (
         ReducedT11inf2[SL, SpLp] +
         Reducedt11inf2[SL, SpLp] -
-        a13 / 6 * z13[[pairPosition]]
+        a13 / 6 * matElement
     );
     redSOOandECSOinf2 = SimplifyFun[redSOOandECSOinf2];
     Return[redSOOandECSOinf2];
@@ -1535,11 +1491,11 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
     Return[SOOandECSOLSTable];
   );
 
-  (* ######################### Reduced SOO and ECSO ########################## *)
-  (* ######################################################################### *)
+  (* ################## Reduced SOO and ECSO ################### *)
+  (* ########################################################### *)
 
-  (* ######################################################################### *)
-  (* ############################# Spin-Spin ################################# *)
+  (* ########################################################### *)
+  (* ###################### Spin-Spin ########################## *)
 
   ReducedT22inf2::usage="ReducedT22inf2[SL, SpLp] returns the reduced matrix element of the scalar component of the double tensor T22 for the terms SL, SpLp in f^2.
   Data used here for m0, m2, m4 is from Table I of Judd, BR, HM Crosswhite, and Hannah Crosswhite. Intra-Atomic Magnetic Interactions for f Electrons. Physical Review 169, no. 1 (1968): 130.
@@ -1693,11 +1649,11 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
     Return[SpinSpinTable];
     );
 
-  (* ######################################################################### *)
-  (* ############################# Spin-Spin ################################# *)
+  (* ########################################################### *)
+  (* ###################### Spin-Spin ########################## *)
 
-  (* ######################################################################### *)
-  (* ##### Spin-Other-Orbit and Electrostatically-Correlated-Spin-Orbit ###### *)
+  (* ########################################################### *)
+  (* ## Spin-Other-Orbit and Electrostatically-Correlated-Spin-Orbit ## *)
 
   SOOandECSO::usage="SOOandECSO[n, SL, SpLp, J] returns the matrix element <|SL,J|spin-spin|SpLp,J|> for the combined effects of the spin-other-orbit interaction and the electrostatically-correlated-spin-orbit (which originates from configuration interaction effects) within the configuration f^n. This matrix element is independent of MJ. This is obtained by querying the relevant reduced matrix element by querying the association SOOandECSOLSTable and putting in the adequate phase and 6-j symbol. The SOOandECSOLSTable puts together the reduced matrix elements from three operators.
   This is calculated according to equation (3) in \"Judd, BR, HM Crosswhite, and Hannah Crosswhite. \"Intra-Atomic Magnetic Interactions for f Electrons.\" Physical Review 169, no. 1 (1968): 130.\".
@@ -1737,11 +1693,11 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
     Return[SOOandECSOTable];
   );
 
-  (* ##### Spin-Other-Orbit and Electrostatically-Correlated-Spin-Orbit ###### *)
-  (* ######################################################################### *)
+  (* ## Spin-Other-Orbit and Electrostatically-Correlated-Spin-Orbit ## *)
+  (* ########################################################### *)
 
-  (* ######################################################################### *)
-  (* ######################### Magnetic Interactions ######################### *)
+  (* ########################################################### *)
+  (* ################## Magnetic Interactions ################## *)
 
   MagneticInteractions::usage="MagneticInteractions[{numE, SLJ, SLJp, J}] returns the matrix element of the magnetic interaction between the terms SLJ and SLJp in the f^n configuration. The interaction is given by the sum of the spin-spin interaction and the SOO and ECSO interactions. The spin-spin interaction is given by the function SpinSpin[{numE, SLJ, SLJp, J}]. The SOO and ECSO interactions are given by the function SOOandECSO[{numE, SLJ, SLJp, J}]. The function requires chenDeltas to be loaded into the session. The option \"ChenDeltas\" can be use to include or exclude the Chen deltas from the calculation. The default is to exclude them.";
   Options[MagneticInteractions] = {"ChenDeltas" -> False};
@@ -1789,11 +1745,11 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
       Return[total];
     )
 
-  (* ######################### Magnetic Interactions ######################### *)
-  (* ######################################################################### *)
+  (* ################## Magnetic Interactions ################## *)
+  (* ########################################################### *)
 
-  (* ######################################################################### *)
-  (* ############################ Crystal Field ############################## *)
+  (* ########################################################### *)
+  (* ##################### Crystal Field ####################### *)
 
   Cqk::usage = "Cqk[numE, q, k, NKSL, J, M, NKSLp, Jp, Mp]. In Wybourne (1965) see equations 6-3, 6-4, and 6-5. Also in TASS see equation 11.53.";
   Cqk[numE_, q_, k_, NKSL_, J_, M_, NKSLp_, Jp_, Mp_] := Module[
@@ -1933,11 +1889,11 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
     ]
   )
 
-  (* ############################ Crystal Field ############################## *)
-  (* ######################################################################### *)
+  (* ##################### Crystal Field ####################### *)
+  (* ########################################################### *)
 
-  (* ######################################################################### *)
-  (* ########### Configuration-Interaction via Casimir Operators ############# *)
+  (* ########################################################### *)
+  (* #### Configuration-Interaction via Casimir Operators ###### *)
 
   CasimirSO3::usage = "CasimirSO3[SL, SpLp] returns LS reduced matrix element of the configuration interaction term corresponding to the Casimir operator of R3.";
   CasimirSO3[{SL_, SpLp_}] := (
@@ -2005,7 +1961,7 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
       If[SL == SpLp,
         CasimirSO3[{SL, SL}] +
         CasimirSO7[{SL, SL}] +
-        CasimirG2[{SL, SL}],
+         CasimirG2[{SL, SL}],
         0
       ]
       );
@@ -2013,11 +1969,11 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
     Return[val];
     ]
 
-  (* ########### Configuration-Interaction via Casimir Operators ############# *)
-  (* ######################################################################### *)
+  (* #### Configuration-Interaction via Casimir Operators ###### *)
+  (* ########################################################### *)
 
-  (* ######################################################################### *)
-  (* ############################ Block assembly ############################# *)
+  (* ########################################################### *)
+  (* ##################### Block assembly ###################### *)
 
   JJBlockMatrix::usage = "For given J, J' in the f^n configuration JJBlockMatrix[numE, J, J'] determines all the SL S'L' terms that may contribute to them and using those it provides the matrix elements <J, LS | H | J', LS'>. H having contributions from the following interactions: Coulomb, spin-orbit, spin-other-orbit, electrostatically-correlated-spin-orbit, spin-spin, three-body interactions, and crystal-field.";
   Options[JJBlockMatrix] = {"Sparse"->True, "ChenDeltas"->False};
@@ -2258,11 +2214,11 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   )
 ]
 
-  (* ############################ Block assembly ############################# *)
-  (* ######################################################################### *)
+  (* ##################### Block assembly ###################### *)
+  (* ########################################################### *)
 
-  (* ######################################################################### *)
-  (* ########################### Optical Operators ########################### *)
+  (* ########################################################### *)
+  (* #################### Optical Operators #################### *)
 
   magOp = <||>;
 
@@ -2491,11 +2447,11 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   )
   ]
 
-  (* ########################### Optical Operators ########################### *)
-  (* ######################################################################### *)
+  (* #################### Optical Operators #################### *)
+  (* ########################################################### *)
 
-  (* ######################################################################### *)
-  (* ########################## Printers and Labels ########################## *)
+  (* ########################################################### *)
+  (* ################### Printers and Labels ################### *)
 
   PrintL::usage = "PrintL[L] give the string representation of a given angular momentum.";
   PrintL[L_] := If[StringQ[L], L, StringTake[specAlphabet, {L + 1}]]
@@ -2523,11 +2479,11 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
       SubscriptBox[PrintL[SLJM[[2]]], {SLJM[[3]], SLJM[[4]]}]}] // 
     DisplayForm;
 
-  (* ########################## Printers and Labels ########################## *)
-  (* ######################################################################### *)
+  (* ################### Printers and Labels ################### *)
+  (* ########################################################### *)
 
-  (* ######################################################################### *)
-  (* ############################ Term management ############################ *)
+  (* ########################################################### *)
+  (* ##################### Term management ##################### *)
 
   AllowedSLTerms::usage = "AllowedSLTerms[numE] returns a list with the allowed terms in the f^numE configuration, the terms are given as lists in the format {S, L}. This list may have redundancies which are compatible with the degeneracies that might correspond to the given case.";
   AllowedSLTerms[numE_] := Map[FindSL[First[#]] &, CFPTerms[Min[numE, 14-numE]]]
@@ -2735,8 +2691,8 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   )
   ]
 
-  (* ############################ Term management ############################ *)
-  (* ######################################################################### *)
+  (* ##################### Term management ##################### *)
+  (* ########################################################### *)
 
   LoadParameters::usage="LoadParameters[ln] takes a string with the symbol the element of a trivalent lanthanide ion and returns model parameters for it. It is based on the data for LaF3. If the option \"Free Ion\" is set to True then the function sets all crystal field parameters to zero. Through the option \"gs\" it allows modyfing the electronic gyromagnetic ratio. For completeness this function also computes the E parameters using the F parameters quoted on Carnall.";
   Options[LoadParameters] = {
@@ -2863,8 +2819,8 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
       Return[shifted];
     ]
 
-  (* ######################################################################### *)
-  (* ######################### Eigensystem analysis ########################## *)
+  (* ########################################################### *)
+  (* ################## Eigensystem analysis ################### *)
 
   PrettySaundersSLJmJ::usage = "PrettySaundersSLJmJ[{SL, J, mJ}] produces a human-redeable symbol for the given basis vector {SL, J, mJ}."
   Options[PrettySaundersSLJmJ] = {"Representation" -> "Ket"};
@@ -3073,11 +3029,11 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   ];
 
 
-  (* ######################### Eigensystem analysis ########################## *)
-  (* ######################################################################### *)
+  (* ################## Eigensystem analysis ################### *)
+  (* ########################################################### *)
 
-  (* ######################################################################### *)
-  (* ################################# Misc ################################## *)
+  (* ########################################################### *)
+  (* ########################## Misc ########################### *)
 
   SymbToNum::usage = "SymbToNum[expr, numAssociation] takes an expression expr and returns what results after making the replacements defined in the given replacementAssociation. If replacementAssociation doesn't define values for expected keys, they are taken to be zero.";
   SymbToNum[expr_, replacementAssociation_]:= (
@@ -3223,11 +3179,11 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
       ]
     );
 
-  (* ################################# Misc ################################## *)
-  (* ######################################################################### *)
+  (* ########################## Misc ########################### *)
+  (* ########################################################### *)
 
-  (* ######################################################################### *)
-  (* ######################## Some Plotting Routines ######################### *)
+  (* ########################################################### *)
+  (* ################# Some Plotting Routines ################## *)
 
   EnergyLevelDiagram::usage = "EnergyLevelDiagram[states] takes states and produces a visualization of its energy spectrum.
   The resultant visualization can be navigated by clicking and dragging to zoom in on a region, or by clicking and dragging horizontally while pressing Ctrl. Double-click to reset the view.";
@@ -3441,11 +3397,11 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     ]
     );
 
-  (* ######################## Some Plotting Routines ######################### *)
-  (* ######################################################################### *)
+  (* ################# Some Plotting Routines ################## *)
+  (* ########################################################### *)
 
-  (* ######################################################################### *)
-  (* ############################ Load Functions ############################# *)
+  (* ########################################################### *)
+  (* ##################### Load Functions ###################### *)
   
   LoadAll::usage="LoadAll[] executes all Load* functions.";
   LoadAll[]:=(
@@ -3816,8 +3772,8 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     ];
   );
 
-  (* ############################ Load Functions ############################# *)
-  (* ######################################################################### *)
+  (* ##################### Load Functions ###################### *)
+  (* ########################################################### *)
 
 End[]
 
