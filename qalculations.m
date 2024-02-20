@@ -471,14 +471,14 @@ MagneticDipoleTransitions[numE_Integer, OptionsPattern[]]:= (
   finalTable                   = Prepend[finalTable,header];
 
   (* tabular output *)
-  basename     = ln <> " in " <> host <> " - example - " <> "MD1-tabular.zip";
+  basename     = ln <> " in " <> host <> " - example - " <> "MD1 - tabular.zip";
   exportFname  = FileNameJoin[{"./examples",basename}];
   PrintFun["Exporting tabular data to "<>exportFname<>" ..."];
   exportKey    = StringReplace[basename,".zip"->".m"];
   Export[exportFname, <|exportKey->finalTable|>];
 
   (* raw data output *)
-  basename    = ln <> " in " <> host <> " - example - " <> "MD1-raw.zip";
+  basename    = ln <> " in " <> host <> " - example - " <> "MD1 - raw.zip";
   rawexportFname = FileNameJoin[{"./examples",basename}];
   PrintFun["Exporting raw data as an association to "<>exportFname<>" ..."];
   rawexportKey   = StringReplace[basename,".zip"->".m"];
