@@ -282,6 +282,7 @@ GenerateThreeBodyTables;
 Generator;
 GroundStateOscillatorStrength;
 HamMatrixAssembly;
+HamMatrixAssemblyALT;
 HamiltonianForm;
 
 HamiltonianMatrixPlot;
@@ -728,7 +729,7 @@ Begin["`Private`"]
       Return[energyStatesTable]
     )
     ];
-  
+
   BasisLSJMJ::usage = "BasisLSJMJ[numE] returns the ordered basis in L-S-J-MJ with the total orbital angular momentum L and total spin angular momentum S coupled together to form J. The function returns a list with each element representing the quantum numbers for each basis vector. Each element is of the form {SL (string in spectroscopic notation),J,MJ}.";
   BasisLSJMJ[numE_] := Module[{energyStatesTable, basis, idx1},
     (
@@ -1139,7 +1140,7 @@ Begin["`Private`"]
     t2Op = (# -> (t2prime[#] + prefactor*e3Op[#])) & /@ Keys[t2prime];
     t2Op = Association[t2Op];
     juddOperators[{3, "t_{2}"}] = t2Op;
-
+    
     (*Special case of t11 in f3*)
     t11 = juddOperators[{3, "t_{11}"}];
     e\[Beta]primeOp = juddOperators[{3, "e_{\\beta}^{'}"}];
@@ -1205,7 +1206,6 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
      tnk = 0;
      ];
     Return[ nE / (nE - opOrder) * tnk];];
-
   (*Calculate the matrix elements of t^i for n up to nmax*)
   tktable = <||>;
   Do[(
@@ -1339,7 +1339,7 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
 
   Reducedt11inf2::usage="Reducedt11inf2[SL, SpLp] returns the reduced matrix element in f^2 of the double tensor operator t11 for the corresponding given terms {SL, SpLp}.
   Values given here are those from Table VII of \"Judd, BR, HM Crosswhite, and Hannah Crosswhite. \"Intra-Atomic Magnetic Interactions for f Electrons.\" Physical Review 169, no. 1 (1968): 130.\"
-  "
+  ";
   Reducedt11inf2[SL_, SpLp_]:= Module[
     {t11inf2},
     t11inf2 = <|
@@ -1787,13 +1787,15 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
     val
     ]
 
+  Bqk::usage="Real part of the Bqk coefficients.";
   Bqk[q_, 2] := {B02/2, B12, B22}[[q + 1]];
   Bqk[q_, 4] := {B04/2, B14, B24, B34, B44}[[q + 1]];
   Bqk[q_, 6] := {B06/2, B16, B26, B36, B46, B56, B66}[[q + 1]];
 
-  Sqk[q_, 2] := {Sm22, Sm12, S02,  S12,  S22}[[q + 3]];
-  Sqk[q_, 4] := {Sm44, Sm34, Sm24, Sm14, S04,  S14,  S24, S34, S44}[[q + 5]];
-  Sqk[q_, 6] := {Sm66, Sm56, Sm46, Sm36, Sm26, Sm16, S06, S16, S26, S36, S46, S56, S66}[[q + 7]];
+  Sqk::usage="Imaginary part of the Bqk coefficients.";
+  Sqk[q_, 2] := {0, S12, S22}[[q + 1]];
+  Sqk[q_, 4] := {0, S14, S24, S34, S44}[[q + 1]];
+  Sqk[q_, 6] := {0, S16, S26, S36, S46, S56, S66}[[q + 1]];
 
   CrystalField::usage = "CrystalField[n, NKSL, J, M, NKSLp, Jp, Mp] gives the general expression for the matrix element of the crystal field Hamiltonian parametrized with Bqk and Sqk coefficients as a sum over spherical harmonics Cqk. 
   Sometimes this expression only includes Bqk coefficients, see for example eqn 6-2 in Wybourne (1965), but one may also split the coefficient into real and imaginary parts as is done here, in an expression that is patently Hermitian.";
@@ -2151,7 +2153,6 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
         blockHam += - TeslaToKayser * (Bx * magx + By * magy + Bz * magz);
       )
     ];
-    blockHam = MapToSparseArray[blockHam, Expand];
     Return[blockHam];
     ]
 
@@ -2268,7 +2269,6 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     {braSLJ, braSLJs},
     {ketSLJ, ketSLJs}
     ];
-    (* magMatrix = Reverse[magMatrix]; *)
     If[OptionValue["Sparse"],
       magMatrix= SparseArray[magMatrix]
     ];

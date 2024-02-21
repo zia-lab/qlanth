@@ -1,6 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
-\ProvidesPackage{qlanth}
-  [2020/09/14 v0.01 LaTeX package for my own purpose]
+\ProvidesPackage{qlanth}[A fun assortment of Math and Physics symbols]
 
 \RequirePackage{multicol}
 \RequirePackage{mathrsfs}
@@ -10,6 +9,7 @@
 \usepackage{tikz}
 \usepackage{xcolor}
 \usepackage{scalerel}
+\usepackage{lmodern}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%% CUSTOM SYMBOLS %%%%%%%%%%%%
@@ -39,13 +39,16 @@
 }
 
 
+\newcommand{\eqnref}[1]{\textcolor{orange}{$\mathcal{E}$qn-\ref{#1}}}
+\newcommand{\figuref}[1]{\textcolor{orange}{$\mathcal{F}$ig-\ref{#1}}}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%% MISC %%%%%%%%%%%%
 
 \newcommand{\colora}[1]{\opcolor{#1}}
 \newcommand{\colorb}[1]{\textcolor{red}{#1}}
 \newcommand{\colorc}[1]{\textcolor{green}{#1}}
-\newcommand{\qlanth}{\texttt{qlanth }}
+\newcommand{\qlanth}{\textbf{\texttt{qlanth }}}
 \newcommand{\precite}[1]{[...]} 
 \newcommand{\recite}[1]{\citep{#1}} % To customize citation style
 \newcommand{\citeref}[1]{Ref. \![\!\!\citenum{#1}]} % add Ref to citenum
@@ -57,7 +60,7 @@
 \newcommand{\sspin}{\underbar{$\mathcal{s}$}}
 \newcommand{\forb}{\underbar{$\text{f}$}}
 \newcommand{\ql}{\texttt{qlanth }}
-\newcommand{\cowan}{{TASS }}
+\newcommand{\muBohr}{\mu_\text{B}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%% MISC %%%%%%%%%%%%
@@ -161,7 +164,7 @@
 \newcommand{\LSJMbasis}{\ket{LSJ\Msub{J}}}
 \newcommand{\LSJbasis}{\ket{LSJ}}
 
-\newcommand{\Ckq}{\mathcal{C}^{(k)}_q}
+\newcommand{\Ckq}[2]{\mathcal{C}^{(#1)}_{#2}}
 \newcommand{\Ck}[1]{\mathcal{C}^{(#1)}}
 \newcommand{\Cktwo}{\mathcal{C}^{(k+2)}}
 \newcommand{\wdouble}[3]{\op{w}_{#1}^{({#2},{#3})}}
@@ -170,13 +173,14 @@
 
 \newcommand{\opcolor}{\textcolor{blue}}
 
-\newcommand{\Bkq}{\opcolor{B^{(k)}_q}}
-\newcommand{\Skq}{\opcolor{S^{(k)}_q}}
+\newcommand{\Bkq}[2]{\opcolor{B^{(#1)}_{#2}}}
+\newcommand{\Skq}[2]{\opcolor{S^{(#1)}_{#2}}}
+\newcommand{\Bcomplexkq}[2]{\opcolor{\mathcal{B}^{(#1)}_{#2}}}
 \newcommand{\Mk}[1]{\opcolor{M^{(#1)}}}
 \newcommand{\Tk}[1]{\opcolor{T^{(#1)}}}
 \newcommand{\Pk}[1]{\opcolor{P^{(#1)}}}
-\newcommand{\Fk}{\opcolor{{F^k}}}
-\newcommand{\Ek}{\opcolor{{E_k}}}
+\newcommand{\Fk}{\opcolor{{F^{(k)}}}}
+\newcommand{\Ek}{\opcolor{{E_{k}}}}
 \newcommand{\spinZeta}{\opcolor{{\zeta}}}
 \newcommand{\casimirAlpha}{\opcolor{{\alpha}}}
 \newcommand{\casimirBeta}{\opcolor{{\beta}}}
@@ -202,7 +206,7 @@
 \newcommand{\hamKinetic}{\sum_{i=1}^\numE \frac{\op{p}_i^2}{2m}} % Kinetic energy
 
 \newcommand{\hamNuclearCoulombSymbol}{\ham_\text{e:sn}}
-\newcommand{\hamNuclearCoulomb}{\sum_{i=1}^\numE V_\textrm{sn}(\op{r}_i)} % Central potential of shielded nuclear charge
+\newcommand{\hamNuclearCoulomb}{\sum_{i=1}^\numE V_\textrm{sn}(r_i)} % Central potential of shielded nuclear charge
 
 \newcommand{\casimir}[1]{\,\mathcal{C}(#1)} % symbol use to represent the Casimir opertor of a group
 
@@ -215,10 +219,14 @@
 \newcommand{\hamSpinOrbit}{\sum_{i=1}^\numE \xi(r_i) \paren{\op{\sspin}_i \cdot \op{\lorb}_i} } 
 
 \newcommand{\hamCrystalFieldSymbol}{\ham_\text{cf}}
-\newcommand{\hamCrystalField}{\sum_{i=1}^\numE V_{\textrm{CF}}(\op{r}_i) = \sum_{i=1}^{\numE} \sum_{k=2,4,6}\sum_{q=-k}^{k} \Bkq \Ckq(i)}
+\newcommand{\hamCrystalField}{\sum_{i=1}^\numE V_{\textrm{CF}}(\op{r}_i) = \sum_{i=1}^{\numE} \sum_{k=2,4,6}\sum_{q=-k}^{k} \Bcomplexkq{k}{q} \Ckq{k}{q}(i)}
 
-
-\newcommand{\hamEffectiveThreeBody}{\sum_{k=2,3,4,6,7,8}^\numE \Tk{k} \op{t}_k}
+\newcommand{\hamEffectiveThreeBody}{\sum_{\substack{
+            k = 2,3,4,6,7,8, \\
+            11,12,14,15, \\
+            16,17,18,19
+            }
+        } \Tk{k} \op{t}_k}
 
 \newcommand{\hamGTwoSymbol}{\ham_{\text{G}_2}}
 \newcommand{\hamSOSevenSymbol}{\ham_{\SO{7}}}
@@ -234,6 +242,9 @@
 
 \newcommand{\hamSOOplusECSOSymbol}{\ham_\text{s:oo{$\oplus$}ecs:o}}
 \newcommand{\hamSOOplusECSO}{\sum_{k=2,4,6} \Pk{k} \op{p}_k + \sum_{k=0,2,4} \Mk{k} \op{m}_k } 
+
+\newcommand{\hamZeemanSymbol}{\ham_{\text{Z}}}
+\newcommand{\hamZeeman}{-\mu_B \vec{B}\cdot\left(\op{L} + g_s \op{S}\right)}
 
 
 %%%%%%% Quantum Mechanics %%%%%%%
