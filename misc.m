@@ -360,6 +360,7 @@ Begin["`Private`"];
       "[" -> "(",
       "]" -> ")",
       "\\" -> "",
+      "I" -> "1j",
       (*Remove special Mathematica backslashes*)
       "/" -> "/" (*Ensure division is represented with a slash*)}]];
 

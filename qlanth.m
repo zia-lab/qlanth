@@ -282,7 +282,6 @@ GenerateThreeBodyTables;
 Generator;
 GroundStateOscillatorStrength;
 HamMatrixAssembly;
-HamMatrixAssemblyALT;
 HamiltonianForm;
 
 HamiltonianMatrixPlot;
@@ -2107,8 +2106,14 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
   Return[fNames];
   )
 
-  HamMatrixAssembly::usage="HamMatrixAssembly[numE] returns the Hamiltonian matrix for the f^n_i configuration. The matrix is returned as a SparseArray. The function admits an optional parameter \"FilenameAppendix\" which can be used to modify the filename to which the resulting array is exported to. It also admits an optional parameter \"IncludeZeeman\" which can be used to include the Zeeman interaction;";
-  Options[HamMatrixAssembly] = {"FilenameAppendix"->"","IncludeZeeman"->False};
+  HamMatrixAssembly::usage="HamMatrixAssembly[numE] returns the Hamiltonian matrix for the f^n_i configuration. The matrix is returned as a SparseArray. 
+  The function admits an optional parameter \"FilenameAppendix\" which can be used to modify the filename to which the resulting array is exported to.
+  It also admits an optional parameter \"IncludeZeeman\" which can be used to include the Zeeman interaction.
+  The option \"Set t2Switch\" can be use to toggle on or off setting the t2 selector automatically or not, the default is False, which leaves this parameter without replacing it.";
+  Options[HamMatrixAssembly] = {
+        "FilenameAppendix"->"",
+        "IncludeZeeman"->False,
+        "Set t2Switch"->False};
   HamMatrixAssembly[nf_, OptionsPattern[]] := Module[
     {numE, ii, jj, howManyJs, Js, blockHam},
     (*#####################################*)
@@ -2127,8 +2132,10 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
       (
         numE = 14 - nf;
         params = HoleElectronConjugation[params0];
+        If[OptionValue["Set t2Switch"], params[t2Switch] = 0];
       ),
       params = params0;
+      If[OptionValue["Set t2Switch"], params[t2Switch] = 1];
     ];
     (* Load symbolic expressions for LS,J,J' energy sub-matrices. *)
     emFname = JJBlockMatrixFileName[numE, "FilenameAppendix" -> OptionValue["FilenameAppendix"]];
@@ -3439,6 +3446,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
 
 
   Carnall::usage = "Association of data from Carnall et al (1989) with the following keys: {data, annotations, paramSymbols, elementNames, rawData, rawAnnotations, annnotatedData, appendix:Pr:Association, appendix:Pr:Calculated, appendix:Pr:RawTable, appendix:Headings}";
+
   LoadCarnall::usage="LoadCarnall[] loads data for trivalent lanthanides in LaF3 using the data from Bill Carnall's 1989 paper.";
   LoadCarnall[]:=(
     If[ValueQ[Carnall], Return[]];

@@ -1,7 +1,7 @@
 \documentclass{article} 
 \usepackage[utf8]{inputenc}
-%\usepackage[paperwidth=8.5in,paperheight=14in]{geometry}
-\usepackage[paperwidth=8.5in,paperheight=14.2885in]{geometry}
+\usepackage[paperwidth=8.5in,paperheight=11in]{geometry}
+%\usepackage[paperwidth=8.5in,paperheight=14.2885in]{geometry}
 \geometry{left=2cm, right=2cm, top=2cm, bottom=2cm}
 % Include the listings package for syntax highlighting
 \usepackage{listingsutf8}
@@ -67,7 +67,7 @@
     % Software name
     {\Large\qlanth}\\
     \vspace*{0.5cm}
-    {\large version $\ket{\alpha}$}\\
+    {\large version $\ket{\alpha}^{(2)}$}\\
     \vspace*{2cm}
     
     % Additional information
@@ -78,26 +78,12 @@
     \vspace*{\fill}
 \end{titlepage}
 
-% \title{qlanth}
-% \author{}
-% \date{}
-% \maketitle
+\newpage
 
-\vspace*{\fill}
-
-\qlanth is a Mathematica package that can be used to estimate the level structure of lanthanide ions embedded in crystals. For this purpose it uses a single configuration description and a corresponding effective Hamiltonian. This Hamiltonian aims to describe the observed properties of ions embedded in solids in a picture that imagines them as free-ions but modified by the influence of the lattice in which they find themselves in.
-
-This picture is one that developed and mostly matured in the second half of the last century by the efforts of Giulio Racah, Brian Judd, Hannah Crosswhite, Robert Cowan, Michael Reid, Bill Carnall, Clyde Morrison, Brian Wybourne, and Katherine Rajnak among others. The goal of this code is to provide a modern implementation of the calculations that resulted from their work, with the aim of fixing some small errors that might have been included at the time these calculations were made.
-
-\qlanth also includes data that might be of use to those interested in the single-configuration description of lanthanide ions, separate to their specific use in this code. These data include the coefficients of fractional parentage (as calculated by Velkov and parsed here), and reduced matrix elements for all the operators in the effective Hamiltonian. These are provided as standard Mathematica associations that should be simple to port elsewhere.
-
-The included Mathematica notebook \codetext{qlanth.nb} has examples of the capabilities that this package offers, and the \codetext{/examples} folder includes a series of notebooks for most of the trivalent lanthanide ions in lanthanum fluoride. LaF3 is remarkable in that it was one of the systems in which a systematic study \cite{carnall_systematic_1989} of all of the trivalent lanthanide ions were studied. 
-
-This code was originally authored by Christopher Dodson and Rashid Zia and has been modified and rewritten by David Lizarazo. It has benefited from conversations with Tharnier Puel at the University of Iowa.
-
-\vspace*{\fill}
+\
 
 \newpage
+
 
 \vspace*{\fill}
 
@@ -106,6 +92,29 @@ This code was originally authored by Christopher Dodson and Rashid Zia and has b
 \vspace*{\fill}
 
 \newpage
+
+\vspace*{\fill}
+
+
+
+\qlanth is a Mathematica package that can be used to estimate the level structure of lanthanide ions embedded in crystals. For this purpose it uses a single configuration description and a corresponding effective Hamiltonian. This Hamiltonian aims to describe the observed properties of ions embedded in solids in a picture that imagines them as free-ions but modified by the influence of the lattice in which they find themselves in.
+
+This picture is one that developed and mostly matured in the second half of the last century by the efforts of Giulio Racah, Brian Judd, Hannah Crosswhite, Robert Cowan, Michael Reid, Bill Carnall, Clyde Morrison, Brian Wybourne, and Katherine Rajnak among others. The goal of this code is to provide a modern implementation of the methods that resulted from their work.
+
+\qlanth also includes data that might be of use to those interested in the single-configuration description of lanthanide ions, separate to their specific use in this code. These data include the coefficients of fractional parentage (as calculated by Velkov and parsed here), and reduced matrix elements for all the operators in the effective Hamiltonian. These are provided as standard Mathematica associations that should be simple to port elsewhere.
+
+The included Mathematica notebook \codetext{qlanth.nb} has examples of the capabilities that this package offers, and the \codetext{/examples} folder includes a series of notebooks for most of the trivalent lanthanide ions in lanthanum fluoride. LaF3 is remarkable in that it was one of the systems in which a systematic study \cite{carnall_systematic_1989} of all of the trivalent lanthanide ions were studied. 
+
+This code was originally authored by Christopher Dodson and Rashid Zia and has been modified and rewritten by David Lizarazo. It has benefited from conversations with Tharnier Puel at the University of Iowa.
+
+This document has 11 sections. In the first section the basis in which the Hamiltonian is evaluated is explained. In the second section a brief explanation of the coefficients of fractional parentage is given. Afther that the third section explains how the Hamiltonian is put together by first having calculated JJ' blocks.
+
+The four section is dedicated to a theoretical exposition of the effective Hamiltonian with subsections for each of the terms that it contains. Section 5 is about the calculation of magnetic dipole transitions.
+
+Sections 6 and 7 list additional data included in \qlanth. While section 8 has a brief comment on units. 
+
+Section 9 includes a brief of notation use throught this document and section 11 prints out the code included in \qlanth.
+
 
 \section{The $\LSJMbasis$ Basis}
 
@@ -128,7 +137,7 @@ The LS quantum numbers, however, only get us half-way to the $\LSJMbasis$ basis.
  
 \input{f2BasisbyJ.tex} 
 
-The order above is exemplar of order in the bases, notice how the basis vectors are sorted in order of increasing $J$, so that for instance not all of the basis kets associated with the $\LSterm{3}{P}$ LS term are contiguous.
+The order above is exemplar of order in the bases. Notice how the basis vectors are sorted in order of increasing $J$, so that for instance not all of the basis kets associated with the $\LSterm{3}{P}$ LS term are contiguous.
 
 In \qlanth the ordered basis used for a given $\forb^\numE$ is provided by \codetext{BasisLSJMJ}. 
 
@@ -136,7 +145,7 @@ In \qlanth the ordered basis used for a given $\forb^\numE$ is provided by \code
 
 \section{The coefficients of fractional parentage}
 
-In the 1920s and 1930s when the spectroscopic evidence was being put together to ellucidate the principles of quantum mechanics, one of the conceptual tools that was put forward for the analysis of the complex spectra of ions \cite{bacher_atomic_1934} consisted in using the spectrum of an ion at a lower stage of ionization to understand a higher stage of ionization. For instance, using the third spectrum of oxygen (OIV) in order to understand the fourth spectrum (OIII) of the same element. 
+In the 1920s and 1930s when the spectroscopic evidence was being put together to ellucidate the principles of quantum mechanics, one of the conceptual tools that was put forward for the analysis of the complex spectra of ions \cite{bacher_atomic_1934} consisted in using the spectrum of an ion at a lower stage of ionization to understand a higher stage of ionization. For instance, using the fourth spectrum of oxygen (OIV) in order to understand the third spectrum (OIII) of the same element. 
 
 This idea matured a couple of decades until the work of Giulio Racah made it mathematically precise. Racah clarified the way in which the wavefunctions from configuration $\forb^{\numE-1}$ can be used to build up the wavefunction of configuration $\forb^{\numE}$, as a ``sum over parents''
 \begin{equation}
@@ -162,13 +171,13 @@ Most importantly for us, in \qlanth the coefficients of fractional parentage can
 
 In principle all the data that is needed in order to evaluate the matrix elements that \qlanth uses can all be derived from coefficients of fractional parentage, tables of 6j and 3j coefficients, and the LSUW labels for the terms in the $\forb^{\numE}$ configurations.
 
-The data for the coefficients of fractional parentage we owe to \cite{velkov_multi-electron_2000} from which the file \codetext{B1F\_all.txt} originates, and which we use here to extract this useful escalator up the $\forb^{\numE}$ configurations.
+The data for the coefficients of fractional parentage we owe to \cite{velkov_multi-electron_2000} from which the file \codetext{B1F\_all.txt} originates, and which we use here to extract this useful ``escalator'' up the $\forb^{\numE}$ configurations.
 
 In \qlanth the function \codetext{GenerateCFPTable} is used to parse the data contained in this file. From this data an association \codetext{CFP} is generated, whose keys are made to represent LS terms from a configuration $\forb^{\numE}$ and whose values are list which contain all the parents terms, together with the corresponding coefficients of fractional parentage.
 
 \section{The JJ' block structure}
 
-Now that we know how the bases are ordered, we can already understand the structure of how the final Hamiltonian matrix representation is put together.
+Now that we know how the bases are ordered, we can already understand the structure of how the final Hamiltonian matrix representation in the $\LSJMbasis$ basis is put together.
 
 For a given configuration $\forb^\numE$ and for each term $\op{\mathcal{h}}$ in the Hamiltonian, \qlanth first calculates the matrix elements $\braopket{\alpha L S J \Msub{J}}{\op{\mathcal{h}}}{\alpha' L' S' J' \Msub{J}'}$ so that for each interaction an association with keys of the form $\{J, J'\}$ are created. The values being rectangular rank-2 arrays.
 
@@ -186,15 +195,9 @@ In \qlanth these blocks are put together by the function \codetext{JJBlockMatrix
 
 \lstinputlisting[language=Mathematica]{./fundefs/JJBlockMatrix.tex}
 
-Once these blocks have been calculate and saved to disk (in the folder \codetext{./hams/}) the function \codetext{HamMatrixAssembly} takes them, assembles the arrays in block form, and finally flattens it to provide a rank-2 array. This are the arrays that are finally diagonalized to find energies and eigenstates.
+Once these blocks have been calculated and saved to disk (in the folder \codetext{./hams/}) the function \codetext{HamMatrixAssembly} takes them, assembles the arrays in block form, and finally flattens it to provide a rank-2 array. This are the arrays that are finally diagonalized to find energies and eigenstates.
 
 \lstinputlisting[language=Mathematica]{./fundefs/HamMatrixAssembly.tex}
-
-\section{Units}
-
-All of the matrix elements of the Hamiltonian are calculated using the Kayser ($\text{K} \equiv \text{cm}^{-1}$) as the (pseudo) energy unit. All the parameters (except the magnetic field which is in Tesla) in the effective Hamiltonian are assumed to be in this unit. 
-
-As is customary, the angular momentum operators assume atomic units in which $\hbar=1$.
 
 \section{The effective Hamiltonian} 
 
@@ -208,7 +211,7 @@ Take for instance a triply ionized neodymium atom. In principle, this gives us t
 
 Here we shall assume a single-configuration description. Meaning that all the valence electrons in the ions that we study here will all be considered to be located in f-orbitals, or what is the same, that they are described by \fn wavefunctions. This is, however, a harsh approximation, but thankfully one can make some amends to it. The effects that arise in the single configuration description because of omitting all the other possible orbitals where the electrons might find themselves, this is what we call \textit{configuration interaction} or CI for short. 
 
-These effects can be brought within the simplified description only through the help of perturbation theory. The task not the usual one of correcting for the energies/eigenvectors given an added perturbation, but rather to consider the effects of using a truncated Hilbert space due to a known interaction. What results from this is are operators that now act solely within the single configuration but with a convoluted coefficient that depends on overlaps between different configurations. This  coefficient one could try to evaluate, and there are some that have trodden this road. Others simply label that complex expression with an unassuming symbol, and leave it as a parameter that one can hope to fit against experimental data. It is from CI that the parameters $\alpha, \beta, \gamma, \Pk{k}, \Tk{k}$ enter into the description.
+These effects can be brought within the simplified description only through the help of perturbation theory. The task not the usual one of correcting for the energies/eigenvectors given an added perturbation, but rather to consider the effects of using a truncated Hilbert space due to a known interaction. For a detailed analysis of this see Rudzikas' \cite{rudzikas_theoretical_2007} book on theoretical atomic spectroscopy or this article by Lindgren \cite{lindgren_rayleigh-schrodinger_1974}. What results from this are operators that now act solely within the single configuration but with a convoluted coefficient that depends on overlap integrals between different configurations. These coefficients one could try to evaluate, and there are some that have trodden this road. Others simply label that complex expression with an unassuming symbol, and leave it as a parameter that one can hope to fit against experimental data. It is from CI that the parameters $\casimirAlpha, \casimirBeta, \casimirGamma, \Pk{k}, \Tk{k}$ enter into the description.
 
 Something that is also borne out of the configuration interaction analysis is that their influence also modifies previously present intra-configuration operators. For instance, part of the configuration interaction influence that results from the Coulomb repulsion between electrons brings about new operators that need to be included, but they also contribute to the intra-configuration Slater integrals.
 
@@ -340,42 +343,40 @@ It is of some importance to note that the eigenstates that we'll end up with hav
 
 \subsection{$\hamSpinOrbitSymbol$: spin-orbit}
 
-    Here one can be of two minds, one can either start from a relativistic description, only including the interaction of charged particles. Then when descending to the non-relativistic description one will notice a term that involves both the orbital angular momentum and the spin angular momentum. In this view the spin-orbit term arises as a relativistic correction to the non-relativistic Schrodinger equation.
-
-    From the non-relativistic viewpoint one may also take it as a given that the electron has an associated magnetic moment. From this one would then continue to consider the effect that magnetic fields have on it. One of those fields that one due to the motion of the electron around the nucleus, one would then conclude a term that involves both the spin and the orbital motion of the electron.
-
-    More generally one may picture an electron in a radial electrostatic potential $V(r)$, in which case the energy associated to the spin-orbit is
+	The spin-orbit interaction arises from the interaction of the magnetic moment of the electron and the magnetic field that its orbital motion generates. In terms of the central potential $V_{\text{s:n}}$ the spin-orbit term for a single electron is
     \begin{equation}
-        \hat{\mathcal{h}}_{\text{s:o}} = \frac{\hbar^2}{2\me^2 c^2} \left(\frac{1}{r}\frac{\mathrm{d}V}{\mathrm{d}r}\right)\op{l}\cdot{\op{s}} \DEF \zeta{(r)} \op{l}\cdot\op{s}.
+        \hat{\mathcal{h}}_{\text{s:o}} = \frac{\hbar^2}{2\me^2 c^2} \left(\frac{1}{r}\frac{\mathrm{d}V_{\text{s:n}}}{\mathrm{d}r}\right)\op{l}\cdot{\op{s}} \DEF \zeta{(r)} \op{l}\cdot\op{s}.
     \end{equation}
-    And adding up for all the $\numE$ valence electrons
+    Adding this term for all the $\numE$ valence electrons, and replacing $\zeta(r)$ by it's radial average $\spinZeta$ then gives
     \begin{equation}
-    \hamSpinOrbitSymbol = \sum_i^{\numE} \zeta(r_i) \dotp{\op{l}_i}{\op{s}_i}.
+    \hamSpinOrbitSymbol = \sum_i^{\numE} \spinZeta \dotp{\op{l}_i}{\op{s}_i}.
     \end{equation}
 
-    The matrix elements that we then require are  
+    From equations 2-106 to 2-109 in Wybourne \cite{wybourne_electrostatic_1963} the matrix elements we need are given by
     \begin{multline} 
         \braopket{\alpha LSJ \Msub{J} }{\hamSpinOrbitSymbol}{\alpha' L'S'J'\Msub{J'}} = 
         \spinZeta
         \kronecker{J}{J'}
         \kronecker{\Msub{J}}{\Msub{J'}}
         \braopket{\alpha LSJ \Msub{J} }{\sum_i^{\numE} \dotp{\op{l}_i}{\op{s}_i}}{\alpha' L'S'J\Msub{J}} \\ 
-        = \spinZeta \phaser{J+L+S'} 
+        = \spinZeta \kronecker{J}{J'}
+        \kronecker{\Msub{J}}{\Msub{J'}} \phaser{J+L+S'} 
             \sixj{L}{L'}{1}{S'}{S}{J} 
             \braopket{\alpha LS}{\sum_i^{\numE} \dotp{\op{l}_i}{\op{s}_i}}{\alpha' L'S'} \\
-        = \spinZeta \phaser{J+L+S'} 
+        = \spinZeta \kronecker{J}{J'}
+        \kronecker{\Msub{J}}{\Msub{J'}} \phaser{J+L+S'} 
             \sixj{L}{L'}{1}{S'}{S}{J} 
             \sqrt{\lorb (\lorb + 1)(2\lorb + 1)} 
-            \redbraopket{\alpha{LS}}{\op{V}^{(11)}}{\alpha'L'S'} 
+            \redbraopket{\alpha{LS}}{\op{V}^{(11)}}{\alpha'L'S'}.
     \end{multline}
 
     Where $\hat{V}^{(11)}$ is a double tensor operator of rank one over spin and orbital parts defined as 
     \begin{equation}
         \op{V}^{(11)} = \sum_{i=1}^\numE \left( \op{s}\op{u}^{(1)} \right)_i,
     \end{equation}
-    where the rank on the spin operator $\op{s}$ has been omitted, and the rank of the tensor operator shown explicitly as 1.
+    where the rank on the spin operator $\op{s}$ has been omitted, and the rank of the orbital tensor operator explicitly as 1.
 
-    In \qlanth the reduced matrix elements for this double tensor operator are calculated by \codetext{ReducedV1k} and aggregated in a static association called \codetext{ReducedV1kTable}. The reduced matrix elements of this operator are calculated using equation 2-101 from Wybourne's book on the spectroscopy of the rare earths \cite{wybourne_spectroscopic_1965}:
+    In \qlanth the reduced matrix elements for this double tensor operator are calculated by \codetext{ReducedV1k} and aggregated in a static association called \codetext{ReducedV1kTable}. The reduced matrix elements of this operator are calculated using equation 2-101 from Wybourne \cite{wybourne_spectroscopic_1965}:
     \begin{multline} 
         \redbraopket{\lorb^\numE \psi}{\op{V}^{(1k)}}{\lorb^\numE \psi'} = 
             \redbraopket{\lorb^\numE \alpha L S}
@@ -401,11 +402,237 @@ It is of some importance to note that the eigenstates that we'll end up with hav
         \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
     }
  
-\subsection[$\ham_3$: three-body effective operators]{$\ham_{\trispoke}$: Three-body effective operators}
+	These reduced matrix elements are then used by the function \codetext{SpinOrbit}.
 
-Three body model interactions arise in the lanthanides due to configuration interaction between configurations $(4\forb)^{\numE}$ and $(4\forb)^{\numE\pm{1}}(n'\lorb')^{\mp{1}}$. As such they describe the effects of configuration interaction of single-electron excitations from the ground configuration to excited ones.
+\foreach \name in {SpinOrbit}{ 
+        \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
+    } 
+ 
+\subsection{$\hamTreesSymbol, \hamGTwoSymbol, \hamSOSevenSymbol$: electrostatic configuration interaction}
 
-What results from the configuration interaction analysis (see \cite{rajnak_configuration_1963},\cite{judd_three-particle_1966}, and \cite{judd_complete_1984}, shows that the effective result from the model interaction arising from CI has the form of a three body operator. 
+    This is a first term where we take into account the very important contributions from configuration interaction. When the interaction with configurations ?? and ?? it was realized that the way the omission of these configurations in the single configuration description was to relax the previous restriction that $\Fk$ should only have even values for k. Parallel to this Trees noticed an interesting fact which is that a fair amount of correction to the calculated spectrum of would benefit if one added to all of the LS energies a term quadratic in L. Soon after this it was acknowledged that the inclusion of odd $\Fk$ was equivalent to adding three terms related to the Casimir operators of the groups $\SO(3)$, $\text{G}_2$, and $\SO(7)$ \cite{wybourne_electrostatic_1963}. In addition to this, the configuration interaction analysis, also showed that the contributions from other configuration would also overlap with the already present even $\Fk$.
+
+    One of these Casimir operators is the familiar $\op{L}^2$ from $\SO{3}$. In analogy to $\op{L}^2$ in which the quantum number $L$ can be used to determine the eigenvalues, in the cases of $\hamGTwoSymbol$ the necessary state label is the $U$ label of the $LS$ term, and in the case of $\hamSOSevenSymbol$ the necessary label is $W$. If $\Lambda_{\text{G}_2}\!(U)$ is used to note the eigenvalue of the Casimir operator of $\text{G}_2$ corresponding to label $U$, and $\Lambda_{\SO{7}}\!(W)$ the eigenvalue corresponding to state label $W$, then the matrix elements of $\hamTreesSymbol$, $\hamGTwoSymbol$ and $\hamSOSevenSymbol$ are diagonal in all quantum numbers and are given by
+    \begin{align}
+        \braopket{\lorb^\numE \alpha S L J \Msub{J}}
+            {\hamTreesSymbol}
+            {\lorb^\numE \alpha' S' L' J' \Msub{J}'} &=
+            \casimirAlpha
+            \kronecker{\alpha{SLJ}\Msub{J}}{\alpha'{S'L'J'}\Msub{J}'}
+            L(L+1) \\
+        \braopket{\lorb^\numE U \alpha S L J \Msub{J}}
+            {\hamGTwoSymbol}
+            {\lorb^\numE U \alpha' S' L' J' \Msub{J}'} &=
+            \casimirBeta
+            \kronecker{\alpha{SLJ}\Msub{J}}{\alpha'{S'L'J'}\Msub{J}'}
+            \Lambda_{\text{G}_2}\!(U) \\
+        \braopket{\lorb^\numE W \alpha S L J \Msub{J}}
+            {\hamSOSevenSymbol}
+            {\lorb^\numE W \alpha' S' L' J' \Msub{J}} &=
+            \casimirGamma
+            \kronecker{\alpha{SLJ}\Msub{J}}{\alpha'{S'L'J'}\Msub{J}'}
+            \Lambda_{\SO{7}}\!(W)
+    \end{align}
+
+    In \qlanth the role of $\Lambda_{\SO{7}}\!(W)$ is played by the function \codetext{GSO7W}, the role of $\Lambda_{\text{G}_2}\!(U)$ by \codetext{GG2U}, and the role of  $\Lambda_{\SO{3}}\!(L)$ by \codetext{CasimirSO3}. These are used by \codetext{CasimirG2}, \codetext{CasimirSO3}, and \codetext{CasimirSO7} which find the corresponding ${U,W,L}$ labels to the LS terms provided to them. Finally, the function \codetext{ElectrostaticConfigInteraction} puts them together.
+
+    \foreach \name in {ElectrostaticConfigInteraction}{
+        \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
+    }
+
+\subsection{$\hamSpinSpinSpinOtherOrbitSymbol$: spin-spin and spin-other-orbit}
+
+    The calculation of the $\hamSpinSpinSpinOtherOrbitSymbol$ is qualitatively different from the previous ones. The previous ones were self-contained in the sense that the reduced matrix elements that we require we also computed on our own. In the case of the interactions that follow from here, we use values from literature for reduced matrix elements either in $\forb^2$ or in $\forb^3$ and then we ``pull'' them up for all $\forb^{\numE}$ configuration with the help of formulas involving coefficients of fractional parentage.
+
+    The analysis of spin-other-orbit, and the spin-spin contributions we use in \qlanth is that of Judd, Crosswhite, and Crosswhite \cite{judd_intra-atomic_1968}. If the spin-orbit correction arrived from the influence that the orbital motion of an electron has on its own magnetic moment, the spin-other-orbit reflects the interaction that the motion of one electron has on the magnetic moment of another. Much as the spin-orbit effect can be extracted as a relativistic correction with the Dirac equation as the starting point. The multi-electron spin-orbit effects can be derived from the Breit operator \cite{bethe_quantum_1957} which is added to the relativistic description of a many-particle system in order to account for retardation of the electromagnetic field
+    \begin{equation}
+    \ham_B = -\frac{1}{2}e^2 \sum_{i>j} \left[ \left(\alpha_i\cdot\alpha_j\right)\frac{1}{r_{ij}} + \left(\alpha_i\cdot{\vec{r}_{ij}}\right)\left(\alpha_j\cdot\vec{r}_{ij}\right) \frac{1}{r_{ij}^3} \right].
+    \end{equation}
+
+    When this operator is expanded in powers of $v/c$, a number of non-relativistic inter-electron interactions result. Two of them being the spin-other-orbit and spin-spin interactions.
+
+    As usual, the radial part of the Hamiltonian is averaged, which in this case gives appearance to the Marvin integrals
+    \begin{equation} 
+    \Mk{k} \DEF \frac{e^2\hbar^2}{8m^2c^2} \braopket{(nl)^2}{\frac{r_<^k}{r_>^{k+3}}}{(nl)^2}
+    \end{equation}
+
+    With these, the expression for the spin-spin term is \cite{judd_intra-atomic_1968}
+    \begin{multline}
+    \ham_{s:s} = -2 \sum_{i\neq{j}}
+        \sum_k \Mk{k}
+            \sqrt{(k+1)(k+2)(2k+3)} 
+            \redbraopket{\lorb}{\Ck{k}}{\lorb} 
+            \redbraopket{\lorb}{\Ck{k+2}}{\lorb}
+            \left\{
+                \wdouble{i}{1}{k}
+                \wdouble{j}{1}{k+2}
+            \right\}^{(2,2)0}
+    \end{multline}
+    and the one for spin-other-orbit 
+    \begin{multline}
+        \ham_{s:oo} = \sum_{i\neq{j}} 
+            \sum_k 
+                \sqrt{(k+1)(2\lorb+k+2)(2\lorb-k)}  \times \\ 
+        \left[ \left\{ \wdouble{i}{0}{k+1} \wdouble{j}{1}{k} \right\}^{(11)0} 
+        \left\{ \Mk{k-1}
+            \redbraopket{\lorb}
+                {\Ck{k+1}}
+                {\lorb}^2
+            +
+            2 \Mk{k} \redbraopket{\lorb}{\Ck{k}}{\lorb}^2
+        \right\} + \right. \\
+        \left.
+            \left\{ \wdouble{i}{0}{k}\wdouble{j}{1}{k+1} \right\}^{(11)0} 
+                \left\{ \Mk{k} 
+                    \redbraopket{\lorb}{\Ck{k}}{\lorb}^2
+                    + 2 \Mk{k-1}
+                    \redbraopket{\lorb}{\Ck{k+1}}{\lorb}^2
+                \right\}
+        \right].
+    \end{multline} 
+
+    In the expressions above $\wdouble{i}{\kappa}{k}$ is a double tensor operator of rank $\kappa$ over spin, of rank $k$ over orbit, and acting on electron $i$. It is defined by its reduced matrix elements as
+    \begin{equation}
+    \redbraopket{\lorb}
+        {\wdouble{}{\kappa}{k}}
+        {\lorb}
+        = \sqrt{\tpobraket{\kappa}
+            \tpobraket{k}
+        }
+    \end{equation} 
+
+    The complexity of the above expressions for can be identified by identifying them with the scalar part of two new double tensors $\Txyz{1}{1}{0}$ and $\Txyz{2}{2}{0}$ such that
+    \begin{align}
+    \sqrt{5}\Txyz{2}{2}{0} &\DEF \hamSpinSpinSymbol \\
+    -\sqrt{3}\Txyz{1}{1}{0} &\DEF \hamSpinOtherOrbitSymbol
+    \end{align}
+
+    In terms of which the reduced matrix elements in the $\LSJbasis$ basis can be obtained by
+    \begin{equation}
+        \braopket{\gamma{SLJ}}{\ham}{\gamma'{S'L'J'}} = \kronecker{J}{J'} \sixj{S'}{L'}{J}{L}{S}{t} \redbraopket{\gamma{SL}}{\Txyz{t}{t}{}}{\gamma'{S'L'}}.
+    \label{SLtoSLJ for Ttt}
+    \end{equation}
+
+    This above relationship is used in \qlanth in the functions \codetext{SpinSpin} and \codetext{SOOandECSO}.
+
+    \foreach \name in {SpinSpin, SOOandECSO}{
+        \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
+    }
+
+    For two-electron operators such as these, the matrix elements in $\forb^\numE$ are related to those in $\forb^{\numE-1}$ through equation 4 in Judd et al \cite{judd_intra-atomic_1968}
+    \begin{multline}
+        \redbraopket{\forb^\numE\psi}
+        	{\Txyz{t}{t}{}}
+        	{\forb^\numE\psi'} 
+        = \frac{\numE}{\numE-2} 
+        \sum_{\bar{\psi},\bar{\psi}'}
+        \phaser{\bar{S}+\bar{L}+\sspin+\lorb+S'+L'}
+        \sqrt{\tpobraket{S}\tpobraket{S'}\tpobraket{L}\tpobraket{L'}} \times \\
+        \cfpinv{\psi}{\bar{\psi}}
+        \cfpinv{\psi'}{\bar{\psi}'} 
+        \sixj{S}{t}{S'}{\bar{S}'}{\sspin}{\bar{S}}
+        \sixj{L}{t}{L'}{\bar{L}'}{\lorb}{\bar{L}}
+        \redbraopket{\forb^{\numE-1}\bar{\psi}}
+        {\Txyz{t}{t}{}}{\forb^{\numE-1}]\bar{\psi}'}.
+    \label{double cfp escalator}
+    \end{multline}
+    Where the sum runs over the terms $\bar{\psi}$ and $\bar{\psi}'$ in $\forb^{\numE-1}$ which are parents common to $\psi$ and $\psi'$. Using these the matrix elements of $\Txyz{1}{1}{}$ and $\Txyz{2}{2}{}$ in $\forb^2$ can be used to compute all the reduced matrix elements in  $\forb^\numE$. These could then be used, together with \eqnref{SLtoSLJ for Ttt} to obtain the matrix elements of $\hamSpinSpinSymbol$ and $\hamSpinOtherOrbitSymbol$. This is done for $\hamSpinSpinSymbol$, but not for $\hamSpinOtherOrbitSymbol$, since this term is traditionally computed (with a slight modification) at the same as the electrostically-correlated-spin-orbit (see next section).
+
+    These equations are implemented in \qlanth through the following functions: \codetext{Generate{\-}T22{\-}Table}, \codetext{ReducedT22infn}, \codetext{ReducedT22inf2}, \codetext{ReducedT11inf2}. Where \codetext{ReducedT22inf2} and \codetext{ReducedT11inf2} provide the reduced matrix elements for $\Txyz{1}{1}{}$ and $\Txyz{2}{2}{}$ in $\forb^2$ as provided in table II of \cite{judd_intra-atomic_1968}.
+
+    \foreach \name in {GenerateT22Table, ReducedT22infn, ReducedT22inf2, ReducedT11inf2}{
+        \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
+    }
+
+\subsection{$\hamECSOSymbol$: electrostatically-correlated-spin-orbit and a note about CI}
+
+    In the same paper \cite{judd_intra-atomic_1968} that describes the spin-spin and spin-other-orbits consideration is also given to the emergence of additional corrections due to configuration interaction as described by the following operator (page.  169 of \cite{judd_intra-atomic_1968})
+    \begin{equation}
+        \ham_{\text{ci}} = -\sum_\chi \sum_i \frac{1}{E_\chi}\xi(r_i) 
+            \left(  
+                \op{\sspin}_i\cdot\op{\lorb}_i
+            \right) \ket{\chi} \bra{\chi} \CoulombNonCentral
+            - \frac{1}{E_\chi}\CoulombNonCentral \ket{\chi}\bra{\chi} \xi(r_i) 
+                \left( 
+                    \op{\sspin}_i\cdot\op{\lorb}_i
+                \right) 
+    \end{equation} 
+    where $\xi(r_h) (\op{\sspin}_h\cdot\op{\lorb}_h)$ is the customary spin-orbit interaction, $E_\chi$ is the energy of state $\ket{\chi}$, $i$ is a label for the valence electrons, and $\ket{\chi}$ are states in the configurations to which one is ``interacting'' with.
+
+    Most importantly in the above, the term $\CoulombNonCentral$ stands for the non-central part of the Coulomb interaction. This serves as a reminder that the central field approximation of single-electron wavefunctions is, indeed, an approximation. The non-central part of the electrostatic field is defined as what remains after subtracting the radial component. This term is crucial to keep in mind because it facilitates parity-breaking transitions, such as forced electric dipole transitions. Moreover, the non-central nature of this term plays a significant role in configuration mixing (see \cite{morrison_many-body_1971}), which is why the operator $\CoulombNonCentral$ is prominently featured in the expression for configuration interaction, and why the modifier ``electrostatically correlated'' is prepended to spin-orbit to form ``electrostatically correlated spin orbit''. It's also worth keeping in mind that the derivation of such an expression is based on second-order perturbation theory.
+
+    This operator can be identified with a it being the scalar component of a double tensor operator of rank 1 both for the spin and orbital parts of the wavefunction. 
+    \begin{equation}
+        \ham_{\text{ci}} = - \sqrt{3}\,\txyz{1}{1}{0}
+    \end{equation}
+
+    Judd \textit{et al.} then go on to list the reduced matrix elements of this operator in the $\forb^2$ configuration. When this is done the Marvin integrals $\Mk{k}$ appear again, but a second set of parameters is also necessary
+    \begin{equation}
+        \Pk{k} = 6 \sum_{f'}
+            \frac{\zeta_{ff'}}
+                {E_{ff'}}
+                R^{(k)}(ff,ff') \text{ for }k=0,2,4,6.
+    \end{equation}
+    Where $f$ notes the radial eigenfunction attached to an f-electron wavefunction, and $f'$ similarly but for a configuration different from $\forb^\numE$. And where
+    \begin{align}
+        \zeta_{ff'} &\DEF \braopket{f}{\xi(r)}{f'} \\
+        R^{(k)}(ff,ff') &\DEF e^2 \braopket{f_1f_2}{\frac{r_<^k}{r_>^{k+1}}}{f_1f_2'}.
+    \end{align}
+
+    In the semi-empirical approach embodied by $\qlanth$, calculating these quantities \textit{ab initio} is not the objective, rendering the precise definition of these parameters non-essential. Nonetheless, these expressions frequently serve to justify the ratios between different orders of these quantities. Consequently, both the set of three $\Mk{k}$ and the set of $\Pk{k}$ ultimately rely on a single free parameter each. Such parsimony is desirable given the large number of parameters (about 20) that the Hamiltonian ends up having.
+
+    Judd \textit{et al.} further note that $\Pk{0}$ is proportional to the spin orbit operator, and as such its effect is absorbed by the standard spin-orbit parameter $\spinZeta$. They also developed an alternative approach based on group theory arguments. They put together the spin-other-orbit and the electrostatically-correlated-spin-orbit as a sum of operators $\op{z}_i$ with useful transformation rules 
+    \begin{equation}
+        \redbraopket{\psi}{\Txyz{1}{1}{} + \txyz{1}{1}{}}{\psi'} = \sum a_i \redbraopket{\psi}{\hat{z}_i}{\psi'}.
+    \end{equation}
+
+    At this stage a subtle point needs to be raised. As Judd points out, in the sum above, the term $\op{z}_{13}$ that contributes with a tensorial character equal to that of the regular spin-orbit operator. As such, if the goal is obtaining a parametric Hamiltonian that can be fit with uncorrelated parameters, it is then necessary to subtract this part from $\Txyz{1}{1}{} + \txyz{1}{1}{}$. This point was clarified by Chen \textit{et al.} \cite{chen_few_2008}. Because of this the final form of the operator contributing both to spin-other-orbit and the electrostatically-correlated-spin-orbit is:
+
+    \begin{equation}
+        \hamSpinOtherOrbitSymbol + \hamECSOSymbol = \Txyz{1}{1}{} + \txyz{1}{1}{} - \frac{1}{6}a_{13}\op{z}_{13}
+        \label{SOO ECSO sum}
+    \end{equation}
+    where
+    \begin{equation}
+        a_{13} = -33 \Mk{0} + 3 \Mk{2} + 15/11 \Mk{4} - 6 \Pk{0} + 3/2 (35 \Pk{2} + 77 \Pk{4} + 143 \Pk{6})
+    \end{equation}
+
+    In \qlanth the contributions from spin-spin, spin-other-orbit, and electrostatically-correlated-spin-orbit are put together by the function \codetext{MagneticInteractions}. That function queries precomputed values from two associations \codetext{SpinSpinTable} and \codetext{SOOandECSOTable}. In turn these two associations are generated by the functions \codetext{GenerateSpinOrbitTable} and \codetext{GenerateSOOandECSOTable}. Note that both spin-spin and spin-other-orbit end up contributing through $\Mk{k}$, however there doesn't seem to be consensus about adding them together, as such \qlanth allows including or excluding the spin-spin contribution, this is done with a control parameter $\sigma_{SS}$ (1 for including, 0 for excluding).
+
+    \foreach \name in {MagneticInteractions, GenerateSpinOrbitTable, GenerateSOOandECSOTable}{
+        \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
+    }
+
+    The function \codetext{GenerateSpinSpinTable} calls the function \codetext{SpinSpin} over all possible combinations of the arguments $\{\numE, SL, S'L', J\}$. In turn the function \codetext{SpinSpin} queries the precomputed values of the the double tensor $\Txyz{2}{2}{}$ which are stored in the association \codetext{T22Table}. 
+
+
+    \foreach \name in {GenerateSpinSpinTable, SpinSpin}{ 
+        \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
+    }
+
+    The association \codetext{T22Table} is computed by the function \codetext{GenerateT22Table}. This function populates \codetext{T22Table} with keys of the form $\{\numE, SL, S'L'\}$. It does this by using the function \codetext{ReducedT22inf2} in the base case of $\forb^2$, and \codetext{ReducedT22infn} for configurations above $\forb^2$. When \codetext{ReducedT22infn} is called the sum in \eqnref{double cfp escalator} is carried out using $t=2$. When \codetext{ReducedT22inf2} is called the reduced matrix elements from \cite{judd_intra-atomic_1968} are used. 
+
+    \foreach \name in {GenerateT22Table, ReducedT22infn, ReducedT22inf2}{
+        \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
+    }
+
+    The function \codetext{GenerateSOOandECSOTable} calls the function \codetext{SOOandECSO} over all possible combinations of the arguments $\{\numE, SL, S'L', J\}$ and uses their values to populate the association \codetext{SOOandECSOTable}. In turn the function \codetext{SOOandECSO} queries the precomputed values of \eqnref{SOO ECSO sum} as stored in the association \codetext{SOOandECSOLSTable}. 
+
+    \foreach \name in {GenerateSOOandECSOTable, SOOandECSO, SOOandECSO}{
+        \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
+    }
+
+    The association \codetext{SOOandECSOLSTable} is computed by the function \codetext{GenerateSOOandECSOLSTable}. This function populates \codetext{SOOandECSOLSTable} with keys of the form $\{\numE, SL, S'L'\}$. It does this by using the function \codetext{ReducedSOOandECSOinf2} in the base case of $\forb^2$, and \codetext{ReducedSOOandECSOinfn} for configurations above $\forb^2$. When \codetext{ReducedSOOandECSOinfn} is called the sum in \eqnref{double cfp escalator} is carried out using $t=1$. When \codetext{ReducedSOOandECSOinf2} is called the reduced matrix elements from \cite{judd_intra-atomic_1968} are used.
+
+    \foreach \name in {ReducedSOOandECSOinfn, ReducedSOOandECSOinf2}{
+        \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
+    }
+
+\subsection[$\ham_3$: three-body effective operators]{$\ham_{\trispoke}$: three-body effective operators}
+
+Three body model\footnote{\textit{model interactions} are interactions that appear because of the simplifications in our models, they are not fundamental, but originate from them.} interactions arise in the lanthanides due to configuration interaction between configurations $(4\forb)^{\numE}$ and $(4\forb)^{\numE\pm{1}}(n'\lorb')^{\mp{1}}$. As such they describe the effects of configuration interaction of single-electron excitations from the ground configuration to excited ones. 
+
+What results from the configuration interaction analysis (see \cite{rajnak_configuration_1963},\cite{judd_three-particle_1966}, and \cite{judd_complete_1984}, shows that the effective result from the model interaction arising from CI has the form of a three body operator.
 
 These operators were initially studied by Wybourne and Rajnak in 1963 \cite{rajnak_configuration_1963}, their analysis was complemented soon after by \cite{judd_three-particle_1966}, and revisted again by Judd in 1984 \cite{judd_complete_1984}.
 
@@ -413,9 +640,9 @@ This interaction is spanned by a set of 14 $\op{t}_i$ of operators
 \begin{equation}
 \ham_{\trispoke} = {\opcolor{T'^{(2)}}}\op{t}'_2 + \hamEffectiveThreeBody.
 \end{equation}
-Where $\hat{t}_2'$ is a fifteenth legacy operator that is needed to reproduce old results from literature.
+Where $\hat{t}_2'$ is a fifteenth legacy operator that is needed to reproduce old results from literature. The omission of some indices has to do with the fact that they way in which these are defined, lead to some of them being two-body operators, and as such they are excluded from the sum.
 
-The calculation of a three body operator across the $\forb^{\numE}$ configuration is analogous to how a two-body operator is calculated. Except that in this case what are needed are the reduced matrix elements in $\forb^3$ and the equation that is needed to propagate these across the other configurations is modified accordingly to eqn. 4 (slightly modified to account for dependence on J and MJ) in \cite{judd_three-particle_1966}:
+The calculation of a three body operator across the $\forb^{\numE}$ configuration is analogous to how a two-body operator is calculated. Except that in this case what are needed are the reduced matrix elements in $\forb^3$ and the equation that is needed to propagate these across the other configurations is modified accordingly to equation 4 in \cite{judd_three-particle_1966} (adding the explicit dependence on $J$ and $\Msub{J}$):
 \begin{equation} 
 	\braopket{\forb^{\numE}\psi}
 		{\op{t}_i}
@@ -426,14 +653,17 @@ The calculation of a three body operator across the $\forb^{\numE}$ configuratio
 		\sum_{\bar{\psi}\bar{\psi}'}
 			\cfpinv{\psi}{\bar{\psi}}
         	\cfpinv{\psi'}{\bar{\psi}'}
-        	\braopket{\forb^{\numE-1}\bar{\psi}}{\op{t}_i}{\forb^{\numE-1}\bar{\psi}'} 
+        	\braopket{\forb^{\numE-1}\bar{\psi}}{\op{t}_i}{\forb^{\numE-1}\bar{\psi}'}.
 \label{eqn:three body escalator}
 \end{equation}
-where the sum runs over the parents in $\forb^{\numE-1}$ that are common to both the daughter terms $\psi$ and $\psi'$ in $\forb^{\numE}$. The equation above yielding LSJMJ matrix elements, and being diagonal in J, MJ as is due to a scalar operator.
 
-In \qlanth this is all implemented in one burst in the function \codetext{GenerateThreeBodyTables}. Where the matrix elements in $\forb^3$ are gotten from \cite{judd_complete_1984}, where the data has been digitized in the files \codetext{Judd1984-1.csv} and \codetext{Judd1984-2.csv}, which are parsed through the function \codetext{ParseJudd1984}.
+The sum in this expresion runs over the parents in $\forb^{\numE-1}$ that are common to both the daughter terms $\psi$ and $\psi'$ in $\forb^{\numE}$. The equation above yielding LSJMJ matrix elements, and being diagonal in J, MJ as is due to a scalar operator.
+
+In \qlanth this is all implemented in the function \codetext{GenerateThreeBodyTables}. Where the matrix elements in $\forb^3$ are gotten from \cite{judd_complete_1984}, where the data has been digitized in the files \codetext{Judd1984-1.csv} and \codetext{Judd1984-2.csv}, which are parsed through the function \codetext{ParseJudd1984}.
  
- In \codetext{GenerateThreeBodyTables} a special case is made for $\op{t}_2$ and $\op{t}_{11}$ for which primed variants $\op{t}_2'$ and $\op{t}_{11}'$ are calculated differently beyond the half filled shell. In the case of the other operators, beyond $\forb^7$ the matrix elements simply see a global sign flip, whereas in the case of $\op{t}_2'$ and $\op{t}_{11}'$ the coefficients of fractional parentage beyond $\forb^7$ are used. This yields the unexpected result that in the $\forb^{12}$ configuration, which corresponds to two holes, there is a non-zero three body operator $\op{t}_2'$. This is an arcane result that was corrected by Judd in 1984 \cite{judd_complete_1984} but which lingered long enough that important work in the 1980s was calculated with it. When calculations are carried out if $\op{t}_2'$ is used then $\op{t}_2$ shouln't be used and vice versa.
+ In \codetext{GenerateThreeBodyTables} a special case is made for $\op{t}_2$ and $\op{t}_{11}$ for which primed variants $\op{t}_2'$ and $\op{t}_{11}'$ are calculated differently beyond the half filled shell. In the case of the other operators, beyond $\forb^7$ the matrix elements simply see a global sign flip, whereas in the case of $\op{t}_2'$ and $\op{t}_{11}'$ the coefficients of fractional parentage beyond $\forb^7$ are used. This yields the unexpected result that in the $\forb^{12}$ configuration, which corresponds to two holes, there is a non-zero three body operator $\op{t}_2'$. This is an arcane result that was corrected by Judd in 1984 \cite{judd_complete_1984}, but which lingered long enough that important work in the 1980s was calculated with it. When calculations are carried out if $\op{t}_2'$ is used then $\op{t}_2$ shouln't be used and vice versa.
+ 
+ One additional feature of $\hat{t}_2'$ that needs to be accounted for, is that it doesn't have the simple relationship for conjugate configurations that all the other $\hat{t}_i$ operators have. For the sake of parsimony, and avoid having to explicitly store matrix elements beyond $f^7$ \qlanth takes the approach of adding a control parameter \codetext{t2Switch} which needs to be set to 1 if below or at $\forb^7$ and set to 0 if above $\forb^7$.
  
  \foreach \name in {GenerateThreeBodyTables, ParseJudd1984}{ 
         \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
@@ -482,7 +712,7 @@ In \qlanth this is all implemented in one burst in the function \codetext{Genera
     
     A staple of the Wigner-Racah algebra is writing up operators on interest in terms of standard ones for which the matrix elements are straightforward.  One such operator is the unit tensor operator $\hat{u}^{(k)}$ for a single electron. The Wigner-Eckart theorem --on which all of this algebra is an elaboration-- effectively separates the dynamical and geometrical parts of a given interaction; the unit tensor operators isolate the geometric contributions. This irreducible tensor operator $\hat{u}^{(k)}$ is defined as the tensor operator having the following reduced matrix elements (written in terms of the triangular delta, see section on notation):
     \begin{equation}
-    \redbraopket{\ell}{\hat{u}^{(k)}}{\ell'} = \tricondition{\ell,k,\ell'}.
+    \redbraopket{\ell}{\hat{u}^{(k)}}{\ell'} = 1.
     \end{equation}
 
     In terms of this tensor one may then define the symmetric (in the sense that the resulting operator is equitable among all electrons) unit tensor operator for $\numE$ particles as
@@ -543,18 +773,18 @@ In \qlanth this is all implemented in one burst in the function \codetext{Genera
     \end{align}
 
     This last reduced matrix element is finally computed with a sum over $\bar{\alpha}\bar{L}\bar{S}$ which are the parents in configuration $\forb^{\numE-1}$ which are common to $\ket{\alpha L S}$ and $\ket{\alpha' L' S'}$ from configuration $\forb^{\numE}$:
-    \begin{align}
+    \begin{multline}
     \overbracket{\redbraopket{\lorb^\numE \alpha S L} 
         {\op{U}^{(k)}}
-        {\lorb^\numE \alpha' S' L'}}^{\text{Cowan eqn. 11.53}} &= \kronecker{S}{S'} \numE \phaser{\lorb + L + k}
+        {\lorb^\numE \alpha' S' L'}}^{\text{Cowan eqn. 11.53}} = \kronecker{S}{S'} \numE \phaser{\lorb + L + k}
             \sqrt{\tpobraket{L}\tpobraket{L'}} \times \\
-    \nonumber \sum_{\bar{\alpha}\bar{L}\bar{S}} 
-        \phaser{\bar{L}} & \sixj{\lorb}{k}{\lorb}{L}{\bar{L}}{L'}
+    \sum_{\bar{\alpha}\bar{L}\bar{S}} 
+        \phaser{\bar{L}} \sixj{\lorb}{k}{\lorb}{L}{\bar{L}}{L'}
         \cfpinv{\lorb^\numE \alpha L S}
             {\lorb^{\numE - 1}\bar{\alpha}\bar{L}\bar{S}}
         \cfp{\lorb^{\numE -1}\bar{\alpha}\bar{L}\bar{S}}{\lorb^\numE\alpha'L'S'}.
     \label{eqn:ReducedUk}
-    \end{align}
+    \end{multline}
 
     From the $\redbraopket{\lorb}{\op{C}^{(k)}}{\lorb}$, and given that we are using $\lorb = \forb = 3$ we can see that by the triangular condition $\tricondition{3,k,3}$ the non-zero contributions only come from $k=0,1,2,3,4,5,6$. An additional selection rule on $k$ comes from considerations of parity. Since both the bra and the ket in $\braopket{\lorb^\numE \alpha SLJ \Msub{J}}{\hamCrystalFieldSymbol}{\lorb^\numE \alpha'S L' J' \Msub{J'}}$ have the same parity, then the overall parity of the braket is determined by the parity of $\Ckq{k}{q}$, and since the parity of $\Ckq{k}{q}$ is $\phaser{k}$ then for the braket to be non-zero we require that $k$ should also be even. In view of this, in all the above equations for the crystal field the values for $k$ should be limited to $2,4,6$. The value of $k=0$ having been omitted from the start since this only contributes a common energy shift. Putting everything together:
        	\begin{equation}
@@ -573,219 +803,6 @@ In \qlanth this is all implemented in one burst in the function \codetext{Genera
         \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
     }
 
-\subsection{$\hamTreesSymbol, \hamGTwoSymbol, \hamSOSevenSymbol$: electrostatic configuration interaction}
-
-    This is a first term where we take into account the very important contributions from configuration interaction. When the interaction with configurations ?? and ?? it was realized that the way the omission of these configurations in the single configuration description was to relax the previous restriction that $\Fk$ should only have even values for k. Parallel to this Trees noticed an interesting fact which is that a fair amount of correction to the calculated spectrum of would benefit if one added to all of the LS energies a term quadratic in L. Soon after this it was acknowledged that the inclusion of odd $\Fk$ was equivalent to adding three terms related to the Casimir operators of the groups $SO(3)$, $G_2$, and $SO(7)$. In addition to this, the configuration interaction analysis, also showed that the contributions from other configuration would also overlap with the already allowed even $\Fk$.
-
-    One of these Casimir operators is the familiar $\op{L}^2$ from $\SO{3}$. In analogy to $\op{L}^2$ in which the quantum number $L$ can be used to determine the eigenvalues, in the cases of $\hamGTwoSymbol$ the necessary state label is the $U$ label of the $LS$ term, and in the case of $\hamSOSevenSymbol$ the necessary label is $W$. If $\Lambda_{\text{G}_2}\!(U)$ is used to note the eigenvalue of the Casimir operator of $\text{G}_2$ corresponding to label $U$, and $\Lambda_{\SO{7}}\!(W)$ the eigenvalue corresponding to state label $W$, then the matrix elements of $\hamTreesSymbol$, $\hamGTwoSymbol$ and $\hamSOSevenSymbol$ are diagonal in all quantum numbers and are given by
-    \begin{align}
-        \braopket{\lorb^\numE \alpha S L J \Msub{J}}
-            {\hamTreesSymbol}
-            {\lorb^\numE \alpha' S' L' J' \Msub{J}'} &=
-            \casimirAlpha
-            \kronecker{\alpha{SLJ}\Msub{J}}{\alpha'{S'L'J'}\Msub{J}'}
-            L(L+1) \\
-        \braopket{\lorb^\numE U \alpha S L J \Msub{J}}
-            {\hamGTwoSymbol}
-            {\lorb^\numE U \alpha' S' L' J' \Msub{J}'} &=
-            \casimirBeta
-            \kronecker{\alpha{SLJ}\Msub{J}}{\alpha'{S'L'J'}\Msub{J}'}
-            \Lambda_{\text{G}_2}\!(U) \\
-        \braopket{\lorb^\numE W \alpha S L J \Msub{J}}
-            {\hamSOSevenSymbol}
-            {\lorb^\numE W \alpha' S' L' J' \Msub{J}} &=
-            \casimirGamma
-            \kronecker{\alpha{SLJ}\Msub{J}}{\alpha'{S'L'J'}\Msub{J}'}
-            \Lambda_{\SO{7}}\!(W)
-    \end{align}
-
-    In \qlanth the role of $\Lambda_{\SO{7}}\!(W)$ is played by the function \codetext{GSO7W}, the role of $\Lambda_{\text{G}_2}\!(U)$ by \codetext{GG2U}, and the role of  $\Lambda_{\SO{3}}\!(L)$ by \codetext{CasimirSO3}. These are used by \codetext{CasimirG2}, \codetext{CasimirSO3}, and \codetext{CasimirSO7} which find the corresponding ${U,W,L}$ labels to the LS terms provided to them. Finally, the function \codetext{ElectrostaticConfigInteraction} puts them together.
-
-\subsection{$\hamSpinSpinSpinOtherOrbitSymbol$: spin-spin and spin-other-orbit}
-
-    The calculation of the $\hamSpinSpinSpinOtherOrbitSymbol$ is qualitatively different from the previous ones. The previous ones were self-contained in the sense that the reduced matrix elements that we require we also computed on our own. In the case of the interactions that follow from here, we need to take precomputed values for reduced matrix elements either in $\forb^2$ or in $\forb^3$ and then we ``pull'' them up for all $\forb^{\numE}$ configuration with the help of formulas involving coefficients of fractional parentage.
-
-    The analysis of spin-other-orbit, and the spin-spin contributions we use in \qlanth is that of Judd, Crosswhite, and Crosswhite \cite{judd_intra-atomic_1968}. If the spin-orbit correction arrived from the influence that the orbital motion of an electron has on its own magnetic moment, the spin-other-orbit reflects the interaction that the motion of one electron has on the magnetic moment of another. Much as the spin-orbit effect can be extracted as a relativistic correction with the Dirac equation as the starting point. The multi-electron spin-orbit effects can be derived from the Breit operator \cite{bethe_quantum_1957} which is added to the relativistic description of a many-particle system in order to account for retardation of the electromagnetic field
-    \begin{equation}
-    \ham_B = -\frac{1}{2}e^2 \sum_{i>j} \left[ \left(\alpha_i\cdot\alpha_j\right)\frac{1}{r_{ij}} + \left(\alpha_i\cdot{\vec{r}_{ij}}\right)\left(\alpha_j\cdot\vec{r}_{ij}\right) \frac{1}{r_{ij}^3} \right].
-    \end{equation}
-
-    When this operator is expanded in powers of $v/c$, a number of non-relativistic inter-electron interactions result. Two of them being the spin-other-orbit and spin-spin interactions.
-
-    As usual, the radial part of the Hamiltonian is averaged, which in this case gives appearance to the Marvin integrals
-    \begin{equation} 
-    \Mk{k} \DEF \frac{e^2\hbar^2}{8m^2c^2} \braopket{(nl)^2}{\frac{r_<^k}{r_>^{k+3}}}{(nl)^2}
-    \end{equation}
-
-    With these, the expression for the spin-spin term is \cite{judd_intra-atomic_1968}
-    \begin{multline}
-    \ham_{s:s} = -2 \sum_{i\neq{j}}
-        \sum_k \Mk{k}
-            \sqrt{(k+1)(k+2)(2k+3)} 
-            \redbraopket{\lorb}{\Ck{k}}{\lorb} 
-            \redbraopket{\lorb}{\Ck{k+2}}{\lorb}
-            \left\{
-                \wdouble{i}{1}{k}
-                \wdouble{j}{1}{k+2}
-            \right\}^{(2,2)0}
-    \end{multline}
-    and the one for spin-other-orbit 
-    \begin{multline}
-        \ham_{s:oo} = \sum_{i\neq{j}} 
-            \sum_k 
-                \sqrt{(k+1)(2\lorb+k+2)(2\lorb-k)}  \times \\ 
-        \left[ \left\{ \wdouble{i}{0}{k+1} \wdouble{j}{1}{k} \right\}^{(11)0} 
-        \left\{ \Mk{k-1}
-            \redbraopket{\lorb}
-                {\Ck{k+1}}
-                {\lorb}^2
-            +
-            2 \Mk{k} \redbraopket{\lorb}{\Ck{k}}{\lorb}^2
-        \right\} + \right. \\
-        \left.
-            \left\{ \wdouble{i}{0}{k}\wdouble{j}{1}{k+1} \right\}^{(11)0} 
-                \left\{ \Mk{k} 
-                    \redbraopket{\lorb}{\Ck{k}}{\lorb}^2
-                    + 2 \Mk{k-1}
-                    \redbraopket{\lorb}{\Ck{k+1}}{\lorb}^2
-                \right\}
-        \right].
-    \end{multline} 
-
-    In the expressions above $\wdouble{i}{\kappa}{k}$ is a double tensor operator of rank $\kappa$ over spin, of rank $k$ over orbit, and acting on electron $i$. It is defined by its reduced matrix elements as
-    \begin{equation}
-    \redbraopket{\lorb}
-        {\wdouble{}{\kappa}{k}}
-        {\lorb}
-        = \sqrt{\tpobraket{\kappa}
-            \tpobraket{k}
-        } \tricondition{l,\kappa,l}\tricondition{l,k,l}
-    \end{equation} 
-
-    The complexity of the above expressions for can be identified by identifying them with the scalar part of two new double tensors $\Txyz{1}{1}{0}$ and $\Txyz{2}{2}{0}$ such that
-    \begin{align}
-    \sqrt{5}\Txyz{2}{2}{0} &\DEF \hamSpinSpinSymbol \\
-    -\sqrt{3}\Txyz{1}{1}{0} &\DEF \hamSpinOtherOrbitSymbol
-    \end{align}
-
-    In terms of which the reduced matrix elements in the $\LSJbasis$ basis can be obtained by
-    \begin{equation}
-        \braopket{\gamma{SLJ}}{\ham}{\gamma'{S'L'J'}} = \kronecker{J}{J'} \sixj{S'}{L'}{J}{L}{S}{t} \redbraopket{\gamma{SL}}{\Txyz{t}{t}{}}{\gamma'{S'L'}}.
-    \label{SLtoSLJ for Ttt}
-    \end{equation}
-
-    This above relationship is used in \qlanth in the functions \codetext{SpinSpin} and \codetext{SOOandECSO}.
-
-    \foreach \name in {SpinSpin, SOOandECSO}{
-        \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
-    }
-
-    For two-electron operators such as these, the matrix elements in $\forb^\numE$ are related to those in $\forb^{\numE-1}$ via:
-    \begin{multline}
-        \redbraopket{\forb^\numE\psi}{\Txyz{t}{t}{}}{\psi'\forb^\numE} 
-        = \frac{\numE}{\numE-2} 
-        \sum_{\bar{\psi},\bar{\psi}'}
-        \phaser{\bar{S}+\bar{L}+\sspin+\lorb+S'+L'}
-        \sqrt{\tpobraket{S}\tpobraket{S'}\tpobraket{L}\tpobraket{L'}} \times \\
-        \cfpinv{\psi}{\bar{\psi}}
-        \cfpinv{\psi'}{\bar{\psi}'} 
-        \sixj{S}{t}{S'}{\bar{S}'}{\sspin}{\bar{S}}
-        \sixj{L}{t}{L'}{\bar{L}'}{\lorb}{\bar{L}}
-    \label{double cfp escalator}
-    \end{multline}
-    Where the sum runs over the terms $\bar{\psi}$ and $\bar{\psi}'$ in $\forb^{\numE-1}$ which are parents common to $\psi$ and $\psi'$. Using these the matrix elements of $\Txyz{1}{1}{}$ and $\Txyz{2}{2}{}$ in $\forb^2$ can be used to compute all the reduced matrix elements in  $\forb^\numE$. These could then be used, together with \eqnref{SLtoSLJ for Ttt} to obtain the matrix elements of $\hamSpinSpinSymbol$ and $\hamSpinOtherOrbitSymbol$. This is done for $\hamSpinSpinSymbol$, but not for $\hamSpinOtherOrbitSymbol$, since this term is traditionally computed at the same as the electrostically-correlated-spin-orbit (see next section).
-
-    These equations are implemented in \qlanth through the following functions: \codetext{Generate{\-}T22{\-}Table}, \codetext{ReducedT22infn}, \codetext{ReducedT22inf2}, \codetext{ReducedT11inf2}. Where \codetext{ReducedT22inf2} and \codetext{ReducedT11inf2} provide the reduced matrix elements for $\Txyz{1}{1}{}$ and $\Txyz{2}{2}{}$ in $\forb^2$ as provided in table II of \cite{judd_intra-atomic_1968}.
-
-    \foreach \name in {GenerateT22Table, ReducedT22infn, ReducedT22inf2, ReducedT11inf2}{
-        \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
-    }
-
-\subsection{$\hamECSOSymbol$: electrostatically-correlated-spin-orbit and a note about CI}
-
-    In the same paper \cite{judd_intra-atomic_1968} that describes the spin-spin and spin-other-orbits consideration is also given to the emergence of additional corrections due to configuration interaction as described by the following operator (page.  169 of \cite{judd_intra-atomic_1968})
-    \begin{equation}
-        \ham_{\text{ci}} = -\sum_\chi \sum_i \frac{1}{E_\chi}\xi(r_i) 
-            \left(  
-                \op{\sspin}_i\cdot\op{\lorb}_i
-            \right) \ket{\chi} \bra{\chi} \CoulombNonCentral
-            - \frac{1}{E_\chi}\CoulombNonCentral \ket{\chi}\bra{\chi} \xi(r_i) 
-                \left( 
-                    \op{\sspin}_i\cdot\op{\lorb}_i
-                \right) 
-    \end{equation} 
-    where $\xi(r_h) (\op{\sspin}_h\cdot\op{\lorb}_h)$ is the customary spin-orbit interaction, $E_\chi$ is the energy of state $\ket{\chi}$, $i$ is a label for the valence electrons, and $\ket{\chi}$ are states in the configurations to which one is ``interacting'' with.
-
-    Most importantly in the above, the term $\CoulombNonCentral$ stands for the non-central part of the Coulomb interaction. This serves as a reminder that the central field approximation of single-electron wavefunctions is, indeed, an approximation. The non-central part of the electrostatic field is defined as what remains after subtracting the radial component. This term is crucial to keep in mind because it facilitates parity-breaking transitions, such as forced electric dipole transitions. Moreover, the non-central nature of this term plays a significant role in configuration mixing (see \cite{morrison_many-body_1971}), which is why the operator $\CoulombNonCentral$ is prominently featured in the expression for configuration interaction, and why the modifier ``electrostatically correlated'' is prepended to spin-orbit to form ``electrostatically correlated spin orbit''. It's also worth keeping in mind that the derivation of such an expression is based on second-order perturbation theory.
-
-    This operator can be identified with a it being the scalar component of a double tensor operator of rank 1 both for the spin and orbital parts of the wavefunction. 
-    \begin{equation}
-        \ham_{\text{ci}} = - \sqrt{3}\,\txyz{1}{1}{0}
-    \end{equation}
-
-    Judd \textit{et al.} then go on to list the reduced matrix elements of this operator in the $\forb^2$ configuration. When this is done the Marvin integrals $\Mk{k}$ appear again, but a second set of parameters is also necessary
-    \begin{equation}
-        \Pk{k} = 6 \sum_{f'}
-            \frac{\zeta_{ff'}}
-                {E_{ff'}}
-                R^{(k)}(ff,ff') \text{ for }k=0,2,4,6.
-    \end{equation}
-    Where $f$ notes the radial eigenfunction attached to an f-electron wavefunction, and $f'$ similarly but for a configuration different from $\forb^\numE$. And where
-    \begin{align}
-        \zeta_{ff'} &\DEF \braopket{f}{\xi(r)}{f'} \\
-        R^{(k)}(ff,ff') &\DEF e^2 \braopket{f_1f_2}{\frac{r_<^k}{r_>^{k+1}}}{f_1f_2'}.
-    \end{align}
-
-    In the semi-empirical approach embodied by $\qlanth$, calculating these quantities \textit{ab initio} is not the objective, rendering the precise definition of these parameters non-essential. Nonetheless, these expressions frequently serve to justify the ratios between different orders of these quantities. Consequently, both the set of three $\Mk{k}$ and the set of $\Pk{k}$ ultimately rely on a single free parameter each. Such parsimony is desirable given the large number of parameters (about 20) that the Hamiltonian ends up having.
-
-    Judd \textit{et al.} further note that $\Pk{0}$ is proportional to the spin orbit operator, and as such its effect is absorbed by the standard spin-orbit parameter $\spinZeta$.
-
-    Judd \textit{et al.} also develop an alternative approach based on group theory arguments. They put together the spin-other-orbit and the electrostatically-correlated-spin-orbit as a sum of operators $\op{z}_i$ with useful transformation rules 
-    \begin{equation}
-        \redbraopket{\psi}{\Txyz{1}{1}{} + \txyz{1}{1}{}}{\psi'} = \sum a_i \redbraopket{\psi}{\hat{z}_i}{\psi'}
-    \end{equation}
-
-    At this stage a subtle point needs to be raised. As Judd points out, in the sum above, the term $\op{z}_{13}$ that contributes with a tensorial character equal to that of the regular spin-orbit operator. As such, if the goal is obtaining a parametric Hamiltonian that can be fit with uncorrelated parameters, it is then necessary to subtract this part from $\Txyz{1}{1}{} + \txyz{1}{1}{}$. This point was clarified by Chen \textit{et al.} \cite{chen_few_2008}. Because of this the final form of the operator contributing both to spin-other-orbit and the electrostatically-correlated-spin-orbit is:
-
-    \begin{equation}
-        \hamSpinOtherOrbitSymbol + \hamECSOSymbol = \Txyz{1}{1}{} + \txyz{1}{1}{} - \frac{1}{6}a_{13}\op{z}_{13}
-        \label{SOO ECSO sum}
-    \end{equation}
-    where
-    \begin{equation}
-        a_{13} = -33 \Mk{0} + 3 \Mk{2} + 15/11 \Mk{4} - 6 \Pk{0} + 3/2 (35 \Pk{2} + 77 \Pk{4} + 143 \Pk{6})
-    \end{equation}
-
-    In \qlanth the contributions from spin-spin, spin-other-orbit, and electrostatically-correlated-spin-orbit are put together by the function \codetext{MagneticInteractions}. That function queries precomputed values from two associations \codetext{SpinSpinTable} and \codetext{SOOandECSOTable}. In turn these two associations are generated by the functions \codetext{GenerateSpinOrbitTable} and \codetext{GenerateSOOandECSOTable}. Note that both spin-spin and spin-other-orbit end up contributing through $\Mk{k}$, however there doesn't seem to be consensus about adding them together, as such \qlanth allows including or excluding the spin-spin contribution, this is done with a control parameter $\sigma_{SS}$.
-
-    \foreach \name in {MagneticInteractions, GenerateSpinOrbitTable, GenerateSOOandECSOTable}{
-        \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
-    }
-
-    The function \codetext{GenerateSpinSpinTable} calls the function \codetext{SpinSpin} over all possible combinations of the arguments $\{\numE, SL, S'L', J\}$. In turn the function \codetext{SpinSpin} queries the precomputed values of the the double tensor $\Txyz{2}{2}{}$ which are stored in the association \codetext{T22Table}. 
-
-
-    \foreach \name in {GenerateSpinSpinTable, SpinSpin}{ 
-        \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
-    }
-
-    The association \codetext{T22Table} is computed by the function \codetext{GenerateT22Table}. This function populates \codetext{T22Table} with keys of the form $\{\numE, SL, S'L'\}$. It does this by using the function \codetext{ReducedT22inf2} in the base case of $\forb^2$, and \codetext{ReducedT22infn} for configurations above $\forb^2$. When \codetext{ReducedT22infn} is called the sum in \eqnref{double cfp escalator} is carried out using $t=2$. When \codetext{ReducedT22inf2} is called the reduced matrix elements from \cite{judd_intra-atomic_1968} are used. 
-
-    \foreach \name in {GenerateT22Table, ReducedT22infn, ReducedT22inf2}{
-        \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
-    }
-
-    The function \codetext{GenerateSOOandECSOTable} calls the function \codetext{SOOandECSO} over all possible combinations of the arguments $\{\numE, SL, S'L', J\}$ and uses their values to populate the association \codetext{SOOandECSOTable}. In turn the function \codetext{SOOandECSO} queries the precomputed values of \eqnref{SOO ECSO sum} as stored in the association \codetext{SOOandECSOLSTable}. 
-
-    \foreach \name in {GenerateSOOandECSOTable, SOOandECSO, SOOandECSO}{
-        \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
-    }
-
-    The association \codetext{SOOandECSOLSTable} is computed by the function \codetext{GenerateSOOandECSOLSTable}. This function populates \codetext{SOOandECSOLSTable} with keys of the form $\{\numE, SL, S'L'\}$. It does this by using the function \codetext{ReducedSOOandECSOinf2} in the base case of $\forb^2$, and \codetext{ReducedSOOandECSOinfn} for configurations above $\forb^2$. When \codetext{ReducedSOOandECSOinfn} is called the sum in \eqnref{double cfp escalator} is carried out using $t=1$. When \codetext{ReducedSOOandECSOinf2} is called the reduced matrix elements from \cite{judd_intra-atomic_1968} are used.
-
-    \foreach \name in {ReducedSOOandECSOinfn, ReducedSOOandECSOinf2}{
-        \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
-    }
 
 \subsection{$\hat{\mu}$ and $\hamZeemanSymbol$: the magnetic dipole operator and the Zeeman term}
 
@@ -795,7 +812,7 @@ In atomic units, the operator associated with the magnetic dipole is
 \end{equation}
 Here we have emphasized the fact that the magnetic dipole operator corresponds to a rank-1 spherical tensor operator.
 
-In the $\LSJMbasis$ basis that we use in \qlanth the LSJ reduced-matrix elements are computed using eqn. 15.7 in \cite{cowan_theory_1981}
+In the $\LSJMbasis$ basis that we use in \qlanth the LSJ reduced-matrix elements are computed using equation 15.7 in \cite{cowan_theory_1981}
 \begin{multline}
     \redbraopket{\alpha{LSJ}}
         {\left(\op{L} + g_s \op{S}\right)^{(1)}}
@@ -840,12 +857,13 @@ The $JJ'$ blocks that are generated with this function are then put together by 
 
 Using the cartesian components of the magnetic dipole operator, the matrix elements of the Zeeman term can then be evaluated. This term can be included in the Hamiltonian through an option in \codetext{HamMatrixAssembly}. Since the magnetic dipole operator is calculated in atomic units, and it seeming desirable that the input units of the magnetic field be Tesla, a conversion factor is included so that the final terms be congruent with the energy units assumed in the other terms in the Hamiltonian, namely the pseudo-energy unit Kayser ($\text{cm}^{-1}$). The conversion factor is called \codetext{TestaToKayser} in the file \codetext{qonstants.m}.
 
-\subsection{Going beyond f7 }
+\subsection[Going beyond $f^7$]{Going beyond $f^7$}
 
 In most cases all matrix elements in \qlanth are only calculated up to and including $\forb^7$. Beyond $\forb^7$ adequate changes of sign are enforced to take into account the equivalence that can be made between $\forb^{\numE}$ and $\forb^{14-\numE}$. This is enforced when the function \codetext{HamMatrixAssembly} is called. In there \codetext{HoleElectronConjugation} is the function responsible for enforcing a global sign flip for the following operators (or equivalently to their accompanying coefficients):
-\begin{equation*}
+\begin{equation}
 \spinZeta, \Tk{2}, \Tk{3}, \Tk{4}, \Tk{6}, \Tk{7}, \Tk{8}, \Bkq{k}{q}	
-\end{equation*}
+\label{eqn:flipped}
+\end{equation}
 
 \foreach \name in {HoleElectronConjugation}{
     \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
@@ -853,7 +871,17 @@ In most cases all matrix elements in \qlanth are only calculated up to and inclu
 
 \section{Magnetic Dipole Transitions}
 
-\qlanth can also calculate magnetic dipole transitions. To this end are the functions \codetext{MagDipLineStrength}, \codetext{MagDipoleRates}, and \codetext{GroundStateOscillatorStrength}.
+\qlanth can also calculate magnetic dipole transitions. With $\hat{\mu} = \{\hat{\mu}_x, \hat{\mu}_y, \hat{\mu}_z\}$ the magnetic dipole operator, the line strength between two eigenstates $\ket{\nu}$ and $\ket{\nu'}$ is defined as (see for example equation 14.31 in \cite{cowan_theory_1981})
+\begin{equation}
+	\braopket{\nu}{\lineStrength}{\nu'} \DEF \left| \braopket{\nu}{\hat{\mu}}{\nu'} \right|^2 = \left| \braopket{\nu}{\hat{\mu}_x}{\nu'} \right|^2 + \left| \braopket{\nu}{\hat{\mu}_y}{\nu'} \right|^2 + \left| \braopket{\nu}{\hat{\mu}_z}{\nu'} \right|^2
+\end{equation}
+
+In \qlanth this is computed with the function \codetext{MagDipLineStrength}, which given a set of eigenvectors computes the sum above, and returns an array that contains all possible pairings of $\ket{\nu}$ and $\ket{\nu'}$.
+
+\lstinputlisting[language=Mathematica]{./fundefs/MagDipLineStrength.tex}
+
+
+To this end are the functions \codetext{MagDipLineStrength}, \codetext{MagDipoleRates}, and \codetext{GroundStateOscillatorStrength}.
 
 \foreach \name in {MagDipLineStrength, MagDipoleRates, GroundStateOscillatorStrength}{
     \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
@@ -868,6 +896,32 @@ In most cases all matrix elements in \qlanth are only calculated up to and inclu
 	\item \codetext{qlanth - JJBlock Calculator.nb}: can be used to generate the JJ blocks for the different interactions. The data files produced here are necessary for \codetext{HamMatrixAssembly} to work.
 	\item \codetext{The Lanthanides in LaF3.nb}: runs \qlanth over the lanthanide ions in LaF3 and compares the results agains the published values from Carnall. It also calculates magnetic dipole transition rates and oscillator strengths.
 \end{itemize}
+
+\section{Additional data}
+
+\subsection{Carnall et al data on Ln:LaF3}
+
+The study of Carnall et al \cite{carnall_systematic_1989} on lanthanum fluoride was a systematic review of trivalent lanthanide ions in LaF3. In this work they fitted the experimental data for all of the lanthanide ions using the single-configuration effective Hamiltonian. In their appendices one can find their calculated values, together with the experimental values that they used for their least squares fittings. In \qlanth this data can be accesed by invoking the command \codetext{LoadCarnall} which brings into the session an Association that has keys that have as values the tables and appendices from this article. Additionally the function \codetext{LoadParameters} can be used to query the data for the fitted parameters, which may serve as a useful starting point for the description of the lanthanides ions in hosts other than LaF3.
+
+\foreach \name in {Carnall, LoadCarnall, LoadParameters}{
+    \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
+}
+
+\subsection{\codetext{sparsefn.py}}
+
+	\qlanth is also accompanied by seven Python scripts \codetext{sparsef[1-7].py}. Each of these contains a single function \codetext{effective\_hamiltonian\_f[1-7]} which returns a sparse array for given values for the model parameters.
+	
+	There is an eight Python script called \codetext{basisLSJMJ.py} which contains a dictionary whose keys are f1, f2, f3, f4, f5, f6, and f7, and whose values are lists that contain the ordered basis in which the array produced by the \codetext{sparsefn.py} should be understood to be in. Each basis vector is a list with three elements \{LS string in NK notation, $J$, $\Msub{J}$\}.
+
+	In those it is left up to the user to make the adequate change of signs in the parameters for configurations above $\forb^7$.  These include changing the signs of all in \eqnref{eqn:flipped} and setting \codetext{t2Switch} to 0. For configurations at or below $\forb^7$ it is necessary to set \codetext{t2Switch} to 1.
+
+\section{Units}
+
+All of the matrix elements of the Hamiltonian are calculated using the Kayser ($\text{K} \equiv \text{cm}^{-1}$) as the (pseudo) energy unit. All the parameters (except the magnetic field which is in Tesla) in the effective Hamiltonian are assumed to be in this unit. As is customary, the angular momentum operators assume atomic units in which $\hbar=1$.
+
+Some constants and conversion values are included in the file \codetext{qonstants.m}.
+
+\lstinputlisting[language=Mathematica]{../qonstants.m}
 
 \section{Notation}
 
@@ -888,6 +942,8 @@ In most cases all matrix elements in \qlanth are only calculated up to and inclu
     \overbracket{\cfp{\lorb^{n-1}\alpha'L'S'}{\lorb^n\alpha{L}{S}}}^{\text{The coefficient of fractional parentage from the parent term }\ket{\lorb^{n-1}\alpha'{L'S'}}\text{ for the daughter term }\ket{\lorb^{n}\alpha{LS}}}  
 \end{gather}
 
+
+
 \section{Definitions}  
 
 \begin{gather} 
@@ -904,31 +960,33 @@ In most cases all matrix elements in \qlanth are only calculated up to and inclu
 
 \newpage
 
-\section{qlanth.m}
+\section{code}
+
+\subsection{qlanth.m}
 
 This file encapsulates the main functions in \qlanth and contains all the Physics related functions.
 
 \lstinputlisting[language=Mathematica]{../qlanth.m}
 
-\section{qonstants.m} 
+\subsection{qonstants.m} 
 
 This file has a few constants and conversion factors.
 
 \lstinputlisting[language=Mathematica]{../qonstants.m}
 
-\section{qplotter.m}
+\subsection{qplotter.m}
 
 This module has a few useful plotting routines.
 
 \lstinputlisting[language=Mathematica]{../qplotter.m}
 
-\section{misc.m}
+\subsection{misc.m}
 
 This module includes a few functions useful for data-handling.
 
 \lstinputlisting[language=Mathematica]{../misc.m}
 
-\section{qalculations.m}
+\subsection{qalculations.m}
 
 This script encapsulates example calculations in which the level structure and magnetic dipole transitions are calculated for the lanthanide ions in lanthanum flouride.
 

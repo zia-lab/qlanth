@@ -12,25 +12,15 @@ The function returns a list with nine elements
 {rmsDifference, carnallEnergies, eigenEnergies, ln, carnallAssignments, simplerStateLabels, eigensys, basis, truncatedStates}.
 
 Where:
-
 1. rmsDifference is the root mean squared difference between the calculated values and those quoted by Carnall
-
 2. carnallEnergies are the quoted calculated energies from Carnall;
-
 3. eigenEnergies are the calculated energies (in the case of an odd number of electrons the Kramers degeneracy may have been removed from this list according to the option \"Remove Kramers\");
-
 4. ln is simply a string labelling the corresponding lanthanide;
-
 5. carnallAssignments is a list of strings providing the multiplet assignments that Carnall assumed;
-
 6. simplerStateLabels is a list of strings providing the multiplet assignments that this function assumes;
-
 7. eigensys is a list of tuples where the first element is the energy corresponding to the eigenvector given as the second element (in the case of an odd number of electrons the Kramers degeneracy may have been removed from this list according to the option \"Remove Kramers\");
-
 8. basis is a list that specifies the basis in which the Hamiltonian was constructed and diagonalized, equal to BasisLSJMJ[numE];
-
 9. Same as eigensys but the eigenvectors have been truncated so that the truncated version adds up to at least a total probability of eigenstateTruncationProbability.
-
 ";
 Options[FastIonSolverLaF3] = {
   "MakeNotebook" -> True,
