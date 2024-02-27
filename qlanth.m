@@ -886,14 +886,14 @@ Begin["`Private`"]
     ToIntegerOrString[list_]     := Map[If[StringMatchQ[#, NumberString], ToExpression[#], #] &, list];
     CFPTable      = ConstantArray[{},7];
     CFPTable[[1]] = {{"2F",{"1S",1}}};
-
+    
     (* Cleaning before processing is useful *)
     rawText  = Import[FileNameJoin[{moduleDir, "data", "B1F_ALL.TXT"}]];
     rawLines = StringTrim/@StringSplit[rawText,"\n"];
     rawLines = Select[rawLines,#!=""&];
     rawLines = CleanWhitespace/@rawLines;
     rawLines = AddSpaceBeforeMinus/@rawLines;
-
+    
     Do[(
       (* the first character can be used to identify the start of a block *)
       leadChar=StringTake[line,{1}];
@@ -3303,6 +3303,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
           range[[2]] = {0, 1};
           )}]]];
 
+  LabeledGrid::usage="LabeledGrid[data, rowHeaders, columnHeaders] provides a grid of given data interpreted as a matrix of values whose rows are labeled by rowHeaders and whose columns are labeled by columnHeaders. When hovering with the mouse over the grid elements, the row and column labels are displayed with the given separator between them.";
   Options[LabeledGrid]={
       ItemSize->Automatic,
       Alignment->Center,
@@ -3310,7 +3311,6 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
       "Separator"->",",
       "Pivot"->""
   };
-  LabeledGrid::usage="LabeledGrid[data, rowHeaders, columnHeaders] provides a grid of given data interpreted as a matrix of values whose rows are labeled by rowHeaders and whose columns are labeled by columnHeaders. When hovering with the mouse over the grid elements, the row and column labels are displayed with the given separator between them.";
   LabeledGrid[data_,rowHeaders_,columnHeaders_,OptionsPattern[]]:=Module[
       {gridList=data,rowHeads=rowHeaders,colHeads=columnHeaders},
       (
@@ -3432,7 +3432,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
       LoadV1k[];
       LoadT22[];
       LoadSOOandECSOLS[];
-
+      
       LoadElectrostatic[];
       LoadSpinOrbit[];
       LoadSOOandECSO[];
@@ -3449,7 +3449,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     If[ValueQ[fnTermLabels], Return[]];
     PrintTemporary["Loading data for state labels in the f^n configurations..."];
     fnTermsFname = FileNameJoin[{moduleDir, "data", "fnTerms.m"}];
-
+    
     If[!FileExistsQ[fnTermsFname],
       (PrintTemporary[">> fnTerms.m not found, generating ..."];
         fnTermLabels = ParseTermLabels["Export"->True];
@@ -3507,7 +3507,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
       ),
       {row, 1, Length[chenDeltasRaw], 2}];
     chenDeltas["A"] = chenDeltasA;
-
+    
     chenDeltasRawB = Import[FileNameJoin[{moduleDir, "data", "the-chen-deltas-B.csv"}], "Text"];
     chenDeltasB = StringSplit[chenDeltasRawB, "\n"];
     chenDeltasB = StringSplit[#, ","] & /@ chenDeltasB;
@@ -3527,7 +3527,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   ParseCarnall[] := (
     ions         = {"Pr","Nd","Pm","Sm","Eu","Gd","Tb","Dy","Ho","Er","Tm"};
     templates    = StringTemplate/@StringSplit["appendix:`ion`:Association appendix:`ion`:Calculated appendix:`ion`:RawTable appendix:`ion`:Headings"," "];
-
+    
     (* How many unique eigenvalues, after removing Kramer's degeneracy *)
     fullSizes    = AssociationThread[ions, {91, 182, 1001, 1001, 3003, 1716, 3003, 1001, 1001, 182, 91}];
     carnall      = Import[FileNameJoin[{moduleDir,"data","Carnall.xls"}]][[2]];
@@ -3571,7 +3571,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
                   {i,1,13}
                   ];
     carnallNotes  = Association[carnallNotes];
-
+    
     annotatedData = Table[
                     If[NumberQ[#[[1]]],Tooltip[#[[1]],#[[2]]],""] & /@ Transpose[{paramNames/.carnallData[element],
                       paramNames/.carnallNotes[element]
@@ -3579,7 +3579,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
                     {element,elementNames}
                     ];
     annotatedData = Transpose[annotatedData];
-
+    
     Carnall = <|"data"      -> carnallData,
         "annotations"       -> carnallNotes,
         "paramSymbols"      -> paramNames,
@@ -3589,7 +3589,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
         "includedTableIons" -> ions,
         "annnotatedData"    -> annotatedData
     |>;
-
+    
     Do[(
         carnallData   = Import[FileNameJoin[{moduleDir,"data","Carnall.xls"}]][[i]];
         headers       = carnallData[[1]];
@@ -3621,7 +3621,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
         ),
     {i,4,14}
     ];
-
+    
     goodions = Select[ions,#!="Pm"&];
     expData  = Select[Transpose[Carnall["appendix:"<>#<>":RawTable"]][[1+Position[Carnall["appendix:"<>#<>":Headings"],"Exp (1/cm)"][[1,1]]]],NumberQ]&/@goodions;
     Carnall["All Experimental Data"]=AssociationThread[goodions,expData];
@@ -3651,7 +3651,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
       ),
       CFPTable = Import[CFPTablefname];
     ];
-
+    
     PrintTemporary["Loading CFPs.m ..."];
     CFPfname = FileNameJoin[{moduleDir, "data", "CFPs.m"}];
     If[!FileExistsQ[CFPfname],
@@ -3660,7 +3660,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
       ),
       CFP = Import[CFPfname];
     ];
-
+    
     PrintTemporary["Loading CFPAssoc.m ..."];
     CFPAfname = FileNameJoin[{moduleDir, "data", "CFPAssoc.m"}];
     If[!FileExistsQ[CFPAfname],
