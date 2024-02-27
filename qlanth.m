@@ -64,6 +64,10 @@ https://doi.org/10.1103/PhysRev.141.4.
 + Nielson,   C. W., and George F Koster. "Spectroscopic Coefficients
 for the p^n, d^n, and f^n Configurations", 1963.
 
++  Thorne, Anne, Ulf Litzén, and Sveneric Johansson. Spectrophysics:
+Principles  and  Applications.  Springer  Science  & Business Media,
+1999.
+
 + Judd, BR, HM  Crosswhite,  and  Hannah  Crosswhite.  "Intra-Atomic
 Magnetic  Interactions  for f Electrons." Physical Review 169, no. 1
 (1968): 130. https://doi.org/10.1103/PhysRev.169.130.
@@ -2369,10 +2373,10 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
         Not[MemberQ[Keys[magOp], numE]],
         OptionValue["Reload MagOp"]],
     (
-      magOp[numE] = ReplaceInSparseArray[#,{gs->2}]& /@ MagDipoleMatrixAssembly[numE];
+      magOp[numE] = ReplaceInSparseArray[#, {gs->2}]& /@ MagDipoleMatrixAssembly[numE];
     )
     ];
-    allEigenvecs = Transpose[Last/@theEigensys];
+    allEigenvecs = Transpose[Last /@ theEigensys];
     Which[OptionValue["States"] === All,
       (
         {Sx,Sy,Sz}   = (ConjugateTranspose[allEigenvecs].#.allEigenvecs) & /@ magOp[numE];
@@ -2399,12 +2403,17 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   )
   ]
 
-  MagDipoleRates::usage="MagDipoleRates[eigenSys, numE] calculates the magnetic dipole transition rate array for the provided eigensystem. The option \"Units\" can be set to \"SI\" or to \"Hartree\". If the option \"Natural Radiative Lifetimes\" is set to true then the reciprocal of the rate is returned instead. The energy unit assumed in eigenSys is kayser. The returned array should be interpreted in the eigenbasis of the Hamiltonian. As such the element AMD[[i,i]] corresponds to the transition rate (or the radiative lifetime, depending on options) between eigenstates |i> and |j>.";
-  Options[MagDipoleRates]={"Units"->"SI", "Lifetime"->False};
+  MagDipoleRates::usage="MagDipoleRates[eigenSys, numE] calculates the magnetic dipole transition rate array for the provided eigensystem. The option \"Units\" can be set to \"SI\" or to \"Hartree\". If the option \"Natural Radiative Lifetimes\" is set to true then the reciprocal of the rate is returned instead. 
+  Based on table 7.3 of Thorne 1999, using g2=1.
+  The energy unit assumed in eigenSys is kayser.
+  The returned array should be interpreted in the eigenbasis of the Hamiltonian. As such the element AMD[[i,i]] corresponds to the transition rate (or the radiative lifetime, depending on options) between eigenstates |i> and |j>. 
+  By default this assumes that the refractive index is unity, this may be changed by setting the option \"RefractiveIndex\" to the desired value.
+  The option \"Lifetime\" can be used to return the reciprocal of the transition rates. The default is to return the transition rates.";
+  Options[MagDipoleRates]={"Units"->"SI", "Lifetime"->False, "RefractiveIndex"->1};
   MagDipoleRates[eigenSys_List, numE0_Integer,OptionsPattern[]]:=Module[
-    {AMD,gKramers,Stot,eigenEnergies,transitionWaveLengthsInMeters},(
+    {AMD,Stot,eigenEnergies,transitionWaveLengthsInMeters,nRefractive},(
+    nRefractive   = OptionValue["RefractiveIndex"];
     numE          = Min[14-numE0, numE0];
-    gKramers      = If[OddQ[numE],2,1];
     Stot          = MagDipLineStrength[eigenSys, numE, "Units"->OptionValue["Units"]];
     eigenEnergies = Chop[First/@eigenSys];
     energyDiffs   = Outer[Subtract,eigenEnergies,eigenEnergies];
@@ -2428,7 +2437,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
       Abort[];
     )
     ];
-    AMD = unitFactor/gKramers (1/transitionWaveLengthsInMeters^3)*Stot;
+    AMD = unitFactor / transitionWaveLengthsInMeters^3 * Stot * nRefractive^3;
     Which[OptionValue["Lifetime"],
       Return[1/AMD],
       True,
@@ -2437,19 +2446,24 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     )
   ]
 
-  GroundStateOscillatorStrength::usage="GroundStateOscillatorStrength[eigenSys, numE] calculates the oscillator strength between the ground state and the excited states as given by eigenSys. The energy unit assumed in eigenSys is kayser. The returned array should be interpreted in the eigenbasis of the Hamiltonian. As such the element fMDGS[[i]] corresponds to the oscillator strength between ground state and eigenstate |i>.";
-  GroundStateOscillatorStrength[eigenSys_, numE_]:=Module[
-  {eigenEnergies, SMDGS, GSEnergy, gKramers, energyDiffs, transitionWaveLengthsInMeters, factor},
+  GroundStateOscillatorStrength::usage="GroundStateOscillatorStrength[eigenSys, numE] calculates the oscillator strengths between the ground state and the excited states as given by eigenSys.
+  Based on equation 8 of Carnall 1965, removing the 2J+1 factor since this degeneracy has been removed by the crystal field. 
+  The energy unit assumed in eigenSys is Kayser.
+  The returned array should be interpreted in the eigenbasis of the Hamiltonian. As such the element fMDGS[[i]] corresponds to the oscillator strength between ground state and eigenstate |i>.
+  By default this assumes that the refractive index is unity, this may be changed by setting the option \"RefractiveIndex\" to the desired value.";
+  Options[GroundStateOscillatorStrength]={"RefractiveIndex"->1};
+  GroundStateOscillatorStrength[eigenSys_List, numE_Integer, OptionsPattern[]]:=Module[
+  {eigenEnergies, SMDGS, GSEnergy, energyDiffs, transitionWaveLengthsInMeters, unitFactor, nRefractive},
   (
     eigenEnergies    = First/@eigenSys;
+    nRefractive      = OptionValue["RefractiveIndex"];
     SMDGS            = MagDipLineStrength[eigenSys,numE, "Units"->"SI", "States"->1];
     GSEnergy         = eigenSys[[1,1]];
-    gKramers         = If[OddQ[numE],2,1];
     energyDiffs      = eigenEnergies-GSEnergy;
     energyDiffs[[1]] = Indeterminate;
     transitionWaveLengthsInMeters = 0.01/energyDiffs;
-    factor = (8\[Pi]^2 me)       /(3 hPlanck eCharge^2 cLight);
-    fMDGS=unitFactor/gKramers/transitionWaveLengthsInMeters*SMDGS;
+    unitFactor       = (8\[Pi]^2 me)/(3 hPlanck eCharge^2 cLight);
+    fMDGS            = unitFactor / transitionWaveLengthsInMeters * SMDGS * nRefractive;
     Return[fMDGS];
   )
   ]
