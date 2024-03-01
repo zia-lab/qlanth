@@ -138,15 +138,23 @@ FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[
         )
     ];
 
-    (*Compare against the data quoted by Bill Carnall*)
+    (* Compare against the data quoted by Bill Carnall *)
     PrintFun["> Comparing against the data from Carnall ..."];
-    mainKey            = StringTemplate["appendix:`Ln`:Association"][<|"Ln" -> ln|>];
-    lnData             = Carnall[mainKey];
-    carnalKeys         = lnData // Keys;
-    repetitions        = Length[lnData[#]["Calc (1/cm)"]] & /@ carnalKeys;
-    carnallAssignments = First /@ Carnall["appendix:" <> ln <> ":RawTable"];
-    carnalKey          = StringTemplate["appendix:`Ln`:Calculated"][<|"Ln" -> ln|>];
-    carnallEnergies    = Carnall[carnalKey];
+    If[Not[MemberQ[{"Ce","Yb"},ln]],
+      (
+        mainKey            = StringTemplate["appendix:`Ln`:Association"][<|"Ln" -> ln|>];
+        lnData             = Carnall[mainKey];
+        carnalKeys         = lnData // Keys;
+        repetitions        = Length[lnData[#]["Calc (1/cm)"]] & /@ carnalKeys;
+        carnallAssignments = First /@ Carnall["appendix:" <> ln <> ":RawTable"];
+        carnalKey          = StringTemplate["appendix:`Ln`:Calculated"][<|"Ln" -> ln|>];
+        carnallEnergies    = Carnall[carnalKey];
+      ),
+      (
+        carnallAssignments = ConstantArray["",7];
+        carnallEnergies    = ConstantArray[Missing[],7];
+      )
+    ];
     If[And[OddQ[numE], Not[OptionValue["Remove Kramers"]]],
     (
       PrintFun[">> The number of eigenstates and the number of quoted states don't match, removing the last state ..."];
@@ -156,7 +164,9 @@ FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[
     ];
 
     (* For the difference take as many energies as quoted by Bill*)
-    eigenEnergies = eigenEnergies + carnallEnergies[[1]];
+    If[Not[MemberQ[{"Ce","Yb"},ln]],
+      eigenEnergies = eigenEnergies + carnallEnergies[[1]];
+    ];
     diffs = Sort[eigenEnergies][[;; Length[carnallEnergies]]] - carnallEnergies;
     (* Remove the differences where the appendix tables have elided values*)
     rmsDifference = Sqrt[Mean[(Select[diffs, FreeQ[#, Missing[]] &])^2]];
@@ -220,11 +230,17 @@ FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[
         DefaultIfMissing/@PadRight[carnallEnergies, Length[simplerStateLabels], "-"], 
         roundedDiffs}
       ];
-      diffTable = TableForm[diffTableData, 
+      diffTable = If[Not[MemberQ[{"Ce","Yb"},ln]],
+      TableForm[diffTableData, 
         TableHeadings -> {None, {"qlanth", 
         "E/\!\(\*SuperscriptBox[\(cm\), \(-1\)]\)", "", "Carnall", 
         "E/\!\(\*SuperscriptBox[\(cm\), \(-1\)]\)", 
         "\[CapitalDelta]E/\!\(\*SuperscriptBox[\(cm\), \(-1\)]\)"}}
+      ],
+      TableForm[(#[[1;;2]]&)/@ diffTableData, 
+        TableHeadings -> {None, {"qlanth", 
+        "E/\!\(\*SuperscriptBox[\(cm\), \(-1\)]\)"}}
+      ]
       ];
       
       diffs = Sort[eigenEnergies][[;; Length[carnallEnergies]]] - carnallEnergies;
@@ -236,29 +252,36 @@ FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[
         AspectRatio -> 1/3, FrameStyle -> Directive[16], 
         FrameLabel -> {"(qlanth-carnall)/Ky", "Freq"}
       ];
-      rmsDifference = Sqrt[Total[diffs^2/Length[diffs]]];
+      
+      rmsDifference = If[Not[MemberQ[{"Ce","Yb"},ln]], 
+        Sqrt[Total[diffs^2/Length[diffs]]],
+        Missing[]
+        ];
       labelTempate = StringTemplate["\!\(\*SuperscriptBox[\(`ln`\), \(\(3\)\(+\)\)]\)"];
       diffData   = diffs;
       diffLabels = simplerStateLabels[[;;Length[notBad]]];
       diffLabels = Pick[diffLabels, notBad];
-      diffPlot   = Framed[
-        ListLabelPlot[diffData,
-        diffLabels,
-        Frame -> True,
-        PlotRange -> All,
-        ImageSize -> 1200,
-        AspectRatio -> 1/3,
-        FrameLabel -> {"", 
-        "(qlanth-carnall) / \!\(\*SuperscriptBox[\(cm\), \(-1\)]\)"},
-        PlotMarkers -> "OpenMarkers",
-        PlotLabel -> 
-        Style[labelTempate[<|"ln" -> ln|>] <> " | " <> "\[Sigma]=" <> 
-            ToString[Round[rmsDifference, 0.01]] <> 
-            " \!\(\*SuperscriptBox[\(cm\), \(-1\)]\)\n", 20],
-        Background -> White
+      diffPlot   = If[Not[MemberQ[{"Ce","Yb"},ln]],
+        Framed[
+          ListLabelPlot[diffData,
+          diffLabels,
+          Frame -> True,
+          PlotRange -> All,
+          ImageSize -> 1200,
+          AspectRatio -> 1/3,
+          FrameLabel -> {"", 
+          "(qlanth-carnall) / \!\(\*SuperscriptBox[\(cm\), \(-1\)]\)"},
+          PlotMarkers -> "OpenMarkers",
+          PlotLabel -> 
+          Style[labelTempate[<|"ln" -> ln|>] <> " | " <> "\[Sigma]=" <> 
+              ToString[Round[rmsDifference, 0.01]] <> 
+              " \!\(\*SuperscriptBox[\(cm\), \(-1\)]\)\n", 20],
+          Background -> White
+          ],
+          Background -> White,
+          FrameMargins -> 50
         ],
-        Background -> White,
-        FrameMargins -> 50
+        ""
       ];
       (* now place all of this in a new notebook *)
       nb = CreateDocument[
@@ -277,6 +300,11 @@ FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[
         TextCell["Multiplet Assignments & Energy Levels",
           "Section",
           TextAlignment -> Center
+        ],
+        If[MemberQ[{"Ce","Yb"},ln],
+        (diffHistogram = "";
+         diffPlot = "";
+        )
         ],
         TextCell[diffHistogram, TextAlignment -> Center],
         TextCell[diffPlot, "Output", TextAlignment -> Center],

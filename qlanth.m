@@ -189,7 +189,7 @@ S56: crystal field parameter S_5^6 (real)
 S66: crystal field parameter S_6^6 (real)
 
 \[Epsilon]: ground level baseline shift
-t2Switch: controls the usage of the t2 operator beyond f7
+t2Switch: controls the usage of the t2 operator beyond f7 (1 for f7 or below, 0 for f8 or above)
 wChErrA: If 1 then the type-A errors in Chen are used, if 0 then not.
 wChErrB: If 1 then the type-B errors in Chen are used, if 0 then not.
 
@@ -813,7 +813,7 @@ Begin["`Private`"]
       halfFilled = 2 * orbital + 1;
       fullShell  = 2 * halfFilled;
       parentMax  = 2 * orbital;
-
+      
       PhaseFun  = <|
           "Judd" -> JuddCFPPhase,
           "NK" -> NKCFPPhase|>[OptionValue["PhaseFunction"]];
@@ -1043,7 +1043,7 @@ Begin["`Private`"]
       {SpLp, Map[First, AllowedNKSLforJTerms[numE, J]]}
       ];
     SpinOrbitTable = Association[SpinOrbitTable];
-
+    
     exportFname = FileNameJoin[{moduleDir, "data", "SpinOrbitTable.m"}];
     If[OptionValue["Export"],
       (
@@ -1072,7 +1072,7 @@ Begin["`Private`"]
       num = sign*Simplify[Sqrt[num^2]];
       If[Round[num] == num, num = Round[num]];
       Return[num]);
-
+    
     (* Parse table 1 from Judd 1984 *)
     judd1984Fname1 = FileNameJoin[{moduleDir, "data", "Judd1984-1.csv"}];
     data = Import[judd1984Fname1, "CSV", "Numeric" -> False];
@@ -1087,7 +1087,7 @@ Begin["`Private`"]
     cols = Select[cols, Length[#] == 21 &];
     tab1 = Prepend[Prepend[cols, \[Psi]p], \[Psi]];
     tab1 = Transpose[Prepend[Transpose[tab1], headers]];
-
+    
     (* Parse table 2 from Judd 1984 *)
     judd1984Fname2 = FileNameJoin[{moduleDir, "data", "Judd1984-2.csv"}];
     data = Import[judd1984Fname2, "CSV", "Numeric" -> False];
@@ -1097,7 +1097,7 @@ Begin["`Private`"]
     {operatorLabels, WUlabels, multiFactorSymbols, multiFactorValues} = data[[;; 4]];
     multiFactorValues = ParseJuddTab1 /@ multiFactorValues;
     multiFactorValues = AssociationThread[multiFactorSymbols -> multiFactorValues];
-
+    
     (*scale values of table 1 given the values in table 2*)
     oppyS = {};
     normalTable = 
@@ -1133,7 +1133,7 @@ Begin["`Private`"]
       juddOperators[{3, opLabel}] = opMatrix),
       {colIndex, 1, Length[normalTable]}
     ];
-
+    
     (* special case of t2 in f3 *)
     (* this is the same as getting the matrix elements from Judd 1966 *)
     numE = 3;
@@ -1232,7 +1232,7 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
     ),
   {numE, 1, nmax}
   ];
-
+  
   (* Now use those matrix elements to determine their sum as weighted by their corresponding strengths Ti *)
   ThreeBodyTable = <||>;
   Do[
@@ -1368,7 +1368,6 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
 
   ReducedSOOandECSOinf2::usage="ReducedSOOandECSOinf2[SL, SpLp] returns the reduced matrix element corresponding to the operator (T11 + t11 - a13 * z13 / 6) for the terms {SL, SpLp}. This combination of operators corresponds to the spin-other-orbit plus ECSO interaction.
   The T11 operator corresponds to the spin-other-orbit interaction, and the t11 operator (associated with electrostatically-correlated spin-orbit) originates from configuration interaction analysis. To their sum the a facor proportional to operator z13 is subtracted since its effect is seen as redundant to the spin-orbit interaction. The factor of 1/6 is not on Judd's 1966 paper, but it is on \"Chen, Xueyuan, Guokui Liu, Jean Margerie, and Michael F Reid. \"A Few Mistakes in Widely Used Data Files for Fn Configurations Calculations.\" Journal of Luminescence 128, no. 3 (2008): 421-27\".
-
   The values for the reduced matrix elements of z13 are obtained from Table IX of the same paper. The value for a13 is from table VIII.";
   ReducedSOOandECSOinf2[SL_, SpLp_] :=
   Module[{a13, z13, z13inf2, matElement, redSOOandECSOinf2}, 
@@ -1702,7 +1701,7 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
   (* ########################################################### *)
   (* ################## Magnetic Interactions ################## *)
 
-  MagneticInteractions::usage="MagneticInteractions[{numE, SLJ, SLJp, J}] returns the matrix element of the magnetic interaction between the terms SLJ and SLJp in the f^n configuration. The interaction is given by the sum of the spin-spin interaction and the SOO and ECSO interactions. The spin-spin interaction is given by the function SpinSpin[{numE, SLJ, SLJp, J}]. The SOO and ECSO interactions are given by the function SOOandECSO[{numE, SLJ, SLJp, J}]. The function requires chenDeltas to be loaded into the session. The option \"ChenDeltas\" can be use to include or exclude the Chen deltas from the calculation. The default is to exclude them.";
+  MagneticInteractions::usage="MagneticInteractions[{numE, SLJ, SLJp, J}] returns the matrix element of the magnetic interaction between the terms SLJ and SLJp in the f^n configuration. The interaction is given by the sum of the spin-spin interaction and the SOO and ECSO interactions. The spin-spin interaction is given by the function SpinSpin[{numE, SLJ, SLJp, J}]. The SOO and ECSO interactions are given by the function SOOandECSO[{numE, SLJ, SLJp, J}]. The function requires chenDeltas to be loaded into the session. The option \"ChenDeltas\" can be used to include or exclude the Chen deltas from the calculation. The default is to exclude them.";
   Options[MagneticInteractions] = {"ChenDeltas" -> False};
   MagneticInteractions[{numE_, SLJ_, SLJp_, J_}, OptionsPattern[]] := 
     (
@@ -2090,7 +2089,7 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
         CFdataFilename = FileNameJoin[{moduleDir, "data", "CrystalFieldTable_f"<>ToString[numE]<>".zip"}];
         PrintTemporary["Importing CrystalFieldTable from ", CFdataFilename, " ..."];
         CrystalFieldTable = ImportMZip[CFdataFilename];
-
+        
         PrintTemporary["#------- numE = ", numE, " -------#"];
         exportFname = JJBlockMatrixFileName[numE, "FilenameAppendix" -> fileApp];
         fNames[numE] = exportFname;
@@ -2102,7 +2101,7 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
           DeleteFile[exportFname]
         ];
         ExportFun[exportFname, JJBlockMatrixTable];
-
+        
         ClearAll[CrystalFieldTable];
       ),
     {numE, ns}
@@ -2113,11 +2112,11 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
   HamMatrixAssembly::usage="HamMatrixAssembly[numE] returns the Hamiltonian matrix for the f^n_i configuration. The matrix is returned as a SparseArray. 
   The function admits an optional parameter \"FilenameAppendix\" which can be used to modify the filename to which the resulting array is exported to.
   It also admits an optional parameter \"IncludeZeeman\" which can be used to include the Zeeman interaction.
-  The option \"Set t2Switch\" can be use to toggle on or off setting the t2 selector automatically or not, the default is False, which leaves this parameter without replacing it.";
+  The option \"Set t2Switch\" can be used to toggle on or off setting the t2 selector automatically or not, the default is True, which replaces the parameter according to numE.";
   Options[HamMatrixAssembly] = {
         "FilenameAppendix"->"",
         "IncludeZeeman"->False,
-        "Set t2Switch"->False};
+        "Set t2Switch"->True};
   HamMatrixAssembly[nf_, OptionsPattern[]] := Module[
     {numE, ii, jj, howManyJs, Js, blockHam},
     (*#####################################*)
@@ -2174,6 +2173,7 @@ Options[SimplerSymbolicHamMatrix]={
   "EorF"->"F",
   "Overwrite" -> False,
   "Return" -> True,
+  "Set t2Switch" -> False,
   "IncludeZeeman" -> False};
 SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Module[
   {thisHam,eTofs,fname},
@@ -2210,9 +2210,9 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
         ]
       )
     ];
-
-    thisHam=HamMatrixAssembly[numE, "IncludeZeeman"->OptionValue["IncludeZeeman"]];
-    thisHam=ReplaceInSparseArray[thisHam, simplifier];
+    
+    thisHam = HamMatrixAssembly[numE, "Set t2Switch" -> OptionValue["Set t2Switch"], "IncludeZeeman"->OptionValue["IncludeZeeman"]];
+    thisHam = ReplaceInSparseArray[thisHam, simplifier];
     If[OptionValue["Export"],
     (
       Print["Exporting to file ",fname];
@@ -2335,7 +2335,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     numE      = nf;
     numH      = 14 - numE;
     numE      = Min[numE,numH];
-
+    
     appendTo  = (OptionValue["FilenameAppendix"]<>"-magDip");
     emFname   = JJBlockMatrixFileName[numE,"FilenameAppendix"->appendTo];
     JJBlockMagDipTable = ImportFun[emFname];
@@ -2403,7 +2403,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   )
   ]
 
-  MagDipoleRates::usage="MagDipoleRates[eigenSys, numE] calculates the magnetic dipole transition rate array for the provided eigensystem. The option \"Units\" can be set to \"SI\" or to \"Hartree\". If the option \"Natural Radiative Lifetimes\" is set to true then the reciprocal of the rate is returned instead. 
+  MagDipoleRates::usage="MagDipoleRates[eigenSys, numE] calculates the magnetic dipole transition rate array for the provided eigensystem. The option \"Units\" can be set to \"SI\" or to \"Hartree\". If the option \"Natural Radiative Lifetimes\" is set to true then the reciprocal of the rate is returned instead. eigenSys is a list of lists with two elements, in each list the first element is the energy and the second one the corresponding eigenvector.
   Based on table 7.3 of Thorne 1999, using g2=1.
   The energy unit assumed in eigenSys is kayser.
   The returned array should be interpreted in the eigenbasis of the Hamiltonian. As such the element AMD[[i,i]] corresponds to the transition rate (or the radiative lifetime, depending on options) between eigenstates |i> and |j>. 
@@ -2420,7 +2420,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     energyDiffs   = ReplaceDiagonal[energyDiffs, Indeterminate];
     (* Energies assumed in pseudo-energy unit kayser.*)
     transitionWaveLengthsInMeters = 0.01/energyDiffs;
-
+    
     unitFactor    = Which[
     OptionValue["Units"]=="Hartree",
     (
@@ -2448,6 +2448,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
 
   GroundStateOscillatorStrength::usage="GroundStateOscillatorStrength[eigenSys, numE] calculates the oscillator strengths between the ground state and the excited states as given by eigenSys.
   Based on equation 8 of Carnall 1965, removing the 2J+1 factor since this degeneracy has been removed by the crystal field. 
+  eigenSys is a list of lists with two elements, in each list the first element is the energy and the second one the corresponding eigenvector.
   The energy unit assumed in eigenSys is Kayser.
   The returned array should be interpreted in the eigenbasis of the Hamiltonian. As such the element fMDGS[[i]] corresponds to the oscillator strength between ground state and eigenstate |i>.
   By default this assumes that the refractive index is unity, this may be changed by setting the option \"RefractiveIndex\" to the desired value.";
@@ -2793,21 +2794,21 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
       "PrependToFilename" -> host,
       "Overwrite" -> OptionValue["Overwrite Hamiltonian"]
     ];
-
+    
     (* Note that we don't have to flip signs of parameters for fn beyond f7 since the matrix produced
     by SimplerSymbolicHamMatrix has already accounted for this. *)
-
+    
     (* Everything that is not given is set to zero *)
     params = ParamPad[params, "Print" -> True];
     PrintFun[params];
-
+    
     (* Enforce the override to the spin-spin contribution to the magnetic interactions *)
     params[\[Sigma]SS] = If[OptionValue["Include Spin-Spin"], 1, 0];
-
+    
     (* Create the numeric hamiltonian *)
     numHam = ReplaceInSparseArray[simpleHam, params];
     Clear[simpleHam];
-
+    
     (* Eigensolver *)
     PrintFun["> Diagonalizing the numerical Hamiltonian ..."];
     startTime = Now;
@@ -2817,7 +2818,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     PrintFun[">> Diagonalization took ", diagonalTime, " seconds."];
     eigensys = Chop[eigensys];
     eigensys = Transpose[eigensys];
-
+    
     (* Shift the baseline energy *)
     eigensys = ShiftedLevels[eigensys];
     (* Sort according to energy *)
@@ -2826,13 +2827,8 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     )
   ]
 
-
-  ShiftedLevels::usage = "
-  ShiftedLevels[originalLevels] takes a list of levels of the form
-  {{energy_1, coeff_vector_1}, 
-  {energy_2, coeff_vector_2},
-  ...}} 
-  and returns the same input except that now to every energy the minimum of all of them has been subtracted.";
+  ShiftedLevels::usage = "ShiftedLevels[eigenSys] takes a list of levels of the form
+  {{energy_1, coeff_vector_1}, {energy_2, coeff_vector_2},...}} and returns the same input except that now to every energy the minimum of all of them has been subtracted.";
   ShiftedLevels[originalLevels_] := 
     Module[{groundEnergy, shifted},
       groundEnergy = Sort[originalLevels][[1,1]];
@@ -2886,7 +2882,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
       "mJ" -> ToString[mJval, InputForm]|>]
     );
 
-  ParseStates::usage = "ParseStates[states, basis] takes a list of eigenstates in terms of their coefficients in the given basis and returns a list of the same states in terms of their energy, LSJMJ symbol, J, mJ, S, L, LSJ symbol, and LS symbol. The LS symbol returned corresponds to the term with the largest coefficient in the given basis.";
+  ParseStates::usage = "ParseStates[eigenSys, basis] takes a list of eigenstates in terms of their coefficients in the given basis and returns a list of the same states in terms of their energy, LSJMJ symbol, J, mJ, S, L, LSJ symbol, and LS symbol. eigenSys is a list of lists with two elements, in each list the first element is the energy and the second one the corresponding eigenvector. The LS symbol returned corresponds to the term with the largest coefficient in the given basis.";
   ParseStates[states_, basis_, OptionsPattern[]] := Module[{parsedStates},
   (
     parsedStates = Table[(
@@ -2904,7 +2900,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     )
   ]
 
-  ParseStatesByNumBasisVecs::usage = "ParseStatesByNumBasisVecs[states, basis, numBasisVecs, roundTo] takes a list of eigenstates in terms of their coefficients in the given basis and returns a list of the same states in terms of their energy and the coefficients at most numBasisVecs basis vectors. By default roundTo is 0.01 and this is the value used to round the amplitude coefficients.
+  ParseStatesByNumBasisVecs::usage = "ParseStatesByNumBasisVecs[eigenSys, basis, numBasisVecs, roundTo] takes a list of eigenstates (given in eigenSys) in terms of their coefficients in the given basis and returns a list of the same states in terms of their energy and the coefficients at most numBasisVecs basis vectors. By default roundTo is 0.01 and this is the value used to round the amplitude coefficients. eigenSys is a list of lists with two elements, in each list the first element is the energy and the second one the corresponding eigenvector.
   The option \"Coefficients\" can be used to specify whether the coefficients are given as \"Amplitudes\" or \"Probabilities\". The default is \"Amplitudes\".
   ";
   Options[ParseStatesByNumBasisVecs] = {"Coefficients" -> "Amplitudes", "Representation" -> "Ket"};
@@ -2947,14 +2943,16 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     )
   ];
 
-  FindThresholdPosition::usage = "FindThresholdPosition[list, threshold] returns the position of the first element in list that is greater than threshold. If no such element exists, it returns the length of list. The elements of the given list must be in ascending order.";
+  FindThresholdPosition::usage = "FindThresholdPosition[list, threshold] returns the position of the first element in list that is greater than or equal to threshold. If no such element exists, it returns the length of list. The elements of the given list must be in ascending order.";
   FindThresholdPosition[list_, threshold_] := 
   Module[{position}, 
-    position = Position[list, _?(# > threshold &), 1, 1];
+    position = Position[list, _?(# >= threshold &), 1, 1];
     thrPos = If[Length[position] > 0,
       position[[1, 1]],
       Length[list]];
-    If[thrPos == 0, Return[1], Return[thrPos+1]]
+    If[thrPos == 0,
+      Return[1],
+      Return[thrPos]]
     ]
 
   ParseStateByProbabilitySum[{energy_, eigenVec_}, probSum_, roundTo_:0.01, maxParts_:20] := Compile[
@@ -3048,7 +3046,6 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   Return[parsedByProb]
   )
   ];
-
 
   (* ################## Eigensystem analysis ################### *)
   (* ########################################################### *)
@@ -3245,7 +3242,6 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   OptAxesRedraw::usage = 
     "Option for ExploreGraphics to specify redrawing of axes. Default False.";
   Options[ExploreGraphics] = {OptAxesRedraw -> False};
-
   ExploreGraphics[graph_Graphics, opts : OptionsPattern[]] := With[
     {gr  = First[graph],
       opt = DeleteCases[Options[graph], 
@@ -3348,6 +3344,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
       LabeledGrid[hamMatrix,braLabels,ketLabels,"Separator"->OptionValue["Separator"],"Pivot"->OptionValue["Pivot"]]
       )
 
+  HamiltonianMatrixPlot::usage="HamiltonianMatrixPlot[hamMatrix, basisLabels] creates a matrix plot of the given hamiltonian matrix with the given basis labels. The matrix elements can be hovered over to display the corresponding row and column labels together with the value of the matrix element. The option \"Overlay Values\" can be used to specify whether the matrix elements should be displayed on top of the matrix plot.";
   Options[HamiltonianMatrixPlot] = Join[Options[MatrixPlot], {"Hover" -> True, "Overlay Values" -> True}];
   HamiltonianMatrixPlot[hamMatrix_, basisLabels_, opts : OptionsPattern[]] := (
     braLabels = DisplayForm[RowBox[{"\[LeftAngleBracket]", #, "\[RightBracketingBar]"}]] & /@ basisLabels;
@@ -3458,7 +3455,6 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     ];
   )
 
-
   Carnall::usage = "Association of data from Carnall et al (1989) with the following keys: {data, annotations, paramSymbols, elementNames, rawData, rawAnnotations, annnotatedData, appendix:Pr:Association, appendix:Pr:Calculated, appendix:Pr:RawTable, appendix:Headings}";
 
   LoadCarnall::usage="LoadCarnall[] loads data for trivalent lanthanides in LaF3 using the data from Bill Carnall's 1989 paper.";
@@ -3532,7 +3528,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     fullSizes    = AssociationThread[ions, {91, 182, 1001, 1001, 3003, 1716, 3003, 1001, 1001, 182, 91}];
     carnall      = Import[FileNameJoin[{moduleDir,"data","Carnall.xls"}]][[2]];
     carnallErr   = Import[FileNameJoin[{moduleDir,"data","Carnall.xls"}]][[3]];
-
+    
     elementNames = carnall[[1]][[2;;]];
     carnall      = carnall[[2;;]];
     carnallErr   = carnallErr[[2;;]];
@@ -3642,7 +3638,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
   LoadCFP::usage="LoadCFP[] loads CFP, CFPAssoc, and CFPTable into the session.";
   LoadCFP[]:=(
     If[And[ValueQ[CFP], ValueQ[CFPTable], ValueQ[CFPAssoc]],Return[]];
-
+    
     PrintTemporary["Loading CFPtable ..."];
     CFPTablefname = FileNameJoin[{moduleDir, "data", "CFPTable.m"}];
     If[!FileExistsQ[CFPTablefname],
