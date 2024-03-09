@@ -434,7 +434,8 @@ MagneticDipoleTransitions[numE_Integer, OptionsPattern[]]:= (
 
   magIon = <||>;
   PrintFun["Calculating the magnetic dipole line strength array..."];
-  magIon["Line Strength"] = magIon;MagDipLineStrength[eigensys, numE, "Reload MagOp" -> False, "Units" -> "SI"];
+  magIon["Line Strength"] = magIon;
+  MagDipLineStrength[eigensys, numE, "Reload MagOp" -> False, "Units" -> "SI"];
 
   PrintFun["Calculating the M1 spontaneous transition rates ..."];
   magIon["AMD"] = MagDipoleRates[eigensys, numE, "Units"->"SI","Lifetime"->False];

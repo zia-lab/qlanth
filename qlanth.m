@@ -144,10 +144,10 @@ T17:  three-body effective operator parameter T^17
 T18:  three-body effective operator parameter T^18
 T19:  three-body effective operator parameter T^19
 
-P0: 0th parameter for the two-body electrostatically correlated spin-orbit interaction
-P2: 2nd parameter for the two-body electrostatically correlated spin-orbit interaction
-P4: 4th parameter for the two-body electrostatically correlated spin-orbit interaction
-P6: 6th parameter for the two-body electrostatically correlated spin-orbit interaction
+P0: pseudo-magnetic parameter P^0
+P2: pseudo-magnetic parameter P^2
+P4: pseudo-magnetic parameter P^4
+P6: pseudo-magnetic parameter P^6
 
 gs: electronic gyromagnetic ratio
 
@@ -399,7 +399,7 @@ Begin["`Private`"]
   (* ########################################################### *)
   (* ########################## MISC ########################### *)
 
-  TPO::usage="Two plus one.";
+  TPO::usage = "Two plus one.";
   TPO[args__] := Times @@ ((2*# + 1) & /@ {args});
 
   Phaser::usage = "Phaser[x] returns (-1)^x";
@@ -2112,11 +2112,13 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
   HamMatrixAssembly::usage="HamMatrixAssembly[numE] returns the Hamiltonian matrix for the f^n_i configuration. The matrix is returned as a SparseArray. 
   The function admits an optional parameter \"FilenameAppendix\" which can be used to modify the filename to which the resulting array is exported to.
   It also admits an optional parameter \"IncludeZeeman\" which can be used to include the Zeeman interaction.
-  The option \"Set t2Switch\" can be used to toggle on or off setting the t2 selector automatically or not, the default is True, which replaces the parameter according to numE.";
+  The option \"Set t2Switch\" can be used to toggle on or off setting the t2 selector automatically or not, the default is True, which replaces the parameter according to numE.
+  The option \"ReturnInBlocks\" can be use to return the matrix in block or flattened form. The default is to return it in flattened form.";
   Options[HamMatrixAssembly] = {
         "FilenameAppendix"->"",
         "IncludeZeeman"->False,
-        "Set t2Switch"->True};
+        "Set t2Switch"->True,
+        "ReturnInBlocks"->False};
   HamMatrixAssembly[nf_, OptionsPattern[]] := Module[
     {numE, ii, jj, howManyJs, Js, blockHam},
     (*#####################################*)
@@ -2153,13 +2155,19 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
     {ii, 1, howManyJs},
     {jj, 1, howManyJs}
     ];
+    
     (* Once the block form is created flatten it *)
-    blockHam = ArrayFlatten[blockHam];
-    blockHam = ReplaceInSparseArray[blockHam, params];
+    If[Not[OptionValue["ReturnInBlocks"]],
+      (blockHam = ArrayFlatten[blockHam];
+      blockHam  = ReplaceInSparseArray[blockHam, params];
+      ),
+      (blockHam  = Map[ReplaceInSparseArray[#, params]&,blockHam,{2}];)
+    ];
+    
     If[OptionValue["IncludeZeeman"],
       (
         PrintTemporary["Including Zeeman terms ..."];
-        {magx, magy, magz} = MagDipoleMatrixAssembly[numE];
+        {magx, magy, magz} = MagDipoleMatrixAssembly[numE, "ReturnInBlocks" -> OptionValue["ReturnInBlocks"]];
         blockHam += - TeslaToKayser * (Bx * magx + By * magy + Bz * magz);
       )
     ];
@@ -2326,9 +2334,11 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     Return[fnames];
   )
 
-  MagDipoleMatrixAssembly::usage="MagDipoleMatrixAssembly[numE] returns the matrix representation of the operator - 1/2 (L + gs S) in the f^numE configuration. The function returns a list with three elements corresponding to the x,y,z components of this operator. The option \"FilenameAppendix\" can be used to append a string to the filename from which the function imports from in order to patch together the array. For numE beyond 7 the function returns the same as for the complementary configuration.";
-  Options[MagDipoleMatrixAssembly]={"FilenameAppendix"->""};
-  MagDipoleMatrixAssembly[nf_,OptionsPattern[]]:=Module[
+  MagDipoleMatrixAssembly::usage="MagDipoleMatrixAssembly[numE] returns the matrix representation of the operator - 1/2 (L + gs S) in the f^numE configuration. The function returns a list with three elements corresponding to the x,y,z components of this operator. The option \"FilenameAppendix\" can be used to append a string to the filename from which the function imports from in order to patch together the array. For numE beyond 7 the function returns the same as for the complementary configuration. The option \"ReturnInBlocks\" can be use to return the matrices in blocks. The default is to return the matrices in flattened form.";
+  Options[MagDipoleMatrixAssembly]={
+    "FilenameAppendix"->"",
+    "ReturnInBlocks"->False};
+  MagDipoleMatrixAssembly[nf_Integer, OptionsPattern[]]:=Module[
     {ImportFun, numE, appendTo, emFname, JJBlockMagDipTable, Js, howManyJs, blockOp, rowIdx, colIdx},
     (
     ImportFun = ImportMZip;
@@ -2348,13 +2358,23 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
       {rowIdx,1,howManyJs},
       {colIdx,1,howManyJs}
     ];
-    blockOp = ArrayFlatten[blockOp];
-    opMinus = blockOp[[;; , ;; , 1]];
-    opZero =  blockOp[[;; , ;; , 2]];
-    opPlus =  blockOp[[;; , ;; , 3]];
-    opX =   (opMinus - opPlus)/Sqrt[2];
-    opY = I (opPlus + opMinus)/Sqrt[2];
-    opZ = opZero;
+    If[OptionValue["ReturnInBlocks"],
+      (
+        opMinus = Map[#[[1]]&, blockOp, {4}];
+        opZero  = Map[#[[2]]&, blockOp, {4}];
+        opPlus  = Map[#[[3]]&, blockOp, {4}];
+        opX =   (opMinus - opPlus)/Sqrt[2];
+        opY = I (opPlus + opMinus)/Sqrt[2];
+        opZ = opZero;  
+      ),
+        blockOp = ArrayFlatten[blockOp];
+        opMinus = blockOp[[;; , ;; , 1]];
+        opZero  = blockOp[[;; , ;; , 2]];
+        opPlus  = blockOp[[;; , ;; , 3]];
+        opX =   (opMinus - opPlus)/Sqrt[2];
+        opY = I (opPlus + opMinus)/Sqrt[2];
+        opZ = opZero;  
+    ];
     Return[{opX, opY, opZ}];
   )
   ];
