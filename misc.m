@@ -24,7 +24,87 @@ ToPythonSymPyExpression;
 RoundToSignificantFigures;
 RobustMissingQ;
 
+BlockMatrixMultiply;
+BlockAndIndex;
+TruncateBlockArray;
+BlockArrayDimensionsArray;
+ArrayBlocker;
+BlockTranspose;
+
 Begin["`Private`"];
+
+  BlockTranspose[anArray_]:=(
+    Map[Transpose, Transpose[anArray], {2}]
+  );
+
+  BlockMatrixMultiply::usage="BlockMatrixMultiply[A,B] gives the matrix multiplication of A and B, with A and B having a compatible block structure that allows for matrix multiplication into a congruent block structure.";
+  BlockMatrixMultiply[Amat_,Bmat_]:=Module[{rowIdx,colIdx,sumIdx},
+  (
+    Table[
+      Sum[Amat[[rowIdx,sumIdx]].Bmat[[sumIdx,colIdx]],{sumIdx,1,Dimensions[Amat][[2]]}],
+    {rowIdx,1,Dimensions[Amat][[1]]},
+    {colIdx,1,Dimensions[Bmat][[2]]}
+    ]
+  )
+  ];
+
+  BlockAndIndex::usage="BlockAndIndex[blockSizes, index] takes a list of bin widths and index. The function return in which block the index would be, were the bins to be layed out from left to right. The function also returns the position within the bin in which it is accomodated. The function returns these two numbers as a list of two elements {blockIndex, blockSubIndex}";
+  BlockAndIndex[blockSizes_List, index_Integer]:=Module[{accumulatedBlockSize,blockIndex, blockSubIndex},
+  (
+    accumulatedBlockSize = Accumulate[blockSizes];
+    If[accumulatedBlockSize[[-1]]-index<0,
+      Print["Index out of bounds"];
+      Abort[]
+    ];
+    blockIndex    = Flatten[Position[accumulatedBlockSize-index,n_ /; n>=0]][[1]];
+    blockSubIndex = Mod[index-accumulatedBlockSize[[blockIndex]],blockSizes[[blockIndex]],1];
+    Return[{blockIndex,blockSubIndex}]
+  )
+  ];
+
+  TruncateBlockArray::usage="TruncateBlockArray[blockArray, truncationIndices, blockWidths] takes a an array of blocks and selects the columns and rows corresponding to truncationIndices. The indices being given in what would be the ArrayFlatten[blockArray] version of the array. They blocks in the given array may be SparseArray. This is equivalent to FlattenArray[blockArray][truncationIndices, truncationIndices] but may be more efficient blockArray is sparse.";
+  TruncateBlockArray[blockArray_,truncationIndices_,blockWidths_]:=Module[
+  {truncatedArray,blockCol,blockRow,blockSubCol,blockSubRow},(
+  truncatedArray = Table[
+    {blockCol,blockSubCol} = BlockAndIndex[blockWidths,fullColIndex];
+    {blockRow,blockSubRow} = BlockAndIndex[blockWidths,fullRowIndex];
+    blockArray[[blockRow,blockCol]][[blockSubRow,blockSubCol]],
+  {fullColIndex,truncationIndices},
+  {fullRowIndex,truncationIndices}
+  ];
+  Return[truncatedArray]
+  )
+  ];
+
+  BlockArrayDimensionsArray::usage="BlockArrayDimensionsArray[blockArray] returns the array of block sizes in a given blocked array.";
+  BlockArrayDimensionsArray[blockArray_]:=(
+    Map[Dimensions,blockArray,{2}]
+  );
+
+  ArrayBlocker::usage="ArrayBlocker[anArray, blockSizes] takes a flat 2d array and a congruent 2D array of block sizes, and with them it returns the original array with the block structure imposed by blockSizes. The resulting array satisfies ArrayFlatten[blockedArray] == anArray, and also Map[Dimensions, blockedArray,{2}] == blockSizes.";
+  ArrayBlocker[anArray_,blockSizes_]:=Module[{rowStart,colStart,colEnd,numBlocks,blockedArray,blockSize,rowEnd,aBlock,idxRow,idxCol},(
+    rowStart  = 1;
+    colStart  = 1;
+    colEnd    = 1;
+    numBlocks = Length[blockSizes];
+    blockedArray = Table[(
+      blockSize = blockSizes[[idxRow,idxCol]];
+      rowEnd    = rowStart+blockSize[[1]]-1;
+      colEnd    = colStart+blockSize[[2]]-1;
+      aBlock    = anArray[[rowStart;;rowEnd,colStart;;colEnd]];
+      colStart  = colEnd+1;
+      If[idxCol==numBlocks,
+        rowStart=rowEnd+1;
+        colStart=1;
+      ];
+      aBlock
+    ),
+    {idxRow,1,numBlocks},
+    {idxCol,1,numBlocks}
+    ];
+    Return[blockedArray]
+  )
+  ];
 
   ReplaceDiagonal::usage = 
     "ReplaceDiagonal[matrix, repValue] replaces all the diagonal of the given array to the given value. The array is assumed to be square and the replacement value is assumed to be a number. The returned value is the array with the diagonal replaced. This function is useful for setting the diagonal of an array to a given value. The original array is not modified. The given array may be sparse.";
@@ -86,8 +166,8 @@ Begin["`Private`"];
       ];
   ];
 
-  FirstOrderPerturbation::usage="Given the eigenValues and eigenVectors of a matrix A (which doesn't need to be given) together with a corresponding perturbation matrix perMatrix, this function calculates the first derivative of the eigenvalues with respect to the scale factor of the perturbation matrix. In the sense that the eigenvalues of the matrix A + \[Beta] perMatrix are to first order equal to \[Lambda] + \[Delta]_i \[Beta], where the \[Delta]_i are the returned values. The eigenvalues and eigenvectors are assumed to be given in the same order, i.e. the ith eigenvalue corresponds to the ith eigenvector. This assuming that the eigenvalues are non-degenerate.";
-  FirstOrderPerturbation[eigenValues_, eigenVectors_, 
+  FirstOrderPerturbation::usage="Given the eigenVectors of a matrix A (which doesn't need to be given) together with a corresponding perturbation matrix perMatrix, this function calculates the first derivative of the eigenvalues with respect to the scale factor of the perturbation matrix. In the sense that the eigenvalues of the matrix A + \[Beta] perMatrix are to first order equal to \[Lambda] + \[Delta]_i \[Beta], where the \[Delta]_i are the returned values. This assuming that the eigenvalues are non-degenerate.";
+  FirstOrderPerturbation[eigenVectors_, 
     perMatrix_] := (Diagonal[
     eigenVectors . perMatrix . Transpose[eigenVectors]])
 
@@ -262,7 +342,7 @@ Begin["`Private`"];
     )
     ]
 
-  FlowMatching::usage="FlowMatching[aList, bList] returns a list of pairs of elements from aList and bList that are closest to each other, this is returned in a list together with a mapping of indices from the aList to those in bList to which they were matched. The option \"alistLabels\" can be used to specify labels for the elements in aList. The option \"blistLabels\" can be used to specify labels for the elements in bList. If these options are used, the function returns a list with three elements the pairs of matched elements, the pairs of corresponding matched labels, and the mapping of indices. This is basically a wrapper around Mathematica's FindMinimumCostFlow function. By default the option \"noMatched\" is zero, and this means that all elements of aList must be matched to elements of bList. If this is not the case, the option \"noMatched\" can be used to specify how many elements of aList can be left unmatched. By default the cost function is Abs[#1-#2]&, but this can be changed with the option \"CostFun\", this function needs to take two arguments.";
+  FlowMatching::usage="FlowMatching[aList, bList] returns a list of pairs of elements from aList and bList that are closest to each other, this is returned in a list together with a mapping of indices from the aList to those in bList to which they were matched. The option \"alistLabels\" can be used to specify labels for the elements in aList. The option \"blistLabels\" can be used to specify labels for the elements in bList. If these options are used, the function returns a list with three elements the pairs of matched elements, the pairs of corresponding matched labels, and the mapping of indices. This is basically a wrapper around Mathematica's FindMinimumCostFlow function. By default the option \"notMatched\" is zero, and this means that all elements of aList must be matched to elements of bList. If this is not the case, the option \"notMatched\" can be used to specify how many elements of aList can be left unmatched. By default the cost function is Abs[#1-#2]&, but this can be changed with the option \"CostFun\", this function needs to take two arguments.";
   Options[FlowMatching] = {"alistLabels" -> {}, "blistLabels" -> {}, "notMatched" -> 0, "CostFun"-> (Abs[#1-#2] &)};
   FlowMatching[aValues0_, bValues0_, OptionsPattern[]] := Module[{
     aValues = aValues0, bValues = bValues0, edgesSourceToA, capacitySourceToA, nA, nB,
@@ -275,15 +355,15 @@ Begin["`Private`"];
     matchingLabels = (Length[OptionValue["alistLabels"]] > 0);
     aLabels = OptionValue["alistLabels"];
     bLabels = OptionValue["blistLabels"];
-    cFun = OptionValue["CostFun"];
+    cFun    = OptionValue["CostFun"];
     nA      = Length[aValues];
     nB      = Length[bValues];
     (*Build up the edges costs and capacities*)
     (*From source to the nodes representing the values of the first \
   list*)
-    edgesSourceToA = ("source" \[DirectedEdge] {"A", #}) & /@ Range[1, nA];
+    edgesSourceToA    = ("source" \[DirectedEdge] {"A", #}) & /@ Range[1, nA];
     capacitySourceToA = ConstantArray[1, nA];
-    costSourceToA = ConstantArray[0, nA];
+    costSourceToA     = ConstantArray[0, nA];
     
     (*From all the elements of A to all the elements of B*)
     midLayer = Table[{{"A", i} \[DirectedEdge] ({"B", j}), 1, cFun[aValues[[i]], bValues[[j]]]}, {i, 1, nA}, {j, 1, nB}];
@@ -291,24 +371,24 @@ Begin["`Private`"];
     {midLayerEdges, midCapacities, midCosts} = Transpose[midLayer];
     
     (*From the elements of B to the sink*)
-    edgesBtoSink = ({"B", #} \[DirectedEdge] "sink") & /@ Range[1, nB];
+    edgesBtoSink    = ({"B", #} \[DirectedEdge] "sink") & /@ Range[1, nB];
     capacityBtoSink = ConstantArray[1, nB];
-    costBtoSink = ConstantArray[0, nB];
+    costBtoSink     = ConstantArray[0, nB];
     
     (*Put it all together*)
     allCapacities = Join[capacitySourceToA, midCapacities, capacityBtoSink];
-    allCosts = Join[costSourceToA, midCosts, costBtoSink];
-    allEdges = Join[edgesSourceToA, midLayerEdges, edgesBtoSink];
-    graph = Graph[allEdges, EdgeCapacity -> allCapacities, 
+    allCosts      = Join[costSourceToA, midCosts, costBtoSink];
+    allEdges      = Join[edgesSourceToA, midLayerEdges, edgesBtoSink];
+    graph         = Graph[allEdges, EdgeCapacity -> allCapacities, 
       EdgeCost -> allCosts];
     
     (*Solve it*)
-    flow = FindMinimumCostFlow[graph, "source", "sink", nA - OptionValue["notMatched"], "OptimumFlowData"];
+    flow          = FindMinimumCostFlow[graph, "source", "sink", nA - OptionValue["notMatched"], "OptimumFlowData"];
     (*Collect the pairs of matched indices*)
     pairedIndices = Select[flow["EdgeList"], And[Not[#[[1]] === "source"], Not[#[[2]] === "sink"]] &];
     pairedIndices = {#[[1, 2]], #[[2, 2]]} & /@ pairedIndices;
     (*Collect the pairs of matched values*)
-    bestValues = {aValues[[#[[1]]]], bValues[[#[[2]]]]} & /@ pairedIndices;
+    bestValues    = {aValues[[#[[1]]]], bValues[[#[[2]]]]} & /@ pairedIndices;
     (*Account for having been given labels*)
     If[matchingLabels,
       (

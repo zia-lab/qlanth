@@ -63,7 +63,7 @@ PostFileToSlack[text_, filePath_, slackChannel_, OptionsPattern[]] :=
         threadTS = OptionValue["threadTS"];
         fileType = OptionValue["fileType"];
         title = OptionValue["title"];
-        fileName = FileNameTake[filePath];
+        fileName = filePath;
         params = {
             "token" -> slackToken,
             "channels" -> slackChannel, 

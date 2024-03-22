@@ -197,9 +197,14 @@ Bx: x component of external magnetic field (in T)
 By: y component of external magnetic field (in T)
 Bz: z component of external magnetic field (in T)
 ";
-paramSymbols = StringSplit[paramAtlas, "\n"];
-paramSymbols = Select[paramSymbols, # != ""& ];
-paramSymbols = ToExpression[StringSplit[#, ":"][[1]]] & /@ paramSymbols;
+paramSymbols   = StringSplit[paramAtlas, "\n"];
+paramSymbols   = Select[paramSymbols, # != ""& ];
+paramSymbols   = ToExpression[StringSplit[#, ":"][[1]]] & /@ paramSymbols;
+racahSymbols   = {E0, E1, E2, E3};
+chenSymbols    = {wChErrA, wChErrB};
+slaterSymbols  = {F0, F2, F4, F6};
+controlSymbols = {t2Switch, \[Sigma]SS};
+threeBSymbols  = {T2, T3, T4, T6, T7, T8, T11p , T11, T12, T14, T15,T16, T18, T17, T19, T2p};
 Protect /@ paramSymbols;
 paramLines = Select[StringSplit[paramAtlas, "\n"], # != "" &];
 usageTemplate = StringTemplate["`paramSymbol`::usage=\"`paramSymbol` : `paramUsage`\";"];
@@ -255,6 +260,7 @@ EnergyLevelDiagram;
 EnergyStates;
 ExportMZip;
 BasisTableGenerator;
+EigenLever;
 EtoF;
 ExportmZip;
 fsubk;
@@ -263,6 +269,7 @@ fsupk;
 FindNKLSTerm;
 FindSL;
 
+FreeHam;
 FtoE;
 GG2U;
 GSO7W;
@@ -298,6 +305,7 @@ JJBlockMatrixFileName;
 
 JJBlockMatrixTable;
 LabeledGrid;
+ListRepeater;
 LoadAll;
 LoadCFP;
 LoadCarnall;
@@ -733,14 +741,24 @@ Begin["`Private`"]
     )
     ];
 
-  BasisLSJMJ::usage = "BasisLSJMJ[numE] returns the ordered basis in L-S-J-MJ with the total orbital angular momentum L and total spin angular momentum S coupled together to form J. The function returns a list with each element representing the quantum numbers for each basis vector. Each element is of the form {SL (string in spectroscopic notation),J,MJ}.";
-  BasisLSJMJ[numE_] := Module[{energyStatesTable, basis, idx1},
+  BasisLSJMJ::usage = "BasisLSJMJ[numE] returns the ordered basis in L-S-J-MJ with the total orbital angular momentum L and total spin angular momentum S coupled together to form J. The function returns a list with each element representing the quantum numbers for each basis vector. Each element is of the form {SL (string in spectroscopic notation),J,MJ}.
+  The option \"AsAssociation\" can be set to True to return the basis as an association with the keys being the allowed J values. The default is False.
+  ";
+  Options[BasisLSJMJ] = {"AsAssociation" -> False};
+  BasisLSJMJ[numE_, OptionsPattern[]] := Module[{energyStatesTable, basis, idx1},
     (
       energyStatesTable = BasisTableGenerator[numE];
       basis = Table[
         energyStatesTable[{numE, AllowedJ[numE][[idx1]]}],
         {idx1, 1, Length[AllowedJ[numE]]}];
       basis = Flatten[basis, 1];
+      If[OptionValue["AsAssociation"],
+        (
+          Js    = AllowedJ[numE];
+          basis = Table[(J -> Select[basis, #[[2]] == J &]), {J, Js}];
+          basis = Association[basis];
+        )
+      ];
       Return[basis]
     )
     ];
@@ -2174,65 +2192,125 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
     Return[blockHam];
     ]
 
-SimplerSymbolicHamMatrix::usage="SimplerSymbolicHamMatrix[numE, simplifier] is a simple addition to HamMatrixAssembly that applies a given simplification to the full hamiltonian. Simplifier is a list of replacement rules. If the option \"Export\" is set to True, then the function also exports the resulting sparse array to the ./hams/ folder. The option \"PrependToFilename\" can be used to append a string to the filename to which the function may exports to. The option \"Return\" can be used to choose whether the function returns the matrix or not. The option \"Overwrite\" can be used to overwrite the file if it already exists. The option \"IncludeZeeman\" can be used to toggle the inclusion of the Zeeman interaction with an external magnetic field.";
-Options[SimplerSymbolicHamMatrix]={
-  "Export"->True, 
-  "PrependToFilename"->"", 
-  "EorF"->"F",
-  "Overwrite" -> False,
-  "Return" -> True,
-  "Set t2Switch" -> False,
-  "IncludeZeeman" -> False};
-SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Module[
-  {thisHam,eTofs,fname},
-  (
-    If[Not[ValueQ[ElectrostaticTable]],
-      LoadElectrostatic[]
-      ];
-    If[Not[ValueQ[SOOandECSOTable]],
-      LoadSOOandECSO[]
-    ];
-    If[Not[ValueQ[SpinOrbitTable]],
-      LoadSpinOrbit[]
-    ];
-    If[Not[ValueQ[SpinSpinTable]],
-      LoadSpinSpin[]
-    ];
-    If[Not[ValueQ[ThreeBodyTable]],
-      LoadThreeBody[]
-    ];
-    
-    fname=FileNameJoin[{moduleDir,"hams",OptionValue["PrependToFilename"]<>"SymbolicMatrix-f"<>ToString[numE]<>".m"}];
-    If[FileExistsQ[fname] && Not[OptionValue["Overwrite"]],
-      (
-        If[OptionValue["Return"],
-          (
-            Print["File ",fname," already exists, and option \"Overwrite\" is set to False, loading file ..."];
-            thisHam = Import[fname];
-            Return[thisHam];
-          ),
-          (
-            Print["File ",fname," already exists, skipping ..."];
-          Return[Null];
-          )
-        ]
-      )
-    ];
-    
-    thisHam = HamMatrixAssembly[numE, "Set t2Switch" -> OptionValue["Set t2Switch"], "IncludeZeeman"->OptionValue["IncludeZeeman"]];
-    thisHam = ReplaceInSparseArray[thisHam, simplifier];
-    If[OptionValue["Export"],
+  SimplerSymbolicHamMatrix::usage="SimplerSymbolicHamMatrix[numE, simplifier] is a simple addition to HamMatrixAssembly that applies a given simplification to the full hamiltonian. Simplifier is a list of replacement rules. If the option \"Export\" is set to True, then the function also exports the resulting sparse array to the ./hams/ folder. The option \"PrependToFilename\" can be used to append a string to the filename to which the function may exports to. The option \"Return\" can be used to choose whether the function returns the matrix or not. The option \"Overwrite\" can be used to overwrite the file if it already exists. The option \"IncludeZeeman\" can be used to toggle the inclusion of the Zeeman interaction with an external magnetic field.";
+  Options[SimplerSymbolicHamMatrix]={
+    "Export"->True, 
+    "PrependToFilename"->"", 
+    "EorF"->"F",
+    "Overwrite" -> False,
+    "Return" -> True,
+    "Set t2Switch" -> False,
+    "IncludeZeeman" -> False};
+  SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Module[
+    {thisHam,eTofs,fname},
     (
-      Print["Exporting to file ",fname];
-      Export[fname,thisHam]
+      If[Not[ValueQ[ElectrostaticTable]],
+        LoadElectrostatic[]
+        ];
+      If[Not[ValueQ[SOOandECSOTable]],
+        LoadSOOandECSO[]
+      ];
+      If[Not[ValueQ[SpinOrbitTable]],
+        LoadSpinOrbit[]
+      ];
+      If[Not[ValueQ[SpinSpinTable]],
+        LoadSpinSpin[]
+      ];
+      If[Not[ValueQ[ThreeBodyTable]],
+        LoadThreeBody[]
+      ];
+      
+      fname=FileNameJoin[{moduleDir,"hams",OptionValue["PrependToFilename"]<>"SymbolicMatrix-f"<>ToString[numE]<>".m"}];
+      If[FileExistsQ[fname] && Not[OptionValue["Overwrite"]],
+        (
+          If[OptionValue["Return"],
+            (
+              Print["File ",fname," already exists, and option \"Overwrite\" is set to False, loading file ..."];
+              thisHam = Import[fname];
+              Return[thisHam];
+            ),
+            (
+              Print["File ",fname," already exists, skipping ..."];
+            Return[Null];
+            )
+          ]
+        )
+      ];
+      
+      thisHam = HamMatrixAssembly[numE, "Set t2Switch" -> OptionValue["Set t2Switch"], "IncludeZeeman"->OptionValue["IncludeZeeman"]];
+      thisHam = ReplaceInSparseArray[thisHam, simplifier];
+      If[OptionValue["Export"],
+      (
+        Print["Exporting to file ",fname];
+        Export[fname,thisHam]
+      )
+      ];
+      If[OptionValue["Return"],
+        Return[thisHam],
+        Return[Null]
+      ];
     )
+  ]
+
+
+  (* ########################################################### *)
+  (* ################ To Intermediate Coupling ################# *)
+  
+  FreeHam::usage = "FreeHam[JJBlocks, numE] given the JJ blocks of the Hamiltonian for f^n, this function returns a list with all the scalar-simplified versions of the blocks.";
+  FreeHam[JJBlocks_List, numE_Integer] := Module[
+    {Js, basisJ, pivot, freeHam, idx, J, thisJbasis, shrunkBasisPositions, theBlock},
+  (
+    Js      = AllowedJ[numE];
+    basisJ  = BasisLSJMJ[numE, "AsAssociation" -> True];
+    pivot   = If[OddQ[numE], 1/2, 0];
+    freeHam = Table[(
+      J = Js[[idx]];
+      theBlock = JJBlocks[[idx]];
+      thisJbasis = basisJ[J];
+      (* find the basis vectors that end with pivot *)
+      shrunkBasisPositions = Flatten[Position[thisJbasis, {_ ..., pivot}]];
+      (* take only those rows and columns *)
+      theBlock[[shrunkBasisPositions, shrunkBasisPositions]]
+    ),
+    {idx, 1, Length[Js]}
     ];
-    If[OptionValue["Return"],
-      Return[thisHam],
-      Return[Null]
-    ];
+    Return[freeHam];
   )
-]
+  ];
+  
+  ListRepeater::usage="ListRepeater[list, reps] repeats each element of list reps times.";
+  ListRepeater[list_List, repeats_Integer] := (
+    Flatten[ConstantArray[#, repeats] & /@ list]
+  );
+
+  ListLever::usage="ListLever[vecs, multiplicity] takes a list of vectors and returns all interleaved shifted versions of them.";
+  ListLever[vecs_, multiplicity_] := Module[
+  {uppityVecs, uppityVec},
+  (
+    uppityVecs = Table[(
+      uppityVec = PadRight[{#}, multiplicity] & /@ vec;
+      uppityVec = Permutations /@ uppityVec;
+      uppityVec = Transpose[uppityVec];
+      uppityVec = Flatten /@ uppityVec
+      ),
+    {vec, vecs}
+    ];
+  Return[Flatten[uppityVecs, 1]];)
+  ];
+
+  EigenLever::usage="EigenLever[eigenSys, multiplicity] takes a list eigenSys of the form {eigenvalues, eigenvectors} and returns the eigenvalues repeated multiplicity times and the eigenvectors interleaved and shifted accordingly.";
+  EigenLever[eigenSys_, multiplicity_] := Module[
+    {eigenVals, eigenVecs, leveledEigenVecs, leveledEigenVals},
+  (
+    {eigenVals, eigenVecs} = eigenSys;
+    leveledEigenVals       = ListRepeater[eigenVals, multiplicity];
+    leveledEigenVecs       = ListLever[eigenVecs, multiplicity];
+    Return[{Flatten[leveledEigenVals], leveledEigenVecs}]
+  )
+  ];
+  
+  (* ################ To Intermediate Coupling ################# *)
+  (* ########################################################### *)
 
   (* ##################### Block assembly ###################### *)
   (* ########################################################### *)
@@ -3540,7 +3618,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
 
   ParseCarnall::usage="ParseCarnall[] parses the data found in ./data/Carnall.xls. If the option \"Export\" is set to True (True is the default), then the parsed data is saved to ./data/Carnall. This data is from the tables and appendices of Carnall et al (1989).";
   Options[ParseCarnall] = {"Export" -> True};
-  ParseCarnall[] := (
+  ParseCarnall[OptionsPattern[]] := (
     ions         = {"Pr","Nd","Pm","Sm","Eu","Gd","Tb","Dy","Ho","Er","Tm"};
     templates    = StringTemplate/@StringSplit["appendix:`ion`:Association appendix:`ion`:Calculated appendix:`ion`:RawTable appendix:`ion`:Headings"," "];
     
@@ -3644,7 +3722,7 @@ SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Modul
     If[OptionValue["Export"],
       (
         carnallFname = FileNameJoin[{moduleDir, "data", "Carnall.m"}];
-        Print["Exporting to "<>exportFname];
+        Print["Exporting to "<>carnallFname];
         Export[carnallFname, Carnall];
       )
       ];
