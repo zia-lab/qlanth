@@ -52,7 +52,7 @@ AddToList[list_, element_, maxSize_, addOnlyNew_ : True] := Module[{
     tempList]
    ];
 
-ProgressNotebook::usage="ProgressNotebook[] creates a progress notebook for the solver. This notebook inclu;des a plot of the RMS history and the current parameter values. The notebook is returned. The RMS history and the parameter values are updated by setting the variables rmsHistory and paramSols. The variables stringPartialVars and paramSols are used to display the parameter values in the notebook. The notebook is created with the title \"Solver Progress\". The notebook is created with the option WindowSelected->True. The notebook is created with the option TextAlignment->Center. The notebook is created with the option WindowTitle->\"Solver Progress\".";
+ProgressNotebook::usage="ProgressNotebook[] creates a progress notebook for the solver. This notebook includes a plot of the RMS history and the current parameter values. The notebook is returned. The RMS history and the parameter values are updated by setting the variables rmsHistory and paramSols. The variables stringPartialVars and paramSols are used to display the parameter values in the notebook. The notebook is created with the title \"Solver Progress\". The notebook is created with the option WindowSelected->True. The notebook is created with the option TextAlignment->Center. The notebook is created with the option WindowTitle->\"Solver Progress\".";
 Options[ProgressNotebook] = {"Basic" -> True};
 ProgressNotebook[OptionsPattern[]] := (
    nb = Which[
@@ -63,7 +63,12 @@ ProgressNotebook[OptionsPattern[]] := (
         TextCell[
          If[
           Length[paramSols] > 0,
-          TableForm[Prepend[Transpose[{stringPartialVars, paramSols[[-1]]}],{"RMS",rmsHistory[[-1]]}]],
+          TableForm[
+            Prepend[
+              Transpose[{stringPartialVars,
+              paramSols[[-1]]}],
+              {"RMS",rmsHistory[[-1]]}]
+              ],
           ""
           ],
          "Output"
@@ -998,8 +1003,11 @@ TruncationFit[numE_Integer, expData0_List, numReps_Integer, activeVars_List, sta
   Return[sols];
 );
 
+ClassicalFit::usage="Classical[numE, expData, excludeDataIndices, problemVars, startValues, \[Sigma]exp, constraints_List, Options] fits the given expData in an f^numE configuration, by using the symbols in problemVars. The symbols given in problemVars may be constrained or held constant, this being controlled by constraints list which is a list of replacement rules expressing desired constraints. The constraints list additional constraints imposed upon the model parameters that remain once other simplifications have been \"baked\" into the compiled Hamiltonians that are used to increase the speed of the calculation. 
 
-ClassicalFit::usage="ClassicalFit[numE, expData, excludeDataIndices, problemVars, startValues, \[Sigma]exp, Options] fits the given expData in an f^numE configuration, by varying the symbols in problemVars. The list expData needs to be a list of lists with the only restriction that the first element of them corresponds to energies of levels. In this list, an empty value can be used to indicate known gaps in the data. Even if the energy value for a level is known (and given in expData) certain values can be omitted from the fitting procedure through the list excludeDataIndices, which correspond to indices in expData that should be skipped over.
+Important, note that in the case of odd number of electrons the given data must explicitly include the Kramers degeneracy; excludeDataIndices must be compatible with this.
+
+The list expData needs to be a list of lists with the only restriction that the first element of them corresponds to energies of levels. In this list, an empty value can be used to indicate known gaps in the data. Even if the energy value for a level is known (and given in expData) certain values can be omitted from the fitting procedure through the list excludeDataIndices, which correspond to indices in expData that should be skipped over.
 
 The Hamiltonian used for fitting is version that has been truncated either by using the maximum energy given in expData or by manually setting a truncation energy using the option \"TruncationEnergy\".
 
@@ -1009,20 +1017,55 @@ The list startValues is a list with all of the parameters needed to define the H
 
 The function saves the solution to a file. The file is named with a prefix (controlled by the option \"FilePrefix\") and a UUID. The file is saved in the log sub-directory as a .m file.
 
-The function returns a list of four elements. The first element is the best-fit root mean squared difference. The second element is the filename to which the log file was saved to. The third element is a list of lists of the form {paramSymbol -> {fittedVal, fittedUncertainty}}. The fourth one is the covariance matrix of the fitted parameters.
+Here's a description of the different parts of this function: first the Hamiltonian is assembled and simplified using the given simplifications. Then the intermediate coupling basis is calculated using the free-ion parameters for the given lanthanide. The Hamiltonian is then changed to the intermediate coupling basis and truncated. The truncated Hamiltonian is then compiled into a function that can be used to calculate the energy levels of the truncated Hamiltonian. The function that calculates the energy levels is then used to fit the experimental data. The fitting is done using FindMinimum with the Levenberg-Marquardt method.
+
+The function returns an association with the following keys: 
+
+\"bestRMS\" which is the best \[Sigma] value found.
+\"bestParams\" which is the best set of parameters found.
+\"paramSols\" which is a list of the parameters during the stepping of the fitting algorithm.
+\"timeTaken/s\" which is the time taken to find the best fit.
+\"simplifier\" which is the simplifier used to simplify the Hamiltonian.
+\"excludeDataIndices\" as given in the input.
+\"starValues\" as given in the input.
+
+\"freeIonSymbols\" which are the symbols used in the intermediate coupling basis.
+\"truncationEnergy\" which is the energy used to truncate the Hamiltonian.
+\"numE\" which is the number of electrons in the f^numE configuration.
+\"expData\" which is the experimental data used for fitting.
+\"problemVars\" which are the symbols considered for fitting
+
+\"maxIterations\" which is the maximum number of iterations used by NMinimize.
+\"hamDim\" which is the dimension of the full Hamiltonian.
+\"allVars\" which are all the symbols defining the Hamiltonian under the aggregate simplifications.
+\"freeBies\" which are the free-ion parameters used to define the intermediate coupling basis.
+\"truncatedDim\" which is the dimension of the truncated Hamiltonian.
+\"compiledIntermediateFname\" the file name of the compiled function used for the truncated Hamiltonian.
+
+\"fittedLevels\" which is the number of levels fitted for.
+\"actualSteps\" the number of steps that FindMiniminum actually took.
+\"solWithUncertainty\" which is a list of replacement rules whose left hand sides are symbols for the used parameters and whose's right hand sides are lists with the best fit value and the uncertainty in that value.
+\"rmsHistory\" which is a list of the \[Sigma] values found during the fitting.
+\"Appendix\" which is an association appended to the log file under the key \"Appendix\".
+\"presentDataIndices\" which is the list of indices in expData that were used for fitting, this takes into account both the empty indices in expData and also the indices in excludeDataIndices.
+
+\"states\" which contains a list of eigenvalues and eigenvectors for the fitted model, this is only available if the option \"SaveEigenvectors\" is set to True; if a general shift of energy was allowed for in the fitting, then the energies are shifted accordingly.
+\"energies\" which is a list of the energies of the fitted levels, this is only available if the option \"SaveEigenvectors\" is set to False. If a general shift of energy was allowed for in the fitting, then the energies are shifted accordingly.
 
 The function admits the following options with default values:
   \"MaxHistory\" : determines how long the logs for the solver can be.
   \"MaxIterations\": determines the maximum number of iterations used by NMinimize.
-  \"FilePrefix\" : the prefix to use for the file name, by default this is the symbol for the lanthanide.
+  \"FilePrefix\" : the prefix to use for the subfolder in the log filder, in which the solution files are saved, by default this is \"calcs\" so that the calculation files are saved under the directory \"log/calcs\".
+  \"AddConstantShift\" : if True then a constant shift is allowed in the fitting, default is False. If this is the case the variable \"\[Epsilon]\" is added to the list of variables to be fitted for, it must not be included in problemVars.
   
   \"AccuracyGoal\": the accuracy goal used by NMinimize, default of 5.
-  \"TrucationEnergy\": if Automatic then the maximum energy in expData is taken, else it takes the value set by this option. In all cases the energies in expData are truncated to this value.
+  \"TrucationEnergy\": if Automatic then the maximum energy in expData is taken, else it takes the value set by this option. In all cases the energies in expData are only considered up to this value.
   \"PrintFun\": the function used to print progress messages, the default is PrintTemporary.
   
-  \"SlackChannel\": name of the Slack channel to which to dump progress messaages, the default is None which disables this option entirely.
+  \"SlackChannel\": name of the Slack channel to which to dump progress messaages, the default is None which disables this option.
   \"ProgressView\": whether or not a progress window will be opened to show the progress of the solver, the default is True.
   \"SignatureCheck\": if True then then the function returns prematurely, returning a list with the symbols that would have defined the Hamiltonian after all simplifications have been applied. Useful to check the entire parameter set that the Hamiltonian has, which has to match one-to-one what is provided by startingValues.
+  \"SaveEigenvectors\": if True then the both the eigenvectors and eigenvalues are saved under the \"states\" key of the returned association. If False then only the energies are saved, the default is False.
   
   \"AppendToLogFile\": an association appended to the log file under the key \"Appendix\".
   \"MagneticSimplifier\": a list of replacement rules to simplify the Marvin and pesudo-magnetic paramters. Here the ratios of the Marvin parameters and the pseudo-magnetic parameters are defined to simplify the magnetic part of the Hamiltonian.
@@ -1034,7 +1077,7 @@ The function admits the following options with default values:
 Options[ClassicalFit] = {
   "MaxHistory"       -> 200,
   "MaxIterations"    -> 100,
-  "FilePrefix"       -> "",
+  "FilePrefix"       -> "calcs",
   "ProgressView"     -> True,
   "TruncationEnergy" -> Automatic,
   "AccuracyGoal"     -> 5,
@@ -1042,6 +1085,8 @@ Options[ClassicalFit] = {
   "SlackChannel"     -> None,
   "ProgressView"     -> True,
   "SignatureCheck"   -> False,
+  "AddConstantShift" -> False,
+  "SaveEigenvectors" -> False,
   "AppendToLogFile"  -> <||>,
   "MagneticSimplifier" -> {
     M2 -> 56/100 M0,
@@ -1055,20 +1100,26 @@ Options[ClassicalFit] = {
     Bz -> 0
     },
   "SymmetrySimplifier" -> {
-    B12->0,B14->0,B16->0,B34->0,B36->0,B56->0,
-    S12->0,S14->0,S16->0,S22->0,S24->0,S26->0,
-    S34->0,S36->0,S44->0,S46->0,S56->0,S66->0
+    B12->0, B14->0, B16->0, B34->0, B36->0, B56->0, 
+    S12->0 ,S14->0, S16->0, S22->0, S24->0, S26->0,
+    S34->0 ,S36->0, S44->0, S46->0, S56->0, S66->0
     },
   "OtherSimplifier" -> {
     F0->0,
     P0->0,
     \[Sigma]SS->0,
-    T11p->0,T11->0,T12->0,T14->0,T15->0,
-    T16->0,T18->0,T17->0,T19->0,T2p->0
+    T11p->0, T11->0, T12->0, T14->0, T15->0, 
+    T16->0, T18->0, T17->0, T19->0, T2p->0
     },
   "ThreeBodySimplifier" -> <|
     1  -> {
-      T2->0,T3->0,T4->0,T6->0,T7->0,T8->0,T11p->0,T11->0,T12->0,T14->0,T15->0,T16->0,T18->0,T17->0,T19->0,T2p->0},2->{T2->0,T3->0,T4->0,T6->0,T7->0,T8->0,T11p->0,T11->0,T12->0,T14->0,T15->0,T16->0,T18->0,T17->0,T19->0,T2p->0
+      T2->0, T3->0, T4->0, T6->0, T7->0, T8->0,
+      T11p->0, T11->0, T12->0, T14->0, T15->0, T16->0, T18->0, T17->0, T19->0,
+      T2p->0}, 
+    2 -> {
+      T2->0, T3->0, T4->0, T6->0, T7->0, T8->0,
+      T11p->0, T11->0, T12->0, T14->0, T15->0, T16->0, T18->0, T17->0, T19->0,
+      T2p->0
       },
     3  -> {},
     4  -> {},
@@ -1080,17 +1131,23 @@ Options[ClassicalFit] = {
     10 -> {},
     11 -> {},
     12 -> {
-      T3->0,T4->0,T6->0,T7->0,T8->0,T11p->0,T11->0,T12->0,T14->0,T15->0,T16->0,T18->0,T17->0,T19->0,T2p->0
+      T3->0, T4->0, T6->0, T7->0, T8->0,
+      T11p->0, T11->0, T12->0, T14->0, T15->0, T16->0, T18->0, T17->0, T19->0,
+      T2p->0
       },
     13->{
-      T2->0,T3->0,T4->0,T6->0,T7->0,T8->0,T11p->0,T11->0,T12->0,T14->0,T15->0,T16->0,T18->0,T17->0,T19->0,T2p->0
+      T2->0, T3->0, T4->0, T6->0, T7->0, T8->0,
+      T11p->0, T11->0, T12->0, T14->0, T15->0, T16->0, T18->0, T17->0, T19->0,
+      T2p->0
       }
     |>,
     "FreeIonSymbols" -> {F0, F2, F4, F6, \[Zeta]}
 };
-ClassicalFit[numE_Integer, expData0_List, excludeDataIndices_List, problemVars_List, startValues_List, \[Sigma]exp_Real, OptionsPattern[]]:=
+ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_List, startValues_Association, \[Sigma]exp_Real, constraints_List, OptionsPattern[]]:=
+  Module[{accuracyGoal, activeVarIndices, activeVars, activeVarsString, activeVarsWithRange, allFreeEnergies, allFreeEnergiesSorted, allVars, allVarsVec, argsForEvalInsideOfTheIntermediateSystems, argsOfTheIntermediateEigensystems, aVar, aVarPosition, basis, basisChanger, basisChangerBlocks, bestError, bestParams, bestRMS, blockShifts, blockSizes, colIdx, compiledDiagonal, compiledIntermediateFname, constrainedProblemVars, constrainedProblemVarsList, covMat, currentRMS, degressOfFreedom, dependentVars, diagonalBlocks, diagonalScalarBlocks, diff, eigenEnergies, eigenvalueDispenserTemplate, eigenVectors, elevatedIntermediateEigensystems, endTime, fmSol, fmSolAssoc, fractionalWidth, freeBies, freeIenergiesAndMultiplets, freeionSymbols, fullHam, fullSolVec, funcString, ham, hamDim, hamEigenvaluesTemplate, hamString, hess, indepSolVecVec, indepVars, intermediateHam, isolationValues, jobVars, lin, linMat, ln, lnParams, logFilePrefix, logFname, magneticSimplifier, maxFreeEnergy, maxHistory, maxIterations, methodString, methodStringTemplate, minFreeEnergy, minpoly, modelSymbols, multipletAssingments, numBlocks, numQSignature, numReps, solCompendium, openNotebooks, ordering, othersFixed, otherSimplifier, p0, paramBest, paramSigma, perHam, polySols, presentDataIndices, PrintFun, problemVarsPositions, problemVarsQ, problemVarsQString, problemVarsVec, problemVarsWithStartValues, reducedModelSymbols, resultMessage, roundedTruncationEnergy, rowIdx, runningInteractive, shiftToggle, simplifier, slackChan, sol, solAssoc, sols, solWithUncertainty, sortedTruncationIndex, sqdiff, standardValues, starTime, startingValues, startTime, startVarValues, states, steps, symmetrySimplifier, theIntermediateEigensystems, TheIntermediateEigensystems, TheTruncatedAndSignedPathGenerator, thisPoly, threadHeaderTemplate, threadMessage, threadTS, timeTaken, totalVariance, truncadedFname, truncatedIntermediateBasis, truncatedIntermediateHam, truncationEnergy, truncationIndices, truncationUmbral, usingInitialRange, varHash, varIdx, varsWithConstants, varWithValsSignature, \[Lambda]0Vec, \[Lambda]exp},
   (
-    oddsAndEnds   = <||>;
+    solCompendium   = <||>;
+    addShift      = OptionValue["AddConstantShift"];
     ln            = theLanthanides[[numE]];
     maxHistory    = OptionValue["MaxHistory"];
     maxIterations = OptionValue["MaxIterations"];
@@ -1124,8 +1181,6 @@ ClassicalFit[numE_Integer, expData0_List, excludeDataIndices_List, problemVars_L
                           symmetrySimplifier,
                           threeBodySimplifier,
                           otherSimplifier];
-    
-    stringPartialVars = ToString/@problemVars;
 
     PrintFun["Determining gaps in the data ..."];
     (* the indices that are numeric in expData whatever is non-numeric is assumed as a known gap *)
@@ -1133,15 +1188,17 @@ ClassicalFit[numE_Integer, expData0_List, excludeDataIndices_List, problemVars_L
     (* some indices omitted here based on the excludeDataIndices argument *)
     presentDataIndices = Complement[presentDataIndices, excludeDataIndices];
     
-    hamDim                          = Binomial[14, numE];
-    oddsAndEnds["simplifier"]       = simplifier;
-    oddsAndEnds["freeIonSymbols"]   = freeIonSymbols;
-    oddsAndEnds["truncationEnergy"] = truncationEnergy;
-    oddsAndEnds["numE"]             = numE;
-    oddsAndEnds["expData"]          = expData;
-    oddsAndEnds["problemVars"]      = problemVars;
-    oddsAndEnds["maxIterations"]    = maxIterations;
-    oddsAndEnds["hamDim"]           = hamDim;
+    hamDim                            = Binomial[14, numE];
+    solCompendium["simplifier"]         = simplifier;
+    solCompendium["excludeDataIndices"] = excludeDataIndices;
+    solCompendium["startValues"]        = startValues;
+    solCompendium["freeIonSymbols"]     = freeIonSymbols;
+    solCompendium["truncationEnergy"]   = truncationEnergy;
+    solCompendium["numE"]               = numE;
+    solCompendium["expData"]            = expData;
+    solCompendium["problemVars"]        = problemVars;
+    solCompendium["maxIterations"]      = maxIterations;
+    solCompendium["hamDim"]             = hamDim;
     modelSymbols  = Sort[Select[paramSymbols, Not[MemberQ[Join[racahSymbols, chenSymbols,{t2Switch, \[Epsilon],gs}],#]]&]];
     (* remove the symbols that will be removed by the simplifier, no symbol should remain here that is not in the symbolic Hamiltonian *)
     reducedModelSymbols = Select[modelSymbols, Not[MemberQ[Keys[simplifier],#]]&];
@@ -1164,22 +1221,23 @@ ClassicalFit[numE_Integer, expData0_List, excludeDataIndices_List, problemVars_L
     (* get the reference parameters from LaF3 *)
     PrintFun["Getting reference free-ion parameters for ",ln," using LaF3 ..."];
     lnParams = LoadParameters[ln];
-    freeBies = Prepend[Values[(#->(#/.lnParams)) &/@ freeIonSymbols], numE];
+    freeBies = Prepend[Values[(#->(#/.lnParams)) &/@ freeIonSymbols],  numE];
     (* a more explicit alias *)
     allVars           = reducedModelSymbols;
     standardValues    = allVars /. lnParams;
-    oddsAndEnds["allVars"]  = allVars;
-    oddsAndEnds["freeBies"] = freeBies;
+    solCompendium["allVars"]  = allVars;
+    solCompendium["freeBies"] = freeBies;
     
     (* reload compiled version if found *)
-    varHash                  = Hash[{numE, allVars, freeBies, truncationEnergy}];
-    compileIntermediateFname = ln<>"-compiled-intermediate-truncated-ham-"<>ToString[varHash]<>".mx";
-    compileIntermediateFname = FileNameJoin[{moduleDir, "compiled", compileIntermediateFname}];
+    varHash                  = Hash[{numE, allVars, freeBies, truncationEnergy, simplifier}];
+    compiledIntermediateFname = ln<>"-compiled-intermediate-truncated-ham-"<>ToString[varHash]<>".mx";
+    compiledIntermediateFname = FileNameJoin[{moduleDir, "compiled", compiledIntermediateFname}];
+    solCompendium["compiledIntermediateFname"] = compiledIntermediateFname;
 
-    If[FileExistsQ[compileIntermediateFname],
-      PrintFun["This ion, free-ion params, and full set of variables have been used before (as determined by {numE, allVars, freeBies, truncationEnergy}). Loading the previously saved compiled function and intermediate coupling basis ..."];
-      PrintFun["Using : ", compileIntermediateFname];
-      {compileIntermediateTruncatedHam, truncatedIntermediateBasis} = Import[compileIntermediateFname];,
+    If[FileExistsQ[compiledIntermediateFname],
+      PrintFun["This ion, free-ion params, and full set of variables have been used before (as determined by {numE, allVars, freeBies, truncationEnergy,simplifier}). Loading the previously saved compiled function and intermediate coupling basis ..."];
+      PrintFun["Using : ", compiledIntermediateFname];
+      {compileIntermediateTruncatedHam, truncatedIntermediateBasis} = Import[compiledIntermediateFname];,
     (
       (* grab the Hamiltonian preserving its block structure *)
       PrintFun["Assembling the Hamiltonian for f^",numE," keeping the block structure ..."];
@@ -1267,7 +1325,7 @@ ClassicalFit[numE_Integer, expData0_List, excludeDataIndices_List, problemVars_L
       (* the indices that enact the truncation *)
       truncationIndices = ordering[[;;sortedTruncationIndex]];
       (* Return[{basisChanger, ham, truncationIndices}]; *)
-      (* Computing the block structure of the change of basis array *)
+      PrintFun["Computing the block structure of the change of basis array ..."];
       blockSizes = BlockArrayDimensionsArray[ham];
       basisChangerBlocks = ArrayBlocker[basisChanger, blockSizes];
       blockShifts = First /@ Diagonal[blockSizes];
@@ -1279,20 +1337,19 @@ ClassicalFit[numE_Integer, expData0_List, excludeDataIndices_List, problemVars_L
       intermediateHam = BlockMatrixMultiply[ham, basisChangerBlocks];
       PrintFun["Distributing products inside of symbolic matrix elements to keep complexity in check ..."];
       Do[
-        intermediateHam[[i, j]] = MapToSparseArray[intermediateHam[[i, j]], Distribute /@ # &];,
-        {i, 1, numBlocks},
-        {j, 1, numBlocks}
+        intermediateHam[[rowIdx, colIdx]] = MapToSparseArray[intermediateHam[[rowIdx, colIdx]], Distribute /@ # &];,
+        {rowIdx, 1, numBlocks},
+        {colIdx, 1, numBlocks}
       ];
       intermediateHam = BlockMatrixMultiply[BlockTranspose[basisChangerBlocks],intermediateHam];
       PrintFun["Distributing products inside of symbolic matrix elements to keep complexity in check ..."];
       Do[
-        intermediateHam[[i, j]] = MapToSparseArray[intermediateHam[[i, j]], Distribute /@ # &];,
-        {i, 1, numBlocks},
-        {j, 1, numBlocks}
+        intermediateHam[[rowIdx, colIdx]] = MapToSparseArray[intermediateHam[[rowIdx, colIdx]], Distribute /@ # &];,
+        {rowIdx, 1, numBlocks},
+        {colIdx, 1, numBlocks}
       ];
       (* using the truncation indices truncate that one *)
       PrintFun["Truncating the Hamiltonian ..."];
-      (* truncatedIntermediateHam   = intermediateHam[[truncationIndices,truncationIndices]]; *)
       truncatedIntermediateHam = TruncateBlockArray[intermediateHam, truncationIndices, blockShifts];
       (* these are the basis vectors for the truncated hamiltonian *)
       PrintFun["Saving the truncated intermediate basis ..."];
@@ -1303,13 +1360,16 @@ ClassicalFit[numE_Integer, expData0_List, excludeDataIndices_List, problemVars_L
       compileIntermediateTruncatedHam = Compile[Evaluate[allVars], Evaluate[truncatedIntermediateHam]];
       (* save the compiled function *)
       PrintFun["Saving the compiled function for the truncated Hamiltonian and the truncatedIntermediateBasis..."];
-      Export[compileIntermediateFname, {compileIntermediateTruncatedHam, truncatedIntermediateBasis}];
+      Export[compiledIntermediateFname, {compileIntermediateTruncatedHam, truncatedIntermediateBasis}];
     )
     ];
     
     truncationUmbral = Dimensions[truncatedIntermediateBasis][[2]];
     PrintFun["The truncated Hamiltonian has a dimension of ", truncationUmbral, "x", truncationUmbral, " ..."];
     presentDataIndices = Select[presentDataIndices, # <= truncationUmbral &];
+    solCompendium["presentDataIndices"] = presentDataIndices;
+    
+    (* the problemVars are the symbols that will be fitted for *)
 
     PrintFun["Starting up the fitting process using the Levenberg-Marquardt method ..."];
     (* using the problemVars I need to create the argument list including _?NumericQ *)
@@ -1327,7 +1387,7 @@ ClassicalFit[numE_Integer, expData0_List, excludeDataIndices_List, problemVars_L
     Clear[HamSortedEigenvalues];
     hamEigenvaluesTemplate = StringTemplate["
     HamSortedEigenvalues[`problemVarsQ`]:=(
-      ham=compileIntermediateTruncatedHam@@`varsWithConstants`;
+      ham         = compileIntermediateTruncatedHam@@`varsWithConstants`;
       eigenValues = Sort@Eigenvalues@ham;
       eigenValues = eigenValues - Min[eigenValues];
       HamSortedEigenvalues[`problemVarsString`] = eigenValues;
@@ -1354,22 +1414,38 @@ ClassicalFit[numE_Integer, expData0_List, excludeDataIndices_List, problemVars_L
         |>];
     ToExpression[eigenValueDispenserString];  
 
+    PringFun["Determining the free variables after constraints ..."];
+    constrainedProblemVars = (problemVars /. constraints);
+    constrainedProblemVarsList = Variables[constrainedProblemVars];
+    If[addShift,
+      PrintFun["Adding a constant shift to the fitting parameters ..."];
+      constrainedProblemVarsList = Append[constrainedProblemVarsList, \[Epsilon]]
+    ];
+    
+    indepVars = Complement[pVars, #[[1]] & /@ constraints]; 
+    stringPartialVars = ToString/@constrainedProblemVarsList;
+    
     paramSols  = {};
     rmsHistory = {};
     steps      = 0;
-    problemVarsWithStartValues = Transpose[{problemVars, startValues}];
+    problemVarsWithStartValues = KeyValueMap[{#1,#2} &, startValues];
+    If[addShift,
+      problemVarsWithStartValues = Append[problemVarsWithStartValues, {\[Epsilon] ,0}];
+    ];
     openNotebooks     = If[runningInteractive,
               ("WindowTitle"/.NotebookInformation[#]) & /@ Notebooks[],
               {}];
     If[Not[MemberQ[openNotebooks,"Solver Progress"]] && OptionValue["ProgressView"],
       ProgressNotebook["Basic"->False]
     ];
-    degressOfFreedom = Length[presentDataIndices] - Length[problemVars];
+    degressOfFreedom = Length[presentDataIndices] - Length[problemVars] - 1;
     PrintFun["Fitting for ", Length[presentDataIndices], " data points with ", Length[problemVars], " free parameters.", " The effective degrees of freedom are ", degressOfFreedom, " ..."];
+    
     PrintFun["Starting the fitting process ..."];
     startTime=Now;
-    fmSol = FindMinimum[
-      Sum[(expData[[j]][[1]] - (PartialHamEigenvalues @@ problemVars)[j])^2,
+    shiftToggle = If[addShift, 1, 0];
+    sol = FindMinimum[
+      Sum[(expData[[j]][[1]] - (PartialHamEigenvalues @@ constrainedProblemVars)[j] - shiftToggle * \[Epsilon])^2,
       {j, presentDataIndices}],
       problemVarsWithStartValues,
       Method        -> "LevenbergMarquardt",
@@ -1377,18 +1453,22 @@ ClassicalFit[numE_Integer, expData0_List, excludeDataIndices_List, problemVars_L
       AccuracyGoal  -> OptionValue["AccuracyGoal"],
       StepMonitor :> (
         steps      += 1;
-        currentRMS = Sum[(expData[[j]][[1]] - (PartialHamEigenvalues @@ problemVars)[j])^2, {j, presentDataIndices}];
+        currentRMS = Sum[(expData[[j]][[1]] - (PartialHamEigenvalues @@ constrainedProblemVars)[j] - shiftToggle * \[Epsilon])^2, {j, presentDataIndices}];
         currentRMS = Sqrt[currentRMS / degressOfFreedom];
-        paramSols  = AddToList[paramSols, problemVars, maxHistory];
+        paramSols  = AddToList[paramSols, constrainedProblemVarsList, maxHistory];
         rmsHistory = AddToList[rmsHistory, currentRMS, maxHistory];
         )
       ];
     endTime = Now;
     timeTaken = QuantityMagnitude[endTime - startTime, "Seconds"];
-    Print["Solution found in ", timeTaken, "s"];
+    PrintFun["Solution found in ", timeTaken, "s"];
     
-    sol = fmSol;
-    solVec = Last /@ fmSol[[-1]];
+    solVec = constrainedProblemVars /. sol[[-1]];
+    indepSolVec = indepVars /. sol[[-1]];
+    If[addShift,
+      \[Epsilon]Best = \[Epsilon]/. sol[[-1]],
+      \[Epsilon]Best = 0
+    ];
     fullSolVec = standardValues;
     fullSolVec[[problemVarsPositions]] = solVec;
     PrintFun["Calculating the numerical Hamiltonian corresponding to the solution ..."];
@@ -1398,8 +1478,7 @@ ClassicalFit[numE_Integer, expData0_List, excludeDataIndices_List, problemVars_L
     states = Transpose[{eigenEnergies, eigenVectors}];
     states = SortBy[states, First];
     eigenEnergies = First /@ states;
-    PrintFun[
-      "Shifting energies to make ground state zero of energy ..."];
+    PrintFun["Shifting energies to make ground state zero of energy ..."];
     eigenEnergies = eigenEnergies - eigenEnergies[[1]];
     PrintFun["Calculating the linear approximant to each eigenvalue ..."];
     allVarsVec = Transpose[{allVars}];
@@ -1410,11 +1489,16 @@ ClassicalFit[numE_Integer, expData0_List, excludeDataIndices_List, problemVars_L
         aVarPosition = Position[allVars, aVar][[1, 1]];
         isolationValues = ConstantArray[0, Length[allVars]];
         isolationValues[[aVarPosition]] = 1;
+        dependentVars = KeyValueMap[{#1, D[#2, aVar]} &, Association[constraints]];
+        Do[
+          isolationValues[[Position[allVars, dVar[[1]]][[1, 1]]]] = dVar[[2]],
+          {dVar, dependentVars}
+        ];
         perHam  = compileIntermediateTruncatedHam @@ isolationValues;
         lin     = FirstOrderPerturbation[Last /@ states, perHam];
         linMat  = Append[linMat, lin];
       ),
-      {aVar, problemVars}
+      {aVar, constrainedProblemVarsList[[;;-2]]}
     ];
     PrintFun["Removing the gradient of the ground state ..."];
     linMat = (# - #[[1]] & /@ linMat);
@@ -1426,42 +1510,240 @@ ClassicalFit[numE_Integer, expData0_List, excludeDataIndices_List, problemVars_L
     PrintFun["Putting together the experimental vector ..."];
     \[Lambda]exp = Transpose[{First /@ expData[[presentDataIndices]]}];
 
-    problemVarsVec = Transpose[{problemVars}];
-    solVecVec = Transpose[{solVec}];
+    problemVarsVec = Transpose[{constrainedProblemVarsList[[;;-2]]}];
+    indepSolVecVec = Transpose[{indepSolVec}];
     PrintFun["Calculating the difference between eigenvalues at solution ..."];
-    diff = (\[Lambda]0Vec - \[Lambda]exp) + linMat[[presentDataIndices]].(problemVarsVec - solVecVec);
+    diff = If[linMat=={},
+      (\[Lambda]0Vec - \[Lambda]exp)  + \[Epsilon]Best,
+      (\[Lambda]0Vec - \[Lambda]exp)  + \[Epsilon]Best + linMat[[presentDataIndices]].(problemVarsVec - indepSolVecVec)
+    ];
     PrintFun["Calculating the sum of squares of differences around solution ... "];
-    sqdiff = Expand[(Transpose[diff] . diff)[[1, 1]]];
-    PrintFun["Calculating the minimum (which should coincide to sol) ..."];
-    minpoly = sqdiff /. AssociationThread[cfVars -> solVec];
-    fmSolAssoc = Association[sol[[2]]];
+    sqdiff        = Expand[(Transpose[diff] . diff)[[1, 1]]];
+    PrintFun["Calculating the minimum (which should coincide with sol ..."];
+    minpoly       = sqdiff /. AssociationThread[problemVars -> solVec];
+    fmSolAssoc    = Association[sol[[2]]];
     totalVariance = Length[presentDataIndices]*\[Sigma]exp^2;
     PrintFun["Calculating the uncertainty in the parameters ..."];
     solWithUncertainty = Table[
       (
-        aVar        = problemVars[[varIdx]];
+        aVar        = constrainedProblemVarsList[[varIdx]];
         paramBest   = aVar /. fmSolAssoc;
-        othersFixed = AssociationThread[Delete[problemVars, varIdx] -> Delete[solVec, varIdx]];
+        othersFixed = AssociationThread[Delete[constrainedProblemVarsList[[;;-2]], varIdx] -> Delete[indepSolVec, varIdx]];
         thisPoly    = sqdiff /. othersFixed;
         polySols    = Last /@ Last /@ Solve[thisPoly == minpoly + 1*totalVariance];
         polySols    = Select[polySols, Im[#] == 0 &];
         paramSigma  = Max[polySols] - Min[polySols];
         (aVar -> {paramBest, paramSigma})
       ),
-    {varIdx, 1, Length[problemVars]}
+    {varIdx, 1, Length[constrainedProblemVarsList]-shiftToggle}
     ];
     PrintFun["Calculating the covariance matrix ..."];
-    hess = 2 * Transpose[linMat[[presentDataIndices]]] . linMat[[presentDataIndices]];
-    covMat  = \[Sigma]exp^2 * Inverse[hess];
+    hess = If[linmat=={},
+      {{Infinity}},
+      2 * Transpose[linMat[[presentDataIndices]]] . linMat[[presentDataIndices]]
+    ];
+    covMat  = If[linmat=={},
+      {{0}},
+      \[Sigma]exp^2 * Inverse[hess]
+    ];
     bestRMS = Sqrt[minpoly / degressOfFreedom];
-    oddsAndEnds["actualSteps"] = steps;
-    oddsAndEnds["bestRMS"] = bestRMS;
-    oddsAndEnds["solWithUncertainty"] = solWithUncertainty;
-    oddsAndEnds["problemVars"] = problemVars;
-    oddsAndEnds["paramSols"] = paramSols;
-    oddsAndEnds["rmsHistory"] = rmsHistory;
-    oddsAndEnds["Appendix"] = OptionValue["AppendToLogFile"];
-    oddsAndEnds["timeTaken/s"] = timeTaken;
-    logFname = LogSol[oddsAndEnds, logFilePrefix];
-    Return[{bestRMS, logFname, solWithUncertainty, covMat}];
-  );
+    solCompendium["truncatedDim"] = truncationUmbral;
+    solCompendium["fittedLevels"] = Length[presentDataIndices];
+    solCompendium["actualSteps"] = steps;
+    solCompendium["bestRMS"]     = bestRMS;
+    solCompendium["solWithUncertainty"] = solWithUncertainty;
+    solCompendium["problemVars"] = problemVars;
+    solCompendium["paramSols"]   = paramSols;
+    solCompendium["rmsHistory"]  = rmsHistory;
+    solCompendium["Appendix"]    = OptionValue["AppendToLogFile"];
+    solCompendium["timeTaken/s"] = timeTaken;
+    solCompendium["bestParams"]  = sol[[2]];
+    If[OptionValue["SaveEigenvectors"],
+        solCompendium["states"] = {#[[1]] + \[Epsilon]Best, #[[2]]} &/@ (Chop /@ ShiftedLevels[states]),
+        (
+          finalEnergies = Sort[First /@ states];
+          finalEnergies = finalEnergies - finalEnergies[[1]];
+          finalEnergies = finalEnergies + \[Epsilon]Best;
+          finalEnergies  = Chop /@ finalEnergies;
+          solCompendium["energies"] = finalEnergies;
+      )
+    ];
+    logFname = LogSol[solCompendium, logFilePrefix];
+    Return[solCompendium]; 
+  )
+];
+
+
+caseConstraints::usage="This Association contains the constraints that are not the same across all of the lanthanides. For instance, since the ratio between M2 and M0 is assumed the same for all the trivalent lanthanides, that one is not included here. 
+This association has keys equal to symbols of lanthanides and values equal to lists of rules that express either a parameter being held fixed or made proportional to another.
+In Table I of Carnall 1989 these correspond to cases were values are given in square brackets.";
+caseConstraints = <|
+"Ce" -> {
+    B02 -> -218.,
+    B04 -> 738.,
+    B06 -> 679.,
+    B22 -> -50.,
+    B24 -> 431.,
+    B26 -> -921.,
+    B44 -> 616.,
+    B46 -> -348.,
+    B66 -> -788.
+    },
+"Pr" -> {},
+"Nd" -> {},
+"Pm" -> {},
+"Sm" -> {
+    B22 -> -50.,
+    T2 -> 300.,
+    T3 -> 36.,
+    T4 -> 56.,
+    \[Gamma] -> 1500.
+    },
+"Eu" -> {
+    F4 -> 0.713 F2,
+    F6 -> 0.512 F2,
+    B22 -> -50.,
+    B24 -> 597.,
+    B26 -> -706.,
+    B44 -> 408.,
+    B46 -> -508.,
+    B66 -> -692.,
+    M0 -> 2.1,
+    P2 -> 360.,
+    T2 -> 300.,
+    T3 -> 40.,
+    T4 -> 60.,
+    T6 -> -300.,
+    T7 -> 370.,
+    T8 -> 320.,
+    \[Alpha] -> 20.16,
+    \[Beta]  -> -566.9,
+    \[Gamma] -> 1500.
+    },
+"Pm" -> {
+    B02 -> -245.,
+    B04 -> 470.,
+    B06 -> 640.,
+    B22 -> -50.,
+    B24 -> 525.,
+    B26 -> -750.,
+    B44 -> 490.,
+    B46 -> -450.,
+    B66 -> -760.,
+    F2 -> 76400.,
+    F4 -> 54900.,
+    F6 -> 37700.,
+    M0 -> 2.4,
+    P2 -> 275.,
+    T2 -> 300.,
+    T3 -> 35.,
+    T4 -> 58.,
+    T6 -> -310.,
+    T7 -> 350.,
+    T8 -> 320.,
+    \[Alpha] -> 20.5, 
+    \[Beta] -> -560.,
+    \[Gamma] -> 1475.,
+    \[Zeta] -> 1025.},
+"Gd" -> {
+    F4 -> 0.710 F2,
+    B02 -> -231.,
+    B04 -> 604.,
+    B06 -> 280.,
+    B22 -> -99.,
+    B24 -> 340.,
+    B26 -> -721.,
+    B44 -> 452.,
+    B46 -> -204.,
+    B66 -> -509.,
+    T2 -> 300.,
+    T3 -> 42.,
+    T4 -> 62.,
+    T6 -> -295.,
+    T7 -> 350.,
+    T8 -> 310.,
+    \[Beta] -> -600.,
+    \[Gamma] -> 1575.
+    },
+"Tb" -> {
+    F4 -> 0.707 F2,
+    T2 -> 320.,
+    T3 -> 40.,
+    T4 -> 50.,
+    \[Gamma] -> 1650.
+    },
+"Dy" -> {},
+"Ho" -> {
+    B02 -> -240.,
+    T2 -> 400.,
+    \[Gamma] -> 1800.
+    },
+"Er" -> {
+    T2 -> 400.,
+    \[Gamma] -> 1800.
+    },
+"Tm" -> {
+    T2 -> 400.,
+    \[Gamma] -> 1820.
+    },
+"Yb" -> {
+    B02 -> -249.,
+    B04 -> 457.,
+    B06 -> 282.,
+    B22 -> -105.,
+    B24 -> 320.,
+    B26 -> -482.,
+    B44 -> 428.,
+    B46 -> -234.,
+    B66 -> -492.
+}
+|>;
+
+variedSymbols =<|
+    "Ce" -> {\[Zeta]}, 
+    "Pr" -> {B02, B04, B06, B22, B24, B26, B44, B46, B66,
+            F2, F4, F6, 
+            M0, P2, 
+            \[Alpha], \[Beta], \[Gamma],
+            \[Zeta]}, 
+    "Nd" -> {B02, B04, B06, B22, B24, B26, B44, B46, B66, 
+            F2, F4, F6, 
+            M0, P2,
+            T2, T3, T4, T6, T7, T8,
+            \[Alpha], \[Beta], \[Gamma],
+            \[Zeta]},
+    "Pm" -> {}, 
+    "Sm" -> {B02, B04, B06, B24, B26, B44, B46, B66,
+            F2, F4, F6, M0, P2, 
+            T6, T7, T8,
+            \[Alpha], \[Beta], \[Zeta]}, 
+    "Eu" -> {B02, B04, B06,
+            F2, F4, F6, \[Zeta]}, 
+    "Gd" -> {F2, F4, F6,
+            M0, P2,
+            \[Alpha], \[Zeta]}, 
+    "Tb" -> {B02, B04, B06, B22, B24, B26, B44, B46, B66,
+            F2, F4, F6,
+            M0, P2,
+            T6, T7, T8, 
+            \[Alpha], \[Beta], \[Zeta]}, 
+    "Dy" -> {B02, B04, B06, B22, B24, B26, B44, B46, B66,
+            F2, F4, F6,
+            M0, P2,
+            T2, T3, T4, T6, T7, T8, 
+            \[Alpha], \[Beta], \[Gamma], \[Zeta]},
+    "Ho" -> {B04, B06, B22, B24, B26, B44, B46, B66,
+            F2, F4, F6,
+            M0, P2,
+            T3, T4, T6, T7, T8,
+            \[Alpha], \[Beta], \[Zeta]}, 
+    "Er" -> {B02, B04, B06, B22, B24, B26, B44, B46, B66,
+            F2, F4, F6,
+            M0, P2,
+            T3, T4, T6, T7, T8, \[Alpha], \[Beta], \[Zeta]}, 
+    "Tm" -> {B02, B04, B06, B22, B24, B26, B44, B46, B66, 
+            F2, F4, F6, 
+            M0, P2, 
+            \[Alpha], \[Beta], \[Zeta]}, 
+    "Yb" -> {\[Zeta]}
+    |>;

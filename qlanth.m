@@ -2818,32 +2818,86 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
   Options[LoadParameters] = {
       "Source"->"Carnall",
       "Free Ion"->False,
-      "gs"->2.002319304386
+      "gs"->2.002319304386,
+      "With Uncertainties"->False
       };
   LoadParameters[Ln_String, OptionsPattern[]]:= 
-    Module[{source, params},
+    Module[{source, params, uncertain, uncertainKeys, uncertainRules},
     (
       source = OptionValue["Source"];
       params = Which[source=="Carnall",
               (Association[Carnall["data"][Ln]])
               ];
       (*If a free ion then all the parameters from the crystal field are set to zero*)
-      If[OptionValue["Free Ion"],
-        Do[params[cfSymbol] = 0, 
-        {cfSymbol, cfSymbols}
-        ]
+      If[OptionValue["Free Ion"], 
+        Do[params[cfSymbol] = 0, {cfSymbol, cfSymbols}]
       ];
       params[F0] = 0;
-      params[M2] = 0.56 * params[M0]; (* See Carnall 1989, Table I, caption, probably fixed based on HF values*)
-      params[M4] = 0.31 * params[M0]; (* See Carnall 1989, Table I, caption, probably fixed based on HF values*)
+      params[M2] = 0.56*params[M0]; (*See Carnall 1989,Table I,caption,probably fixed based on HF values*)
+      params[M4] = 0.31*params[M0]; (*See Carnall 1989,Table I,caption,probably fixed based on HF values*)
       params[P0] = 0;
-      params[P4] = 0.5 * params[P2];  (* See Carnall 1989, Table I, caption, probably fixed based on HF values*)
-      params[P6] = 0.1 * params[P2];  (* See Carnall 1989, Table I, caption, probably fixed based on HF values*)
+      params[P4] = 0.5*params[P2];  (*See Carnall 1989,Table I,caption,probably fixed based on HF values*)
+      params[P6] = 0.1*params[P2];  (*See Carnall 1989,Table I,caption,probably fixed based on HF values*)
       params[gs] = OptionValue["gs"];
       {params[E0], params[E1], params[E2], params[E3]} = FtoE[params[F0], params[F2], params[F4], params[F6]];
       params[E0] = 0;
-      Return[params];
-    )
+      If[
+        Not[OptionValue["With Uncertainties"]],
+        Return[params],
+        (
+          uncertain     = Association[Carnall["annotations"][Ln]];
+          uncertainKeys = Keys[uncertain];
+          uncertain     = If[# == "Not allowed to vary in fitting." || # == "Interpolated", 
+              0., #] & /@ uncertain;
+          paramKeys = Keys[params];
+          uncertainVals = Sort[Intersection[paramKeys, uncertainKeys]] /. Association[uncertain];
+          uncertainRules = MapThread[Rule, {Sort[uncertainKeys], uncertainVals}];
+          Which[
+            MemberQ[{"Ce", "Yb"}, Ln],
+            (
+              subsetL = {F0};
+              subsetR = {0};
+            ),
+            True,
+            (
+            subsetL = {F0, M2, M4, P0, P4, P6, E0, E1, E2, E3};
+            subsetR = {0, M0*0.65, M0*0.31, 0, P2*0.5, P2*0.1,
+              0,
+              Sqrt[(196 F2^2)/164025 + (49 F4^2)/88209 + (122500 F6^2)/134165889],
+              Sqrt[F2^2/4100625 + F4^2/10673289 + (30625 F6^2)/2743558264161],
+              Sqrt[F2^2/18225 + (4 F4^2)/1185921 + (30625 F6^2)/1803785841]};
+            )
+          ];
+          uncertainRules = Join[uncertainRules, MapThread[Rule, {subsetL,subsetR /. uncertainRules}]];
+          uncertainRules = Association[uncertainRules];
+          Which[
+            Ln == "Eu",
+            (
+              uncertainRules[F4] = 12.121;
+              uncertainRules[F6] = 15.872;
+            ),
+            Ln == "Gd",
+            (
+              uncertainRules[F4] = 12.07;
+            ),
+            Ln == "Tb",
+            (
+              uncertainRules[F4] = 41.006;
+            )
+          ];
+          If[MemberQ[{"Eu","Gd","Tb"},Ln],
+            (
+              uncertainRules[E1] = Sqrt[(196 F2^2)/164025 + (49 F4^2)/88209 + (122500 F6^2)/134165889] /. uncertainRules;
+              uncertainRules[E2] = Sqrt[F2^2/4100625 + F4^2/10673289 + (30625 F6^2)/2743558264161] /. uncertainRules;
+              uncertainRules[E3] = Sqrt[F2^2/18225 + (4 F4^2)/1185921 + (30625 F6^2)/1803785841] /. uncertainRules;  
+            )
+          ];
+          uncertainKeys = First /@ Normal[uncertainRules];
+          fullParams = Association[MapThread[Rule, {uncertainKeys, MapThread[Around, {uncertainKeys /. params, uncertainKeys /. uncertainRules}]}]];
+          Return[Join[params, fullParams]]
+        )
+        ];
+      )
   ];
 
   HoleElectronConjugation::usage = "HoleElectronConjugation[params] takes the parameters (as an association) that define a configuration and converts them so that they may be interpreted as corresponding to a complentary hole configuration. Some of this can be simply done by changing the sign of the model parameters. In the case of the effective three body interaction the relationship is more complex and is controlled by the value of the isE variable.";
@@ -3619,11 +3673,11 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
   ParseCarnall::usage="ParseCarnall[] parses the data found in ./data/Carnall.xls. If the option \"Export\" is set to True (True is the default), then the parsed data is saved to ./data/Carnall. This data is from the tables and appendices of Carnall et al (1989).";
   Options[ParseCarnall] = {"Export" -> True};
   ParseCarnall[OptionsPattern[]] := (
-    ions         = {"Pr","Nd","Pm","Sm","Eu","Gd","Tb","Dy","Ho","Er","Tm"};
+    ions         = {"Ce","Pr","Nd","Pm","Sm","Eu","Gd","Tb","Dy","Ho","Er","Tm","Yb"};
     templates    = StringTemplate/@StringSplit["appendix:`ion`:Association appendix:`ion`:Calculated appendix:`ion`:RawTable appendix:`ion`:Headings"," "];
     
     (* How many unique eigenvalues, after removing Kramer's degeneracy *)
-    fullSizes    = AssociationThread[ions, {91, 182, 1001, 1001, 3003, 1716, 3003, 1001, 1001, 182, 91}];
+    fullSizes    = AssociationThread[ions, {14, 91, 182, 1001, 1001, 3003, 1716, 3003, 1001, 1001, 182, 91, 14}];
     carnall      = Import[FileNameJoin[{moduleDir,"data","Carnall.xls"}]][[2]];
     carnallErr   = Import[FileNameJoin[{moduleDir,"data","Carnall.xls"}]][[3]];
     
@@ -3713,7 +3767,7 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
         Carnall[keys[[3]]]  = carnallData;
         Carnall[keys[[4]]]  = headers;
         ),
-    {i,4,14}
+    {i,4,16}
     ];
     
     goodions = Select[ions,#!="Pm"&];
