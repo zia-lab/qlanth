@@ -70,7 +70,8 @@ Begin["`Private`"];
   GetColor[_] := Black
 
   ListLabelPlot::usage="ListLabelPlot[data, labels] takes a list of numbers with corresponding labels. The data is grouped according to the labels and a ListPlot is created with them so that each group has a different color and their corresponding label is shown in the horizontal axis.";
-  Options[ListLabelPlot] = Append[Options[ListPlot], "TickCompression"->True];
+  Options[ListLabelPlot] = Join[Options[ListPlot], {"TickCompression"->True,
+  "LabelLevels"->1}];
   ListLabelPlot[data_, labels_, opts : OptionsPattern[]] := Module[
     {uniqueLabels, pallete, groupedByTerm, groupedKeys, scatterGroups, 
     groupedColors, frameTicks, compTicks, bottomTicks, topTicks},
@@ -85,7 +86,7 @@ Begin["`Private`"];
     scatterGroups = Transpose[Transpose[#][[2 ;; 3]]] & /@ Values[groupedByTerm];
     groupedColors = uniqueLabels[#] & /@ groupedKeys;
     frameTicks    = {Transpose[{Range[Length[data]], 
-      Style[Rotate[#, 0], uniqueLabels[#]] & /@ labels}], 
+      Style[Rotate[#, 90 Degree], uniqueLabels[#]] & /@ labels}], 
       Automatic};
       If[OptionValue["TickCompression"], (
           compTicks = TickCompressor[frameTicks[[1]]];
@@ -104,6 +105,7 @@ Begin["`Private`"];
     ListPlot[scatterGroups,
       opts,
       Frame->True,
+      AxesStyle -> {Directive[Black, Dotted], Automatic},
       PlotStyle -> groupedColors,
       FrameTicks -> frameTicks]
     )

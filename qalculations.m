@@ -1,38 +1,50 @@
 Needs["qlanth`"];
 Needs["misc`"];
 Needs["qplotter`"];
-Needs["qonstants`"]
+Needs["qonstants`"];
 LoadCarnall[];
 
 workDir = DirectoryName[$InputFileName];
 
-FastIonSolverLaF3::usage = "This function solves the energy levels of the given trivalent lanthanide in LaF3. The values for the Hamiltonian are simply taken from the values quoted by Carnall. It uses precomputed symbolic matrices for the Hamiltonian so it's faster than the previous alternatives.
+FastIonSolverLaF3::usage = "This function solves the energy levels of the given trivalent lanthanide in LaF3. The values for the parameters in the Hamiltonian are  taken from the values quoted by Carnall. It can use precomputed symbolic matrices for the Hamiltonian if they have been loaded already and defined as a value of symbolicHamiltonians.
 
-The function returns a list with nine elements 
-{rmsDifference, carnallEnergies, eigenEnergies, ln, carnallAssignments, simplerStateLabels, eigensys, basis, truncatedStates}.
+The function returns a list with nine elements {rmsDifference, carnallEnergies, eigenEnergies, ln, carnallAssignments, simplerStateLabels, eigensys, basis, truncatedStates}. The elements of the list are as follows:
 
-Where:
-1. rmsDifference is the root mean squared difference between the calculated values and those quoted by Carnall
-2. carnallEnergies are the quoted calculated energies from Carnall;
+1. rmsDifference is the root mean squared difference between the calculated values and those quoted by Carnall;
+2. carnallEnergies are the quoted calculated energies from Carnall used for comparison;
 3. eigenEnergies are the calculated energies (in the case of an odd number of electrons the Kramers degeneracy may have been removed from this list according to the option \"Remove Kramers\");
 4. ln is simply a string labelling the corresponding lanthanide;
 5. carnallAssignments is a list of strings providing the multiplet assignments that Carnall assumed;
 6. simplerStateLabels is a list of strings providing the multiplet assignments that this function assumes;
 7. eigensys is a list of tuples where the first element is the energy corresponding to the eigenvector given as the second element (in the case of an odd number of electrons the Kramers degeneracy may have been removed from this list according to the option \"Remove Kramers\");
 8. basis is a list that specifies the basis in which the Hamiltonian was constructed and diagonalized, equal to BasisLSJMJ[numE];
-9. Same as eigensys but the eigenvectors have been truncated so that the truncated version adds up to at least a total probability of eigenstateTruncationProbability.
+9. truncatedStates is the same as eigensys but with the truncated eigenvectors so that the total propability add up to at least  eigenstateTruncationProbability.
+
+This function admits the following options:
+  - \"MakeNotebook\" -> True or False. If True, a notebook with a summary of the data is created. Default is True.
+  - \"NotebookSave\" -> True or False. If True, the results notebook is saved automatically. Default is True.
+  - \"eigenstateTruncationProbability\" -> 0.9. The probability sum of the truncated eigenvectors. Default is 0.9.
+  - \"Include spin-spin\" -> True or False. If True, the spin-spin contribution to the magnetic interactions is included. Default is True.
+  - \"Max Eigenstates in Table\" -> 100. The maximum number of eigenstates to be shown in the table shown in the results notebook. Default is 100.
+  - \"Sparse\" -> True or False. If True, the numerical Hamiltonian is kept in sparse form. Default is True.
+  - \"PrintFun\" -> Print, PrintTemporary, or other to serve as a printer for progress messages. Default is Print.
+  - \"SaveData\" -> True or False. If True, the resulting data is saved to disk. Default is True.
+  - \"ParamOverride\". An association that can override parameters in the Hamiltonian. Default is <||>. This override cannot change the inclusion or exclusion of the spin-spin contribution to the magnetic interactions, for this purpose use the option \"Include spin-spin\".
+  - \"Append to Filename\" -> \"\". A string to append to the filename of the saved notebook and data files. Default is \"\".
+  - \"Remove Kramers\" -> True or False. If True, the Kramers degeneracy is removed from the eigenstates. Default is True.
+  - \"OutputDirectory\" -> \"calcs\". The directory where the output files are saved. Default is \"calcs\".
+  - \"Explorer\" -> True or False. If True, the energy level diagram is interactive. Default is False.
 ";
 Options[FastIonSolverLaF3] = {
-  "MakeNotebook" -> True,
-  "NotebookSave" -> True,
-  "HTMLSave" -> False,
-  "eigenstateTruncationProbability" -> 0.9,
+  "MakeNotebook"      -> True,
+  "NotebookSave"      -> True,
   "Include spin-spin" -> True,
+  "eigenstateTruncationProbability" -> 0.9,
   "Max Eigenstates in Table" -> 100,
   "Sparse" -> True,
   "PrintFun" -> Print,
   "SaveData" -> True,
-  "paramFiddle" -> {},
+  "ParamOverride" -> <||>,
   "Append to Filename" -> "",
   "Remove Kramers" -> True,
   "OutputDirectory" -> "calcs",
@@ -49,7 +61,7 @@ FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[
     maxStatesInTable = OptionValue["Max Eigenstates in Table"];
     Duplicator[aList_] := Flatten[{#, #} & /@ aList];
     host = "LaF3";
-    paramFiddle = OptionValue["paramFiddle"];
+    ParamOverride = OptionValue["ParamOverride"];
     ln = theLanthanides[[numE]];
     terms = AllowedNKSLJTerms[Min[numE, 14 - numE]];
     termNames = First /@ terms;
@@ -61,7 +73,7 @@ FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[
       ],
       {termN, termNames}
     ];
-
+    
     (*Load the parameters from Carnall*)
     PrintFun["> Loading the fit parameters from Carnall ..."];
     params = LoadParameters[ln, "Free Ion" -> False];
@@ -73,23 +85,22 @@ FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[
       ),
       params[t2Switch] = 1;
     ];
-
-    Do[params[key] = paramFiddle[key], 
-      {key, Keys[paramFiddle]}
+    
+    (* Apply the parameter override *)
+    Do[params[key] = ParamOverride[key], 
+      {key, Keys[ParamOverride]}
     ];
-
+    
     (* Import the symbolic Hamiltonian *)
     PrintFun["> Loading the symbolic Hamiltonian for this configuration ..."];
     startTime = Now;
     numH = 14 - numE;
     numEH = Min[numE, numH];
-    C2vsimplifier = {B12 -> 0, B14 -> 0, B16 -> 0, B34 -> 0, B36 -> 0, 
-      B56 -> 0,
-      S12 -> 0, S14 -> 0, S16 -> 0, S22 -> 0, S24 -> 0, S26 -> 0, 
-      S34 -> 0, S36 -> 0,
-      S44 -> 0, S46 -> 0, S56 -> 0, S66 -> 0, T11p -> 0, T11 -> 0, 
-      T12 -> 0, T14 -> 0, T15 -> 0,
-      T16 -> 0, T18 -> 0, T17 -> 0, T19 -> 0};
+    C2vsimplifier = {
+      B12 -> 0, B14 -> 0, B16 -> 0, B34 -> 0, B36 -> 0, B56 -> 0,
+      S12 -> 0, S14 -> 0, S16 -> 0, S22 -> 0, S24 -> 0, S26 -> 0, S34 -> 0, S36 -> 0,S44 -> 0, S46 -> 0, S56 -> 0, S66 -> 0,
+      T11p -> 0, T11 -> 0, T12 -> 0, T14 -> 0, T15 -> 0, T16 -> 0, T18 -> 0, T17 -> 0, T19 -> 0};
+    (* If the necessary symbolicHamiltonian is define load if not make it *)
     simpleHam = If[
       ValueQ[symbolicHamiltonians[numEH]],
       symbolicHamiltonians[numEH],
@@ -98,21 +109,20 @@ FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[
     endTime  = Now; 
     loadTime = QuantityMagnitude[endTime - startTime, "Seconds"];
     PrintFun[">> Loading the symbolic Hamiltonian took ", loadTime, " seconds."];
-
+    
     (*Enforce the override to the spin-spin contribution to the magnetic interactions*)
     params[\[Sigma]SS] = If[OptionValue["Include spin-spin"], 1, 0];
-
+    
     (*Everything that is not given is set to zero*)
     params = ParamPad[params, "Print" -> False];
     PrintFun[params];
-    (* numHam = simpleHam /. params; *)
     numHam = ReplaceInSparseArray[simpleHam, params];
     If[Not[OptionValue["Sparse"]],
         numHam = Normal[numHam]
     ];
     PrintFun["> Calculating the SLJ basis ..."];
     basis = BasisLSJMJ[numE];
-
+    
     (* Eigensolver *)
     PrintFun["> Diagonalizing the numerical Hamiltonian ..."];
     startTime = Now;
@@ -122,39 +132,33 @@ FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[
     PrintFun[">> Diagonalization took ", diagonalTime, " seconds."];
     eigensys = Chop[eigensys];
     eigensys = Transpose[eigensys];
-
-    (*Shift the baseline energy*)
+    
+    (* Shift the baseline energy *)
     eigensys = ShiftedLevels[eigensys];
-    (*Sort according to energy*)
+    (* Sort according to energy *)
     eigensys = SortBy[eigensys, First];
-    (*Grab just the energies*)
+    (* Grab just the energies *)
     eigenEnergies = First /@ eigensys;
-
-    (*Energies are doubly degenerate in the case of odd number of electrons, keep only one*)
+    
+    (* Energies are doubly degenerate in the case of odd number of electrons, keep only one *)
     If[And[OddQ[numE], OptionValue["Remove Kramers"]], 
         (
         PrintFun["> Since there's an odd number of electrons energies come in pairs, taking just one for each pair ..."];
         eigenEnergies = eigenEnergies[[;; ;; 2]];
         )
     ];
-
+    
     (* Compare against the data quoted by Bill Carnall *)
     PrintFun["> Comparing against the data from Carnall ..."];
-    If[Not[MemberQ[{"Ce","Yb"},ln]],
-      (
-        mainKey            = StringTemplate["appendix:`Ln`:Association"][<|"Ln" -> ln|>];
-        lnData             = Carnall[mainKey];
-        carnalKeys         = lnData // Keys;
-        repetitions        = Length[lnData[#]["Calc (1/cm)"]] & /@ carnalKeys;
-        carnallAssignments = First /@ Carnall["appendix:" <> ln <> ":RawTable"];
-        carnalKey          = StringTemplate["appendix:`Ln`:Calculated"][<|"Ln" -> ln|>];
-        carnallEnergies    = Carnall[carnalKey];
-      ),
-      (
-        carnallAssignments = ConstantArray["",7];
-        carnallEnergies    = ConstantArray[Missing[],7];
-      )
-    ];
+    mainKey            = StringTemplate["appendix:`Ln`:Association"][<|"Ln" -> ln|>];
+    lnData             = Carnall[mainKey];
+    carnalKeys         = lnData // Keys;
+    repetitions        = Length[lnData[#]["Calc (1/cm)"]] & /@ carnalKeys;
+    carnallAssignments = First /@ Carnall["appendix:" <> ln <> ":RawTable"];
+    carnallAssignments = Select[carnallAssignments, Not[# === ""] &];
+    carnalKey          = StringTemplate["appendix:`Ln`:Calculated"][<|"Ln" -> ln|>];
+    carnallEnergies    = Carnall[carnalKey];
+
     If[And[OddQ[numE], Not[OptionValue["Remove Kramers"]]],
     (
       PrintFun[">> The number of eigenstates and the number of quoted states don't match, removing the last state ..."];
@@ -162,25 +166,23 @@ FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[
       carnallEnergies    = Duplicator[carnallEnergies];
     )
     ];
-
-    (* For the difference take as many energies as quoted by Bill*)
-    If[Not[MemberQ[{"Ce","Yb"},ln]],
-      eigenEnergies = eigenEnergies + carnallEnergies[[1]];
-    ];
+    
+    (* For the difference take as many energies as quoted by Bill *)
+    eigenEnergies = eigenEnergies + carnallEnergies[[1]];
     diffs = Sort[eigenEnergies][[;; Length[carnallEnergies]]] - carnallEnergies;
     (* Remove the differences where the appendix tables have elided values*)
     rmsDifference = Sqrt[Mean[(Select[diffs, FreeQ[#, Missing[]] &])^2]];
     titleTemplate = StringTemplate[
-        "Energy Level Diagram of \!\(\*SuperscriptBox[\(`ion`\), \(\(3\)\(+\)\)]\)"];
+      "Energy Level Diagram of \!\(\*SuperscriptBox[\(`ion`\), \(\(3\)\(+\)\)]\)"];
     title = titleTemplate[<|"ion" -> ln|>];
     parsedStates = ParseStates[eigensys, basis];
     If[And[OddQ[numE],OptionValue["Remove Kramers"]], 
       parsedStates = parsedStates[[;; ;; 2]]
     ];
-
+    
     stateLabels = #[[-1]] & /@ parsedStates;
     simplerStateLabels = ((#[[2]] /. termSimplifier) <> ToString[#[[3]], InputForm]) & /@ parsedStates;
-
+    
     PrintFun[">> Truncating eigenvectors to given probability ..."];
     startTime = Now;
     truncatedStates = ParseStatesByProbabilitySum[eigensys, basis, 
@@ -189,7 +191,7 @@ FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[
     endTime = Now;
     truncationTime = QuantityMagnitude[endTime - startTime, "Seconds"];
     PrintFun[">>> Truncation took ", truncationTime, " seconds."];
-
+    
     If[makeNotebook,
     (
       PrintFun["> Putting together results in a notebook ..."];
@@ -200,18 +202,18 @@ FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[
         , Background -> White, FrameMargins -> 50];
       appToFname = OptionValue["Append to Filename"];
       PrintFun[">> Comparing the term assignments between qlanth and Carnall ..."];
-      assignmentMatches = 
-      If[StringContainsQ[#[[1]], #[[2]]], "\[Checkmark]", "X"] & /@ 
-        Transpose[{carnallAssignments, simplerStateLabels[[;; Length[carnallAssignments]]]}];
+      AssignmentMatchFunc = Which[
+        StringContainsQ[#[[1]], #[[2]]],
+        "\[Checkmark]",
+        True,
+        "X"] &;
+      assignmentMatches = AssignmentMatchFunc /@ Transpose[{carnallAssignments, simplerStateLabels[[;; Length[carnallAssignments]]]}];
       assignmentMatches = {{"\[Checkmark]", 
         Count[assignmentMatches, "\[Checkmark]"]}, {"X", 
         Count[assignmentMatches, "X"]}};
-      labelComparison = (If[StringContainsQ[#[[1]], #[[2]]], "\[Checkmark]", "X"] & /@ 
-        Transpose[{carnallAssignments, 
-        simplerStateLabels[[;; Length[carnallAssignments]]]}]);
-      labelComparison = 
-      PadRight[labelComparison, Length[simplerStateLabels], "-"];
-
+      labelComparison = (AssignmentMatchFunc /@ Transpose[{carnallAssignments, simplerStateLabels[[;; Length[carnallAssignments]]]}]);
+      labelComparison = PadRight[labelComparison, Length[simplerStateLabels], "-"];
+      
       statesTable = Grid[Prepend[{Round[#[[1]]], #[[2]]} & /@ 
           truncatedStates[[;;Min[Length[eigensys],maxStatesInTable]]], {"Energy/\!\(\*SuperscriptBox[\(cm\), \(-1\)]\)", 
           "\[Psi]"}], Frame -> All, Spacings -> {2, 2}, 
@@ -230,59 +232,49 @@ FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[
         DefaultIfMissing/@PadRight[carnallEnergies, Length[simplerStateLabels], "-"], 
         roundedDiffs}
       ];
-      diffTable = If[Not[MemberQ[{"Ce","Yb"},ln]],
-      TableForm[diffTableData, 
+      diffTable = TableForm[diffTableData, 
         TableHeadings -> {None, {"qlanth", 
         "E/\!\(\*SuperscriptBox[\(cm\), \(-1\)]\)", "", "Carnall", 
         "E/\!\(\*SuperscriptBox[\(cm\), \(-1\)]\)", 
         "\[CapitalDelta]E/\!\(\*SuperscriptBox[\(cm\), \(-1\)]\)"}}
-      ],
-      TableForm[(#[[1;;2]]&)/@ diffTableData, 
-        TableHeadings -> {None, {"qlanth", 
-        "E/\!\(\*SuperscriptBox[\(cm\), \(-1\)]\)"}}
-      ]
       ];
       
       diffs = Sort[eigenEnergies][[;; Length[carnallEnergies]]] - carnallEnergies;
       notBad = FreeQ[#,Missing[]]&/@diffs;
-      diffs = Pick[diffs,notBad];
-      diffHistogram = Histogram[diffs,
+      diffs = Pick[diffs, notBad];
+      (* diffHistogram = Histogram[diffs,
         Frame -> True,
         ImageSize -> 800, 
         AspectRatio -> 1/3, FrameStyle -> Directive[16], 
         FrameLabel -> {"(qlanth-carnall)/Ky", "Freq"}
-      ];
+      ]; *)
       
-      rmsDifference = If[Not[MemberQ[{"Ce","Yb"},ln]], 
-        Sqrt[Total[diffs^2/Length[diffs]]],
-        Missing[]
-        ];
-      labelTempate = StringTemplate["\!\(\*SuperscriptBox[\(`ln`\), \(\(3\)\(+\)\)]\)"];
+      rmsDifference = Sqrt[Total[diffs^2/Length[diffs]]];
+      labelTempate  = StringTemplate["\!\(\*SuperscriptBox[\(`ln`\), \(\(3\)\(+\)\)]\)"];
       diffData   = diffs;
       diffLabels = simplerStateLabels[[;;Length[notBad]]];
       diffLabels = Pick[diffLabels, notBad];
-      diffPlot   = If[Not[MemberQ[{"Ce","Yb"},ln]],
-        Framed[
-          ListLabelPlot[diffData,
-          diffLabels,
-          Frame -> True,
-          PlotRange -> All,
-          ImageSize -> 1200,
-          AspectRatio -> 1/3,
-          FrameLabel -> {"", 
-          "(qlanth-carnall) / \!\(\*SuperscriptBox[\(cm\), \(-1\)]\)"},
-          PlotMarkers -> "OpenMarkers",
-          PlotLabel -> 
-          Style[labelTempate[<|"ln" -> ln|>] <> " | " <> "\[Sigma]=" <> 
+      diffPlot   = Framed[
+          ListLabelPlot[
+            diffData[[;;;;If[OddQ[numE],2,1]]],
+            diffLabels[[;;;;If[OddQ[numE],2,1]]],
+            Frame -> True,
+            PlotRange -> All,
+            ImageSize -> 1200,
+            AspectRatio -> 1/3,
+            Filling -> Axis,
+            FrameLabel -> {"", 
+            "(qlanth-carnall) / \!\(\*SuperscriptBox[\(cm\), \(-1\)]\)"},
+            PlotMarkers -> "OpenMarkers",
+            PlotLabel -> 
+            Style[labelTempate[<|"ln" -> ln|>] <> " | " <> "\[Sigma]=" <> 
               ToString[Round[rmsDifference, 0.01]] <> 
               " \!\(\*SuperscriptBox[\(cm\), \(-1\)]\)\n", 20],
-          Background -> White
+            Background -> White
           ],
           Background -> White,
           FrameMargins -> 50
-        ],
-        ""
-      ];
+        ];
       (* now place all of this in a new notebook *)
       nb = CreateDocument[
       {
@@ -301,12 +293,7 @@ FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[
           "Section",
           TextAlignment -> Center
         ],
-        If[MemberQ[{"Ce","Yb"},ln],
-        (diffHistogram = "";
-         diffPlot = "";
-        )
-        ],
-        TextCell[diffHistogram, TextAlignment -> Center],
+        (* TextCell[diffHistogram, TextAlignment -> Center], *)
         TextCell[diffPlot, "Output", TextAlignment -> Center],
         TextCell[assignmentMatches, "Output", TextAlignment -> Center],
         TextCell[diffTable, "Output", TextAlignment -> Center],
@@ -357,17 +344,14 @@ FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[
           NotebookSave[nb, nbFname];
         )
       ];
-      If[OptionValue["HTMLSave"],
-      (
-        htmlFname = FileNameJoin[{workDir,OptionValue["OutputDirectory"], "html", ln <> " in " <> "LaF3" <> appToFname <> ".html"}];
-        PrintFun[">> Saving html version to ", htmlFname, " ..."];
-        Export[htmlFname, nb];
-      )
-      ];
     )
     ];
 
-    Return[{rmsDifference, carnallEnergies, eigenEnergies, ln, carnallAssignments, simplerStateLabels, eigensys, basis, truncatedStates}];
+    Return[{rmsDifference, carnallEnergies, 
+            eigenEnergies, ln,
+            carnallAssignments, simplerStateLabels,
+            eigensys, basis,
+            truncatedStates}];
   )
 ];
 

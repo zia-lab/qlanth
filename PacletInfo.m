@@ -1,11 +1,20 @@
 Paclet[
-    Name -> "qlanth",
-    Version -> "1.0.0",
-    MathematicaVersion -> "13.2+",
-    Description -> "A Hamiltonian for the lanthanides.",
-    Creator -> "Juan David Lizarazo Ferro, Christopher Dodson",
-    Extensions -> 
+<|
+    "Name" -> "qlanth",
+    "Version" -> "1.0.0",
+    "WolframVersion" -> "13.2+",
+    "Description" -> "qlanth provides the matrix representation of the effective Hamiltonian for the description of lanthanide ions.",
+    "Creator" -> "juan.lizarazo@icloud.com",
+    "Extensions" -> 
         {
-            {"Kernel", Root ->  ".", Context -> "qlanth`"}
+            {
+                "Documentation"
+            },
+            {
+                "Kernel", 
+                Root ->  ".",
+                Context -> "qlanth`"
+            }
         }
+|>
 ]
