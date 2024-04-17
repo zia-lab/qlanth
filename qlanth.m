@@ -2407,7 +2407,8 @@ Begin["`Private`"]
       Return[{Flatten[leveledEigenVals], leveledEigenVecs}]
     )
   ];
-  
+
+ 
   SimplerSymbolicIntermediateHamMatrix::usage = "SimplerSymbolicIntermediateHamMatrix[numE] is provides a variation of HamMatrixAssembly that returns the intermediate Hamiltonian blocks applying a simplifier. The keys of the given association correspond to the different values of J that are possible for f^numE, the values are sparse array that are meant to be interpreted in the basis provided by BasisLSJ.
   The option \"Simplifier\" is a list of symbols that are set to zero in the intermediate Hamiltoniann description. At a minimum this has to include the crystal field parameters. By default this includes everything except the Slater parameters Fk and the spin orbit coupling \[Zeta].
   The option \"Export\" controls whether the resulting association is saved to disk, the default is True and the resulting file is saved to the ./hams/ folder. A hash is appended to the filename that corresponds to the simplifier used in the resulting expression. If the option \"Overwrite\" is set to False then these files may be used to quickly retrieve a previously computed case. The file is saved both in .m and .mx format.
@@ -2492,7 +2493,7 @@ Begin["`Private`"]
     )
   ];
 
-  IntermediateSolver::usage="IntermediateSolver[numE, params, host] puts together (or retrieves from disk) the symbolic intermediate Hamiltonian for the f^numE configuration and solves it for the given params. 
+  IntermediateSolver::usage="IntermediateSolver[numE, params] puts together (or retrieves from disk) the symbolic intermediate Hamiltonian for the f^numE configuration and solves it for the given params returning the resultant energies and eigenstates.
   If the option \"Return as states\" is set to False, then the function returns an association whose keys are values for J in f^numE, and whose values are lists with two elements. The first element being equal to the ordered basis for the corresponding subpsace, given as a list of lists of the form {LS string, J}. The second element being another list of two elements, the first element being equal to the energies and the second being equal to the corresponding normalized eigenvectors. The energies given have been subtracted the energy of the ground state.
   If the option \"Return as states\" is set to True, then the function returns a list with two elements. The first element is the global intermediate coupling basis for the f^numE configuration, given as a list of lists of the form {LS string, J}. The second element is a list of lists with three elements, in each list the first element being equal to the energy, the second being equal to the value of J, and the third being equal to the corresponding normalized eigenvector. The energies given have been subtracted the energy of the ground state, and the states have been sorted in order of increasing energy.
   The following options are admitted:
@@ -2513,7 +2514,7 @@ Begin["`Private`"]
     ],
     "PrintFun" -> PrintTemporary
   };
-  IntermediateSolver[numE_Integer, params0_Association, host_String:"Ln",OptionsPattern[]] := Module[
+  IntermediateSolver[numE_Integer, params0_Association, OptionsPattern[]] := Module[
     {ln, simplifier, simpleHam, basis, numHam, eigensys, startTime, endTime, diagonalTime, params=params0, globalBasis, eigenVectors, eigenEnergies, eigenJs, states, groundEnergy, allEnergies, PrintFun},
     (
       ln    = theLanthanides[[numE]];
@@ -2560,6 +2561,7 @@ Begin["`Private`"]
       ];
     )
   ];
+
  
   (* ################ To Intermediate Coupling ################# *)
   (* ########################################################### *)
@@ -3264,7 +3266,7 @@ Begin["`Private`"]
   (* ########################################################### *)
   (* ################## Eigensystem analysis ################### *)
 
-  PrettySaundersSLJmJ::usage = "PrettySaundersSLJmJ[{SL, J, mJ}] produces a human-redeable symbol for the given basis vector {SL, J, mJ}."
+  PrettySaundersSLJmJ::usage = "PrettySaundersSLJmJ[{SL, J, mJ}] produces a human-redeable symbol for the given basis vector {SL, J, mJ}.";
   Options[PrettySaundersSLJmJ] = {"Representation" -> "Ket"};
   PrettySaundersSLJmJ[{SL_, J_, mJ_}, OptionsPattern[]] := (If[
     StringQ[SL], 
@@ -3282,6 +3284,32 @@ Begin["`Private`"]
     pretty = DisplayForm[pretty];
     If[OptionValue["Representation"] == "Ket",
       pretty = Ket[pretty]
+    ];
+    Return[pretty];
+  );
+
+  PrettySaundersSLJ::usage = "PrettySaundersSLJ[{SL, J}] produces a human-redeable symbol for the given basis vector {SL, J}. SL can be either a list of two numbers representing S and L or a string representing the spin multiplicity and the total orbital angular momentum J in spectroscopic notation. The option \"Representation\" can be used to specify whether the output is given as a symbol or as a ket. The default is \"Ket\".;
+  Options[PrettySaundersSLJ] = {"Representation"->"Ket"};
+  PrettySaundersSLJ[{SL_,J_},OptionsPattern[]]:=(
+    If[StringQ[SL],
+    (
+      {S,L}=FindSL[SL];
+      L=StringTake[SL,{2,-1}];
+    ),
+      {S,L}=SL
+    ];
+    pretty = RowBox[{
+        AdjustmentBox[Style[2*S+1,Smaller],BoxBaselineShift->-1,BoxMargins->0],
+        AdjustmentBox[PrintL[L],BoxMargins->-0.2],
+        AdjustmentBox[Style[InputForm[J],Small,FontTracking->"Narrow"],BoxBaselineShift->1,BoxMargins->{{0.7,0},{0.4,0.4}}]
+      }
+    ];
+    pretty = DisplayForm[pretty];
+    pretty = Which[
+      OptionValue["Representation"]=="Ket",
+        Ket[pretty],
+      OptionValue["Representation"]=="Symbol",
+        pretty
     ];
     Return[pretty];
   );

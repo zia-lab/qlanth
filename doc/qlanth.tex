@@ -73,7 +73,7 @@
     % Software name
     {\Large\qlanth}\\
     \vspace*{0.5cm}
-    {\large version $\ket{\alpha}^{(5)}$}\\
+    {\large version $\ket{\alpha}^{(6)}$}\\
     \vspace*{2cm}
     
     % Additional information
@@ -157,7 +157,23 @@ Much as $L$ tells us how a rotation acts on a $L$ wavefunction by mixing differe
 
 In \qlanth the $\RacahW$ and $\RacahU$ are used in order to determine the matrix elements of the $\casimir{\SO{7}}$ and $\casimir{\Gtwo}$ operators.
 
-\section{The \cfps}
+\subsection{The $\LSJbasis$ intermediate coupling basis}
+
+When only interactions with spherical symmetry are kept (all but the crystal field or external magnetic field) then the total angular momentum $J$ is a good quantum number and all the $\Msub{J}$ projections are degenerate. This allows for a much more frugal description of the eigenstates, in what is traditionally called the intermediate coupling description. Not only the number of basis states that need to be considered is much less than otherwise, but also the diagonalization is more efficient since it can be carried out within subspaces with shared $J$.
+
+In \qlanth the function \codetext{BasisLSJ} can be used to retrieve the ordered basis that is used in the intermediate coupling description. This function admits the option ``ReturnAsAssociation'' in which the function returns an association where the keys are values of $J$ and the values are lists of lists of the form $\{\text{LS string}, J\}$.
+
+To obtain the blocks (indexed by J) representing the intermediate coupling Hamiltonian, the function \codetext{SimplerSymbolicIntermediateHamMatrix} is included in \qlanth.
+
+\lstinputlisting[language=Mathematica]{./fundefs/SimplerSymbolicIntermediateHamMatrix.tex} 
+
+Whereas this description may be calculated without ever making explicit reference to $\Msub{J}$, in \qlanth what is done is that the more verbose description associated with the $\LSJMbasis$ basis is ``downsized'' to obtain the intermediate coupling description. To this aim the following functions in \qlanth are instrumental: \codetext{EigenLever}, \codetext{FreeHam}, \codetext{ListRepeater}, and \codetext{ListLever}.
+
+The function \codetext{IntermediateSolver} can be used to facilitate the calculation of a specific intermediate coupling level structure given values for the parameters that are kept in the description.
+
+\lstinputlisting[language=Mathematica]{./fundefs/IntermediateSolver.tex}
+
+\section{The \cfps} 
 
 In the 1920s and 1930s, when spectroscopic evidence was being studied to elucidate the principles of quantum mechanics, one conceptual tool that was put forward for the analysis of the complex spectra of ions \cite{bacher_atomic_1934} involved using the spectrum of an ion at one stage of ionization to understand another stage.  For instance, using the fourth spectrum of oxygen (OIV) in order to understand the third spectrum (OIII) of the same element. 
 
@@ -238,7 +254,7 @@ In \qlanth these blocks are put together by the function \codetext{JJBlockMatrix
 
 \lstinputlisting[language=Mathematica]{./fundefs/JJBlockMatrix.tex}
 
-Once these blocks have been calculated and saved to disk (in the folder \codetext{./hams/}) the function \codetext{HamMatrixAssembly} takes them, assembles the arrays in block form, and finally flattens it to provide a rank-2 array. This are the arrays that are finally diagonalized to find energies and eigenstates.
+Once these blocks have been calculated and saved to disk (in the folder \codetext{./hams/}) the function \codetext{HamMatrixAssembly} takes them, assembles the arrays in block form, and finally flattens it to provide a rank-2 array. This are the arrays that are finally diagonalized to find energies and eigenstates. Through options this function can also return the Hamiltonian in block form, which is useful for the intermediate coupling description.
 
 \lstinputlisting[language=Mathematica]{./fundefs/HamMatrixAssembly.tex}
 
