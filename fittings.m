@@ -85,6 +85,8 @@ ProgressNotebook[OptionsPattern[]] := (
    True,
    CreateDocument[(
       {
+        "",
+        Dynamic[Framed[progressMessage]],
         Dynamic[
         GraphicsColumn[
          {ListPlot[rmsHistory,
@@ -579,7 +581,7 @@ FitToHam[numE_Integer, expData_List, fitToSymbols_List, simplifier_List, Options
 TruncationFit::usage="TruncaationFit[numE, expData, numReps, activeVars, startingValues, Options] fits the given expData in an f^numE configuration, generating numReps different solutions, and varying the symbols in activeVars. The list startingValues is a list with all of the parameters needed to define the Hamiltonian (including values for activeVars, which will be disregarded but are required as position placeholders). The function returns a list of solutions. The solutions are the results of the NMinimize function using the Differential Evolution method. The solutions are a list of tuples. The first element of the tuple is the RMS error and the second element is a list of replacement rules for the fitted parameters. Once each NMinimize is done, the function saves the solutions to a file. The file is named with a prefix and a UUID. The file is saved in the log sub-directory as a .m file. The solver is always constrained by the relevant subsets of constraints for the parameters as provided by the Constrainer function. By default the Differential Evolution method starts with a generation of points within the given constraints, however it is also possible here to have a different region from which the initial points are chosen with the option \"StartingForVars\". 
 
 The following options can be used:
-  \"SignatureCheck\" : if True then then the function returns prematurely, returning a list with the symbols that would have defined the Hamiltonian after all simplifications have been applied. Useful to check the entire parameter set that the Hamiltonian has, which has to match one-to-one what is provided by startingValues.
+  \"SignatureCheck\" : if True then then the function ends prematurely, printing a list with the symbols that would have defined the Hamiltonian after all simplifications have been applied. Useful to check the entire parameter set that the Hamiltonian has, which has to match one-to-one what is provided by startingValues.
   \"FilePrefix\" : the prefix to use for the file name, by default this is the symbol for the lanthanide.
   \"AccuracyGoal\": sets the accuracy goal for NMinimize, the default is 3.
   \"MaxHistory\" : determines how long the logs for the solver can be.
@@ -802,11 +804,11 @@ TruncationFit[numE_Integer, expData0_List, numReps_Integer, activeVars_List, sta
       pivot = If[EvenQ[numEv],0,-1/2];
       LSJmultiplets = (#[[1]]<>ToString[InputForm[#[[2]]]])&/@Select[BasisLSJMJ[numEv],#[[-1]]== pivot &];
       (* Calculate the multiplet assignments that the intermediate basis eigenvectors have *)
-      multipletAssingments = Table[
+      multipletAssignments = Table[
         (
           J         = Js[[idx]];
           eigenVecs = theIntermediateEigensystems[[idx]][[2]];
-          majorComponentIndices        = Ordering[Abs[#]][[1]]&/@eigenVecs;
+          majorComponentIndices        = Ordering[Abs[#]][[-1]]&/@eigenVecs;
           majorComponentAssignments    = LSJmultiplets[[#]]&/@majorComponentIndices;
           (* All of the degenerate eigenvectors belong to the same multiplet*)
           elevatedMultipletAssignments = ListRepeater[majorComponentAssignments,2J+1];
@@ -815,17 +817,17 @@ TruncationFit[numE_Integer, expData0_List, numReps_Integer, activeVars_List, sta
       {idx, 1, Length[Js]}
       ];
       (* Put together the multiplet assignments and the energies *)
-      freeIenergiesAndMultiplets = Transpose/@Transpose[{First/@elevatedIntermediateEigensystems, multipletAssingments}];
+      freeIenergiesAndMultiplets = Transpose/@Transpose[{First/@elevatedIntermediateEigensystems, multipletAssignments}];
       freeIenergiesAndMultiplets = Flatten[freeIenergiesAndMultiplets, 1];
       (* Calculate the change of basis matrix using the intermediate coupling eigenvectors *)
       basisChanger = BlockDiagonalMatrix[Transpose/@Last/@elevatedIntermediateEigensystems];
       basisChanger = SparseArray[basisChanger];
-      Return[{theIntermediateEigensystems, multipletAssingments, elevatedIntermediateEigensystems, freeIenergiesAndMultiplets, basisChanger}]
+      Return[{theIntermediateEigensystems, multipletAssignments, elevatedIntermediateEigensystems, freeIenergiesAndMultiplets, basisChanger}]
     );
     
     PrintFun["Calculating the intermediate eigensystems for ",ln," using free-ion params from LaF3 ..."];
     (* Calculate intermediate coupling basis using the free-ion params for LaF3 *)
-    {theIntermediateEigensystems, multipletAssingments, elevatedIntermediateEigensystems, freeIenergiesAndMultiplets, basisChanger} = TheIntermediateEigensystems@@freeBies;
+    {theIntermediateEigensystems, multipletAssignments, elevatedIntermediateEigensystems, freeIenergiesAndMultiplets, basisChanger} = TheIntermediateEigensystems@@freeBies;
     
     (* Use that intermediate coupling basis to compile a function for the full Hamiltonian *)
     allFreeEnergies = Flatten[First/@elevatedIntermediateEigensystems];
@@ -1004,23 +1006,23 @@ TruncationFit[numE_Integer, expData0_List, numReps_Integer, activeVars_List, sta
 );
 
 ClassicalFit::usage="Classical[numE, expData, excludeDataIndices, problemVars, startValues, \[Sigma]exp, constraints_List, Options] fits the given expData in an f^numE configuration, by using the symbols in problemVars. The symbols given in problemVars may be constrained or held constant, this being controlled by constraints list which is a list of replacement rules expressing desired constraints. The constraints list additional constraints imposed upon the model parameters that remain once other simplifications have been \"baked\" into the compiled Hamiltonians that are used to increase the speed of the calculation. 
-
+ 
 Important, note that in the case of odd number of electrons the given data must explicitly include the Kramers degeneracy; excludeDataIndices must be compatible with this.
-
+ 
 The list expData needs to be a list of lists with the only restriction that the first element of them corresponds to energies of levels. In this list, an empty value can be used to indicate known gaps in the data. Even if the energy value for a level is known (and given in expData) certain values can be omitted from the fitting procedure through the list excludeDataIndices, which correspond to indices in expData that should be skipped over.
-
+ 
 The Hamiltonian used for fitting is version that has been truncated either by using the maximum energy given in expData or by manually setting a truncation energy using the option \"TruncationEnergy\".
-
+ 
 The argument \[Sigma]exp is the estimated uncertainty in the differences between the calculated and the experimental energy levels. This is used to estimate the uncertainty in the fitted parameters. Admittedly this will be a rough estimate (at least on the contribution of the calculated uncertainty), but it is better than nothing and may at least provide a lower bound to the uncertainty in the fitted parameters. It is assumed that the uncertainty in the differences between the calculated and the experimental energy levels is the same for all of them.
-
+ 
 The list startValues is a list with all of the parameters needed to define the Hamiltonian (including the initial values for problemVars). 
-
+ 
 The function saves the solution to a file. The file is named with a prefix (controlled by the option \"FilePrefix\") and a UUID. The file is saved in the log sub-directory as a .m file.
-
+ 
 Here's a description of the different parts of this function: first the Hamiltonian is assembled and simplified using the given simplifications. Then the intermediate coupling basis is calculated using the free-ion parameters for the given lanthanide. The Hamiltonian is then changed to the intermediate coupling basis and truncated. The truncated Hamiltonian is then compiled into a function that can be used to calculate the energy levels of the truncated Hamiltonian. The function that calculates the energy levels is then used to fit the experimental data. The fitting is done using FindMinimum with the Levenberg-Marquardt method.
-
+ 
 The function returns an association with the following keys: 
-
+ 
 \"bestRMS\" which is the best \[Sigma] value found.
 \"bestParams\" which is the best set of parameters found.
 \"paramSols\" which is a list of the parameters during the stepping of the fitting algorithm.
@@ -1028,30 +1030,30 @@ The function returns an association with the following keys:
 \"simplifier\" which is the simplifier used to simplify the Hamiltonian.
 \"excludeDataIndices\" as given in the input.
 \"starValues\" as given in the input.
-
+ 
 \"freeIonSymbols\" which are the symbols used in the intermediate coupling basis.
 \"truncationEnergy\" which is the energy used to truncate the Hamiltonian.
 \"numE\" which is the number of electrons in the f^numE configuration.
 \"expData\" which is the experimental data used for fitting.
 \"problemVars\" which are the symbols considered for fitting
-
+ 
 \"maxIterations\" which is the maximum number of iterations used by NMinimize.
 \"hamDim\" which is the dimension of the full Hamiltonian.
 \"allVars\" which are all the symbols defining the Hamiltonian under the aggregate simplifications.
 \"freeBies\" which are the free-ion parameters used to define the intermediate coupling basis.
 \"truncatedDim\" which is the dimension of the truncated Hamiltonian.
 \"compiledIntermediateFname\" the file name of the compiled function used for the truncated Hamiltonian.
-
+ 
 \"fittedLevels\" which is the number of levels fitted for.
 \"actualSteps\" the number of steps that FindMiniminum actually took.
 \"solWithUncertainty\" which is a list of replacement rules whose left hand sides are symbols for the used parameters and whose's right hand sides are lists with the best fit value and the uncertainty in that value.
 \"rmsHistory\" which is a list of the \[Sigma] values found during the fitting.
 \"Appendix\" which is an association appended to the log file under the key \"Appendix\".
 \"presentDataIndices\" which is the list of indices in expData that were used for fitting, this takes into account both the empty indices in expData and also the indices in excludeDataIndices.
-
+ 
 \"states\" which contains a list of eigenvalues and eigenvectors for the fitted model, this is only available if the option \"SaveEigenvectors\" is set to True; if a general shift of energy was allowed for in the fitting, then the energies are shifted accordingly.
 \"energies\" which is a list of the energies of the fitted levels, this is only available if the option \"SaveEigenvectors\" is set to False. If a general shift of energy was allowed for in the fitting, then the energies are shifted accordingly.
-
+ 
 The function admits the following options with default values:
   \"MaxHistory\" : determines how long the logs for the solver can be.
   \"MaxIterations\": determines the maximum number of iterations used by NMinimize.
@@ -1143,8 +1145,9 @@ Options[ClassicalFit] = {
     |>,
     "FreeIonSymbols" -> {F0, F2, F4, F6, \[Zeta]}
 };
-ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_List, startValues_Association, \[Sigma]exp_Real, constraints_List, OptionsPattern[]]:=
-  Module[{accuracyGoal, activeVarIndices, activeVars, activeVarsString, activeVarsWithRange, allFreeEnergies, allFreeEnergiesSorted, allVars, allVarsVec, argsForEvalInsideOfTheIntermediateSystems, argsOfTheIntermediateEigensystems, aVar, aVarPosition, basis, basisChanger, basisChangerBlocks, bestError, bestParams, bestRMS, blockShifts, blockSizes, colIdx, compiledDiagonal, compiledIntermediateFname, constrainedProblemVars, constrainedProblemVarsList, covMat, currentRMS, degressOfFreedom, dependentVars, diagonalBlocks, diagonalScalarBlocks, diff, eigenEnergies, eigenvalueDispenserTemplate, eigenVectors, elevatedIntermediateEigensystems, endTime, fmSol, fmSolAssoc, fractionalWidth, freeBies, freeIenergiesAndMultiplets, freeionSymbols, fullHam, fullSolVec, funcString, ham, hamDim, hamEigenvaluesTemplate, hamString, hess, indepSolVecVec, indepVars, intermediateHam, isolationValues, jobVars, lin, linMat, ln, lnParams, logFilePrefix, logFname, magneticSimplifier, maxFreeEnergy, maxHistory, maxIterations, methodString, methodStringTemplate, minFreeEnergy, minpoly, modelSymbols, multipletAssingments, numBlocks, numQSignature, numReps, solCompendium, openNotebooks, ordering, othersFixed, otherSimplifier, p0, paramBest, paramSigma, perHam, polySols, presentDataIndices, PrintFun, problemVarsPositions, problemVarsQ, problemVarsQString, problemVarsVec, problemVarsWithStartValues, reducedModelSymbols, resultMessage, roundedTruncationEnergy, rowIdx, runningInteractive, shiftToggle, simplifier, slackChan, sol, solAssoc, sols, solWithUncertainty, sortedTruncationIndex, sqdiff, standardValues, starTime, startingValues, startTime, startVarValues, states, steps, symmetrySimplifier, theIntermediateEigensystems, TheIntermediateEigensystems, TheTruncatedAndSignedPathGenerator, thisPoly, threadHeaderTemplate, threadMessage, threadTS, timeTaken, totalVariance, truncadedFname, truncatedIntermediateBasis, truncatedIntermediateHam, truncationEnergy, truncationIndices, truncationUmbral, usingInitialRange, varHash, varIdx, varsWithConstants, varWithValsSignature, \[Lambda]0Vec, \[Lambda]exp},
+ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_List, startValues_Association, \[Sigma]exp_?NumericQ, constraints_List, OptionsPattern[]]:=
+  (* Module[{accuracyGoal, activeVarIndices, activeVars, activeVarsString, activeVarsWithRange, allFreeEnergies, allFreeEnergiesSorted, allVars, allVarsVec, argsForEvalInsideOfTheIntermediateSystems, argsOfTheIntermediateEigensystems, aVar, aVarPosition, basis, basisChanger, basisChangerBlocks, bestError, bestParams, bestRMS, blockShifts, blockSizes, colIdx, compiledDiagonal, compiledIntermediateFname, constrainedProblemVars, constrainedProblemVarsList, covMat, currentRMS, degressOfFreedom, dependentVars, diagonalBlocks, diagonalScalarBlocks, diff, eigenEnergies, eigenvalueDispenserTemplate, eigenVectors, elevatedIntermediateEigensystems, endTime, fmSol, fmSolAssoc, fractionalWidth, freeBies, freeIenergiesAndMultiplets, freeionSymbols, fullHam, fullSolVec, funcString, ham, hamDim, hamEigenvaluesTemplate, hamString, hess, indepSolVecVec, indepVars, intermediateHam, isolationValues, jobVars, lin, linMat, ln, lnParams, logFilePrefix, logFname, magneticSimplifier, maxFreeEnergy, maxHistory, maxIterations, methodString, methodStringTemplate, minFreeEnergy, minpoly, modelSymbols, multipletAssignments, needlePosition, numBlocks, numQSignature, numReps, solCompendium, openNotebooks, ordering, othersFixed, otherSimplifier, p0, paramBest, paramSigma, perHam, polySols, presentDataIndices, PrintFun, problemVarsPositions, problemVarsQ, problemVarsQString, problemVarsVec, problemVarsWithStartValues, reducedModelSymbols, resultMessage, roundedTruncationEnergy, rowIdx, runningInteractive, shiftToggle, simplifier, slackChan, sol, solAssoc, sols, solWithUncertainty, sortedTruncationIndex, sqdiff, standardValues, starTime, startingValues, startTime, startVarValues, states, steps, symmetrySimplifier, theIntermediateEigensystems, TheIntermediateEigensystems, TheTruncatedAndSignedPathGenerator, thisPoly, threadHeaderTemplate, threadMessage, threadTS, timeTaken, totalVariance, truncadedFname, truncatedIntermediateBasis, truncatedIntermediateHam, truncationEnergy, truncationIndices, truncationUmbral, usingInitialRange, varHash, varIdx, varsWithConstants, varWithValsSignature, \[Lambda]0Vec, \[Lambda]exp}, *)
+  Module[{},
   (
     solCompendium   = <||>;
     addShift      = OptionValue["AddConstantShift"];
@@ -1175,16 +1178,16 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
       OptionValue["TruncationEnergy"]
       ];
     PrintFun["Using a truncation energy of ", truncationEnergy, " K"];
-
+    
     simplifier          = Join[magneticSimplifier,
                           magFieldSimplifier,
                           symmetrySimplifier,
                           threeBodySimplifier,
                           otherSimplifier];
-
+    
     PrintFun["Determining gaps in the data ..."];
     (* the indices that are numeric in expData whatever is non-numeric is assumed as a known gap *)
-    presentDataIndices = Flatten[Position[expData, {_?(NumericQ[#] &), _, _}]];
+    presentDataIndices = Flatten[Position[expData, {_?(NumericQ[#] &), ___}]];
     (* some indices omitted here based on the excludeDataIndices argument *)
     presentDataIndices = Complement[presentDataIndices, excludeDataIndices];
     
@@ -1199,6 +1202,7 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
     solCompendium["problemVars"]        = problemVars;
     solCompendium["maxIterations"]      = maxIterations;
     solCompendium["hamDim"]             = hamDim;
+    solCompendium["constraints"]        = constraints;
     modelSymbols  = Sort[Select[paramSymbols, Not[MemberQ[Join[racahSymbols, chenSymbols,{t2Switch, \[Epsilon],gs}],#]]&]];
     (* remove the symbols that will be removed by the simplifier, no symbol should remain here that is not in the symbolic Hamiltonian *)
     reducedModelSymbols = Select[modelSymbols, Not[MemberQ[Keys[simplifier],#]]&];
@@ -1208,23 +1212,23 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
       (
         Print["Given the model parameters and the simplifying assumptions, the resultant model parameters are:"];
         Print[{reducedModelSymbols}];
-        Print["The ordering in these needs to be respected in the startValues parameter ..."];
         Print["Exiting ..."];
         Return[""];
       )
     ];
-
+    
     (* calculate the basis *)
     PrintFun["Retrieving the LSJMJ basis for f^", numE, " ..."];
     basis    = BasisLSJMJ[numE];
-
+     
     (* get the reference parameters from LaF3 *)
     PrintFun["Getting reference free-ion parameters for ",ln," using LaF3 ..."];
     lnParams = LoadParameters[ln];
     freeBies = Prepend[Values[(#->(#/.lnParams)) &/@ freeIonSymbols],  numE];
     (* a more explicit alias *)
     allVars           = reducedModelSymbols;
-    standardValues    = allVars /. lnParams;
+    numericConstraints = Association@Select[constraints, NumericQ[#[[2]]] &];
+    standardValues    = allVars /. Join[lnParams, numericConstraints];
     solCompendium["allVars"]  = allVars;
     solCompendium["freeBies"] = freeBies;
     
@@ -1233,7 +1237,7 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
     compiledIntermediateFname = ln<>"-compiled-intermediate-truncated-ham-"<>ToString[varHash]<>".mx";
     compiledIntermediateFname = FileNameJoin[{moduleDir, "compiled", compiledIntermediateFname}];
     solCompendium["compiledIntermediateFname"] = compiledIntermediateFname;
-
+    
     If[FileExistsQ[compiledIntermediateFname],
       PrintFun["This ion, free-ion params, and full set of variables have been used before (as determined by {numE, allVars, freeBies, truncationEnergy,simplifier}). Loading the previously saved compiled function and intermediate coupling basis ..."];
       PrintFun["Using : ", compiledIntermediateFname];
@@ -1257,13 +1261,13 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
       (* these include the MJ quantum numbers, remove that *)
       PrintFun["Contracting the basis vectors by removing the MJ quantum numbers from the diagonal blocks ..."];
       diagonalScalarBlocks = FreeHam[diagonalScalarBlocks, numE];
-
+      
       argsOfTheIntermediateEigensystems         = StringJoin[Riffle[Prepend[(ToString[#]<>"v_") & /@ freeIonSymbols,"numE_"],", "]];
       argsForEvalInsideOfTheIntermediateSystems = StringJoin[Riffle[(ToString[#]<>"v") & /@ freeIonSymbols,", "]];
       PrintFun["argsOfTheIntermediateEigensystems = ",argsOfTheIntermediateEigensystems];
       PrintFun["argsForEvalInsideOfTheIntermediateSystems = ",argsForEvalInsideOfTheIntermediateSystems];
       PrintFun["(if the following fails, it might help to see if the arguments of TheIntermediateEigensystems match the ones shown above)"];
-
+      
       (* compile a function that will effectively calculate the spectrum of all of the scalar blocks given the parameters of the free-ion part of the Hamiltonian *)
       (* compile one function for each of the blocks *)
       PrintFun["Compiling functions for the diagonal blocks of the Hamiltonian ..."];
@@ -1280,11 +1284,14 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
         pivot = If[EvenQ[numEv],0,-1/2];
         LSJmultiplets = (#[[1]]<>ToString[InputForm[#[[2]]]])&/@Select[BasisLSJMJ[numEv],#[[-1]]== pivot &];
         (* calculate the multiplet assignments that the intermediate basis eigenvectors have *)
-        multipletAssingments = Table[
+        needlePosition = 0;
+        multipletAssignments = Table[
           (
             J         = Js[[idx]];
             eigenVecs = theIntermediateEigensystems[[idx]][[2]];
-            majorComponentIndices        = Ordering[Abs[#]][[1]]&/@eigenVecs;
+            majorComponentIndices        = Ordering[Abs[#]][[-1]]&/@eigenVecs;
+            majorComponentIndices       += needlePosition;
+            needlePosition              += Length[majorComponentIndices];
             majorComponentAssignments    = LSJmultiplets[[#]]&/@majorComponentIndices;
             (* All of the degenerate eigenvectors belong to the same multiplet*)
             elevatedMultipletAssignments = ListRepeater[majorComponentAssignments,2J+1];
@@ -1293,18 +1300,18 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
         {idx, 1, Length[Js]}
         ];
         (* put together the multiplet assignments and the energies *)
-        freeIenergiesAndMultiplets = Transpose/@Transpose[{First/@elevatedIntermediateEigensystems, multipletAssingments}];
+        freeIenergiesAndMultiplets = Transpose/@Transpose[{First/@elevatedIntermediateEigensystems, multipletAssignments}];
         freeIenergiesAndMultiplets = Flatten[freeIenergiesAndMultiplets, 1];
         (* calculate the change of basis matrix using the intermediate coupling eigenvectors *)
         basisChanger = BlockDiagonalMatrix[Transpose/@Last/@elevatedIntermediateEigensystems];
         basisChanger = SparseArray[basisChanger];
-        Return[{theIntermediateEigensystems, multipletAssingments, elevatedIntermediateEigensystems, freeIenergiesAndMultiplets, basisChanger}]
+        Return[{theIntermediateEigensystems, multipletAssignments, elevatedIntermediateEigensystems, freeIenergiesAndMultiplets, basisChanger}]
       );
-
+      
       PrintFun["Calculating the intermediate eigensystems for ",ln," using free-ion params from LaF3 ..."];
       (* calculate intermediate coupling basis using the free-ion params for LaF3 *)
-      {theIntermediateEigensystems, multipletAssingments, elevatedIntermediateEigensystems, freeIenergiesAndMultiplets, basisChanger} = TheIntermediateEigensystems@@freeBies;
-
+      {theIntermediateEigensystems, multipletAssignments, elevatedIntermediateEigensystems, freeIenergiesAndMultiplets, basisChanger} = TheIntermediateEigensystems@@freeBies;
+      
       (* use that intermediate coupling basis to compile a function for the full Hamiltonian *)
       allFreeEnergies = Flatten[First/@elevatedIntermediateEigensystems];
       (* important that the intermediate coupling basis have attached energies, which make possible the truncation *)
@@ -1321,7 +1328,7 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
       ];
       (* the actual energy at which the truncation is made *)
       roundedTruncationEnergy = allFreeEnergiesSorted[[sortedTruncationIndex]];
-
+      
       (* the indices that enact the truncation *)
       truncationIndices = ordering[[;;sortedTruncationIndex]];
       (* Return[{basisChanger, ham, truncationIndices}]; *)
@@ -1359,7 +1366,7 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
       (* compile a function that will calculate the truncated Hamiltonian given the parameters in allVars, this is the function to be use in fitting *)
       compileIntermediateTruncatedHam = Compile[Evaluate[allVars], Evaluate[truncatedIntermediateHam]];
       (* save the compiled function *)
-      PrintFun["Saving the compiled function for the truncated Hamiltonian and the truncatedIntermediateBasis..."];
+      PrintFun["Saving the compiled function for the truncated Hamiltonian and the truncated intermediate basis ..."];
       Export[compiledIntermediateFname, {compileIntermediateTruncatedHam, truncatedIntermediateBasis}];
     )
     ];
@@ -1370,7 +1377,7 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
     solCompendium["presentDataIndices"] = presentDataIndices;
     
     (* the problemVars are the symbols that will be fitted for *)
-
+    
     PrintFun["Starting up the fitting process using the Levenberg-Marquardt method ..."];
     (* using the problemVars I need to create the argument list including _?NumericQ *)
     problemVarsQ = (ToString[#] <> "_?NumericQ") & /@ problemVars;
@@ -1413,7 +1420,7 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
         "problemVarsString" -> problemVarsString
         |>];
     ToExpression[eigenValueDispenserString];  
-
+    
     PringFun["Determining the free variables after constraints ..."];
     constrainedProblemVars = (problemVars /. constraints);
     constrainedProblemVarsList = Variables[constrainedProblemVars];
@@ -1484,6 +1491,9 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
     allVarsVec = Transpose[{allVars}];
     p0 = Transpose[{fullSolVec}];
     linMat = {};
+    If[addShift,
+      tail = -2,
+      tail = -1];
     Do[
       (
         aVarPosition = Position[allVars, aVar][[1, 1]];
@@ -1498,7 +1508,7 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
         lin     = FirstOrderPerturbation[Last /@ states, perHam];
         linMat  = Append[linMat, lin];
       ),
-      {aVar, constrainedProblemVarsList[[;;-2]]}
+      {aVar, constrainedProblemVarsList[[;;tail]]}
     ];
     PrintFun["Removing the gradient of the ground state ..."];
     linMat = (# - #[[1]] & /@ linMat);
@@ -1509,8 +1519,10 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
     \[Lambda]0Vec = Transpose[{eigenEnergies[[presentDataIndices]]}];
     PrintFun["Putting together the experimental vector ..."];
     \[Lambda]exp = Transpose[{First /@ expData[[presentDataIndices]]}];
-
-    problemVarsVec = Transpose[{constrainedProblemVarsList[[;;-2]]}];
+    problemVarsVec = If[addShift,
+      Transpose[{constrainedProblemVarsList[[;;-2]]}],
+      Transpose[{constrainedProblemVarsList}] 
+    ];
     indepSolVecVec = Transpose[{indepSolVec}];
     PrintFun["Calculating the difference between eigenvalues at solution ..."];
     diff = If[linMat=={},
@@ -1528,7 +1540,7 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
       (
         aVar        = constrainedProblemVarsList[[varIdx]];
         paramBest   = aVar /. fmSolAssoc;
-        othersFixed = AssociationThread[Delete[constrainedProblemVarsList[[;;-2]], varIdx] -> Delete[indepSolVec, varIdx]];
+        othersFixed = AssociationThread[Delete[constrainedProblemVarsList[[;;tail]], varIdx] -> Delete[indepSolVec, varIdx]];
         thisPoly    = sqdiff /. othersFixed;
         polySols    = Last /@ Last /@ Solve[thisPoly == minpoly + 1*totalVariance];
         polySols    = Select[polySols, Im[#] == 0 &];

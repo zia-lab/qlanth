@@ -203,7 +203,7 @@ paramSymbols   = ToExpression[StringSplit[#, ":"][[1]]] & /@ paramSymbols;
 Protect /@ paramSymbols;
 
 (* Parameter families *)
-
+Unprotect[racahSymbols, chenSymbols, slaterSymbols, controlSymbols, cfSymbols, TSymbols, pseudoMagneticSymbols, marvinSymbols, casimirSymbols, magneticSymbols];
 racahSymbols   = {E0, E1, E2, E3};
 chenSymbols    = {wChErrA, wChErrB};
 slaterSymbols  = {F0, F2, F4, F6};
@@ -211,7 +211,7 @@ controlSymbols = {t2Switch, \[Sigma]SS};
 cfSymbols      = {B02, B04, B06, B12, B14, B16, B22, B24, B26, B34, B36, 
                   B44, B46, B56, B66, 
                   S12, S14, S16, S22, S24, S26, S34, S36, S44, S46, S56, S66};
-TSymbols              = {T2, T2p, T3, T4, T6, T7, T8, T11, T11p, T12, T14, T15, T16, T17, T18, T19};
+TSymbols       = {T2, T2p, T3, T4, T6, T7, T8, T11, T11p, T12, T14, T15, T16, T17, T18, T19};
 pseudoMagneticSymbols = {P0, P2, P4, P6};
 marvinSymbols         = {M0, M2, M4};
 magneticSymbols       = {Bx, By, Bz, gs, \[Zeta]};
@@ -243,6 +243,7 @@ AllowedSLJMTerms;
 AllowedSLJTerms;
 
 AllowedSLTerms;
+BasisLSJ;
 BasisLSJMJ;
 Bqk;
 CFP;
@@ -303,6 +304,7 @@ HamiltonianForm;
 
 HamiltonianMatrixPlot;
 HoleElectronConjugation;
+IntermediateSolver;
 IonSolver;
 ImportMZip;
 JJBlockMatrix;
@@ -368,6 +370,7 @@ Reducedt11inf2;
 
 ReplaceInSparseArray;
 SimplerSymbolicHamMatrix;
+SimplerSymbolicIntermediateHamMatrix;
 SOOandECSO;
 SOOandECSOTable;
 Seniority;
@@ -375,6 +378,7 @@ Seniority;
 ShiftedLevels;
 SixJay;
 SpinOrbit;
+SpinOrbitTable;
 SpinSpin;
 SpinSpinTable;
 
@@ -759,8 +763,8 @@ Begin["`Private`"]
     )
   ];
 
-  BasisLSJMJ::usage = "BasisLSJMJ[numE] returns the ordered basis in L-S-J-MJ with the total orbital angular momentum L and total spin angular momentum S coupled together to form J. The function returns a list with each element representing the quantum numbers for each basis vector. Each element is of the form {SL (string in spectroscopic notation),J,MJ}.
-  The option \"AsAssociation\" can be set to True to return the basis as an association with the keys being the allowed J values. The default is False.
+  BasisLSJMJ::usage = "BasisLSJMJ[numE] returns the ordered basis in L-S-J-MJ with the total orbital angular momentum L and total spin angular momentum S coupled together to form J. The function returns a list with each element representing the quantum numbers for each basis vector. Each element is of the form {SL (string in spectroscopic notation),J, MJ}.
+  The option \"AsAssociation\" can be set to True to return the basis as an association with the keys corresponding to values of J and the values lists with the corresponding {L, S, J, MJ} list. The default of this option is False.
   ";
   Options[BasisLSJMJ] = {"AsAssociation" -> False};
   BasisLSJMJ[numE_, OptionsPattern[]]:=Module[
@@ -779,6 +783,25 @@ Begin["`Private`"]
         )
       ];
       Return[basis]
+    )
+  ];
+
+  BasisLSJ::usage="BasisLSJ[numE] returns the intermediate coupling basis L-S-J. The function returns a list with each element representing the quantum numbers for each basis vector. Each element is of the form {SL (string in spectroscopic notation), J}.
+  The option \"AsAssociation\" can be set to True to return the basis as an association with the keys being the allowed J values. The default is False.
+    ";
+  Options[BasisLSJ]={"AsAssociation"->False};
+  BasisLSJ[numE_,OptionsPattern[]]:=Module[
+    {Js,basis},
+    (
+      Js    = AllowedJ[numE];
+      basis = BasisLSJMJ[numE,"AsAssociation"->False];
+      basis = DeleteDuplicates[{#[[1]],#[[2]]}& /@ basis];
+      If[OptionValue["AsAssociation"],
+        (
+          basis = Association @ Table[(J->Select[basis,#[[2]]==J&]),{J,Js}]
+        )
+      ];
+      Return[basis];
     )
   ];
 
@@ -1203,129 +1226,129 @@ Begin["`Private`"]
     Return[juddOperators];
   );
 
-GenerateThreeBodyTables::usage="This function generates the matrix elements for the three body operators using the coefficients of fractional parentage, including those beyond f^7.";
-Options[GenerateThreeBodyTables] = {"Export" -> False};
-GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
-  tiKeys = {"t_{2}", "t_{2}^{'}", "t_{3}", "t_{4}", "t_{6}", "t_{7}", 
-    "t_{8}", "t_{11}", "t_{11}^{'}", "t_{12}", "t_{14}", "t_{15}", 
-    "t_{16}", "t_{17}", "t_{18}", "t_{19}"};
-  TSymbolsAssoc = AssociationThread[tiKeys -> TSymbols];
-  juddOperators = ParseJudd1984[];
-  (* op3MatrixElement[SL, SpLp, opSymbol] returns the value for the reduced matrix element of the operator opSymbol for the terms {SL, SpLp} in the f^3 configuration. *)
-  op3MatrixElement[SL_, SpLp_, opSymbol_] := (
-    jOP = juddOperators[{3, opSymbol}];
-    key = {SL, SpLp};
-    val = If[MemberQ[Keys[jOP], key],
-      jOP[key],
-      0];
-    Return[val];
+  GenerateThreeBodyTables::usage="This function generates the matrix elements for the three body operators using the coefficients of fractional parentage, including those beyond f^7.";
+  Options[GenerateThreeBodyTables] = {"Export" -> False};
+  GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
+    tiKeys = {"t_{2}", "t_{2}^{'}", "t_{3}", "t_{4}", "t_{6}", "t_{7}", 
+      "t_{8}", "t_{11}", "t_{11}^{'}", "t_{12}", "t_{14}", "t_{15}", 
+      "t_{16}", "t_{17}", "t_{18}", "t_{19}"};
+    TSymbolsAssoc = AssociationThread[tiKeys -> TSymbols];
+    juddOperators = ParseJudd1984[];
+    (* op3MatrixElement[SL, SpLp, opSymbol] returns the value for the reduced matrix element of the operator opSymbol for the terms {SL, SpLp} in the f^3 configuration. *)
+    op3MatrixElement[SL_, SpLp_, opSymbol_] := (
+      jOP = juddOperators[{3, opSymbol}];
+      key = {SL, SpLp};
+      val = If[MemberQ[Keys[jOP], key],
+        jOP[key],
+        0];
+      Return[val];
     );
-  (* ti: This is the implementation of formula (2) in Judd & Suskin 1984. It computes the matrix elements of ti in f^n by using the matrix elements in f3 and the coefficients of fractional parentage. If the option \"Fast\" is set to True then the values for n>7 are simply computed as the negatives of the values in the complementary configuration; this except for t2 and t11 which are treated as special cases. *)
-  Options[ti] = {"Fast" -> True};
-  ti[nE_, SL_, SpLp_, tiKey_, opOrder_ : 3, OptionsPattern[]]:=Module[
-    {
-      nn, S, L, Sp, Lp, 
-      cfpSL, cfpSpLp,
-      parentSL, parentSpLp, tnk, tnks
-    },
-    (
-      {S, L}   = FindSL[SL];
-      {Sp, Lp} = FindSL[SpLp];
-      fast     = OptionValue["Fast"];
-      numH = 14 - nE;
-      If[fast && Not[MemberQ[{"t_{2}","t_{11}"},tiKey]] && nE > 7,
-        Return[-tktable[{numH, SL, SpLp, tiKey}]]
-      ];
-      If[(S == Sp && L == Lp),
+    (* ti: This is the implementation of formula (2) in Judd & Suskin 1984. It computes the matrix elements of ti in f^n by using the matrix elements in f3 and the coefficients of fractional parentage. If the option \"Fast\" is set to True then the values for n>7 are simply computed as the negatives of the values in the complementary configuration; this except for t2 and t11 which are treated as special cases. *)
+    Options[ti] = {"Fast" -> True};
+    ti[nE_, SL_, SpLp_, tiKey_, opOrder_ : 3, OptionsPattern[]]:=Module[
+      {
+        nn, S, L, Sp, Lp, 
+        cfpSL, cfpSpLp,
+        parentSL, parentSpLp, tnk, tnks
+      },
       (
-        cfpSL   = CFP[{nE, SL}];
-        cfpSpLp = CFP[{nE, SpLp}];
-        tnks = Table[(
-            parentSL   = cfpSL[[nn, 1]];
-            parentSpLp = cfpSpLp[[mm, 1]];
-            cfpSL[[nn, 2]] * cfpSpLp[[mm, 2]] *
-            tktable[{nE - 1, parentSL, parentSpLp, tiKey}]
-            ),
-            {nn, 2, Length[cfpSL]},
-            {mm, 2, Length[cfpSpLp]}
-            ];
-        tnk = Total[Flatten[tnks]];
-        ),
-      tnk = 0;
-      ];
-      Return[ nE / (nE - opOrder) * tnk];
-    )
-  ];
-  (*Calculate the matrix elements of t^i for n up to nmax*)
-  tktable = <||>;
-  Do[(
-    Do[(
-      tkValue = Which[numE <= 2,
-        (*Initialize n=1,2 with zeros*)
-        0,
-        numE == 3,
-        (*Grab matrix elem in f^3 from Judd 1984*)
-        SimplifyFun[op3MatrixElement[SL, SpLp, opKey]],
-        True,
-        SimplifyFun[ti[numE, SL, SpLp, opKey, If[opKey == "e_{3}", 2, 3]]]
+        {S, L}   = FindSL[SL];
+        {Sp, Lp} = FindSL[SpLp];
+        fast     = OptionValue["Fast"];
+        numH = 14 - nE;
+        If[fast && Not[MemberQ[{"t_{2}","t_{11}"},tiKey]] && nE > 7,
+          Return[-tktable[{numH, SL, SpLp, tiKey}]]
         ];
-      tktable[{numE, SL, SpLp, opKey}] = tkValue;
-      ),
-    {SL, AllowedNKSLTerms[numE]},
-    {SpLp, AllowedNKSLTerms[numE]},
-    {opKey, Append[tiKeys, "e_{3}"]}
-    ];
-    PrintTemporary[StringJoin["\[ScriptF]", ToString[numE], " configuration complete"]];
-    ),
-    {numE, 1, nmax}
-  ];
-  
-  (* Now use those matrix elements to determine their sum as weighted by their corresponding strengths Ti *)
-  ThreeBodyTable = <||>;
-  Do[
-    Do[
-    (
-      ThreeBodyTable[{numE, SL, SpLp}] = (
-        Sum[(
-          If[tiKey == "t_{2}", t2Switch, 1] * 
-          tktable[{numE, SL, SpLp, tiKey}] * 
-          TSymbolsAssoc[tiKey] +
-          If[tiKey == "t_{2}", 1 - t2Switch, 0] * 
-          (-tktable[{14 - numE, SL, SpLp, tiKey}]) * 
-          TSymbolsAssoc[tiKey]
+        If[(S == Sp && L == Lp),
+        (
+          cfpSL   = CFP[{nE, SL}];
+          cfpSpLp = CFP[{nE, SpLp}];
+          tnks = Table[(
+              parentSL   = cfpSL[[nn, 1]];
+              parentSpLp = cfpSpLp[[mm, 1]];
+              cfpSL[[nn, 2]] * cfpSpLp[[mm, 2]] *
+              tktable[{nE - 1, parentSL, parentSpLp, tiKey}]
+              ),
+              {nn, 2, Length[cfpSL]},
+              {mm, 2, Length[cfpSpLp]}
+              ];
+          tnk = Total[Flatten[tnks]];
           ),
-        {tiKey, tiKeys}
-        ]
-      );
-    ),
-    {SL, AllowedNKSLTerms[numE]},
-    {SpLp, AllowedNKSLTerms[numE]}
+        tnk = 0;
+        ];
+        Return[ nE / (nE - opOrder) * tnk];
+      )
     ];
-  PrintTemporary[StringJoin["\[ScriptF]", ToString[numE], " matrix complete"]];,
-  {numE, 1, 7}
-  ];
-  
-  ThreeBodyTables = Table[(
-    terms = AllowedNKSLTerms[numE];
-    singleThreeBodyTable = 
-      Table[
-        {SL, SLp} -> ThreeBodyTable[{numE, SL, SLp}],
-        {SL, terms},
-        {SLp, terms}
-      ];
-    singleThreeBodyTable  = Flatten[singleThreeBodyTable];
-    singleThreeBodyTables = Table[(
-        notNullPosition = Position[TSymbols, notNullSymbol][[1, 1]];
-        reps = ConstantArray[0, Length[TSymbols]];
-        reps[[notNullPosition]] = 1;
-        rep = AssociationThread[TSymbols -> reps];
-        notNullSymbol -> Association[(singleThreeBodyTable /. rep)]
+    (*Calculate the matrix elements of t^i for n up to nmax*)
+    tktable = <||>;
+    Do[(
+      Do[(
+        tkValue = Which[numE <= 2,
+          (*Initialize n=1,2 with zeros*)
+          0,
+          numE == 3,
+          (*Grab matrix elem in f^3 from Judd 1984*)
+          SimplifyFun[op3MatrixElement[SL, SpLp, opKey]],
+          True,
+          SimplifyFun[ti[numE, SL, SpLp, opKey, If[opKey == "e_{3}", 2, 3]]]
+          ];
+        tktable[{numE, SL, SpLp, opKey}] = tkValue;
         ),
-      {notNullSymbol, TSymbols}
+      {SL, AllowedNKSLTerms[numE]},
+      {SpLp, AllowedNKSLTerms[numE]},
+      {opKey, Append[tiKeys, "e_{3}"]}
       ];
-    singleThreeBodyTables = Association[singleThreeBodyTables];
-    numE -> singleThreeBodyTables),
+      PrintTemporary[StringJoin["\[ScriptF]", ToString[numE], " configuration complete"]];
+      ),
+      {numE, 1, nmax}
+    ];
+    
+    (* Now use those matrix elements to determine their sum as weighted by their corresponding strengths Ti *)
+    ThreeBodyTable = <||>;
+    Do[
+      Do[
+      (
+        ThreeBodyTable[{numE, SL, SpLp}] = (
+          Sum[(
+            If[tiKey == "t_{2}", t2Switch, 1] * 
+            tktable[{numE, SL, SpLp, tiKey}] * 
+            TSymbolsAssoc[tiKey] +
+            If[tiKey == "t_{2}", 1 - t2Switch, 0] * 
+            (-tktable[{14 - numE, SL, SpLp, tiKey}]) * 
+            TSymbolsAssoc[tiKey]
+            ),
+          {tiKey, tiKeys}
+          ]
+        );
+      ),
+      {SL, AllowedNKSLTerms[numE]},
+      {SpLp, AllowedNKSLTerms[numE]}
+      ];
+    PrintTemporary[StringJoin["\[ScriptF]", ToString[numE], " matrix complete"]];,
     {numE, 1, 7}
+    ];
+    
+    ThreeBodyTables = Table[(
+      terms = AllowedNKSLTerms[numE];
+      singleThreeBodyTable = 
+        Table[
+          {SL, SLp} -> ThreeBodyTable[{numE, SL, SLp}],
+          {SL, terms},
+          {SLp, terms}
+        ];
+      singleThreeBodyTable  = Flatten[singleThreeBodyTable];
+      singleThreeBodyTables = Table[(
+          notNullPosition = Position[TSymbols, notNullSymbol][[1, 1]];
+          reps = ConstantArray[0, Length[TSymbols]];
+          reps[[notNullPosition]] = 1;
+          rep = AssociationThread[TSymbols -> reps];
+          notNullSymbol -> Association[(singleThreeBodyTable /. rep)]
+          ),
+        {notNullSymbol, TSymbols}
+        ];
+      singleThreeBodyTables = Association[singleThreeBodyTables];
+      numE -> singleThreeBodyTables),
+      {numE, 1, 7}
   ];
   
   ThreeBodyTables = Association[ThreeBodyTables];
@@ -1697,23 +1720,23 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
   GenerateSpinSpinTable::usage="GenerateSpinSpinTable[nmax] generates the matrix elements in the |LSJ> basis for the (spin-other-orbit + electrostatically-correlated-spin-orbit) operator. It returns an association where the keys are of the form {numE, SL, SpLp, J}. If the option \"Export\" is set to True then the resulting object is saved to the data folder. Since this is a scalar operator, there is no MJ dependence. This dependence only comes into play when the crystal field contribution is taken into account.";
   Options[GenerateSpinSpinTable] = {"Export"->False};
   GenerateSpinSpinTable[nmax_, OptionsPattern[]] :=
-  (
-    SpinSpinTable = <||>;
-    PrintTemporary[Dynamic[numE]];
-    Do[
-      SpinSpinTable[{numE, SL, SpLp, J}] = (SpinSpin[numE, SL, SpLp, J]);,
-    {numE, 1, nmax},
-    {J, MinJ[numE], MaxJ[numE]},
-    {SL,   First /@ AllowedNKSLforJTerms[numE, J]},
-    {SpLp, First /@ AllowedNKSLforJTerms[numE, J]}
-    ];
-    If[OptionValue["Export"],
-    (fname = FileNameJoin[{moduleDir, "data", "SpinSpinTable.m"}];
-      Export[fname, SpinSpinTable];
-      )
-    ];
-    Return[SpinSpinTable];
-  );
+    (
+      SpinSpinTable = <||>;
+      PrintTemporary[Dynamic[numE]];
+      Do[
+        SpinSpinTable[{numE, SL, SpLp, J}] = (SpinSpin[numE, SL, SpLp, J]);,
+      {numE, 1, nmax},
+      {J, MinJ[numE], MaxJ[numE]},
+      {SL,   First /@ AllowedNKSLforJTerms[numE, J]},
+      {SpLp, First /@ AllowedNKSLforJTerms[numE, J]}
+      ];
+      If[OptionValue["Export"],
+      (fname = FileNameJoin[{moduleDir, "data", "SpinSpinTable.m"}];
+        Export[fname, SpinSpinTable];
+        )
+      ];
+      Return[SpinSpinTable];
+    );
 
   (* ########################################################### *)
   (* ###################### Spin-Spin ########################## *)
@@ -2250,7 +2273,7 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
     )
   ];
 
-  SimplerSymbolicHamMatrix::usage="SimplerSymbolicHamMatrix[numE, simplifier] is a simple addition to HamMatrixAssembly that applies a given simplification to the full Hamiltonian. simplifier is a list of replacement rules. If the option \"Export\" is set to True, then the function also exports the resulting sparse array to the ./hams/ folder. The option \"PrependToFilename\" can be used to append a string to the filename to which the function may exports to. The option \"Return\" can be used to choose whether the function returns the matrix or not. The option \"Overwrite\" can be used to overwrite the file if it already exists. The option \"IncludeZeeman\" can be used to toggle the inclusion of the Zeeman interaction with an external magnetic field.";
+  SimplerSymbolicHamMatrix::usage="SimplerSymbolicHamMatrix[numE, simplifier] is a simple addition to HamMatrixAssembly that applies a given simplification to the full Hamiltonian. simplifier is a list of replacement rules. If the option \"Export\" is set to True, then the function also exports the resulting sparse array to the ./hams/ folder. The option \"PrependToFilename\" can be used to append a string to the filename to which the function may export to. The option \"Return\" can be used to choose whether the function returns the matrix or not. The option \"Overwrite\" can be used to overwrite the file if it already exists. The option \"IncludeZeeman\" can be used to toggle the inclusion of the Zeeman interaction with an external magnetic field.";
   Options[SimplerSymbolicHamMatrix]={
     "Export"->True, 
     "PrependToFilename"->"", 
@@ -2260,7 +2283,7 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
     "Set t2Switch" -> False,
     "IncludeZeeman" -> False};
   SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]]:=Module[
-    {thisHam,eTofs,fname},
+    {thisHam,fname, fnamemx},
     (
       If[Not[ValueQ[ElectrostaticTable]],
         LoadElectrostatic[]
@@ -2339,8 +2362,8 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
       basisJ  = BasisLSJMJ[numE, "AsAssociation" -> True];
       pivot   = If[OddQ[numE], 1/2, 0];
       freeHam = Table[(
-        J = Js[[idx]];
-        theBlock = JJBlocks[[idx]];
+        J          = Js[[idx]];
+        theBlock   = JJBlocks[[idx]];
         thisJbasis = basisJ[J];
         (* find the basis vectors that end with pivot *)
         shrunkBasisPositions = Flatten[Position[thisJbasis, {_ ..., pivot}]];
@@ -2385,6 +2408,159 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
     )
   ];
   
+  SimplerSymbolicIntermediateHamMatrix::usage = "SimplerSymbolicIntermediateHamMatrix[numE] is provides a variation of HamMatrixAssembly that returns the intermediate Hamiltonian blocks applying a simplifier. The keys of the given association correspond to the different values of J that are possible for f^numE, the values are sparse array that are meant to be interpreted in the basis provided by BasisLSJ.
+  The option \"Simplifier\" is a list of symbols that are set to zero in the intermediate Hamiltoniann description. At a minimum this has to include the crystal field parameters. By default this includes everything except the Slater parameters Fk and the spin orbit coupling \[Zeta].
+  The option \"Export\" controls whether the resulting association is saved to disk, the default is True and the resulting file is saved to the ./hams/ folder. A hash is appended to the filename that corresponds to the simplifier used in the resulting expression. If the option \"Overwrite\" is set to False then these files may be used to quickly retrieve a previously computed case. The file is saved both in .m and .mx format.
+  The option \"PrependToFilename\" can be used to append a string to the filename to which the function may export to.
+  The option \"Return\" can be used to choose whether the function returns the matrix or not.
+  The option \"Overwrite\" can be used to overwrite the file if it already exists.";
+  Options[SimplerSymbolicIntermediateHamMatrix] = {
+    "Export" -> True,
+    "PrependToFilename" -> "",
+    "Overwrite" -> False,
+    "Return" -> True,
+    "Simplifier" -> Join[
+      {F0,\[Sigma]SS},
+      cfSymbols,
+      TSymbols,
+      casimirSymbols,
+      pseudoMagneticSymbols,
+      marvinSymbols,
+      DeleteCases[magneticSymbols,\[Zeta]]
+    ]
+  };
+  SimplerSymbolicIntermediateHamMatrix[numE_Integer, OptionsPattern[]] := Module[
+    {thisHamAssoc, Js, fname, fnamemx, hash, simplifier},
+    (
+      simplifier = (#->0)&/@Sort[OptionValue["Simplifier"]];
+      hash       = Hash[simplifier];
+      If[Not[ValueQ[ElectrostaticTable]],LoadElectrostatic[]];
+      If[Not[ValueQ[SOOandECSOTable]],LoadSOOandECSO[]];
+      If[Not[ValueQ[SpinOrbitTable]],LoadSpinOrbit[]];
+      If[Not[ValueQ[SpinSpinTable]],LoadSpinSpin[]];
+      If[Not[ValueQ[ThreeBodyTable]],LoadThreeBody[]];
+      fname   = FileNameJoin[{moduleDir,"hams",OptionValue["PrependToFilename"]<>"Intermediate-SymbolicMatrix-f"<>ToString[numE]<>"-"<>ToString[hash]<>".m"}];
+      fnamemx = FileNameJoin[{moduleDir,"hams",OptionValue["PrependToFilename"]<>"Intermediate-SymbolicMatrix-f"<>ToString[numE]<>"-"<>ToString[hash]<>".mx"}];
+      If[Or[FileExistsQ[fname],FileExistsQ[fnamemx]]&&Not[OptionValue["Overwrite"]],
+      (
+        If[OptionValue["Return"],
+        (
+          Which[FileExistsQ[fnamemx],
+          (
+            Print["File ",fnamemx," already exists, and option \"Overwrite\" is set to False, loading file ..."];
+            thisHamAssoc=Import[fnamemx];
+            Return[thisHamAssoc];
+          ),
+          FileExistsQ[fname],
+          (
+            Print["File ",fname," already exists, and option \"Overwrite\" is set to False, loading file ..."];
+            thisHamAssoc=Import[fname];
+            Print["Exporting to file ",fnamemx," for quicker loading."];
+            Export[fnamemx,thisHamAssoc];
+            Return[thisHamAssoc];
+          )
+          ]
+        ),
+        (
+          Print["File ",fname," already exists, skipping ..."];
+          Return[Null];
+        )
+        ]
+      )
+      ];
+      Js           = AllowedJ[numE];
+      thisHamAssoc = HamMatrixAssembly[numE,
+        "Set t2Switch"->True,
+        "IncludeZeeman"->False,
+        "ReturnInBlocks"->True
+      ];
+      thisHamAssoc = Diagonal[thisHamAssoc];
+      thisHamAssoc = Map[SparseArray[ReplaceInSparseArray[#,simplifier]]&,thisHamAssoc,{1}];
+      thisHamAssoc = FreeHam[thisHamAssoc,numE];
+      thisHamAssoc = AssociationThread[Js->thisHamAssoc];
+      If[OptionValue["Export"],
+        (
+          Print["Exporting to file ",fname," and to ",fnamemx];
+          Export[fname,thisHamAssoc];
+          Export[fnamemx,thisHamAssoc];
+        )
+      ];
+      If[OptionValue["Return"],
+        Return[thisHamAssoc],
+        Return[Null]
+      ];
+    )
+  ];
+
+  IntermediateSolver::usage="IntermediateSolver[numE, params, host] puts together (or retrieves from disk) the symbolic intermediate Hamiltonian for the f^numE configuration and solves it for the given params. 
+  If the option \"Return as states\" is set to False, then the function returns an association whose keys are values for J in f^numE, and whose values are lists with two elements. The first element being equal to the ordered basis for the corresponding subpsace, given as a list of lists of the form {LS string, J}. The second element being another list of two elements, the first element being equal to the energies and the second being equal to the corresponding normalized eigenvectors. The energies given have been subtracted the energy of the ground state.
+  If the option \"Return as states\" is set to True, then the function returns a list with two elements. The first element is the global intermediate coupling basis for the f^numE configuration, given as a list of lists of the form {LS string, J}. The second element is a list of lists with three elements, in each list the first element being equal to the energy, the second being equal to the value of J, and the third being equal to the corresponding normalized eigenvector. The energies given have been subtracted the energy of the ground state, and the states have been sorted in order of increasing energy.
+  The following options are admitted:
+  - \"Overwrite Hamiltonian\", if set to True the function will overwrite the symbolic Hamiltonian. Default is False.
+  - \"Return as states\", see description above. Default is True.
+  - \"Simplifier\", this is a list with symbols that are set to zero for defining the parameters kept in the intermediate coupling description.
+  ";
+  Options[IntermediateSolver] = {
+    "Overwrite Hamiltonian" -> False,
+    "Return as states" -> True,
+    "Simplifier" -> Join[
+      cfSymbols,
+      TSymbols,
+      casimirSymbols,
+      pseudoMagneticSymbols,
+      marvinSymbols,
+      DeleteCases[magneticSymbols,\[Zeta]]
+    ],
+    "PrintFun" -> PrintTemporary
+  };
+  IntermediateSolver[numE_Integer, params0_Association, host_String:"Ln",OptionsPattern[]] := Module[
+    {ln, simplifier, simpleHam, basis, numHam, eigensys, startTime, endTime, diagonalTime, params=params0, globalBasis, eigenVectors, eigenEnergies, eigenJs, states, groundEnergy, allEnergies, PrintFun},
+    (
+      ln    = theLanthanides[[numE]];
+      basis = BasisLSJ[numE, "AsAssociation"->True];
+      simplifier = OptionValue["Simplifier"];
+      PrintFun   = OptionValue["PrintFun"];
+      PrintFun["> IntermediateSolver for ",ln," with ",numE," f-electrons."];
+      PrintFun["> Loading the symbolic intermediate coupling Hamiltonian ..."];
+      simpleHam  = SimplerSymbolicIntermediateHamMatrix[numE,
+        "Simplifier" -> simplifier,
+        "Overwrite"  -> OptionValue["Overwrite Hamiltonian"]
+      ];
+      (* Everything that is not given is set to zero *)
+      PrintFun["> Setting to zero every parameter not given ..."];
+      params    = ParamPad[params,"Print"->True];
+      PrintFun[params];
+      (* Create the numeric hamiltonian *)
+      PrintFun["> Replacing parameters in the J-blocks of the intermediate coupling Hamiltonian to produce numeric arrays ..."];
+      numHam    = N /@ Map[ReplaceInSparseArray[#, params]&, simpleHam];
+      Clear[simpleHam];
+      (* Eigensolver *)
+      PrintFun["> Diagonalizing the numerical Hamiltonian within each separat J-subspace ..."];
+      startTime    = Now;
+      eigensys     = Eigensystem /@ numHam;
+      endTime      = Now;
+      diagonalTime = QuantityMagnitude[endTime-startTime,"Seconds"];
+      allEnergies  = Flatten[First/@Values[eigensys]];
+      groundEnergy = Min[allEnergies];
+      eigensys     = Map[Chop[{#[[1]]-groundEnergy,#[[2]]}]&,eigensys];
+      eigensys     = Association@KeyValueMap[#1->{basis[#1],#2} &,eigensys];
+      PrintFun[">> Diagonalization took ",diagonalTime," seconds."];
+      If[OptionValue["Return as states"],
+        (
+          PrintFun["> Padding the eigenvectors to correspond to the global intermediate basis ..."];
+          eigenVectors  = SparseArray @ BlockDiagonalMatrix[Values[#[[2, 2]] & /@ eigensys]];
+          globalBasis   = Flatten[Values[basis], 1];
+          eigenEnergies = Flatten[Values[#[[2, 1]] & /@ eigensys]];
+          eigenJs       = Flatten[KeyValueMap[ConstantArray[#1, Length[#2[[2, 2]]]] &, eigensys]];
+          states        = Transpose[{eigenEnergies, eigenJs, eigenVectors}];
+          states        = SortBy[states, First];
+          Return[{globalBasis, states}];
+        ),
+        Return[{basis, eigensys}]
+      ];
+    )
+  ];
+ 
   (* ################ To Intermediate Coupling ################# *)
   (* ########################################################### *)
 
@@ -3023,14 +3199,16 @@ GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
   \"Overwrite Hamiltonian\" (bool) : If True then the function will overwrite the symbolic Hamiltonian that is saved to disk to expedite calculations. The default is False. The symbolic Hamiltonian is saved to disk to the ./hams/ folder preceded by the string host.
   \"Zeroes\" (list) : A list with symbols assumed to be zero.
   "; 
-  Options[IonSolver] = {"Include Spin-Spin" -> True,
+  Options[IonSolver] = {
+    "Include Spin-Spin" -> True,
     "Overwrite Hamiltonian" -> False,
-    "Zeroes" -> {}};
+    "Zeroes" -> {}
+  };
   IonSolver[numE_Integer, params0_Association, host_String:"Ln", OptionsPattern[]]:=Module[
     {ln, simplifier, simpleHam, numHam, eigensys,
     startTime, endTime, diagonalTime, params=params0, zeroSymbols},
     (
-      ln = StringSplit["Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb"][[numE]];
+      ln = theLanthanides[[numE]];
       
       (* This could be done when replacing values, but this produces smaller saved arrays. *)
       simplifier = (#-> 0) & /@ OptionValue["Zeroes"];
