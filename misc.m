@@ -30,8 +30,11 @@ TruncateBlockArray;
 BlockArrayDimensionsArray;
 ArrayBlocker;
 BlockTranspose;
+RemoveTrailingDigits;
 
 Begin["`Private`"];
+
+  RemoveTrailingDigits[s_String] := StringReplace[s, RegularExpression["\\d+$"] -> ""];
 
   BlockTranspose[anArray_]:=(
     Map[Transpose, Transpose[anArray], {2}]

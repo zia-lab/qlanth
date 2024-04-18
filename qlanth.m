@@ -43,30 +43,39 @@ REFERENCES:
 
 + Condon, E U, and G H Shortley. The Theory of Atomic Spectra, 1935.
 
++  Racah,  Giulio.  "Theory of Complex Spectra. II." Physical Review
+62,      no.      9–10      (November      1,     1942):     438–62.
+https://doi.org/10.1103/PhysRev.62.438.
+
 + Racah,   Giulio. "Theory of Complex Spectra. III." Physical Review
 63,       no.       9-10       (May      1,      1943):      367-82.
 https://doi.org/10.1103/PhysRev.63.367.
 
-+ Racah,   Giulio.  "Theory of Complex Spectra. II." Physical Review
-62,      no.      9-10      (November      1,     1942):     438-62.
-https://doi.org/10.1103/PhysRev.62.438.
++  Judd,  B. R. "Optical Absorption Intensities of Rare-Earth Ions."
+Physical   Review   127,   no.   3   (August   1,   1962):   750–61.
+https://doi.org/10.1103/PhysRev.127.750.
+
++  Ofelt,  GS.  "Intensities of Crystal Spectra of Rare-Earth Ions."
+The Journal of Chemical Physics 37, no. 3 (1962): 511–20.
+
 
 + Rajnak,  K, and BG Wybourne. "Configuration Interaction Effects in
 l^N  Configurations."  Physical  Review  132,  no.  1  (1963):  280.
 https://doi.org/10.1103/PhysRev.132.280.
 
++ Nielson,   C. W., and George F Koster. "Spectroscopic Coefficients
+for the p^n, d^n, and f^n Configurations", 1963.
+
 + Wybourne, Brian G. Spectroscopic Properties of Rare Earths, 1965.
+
++  Carnall,  W To, PR Fields, and BG Wybourne. "Spectral Intensities
+of  the  Trivalent  Lanthanides  and Actinides in Solution. I. Pr3+,
+Nd3+, Er3+, Tm3+, and Yb3+." The Journal of Chemical Physics 42, no.
+11 (1965): 3797–3806. 
 
 + Judd,   BR.  "Three-Particle  Operators for Equivalent Electrons."
 Physical       Review      141,      no.      1      (1966):      4.
 https://doi.org/10.1103/PhysRev.141.4.
-
-+ Nielson,   C. W., and George F Koster. "Spectroscopic Coefficients
-for the p^n, d^n, and f^n Configurations", 1963.
-
-+  Thorne, Anne, Ulf Litzén, and Sveneric Johansson. Spectrophysics:
-Principles  and  Applications.  Springer  Science  & Business Media,
-1999.
 
 + Judd, BR, HM  Crosswhite,  and  Hannah  Crosswhite.  "Intra-Atomic
 Magnetic  Interactions  for f Electrons." Physical Review 169, no. 1
@@ -84,6 +93,10 @@ Operators  for  the  Configuration  f^3."  JOSA  B  1, no. 2 (1984):
 Systematic  Analysis  of  the  Spectra of the Lanthanides Doped into
 Single  Crystal  LaF3."  The  Journal  of Chemical Physics 90, no. 7
 (1989): 3443-57. https://doi.org/10.1063/1.455853.
+
++  Thorne, Anne, Ulf Litzén, and Sveneric Johansson. Spectrophysics:
+Principles  and  Applications.  Springer  Science  & Business Media,
+1999.
 
 + Hansen,   JE,  BR Judd, and Hannah Crosswhite. "Matrix Elements of
 Scalar Three-Electron Operators for the Atomic f-Shell." Atomic Data
@@ -312,6 +325,7 @@ JJBlockMagDip;
 JJBlockMatrixFileName;
 
 JJBlockMatrixTable;
+JuddOfeltUkSquared;
 LabeledGrid;
 ListRepeater;
 LoadAll;
@@ -3263,6 +3277,69 @@ Begin["`Private`"]
     )
   ];
 
+
+  (* ########################################################### *)
+  (* ####################### Judd-Ofelt ######################## *)
+
+  JuddOfeltUkSquared::usage="JuddOfeltUkSquared[numE, params] calculates the matrix elements of the Uk operator in the intermediate eigenstate basis. These are calculated according to equation (7) in Carnall 1965. 
+  The function returns a list with the following elements:
+    - basis : A list with the allowed {SL, J} terms in the f^numE configuration. Equal to BasisLSJ[numE].
+    - eigenSys : A list with the eigensystem of the Hamiltonian for the f^n configuration.
+    - levelLabels : A list with the labels of the major components of the intermediate coupling eigenstates.
+    - UkintermediateSquared : An association with the squared matrix elements of the Uk operators in the intermediate eigenstate basis. The keys being {2, 4, 6} corresponding to the rank of the Uk operator. The basis in which the matrix elements are given is the one corresponding to the intermediate coupling eigenstates given in eigenSys and whose major SLJ components are given in levelLabels. The matrix is symmetric and given as a SymmetrizedArray.
+    The function admits the following options:
+    \"PrintFun\" : A function that will be used to print the progress of the calculations. The default is PrintTemporary.";
+  Options[JuddOfeltUkSquared] = {"PrintFun" -> PrintTemporary};
+  JuddOfeltUkSquared[numE_, params_] := Module[
+    {eigenChanger, numEH, basis, eigenSys, Js, Ukmat, UkintermediateSquared, kRank, S, L, Sp, Lp, J, Jp, phase, braTerm, ketTerm, levelLabels, eigenVecs, majorComponentIndices},
+    (
+      If[Not[ValueQ[ReducedUkTable]],
+        LoadUk[]
+      ];
+      numEH = Min[numE, 14-numE];
+      PrintFun = OptionValue["PrintFun"];
+      (* The parameters are assumed to be in the form of the ones for the ground state *)
+      PrintFun["> Solving for the intermediate eigenstates for the given parameters ..."];
+      {basis, eigenSys} = IntermediateSolver[numE, params];
+      (* The change of basis matrix to the eigenstate basis *)
+      eigenChanger = Transpose[Last /@ eigenSys];
+      PrintFun["Calculating the matrix elements of Uk in the physical coupling basis ..."];
+      UkintermediateSquared = <||>;
+      Do[(
+        Ukmat = Table[(
+            {S, L}   = FindSL[braTerm[[1]]];
+            J        = braTerm[[2]];
+            Jp       = ketTerm[[2]];
+            {Sp, Lp} = FindSL[ketTerm[[1]]];
+            phase    = Phaser[S + Lp + J + kRank];
+            Simplify @ (
+              phase *
+              Sqrt[TPO[J]*TPO[Jp]] *
+              SixJay[{J, Jp, kRank}, {Lp, L, S}] *
+              ReducedUkTable[{numEH, 3, braTerm[[1]], ketTerm[[1]], kRank}]
+              )
+            ),
+          {braTerm, basis},
+          {ketTerm, basis}
+        ];
+        Ukmat = (Transpose[eigenChanger] . Ukmat . eigenChanger)^2;
+        Ukmat = Chop@Ukmat;
+        UkintermediateSquared[kRank] = SymmetrizedArray[Ukmat, Dimensions[eigenChanger], Symmetric[{1, 2}]];
+        ),
+        {kRank, {2, 4, 6}}
+      ];
+      LSJmultiplets = (RemoveTrailingDigits[#[[1]]] <> ToString[InputForm[#[[2]]]]) & /@ basis;
+      eigenVecs = Last /@ eigenSys;
+      majorComponentIndices = Ordering[Abs[#]][[-1]] & /@ eigenVecs;
+      levelLabels = LSJmultiplets[[majorComponentIndices]];
+      Return[{basis, eigenSys, levelLabels, UkintermediateSquared}];
+    )
+  ];
+
+
+  (* ####################### Judd-Ofelt ######################## *)
+  (* ########################################################### *)
+
   (* ########################################################### *)
   (* ################## Eigensystem analysis ################### *)
 
@@ -3288,7 +3365,7 @@ Begin["`Private`"]
     Return[pretty];
   );
 
-  PrettySaundersSLJ::usage = "PrettySaundersSLJ[{SL, J}] produces a human-redeable symbol for the given basis vector {SL, J}. SL can be either a list of two numbers representing S and L or a string representing the spin multiplicity and the total orbital angular momentum J in spectroscopic notation. The option \"Representation\" can be used to specify whether the output is given as a symbol or as a ket. The default is \"Ket\".;
+  PrettySaundersSLJ::usage = "PrettySaundersSLJ[{SL, J}] produces a human-redeable symbol for the given basis vector {SL, J}. SL can be either a list of two numbers representing S and L or a string representing the spin multiplicity and the total orbital angular momentum J in spectroscopic notation. The option \"Representation\" can be used to specify whether the output is given as a symbol or as a ket. The default is \"Ket\".";
   Options[PrettySaundersSLJ] = {"Representation"->"Ket"};
   PrettySaundersSLJ[{SL_,J_},OptionsPattern[]]:=(
     If[StringQ[SL],
@@ -4132,7 +4209,7 @@ Begin["`Private`"]
     ];
   );
 
-  ReducedUkTable::usage = "ReducedUkTable[{n, l = 3, SL, SpLp, k}] provides reduced matrix elements of the spherical tensor operator Uk. See TASS section 11-9 \"Unit Tensor Operators\". Loaded using LoadUk[].";
+  ReducedUkTable::usage = "ReducedUkTable[{n, l = 3, SL, SpLp, k}] provides reduced matrix elements of the unit spherical tensor operator Uk. See TASS section 11-9 \"Unit Tensor Operators\". Loaded using LoadUk[].";
 
   LoadUk::usage="LoadUk[] loads into session the reduced matrix elements for unit tensor operators.";
   LoadUk[]:=(
