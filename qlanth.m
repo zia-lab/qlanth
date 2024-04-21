@@ -113,7 +113,10 @@ Calculated Emission Rates and Oscillator Strengths." Physical Review
 B     86,     no.     12     (September     5,     2012):    125102.
 https://doi.org/10.1103/PhysRevB.86.125102.
 
-
++  Hehlen,  Markus  P,  Mikhail  G  Brik,  and  Karl W Krämer. "50th
+Anniversary  of  the Judd–Ofelt Theory: An Experimentalist's View of
+the  Formalism  and  Its  Application."  Journal of Luminescence 136
+(2013): 221–39.
 ----------------------------------------------------------------- *)
 
 BeginPackage["qlanth`"];
@@ -209,6 +212,10 @@ wChErrB: If 1 then the type-B errors in Chen are used, if 0 then not.
 Bx: x component of external magnetic field (in T)
 By: y component of external magnetic field (in T)
 Bz: z component of external magnetic field (in T)
+
+\[CapitalOmega]2: Judd-Ofelt intensity parameter k=2 (in cm^2)
+\[CapitalOmega]4: Judd-Ofelt intensity parameter k=4 (in cm^2)
+\[CapitalOmega]6: Judd-Ofelt intensity parameter k=6 (in cm^2)
 ";
 paramSymbols   = StringSplit[paramAtlas, "\n"];
 paramSymbols   = Select[paramSymbols, # != ""& ];
@@ -311,13 +318,14 @@ GenerateT22Table;
 GenerateThreeBodyTables;
 GenerateThreeBodyTables;
 Generator;
-GroundStateOscillatorStrength;
+GroundMDOscillatorStrength;
 HamMatrixAssembly;
 HamiltonianForm;
 
 HamiltonianMatrixPlot;
 HoleElectronConjugation;
 IntermediateSolver;
+IntermediateOscillatorStrengthED;
 IonSolver;
 ImportMZip;
 JJBlockMatrix;
@@ -2816,14 +2824,14 @@ Begin["`Private`"]
     )
   ];
 
-  GroundStateOscillatorStrength::usage="GroundStateOscillatorStrength[eigenSys, numE] calculates the oscillator strengths between the ground state and the excited states as given by eigenSys.
+  GroundMDOscillatorStrength::usage="GroundMDOscillatorStrength[eigenSys, numE] calculates the magnetic diople oscillator strengths between the ground state and the excited states as given by eigenSys.
   Based on equation 8 of Carnall 1965, removing the 2J+1 factor since this degeneracy has been removed by the crystal field. 
   eigenSys is a list of lists with two elements, in each list the first element is the energy and the second one the corresponding eigenvector.
   The energy unit assumed in eigenSys is Kayser.
   The returned array should be interpreted in the eigenbasis of the Hamiltonian. As such the element fMDGS[[i]] corresponds to the oscillator strength between ground state and eigenstate |i>.
   By default this assumes that the refractive index is unity, this may be changed by setting the option \"RefractiveIndex\" to the desired value.";
-  Options[GroundStateOscillatorStrength]={"RefractiveIndex"->1};
-  GroundStateOscillatorStrength[eigenSys_List, numE_Integer, OptionsPattern[]]:=Module[
+  Options[GroundMDOscillatorStrength]={"RefractiveIndex"->1};
+  GroundMDOscillatorStrength[eigenSys_List, numE_Integer, OptionsPattern[]]:=Module[
     {eigenEnergies, SMDGS, GSEnergy, energyDiffs, transitionWaveLengthsInMeters, unitFactor, nRefractive},
     (
       eigenEnergies    = First/@eigenSys;
@@ -3290,7 +3298,7 @@ Begin["`Private`"]
     The function admits the following options:
     \"PrintFun\" : A function that will be used to print the progress of the calculations. The default is PrintTemporary.";
   Options[JuddOfeltUkSquared] = {"PrintFun" -> PrintTemporary};
-  JuddOfeltUkSquared[numE_, params_] := Module[
+  JuddOfeltUkSquared[numE_, params_, OptionsPattern[]] := Module[
     {eigenChanger, numEH, basis, eigenSys, Js, Ukmat, UkintermediateSquared, kRank, S, L, Sp, Lp, J, Jp, phase, braTerm, ketTerm, levelLabels, eigenVecs, majorComponentIndices},
     (
       If[Not[ValueQ[ReducedUkTable]],
@@ -3299,7 +3307,7 @@ Begin["`Private`"]
       numEH = Min[numE, 14-numE];
       PrintFun = OptionValue["PrintFun"];
       (* The parameters are assumed to be in the form of the ones for the ground state *)
-      PrintFun["> Solving for the intermediate eigenstates for the given parameters ..."];
+      PrintFun["> Calculating the intermediate levels for the given parameters ..."];
       {basis, eigenSys} = IntermediateSolver[numE, params];
       (* The change of basis matrix to the eigenstate basis *)
       eigenChanger = Transpose[Last /@ eigenSys];
@@ -3336,6 +3344,96 @@ Begin["`Private`"]
     )
   ];
 
+  IntermediateOscillatorStrengthED::usage="IntermediateOscillatorStrengthED[numE, intermediateParams, juddOfeltParams] uses Judd-Ofelt theory to estimate the forced electric dipole oscillator strengths for an ion whose intermediate coupling description is determined by intermediateParams. 
+  The second parameter juddOfeltParams is an asssociation with keys equal to the three Judd-Ofelt intensity parameters {\[CapitalOmega]2, \[CapitalOmega]4, \[CapitalOmega]6} and corresponding values in cm^2.
+  The function returns a square array, oStrengthArray, where oStrengthArray[[i,j]] equals the oscillator strength (which is a dimensionless quantity) between levels |Subscript[\[Psi], i]> and |Subscript[\[Psi], j]>. 
+  The local field correction implemented here corresponds to the one given by the virtual cavity model of Lorentz.
+  The function returns a list with the following elements:
+    - basis : A list with the allowed {SL, J} terms in the f^numE configuration. Equal to BasisLSJ[numE].
+    - eigenSys : A list with the eigensystem of the Hamiltonian for the f^n configuration in intermediate coupling.
+    - levelLabels : A list with the labels of the major components of the intermediate coupling levels.
+    - oStrengthArray : A square array where the rows and columns correspond to the levels in the basis.
+  In oStrengthArray, the elements below the diagonal represent emission oscillator strengths, and elements above the diagonal represent absorption oscillator strengths.
+  The function admits the following three options:
+    \"PrintFun\" : A function that will be used to print the progress of the calculations. The default is PrintTemporary.
+    \"RefractiveIndex\" : The refractive index of the medium where the transitions are taking place. This may be a number or a function. If a number then the oscillator strengths are calculated for assuming a wavelength-independent refractive index. If a function then the refractive indices are calculated accordingly to the wavelength of each transition (the function must admit a single argument equal to the wavelength in nm). The default is 1.
+    \"LocalFieldCorrection\" : The local field correction to be used. The default is \"VirtualCavity\". The options are: \"VirtualCavity\" and \"EmptyCavity\".
+  The equation implemented here is the one given in eqn. 29 from the review article of Hehlen (2013). See that same article for a discussion on the local field correction.
+  ";
+  Options[IntermediateOscillatorStrengthED]={
+    "PrintFun"        -> PrintTemporary,
+    "RefractiveIndex" -> 1,
+    "LocalFieldCorrection" -> "VirtualCavity"
+  };
+  IntermediateOscillatorStrengthED[numE_, intermediateParams_Association, juddOfeltParams_Association, OptionsPattern[]] := Module[
+    {
+      PrintFun, basis, eigenSys, levelLabels, UkintermediateSquared,eigenEnergies, energyDiffs, oStrengthArray, nRef, \[Chi], nRefs, \[Chi]OverN, groundLevel, const, transitionFrequencies, wavelengthsInNM, fieldCorrectionType
+    },
+    (
+      PrintFun = OptionValue["PrintFun"];
+      nRef     = OptionValue["RefractiveIndex"];
+      PrintFun["Calculating the Uk^2 matrix elements for the given parameters ..."];
+      {basis, eigenSys, levelLabels, UkintermediateSquared} = JuddOfeltUkSquared[numE, intermediateParams, "PrintFun"->PrintFun];
+      eigenEnergies = First/@eigenSys;
+      const         = (8\[Pi]^2)/3 me/hPlanck;
+      energyDiffs   = Transpose@Outer[Subtract,eigenEnergies,eigenEnergies];
+      (* since energies are assumed in Kayser, speed of light needs to be in cm/s, so that the frequencies are in 1/s *)
+      transitionFrequencies = energyDiffs*cLight*100;
+      (* grab the J for each level *)
+      levelJs        = #[[2]] & /@ eigenSys;
+      oStrengthArray = (
+        juddOfeltParams[\[CapitalOmega]2]*UkintermediateSquared[2]+
+        juddOfeltParams[\[CapitalOmega]4]*UkintermediateSquared[4]+
+        juddOfeltParams[\[CapitalOmega]6]*UkintermediateSquared[6]
+      );
+      oStrengthArray = Abs@(const * transitionFrequencies * oStrengthArray);
+      (* it is necessary to divide each oscillator strength by the degeneracy of the initial level *)
+      oStrengthArray = MapIndexed[1/(2 levelJs[[#2[[1]]]]+1) #1 &, oStrengthArray,{2}];
+      (* including the effects of the refractive index *)
+      fieldCorrectionType = OptionValue["LocalFieldCorrection"];
+      Which[
+        nRef === 1,
+          True,
+        NumberQ[nRef],
+        (
+          \[Chi] = Which[
+            fieldCorrectionType == "VirtualCavity",
+            (
+              ( (nRef^2 + 2) / 3 )^2
+            ),
+            fieldCorrectionType == "EmptyCavity",
+            (
+              ( 3 * nRef^2 / ( 2 * nRef^2 + 1 ) )^2
+            )
+          ];
+          \[Chi]OverN    = \[Chi] / nRef;
+          oStrengthArray = \[Chi]OverN * oStrengthArray;
+          (* the refractive index participates different in absorption and in emission *)
+          aFunction      = If[#2[[1]]>#2[[2]], #1 * nRef^2, #1]&;
+          oStrengthArray = MapIndexed[aFunction, oStrengthArray, {2}];
+        ),
+        True,
+        (
+          wavelengthsInNM = Abs[1 / energyDiffs] * 10^7;
+          nRefs           = Map[nRef, wavelengthsInNM];
+          Print["Calculating the oscillator strengths for the given refractive index ..."];
+          \[Chi] = Which[
+            fieldCorrectionType == "VirtualCavity",
+            (
+              ( (nRefs^2 + 2) / 3 )^2
+            ),
+            fieldCorrectionType == "EmptyCavity",
+            (
+              ( 3 * nRefs^2 / ( 2*nRefs^2 + 1 ) )^2
+            )
+          ];
+          \[Chi]OverN     = \[Chi] / nRefs;
+          oStrengthArray  = \[Chi]OverN * oStrengthArray
+        )
+      ];
+      Return[{basis, eigenSys, levelLabels, oStrengthArray}];
+    )
+  ];
 
   (* ####################### Judd-Ofelt ######################## *)
   (* ########################################################### *)
