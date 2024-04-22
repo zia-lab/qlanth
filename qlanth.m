@@ -41,9 +41,9 @@ of lanthanum fluoride.
 
 REFERENCES:
 
-+ Condon, E U, and G H Shortley. The Theory of Atomic Spectra, 1935.
++ Condon, E U, and G Shortley. "The Theory of Atomic Spectra." 1935.
 
-+  Racah,  Giulio.  "Theory of Complex Spectra. II." Physical Review
++ Racah,  Giulio.   "Theory of Complex Spectra. II." Physical Review
 62,      no.      9–10      (November      1,     1942):     438–62.
 https://doi.org/10.1103/PhysRev.62.438.
 
@@ -51,13 +51,12 @@ https://doi.org/10.1103/PhysRev.62.438.
 63,       no.       9-10       (May      1,      1943):      367-82.
 https://doi.org/10.1103/PhysRev.63.367.
 
-+  Judd,  B. R. "Optical Absorption Intensities of Rare-Earth Ions."
++ Judd,  B. R.  "Optical Absorption Intensities of Rare-Earth Ions."
 Physical   Review   127,   no.   3   (August   1,   1962):   750–61.
 https://doi.org/10.1103/PhysRev.127.750.
 
-+  Ofelt,  GS.  "Intensities of Crystal Spectra of Rare-Earth Ions."
++ Ofelt,  GS.   "Intensities of Crystal Spectra of Rare-Earth Ions."
 The Journal of Chemical Physics 37, no. 3 (1962): 511–20.
-
 
 + Rajnak,  K, and BG Wybourne. "Configuration Interaction Effects in
 l^N  Configurations."  Physical  Review  132,  no.  1  (1963):  280.
@@ -66,9 +65,9 @@ https://doi.org/10.1103/PhysRev.132.280.
 + Nielson,   C. W., and George F Koster. "Spectroscopic Coefficients
 for the p^n, d^n, and f^n Configurations", 1963.
 
-+ Wybourne, Brian G. Spectroscopic Properties of Rare Earths, 1965.
++ Wybourne, Brian. "Spectroscopic Properties of Rare Earths." 1965.
 
-+  Carnall,  W To, PR Fields, and BG Wybourne. "Spectral Intensities
++ Carnall,  W To, PR Fields, and BG Wybourne. "Spectral Intensities
 of  the  Trivalent  Lanthanides  and Actinides in Solution. I. Pr3+,
 Nd3+, Er3+, Tm3+, and Yb3+." The Journal of Chemical Physics 42, no.
 11 (1965): 3797–3806. 
@@ -81,8 +80,8 @@ https://doi.org/10.1103/PhysRev.141.4.
 Magnetic  Interactions  for f Electrons." Physical Review 169, no. 1
 (1968): 130. https://doi.org/10.1103/PhysRev.169.130.
 
-+  (TASS)  Cowan,  Robert  Duane. The Theory of Atomic Structure and
-Spectra.  Los  Alamos  Series  in  Basic  and  Applied  Sciences  3.
++ (TASS)  Cowan,  Robert  Duane. "The Theory of Atomic Structure and
+Spectra." Los  Alamos  Series  in  Basic  and  Applied  Sciences  3.
 Berkeley: University of California Press, 1981.
 
 + Judd,   BR,  and  MA  Suskin.  "Complete  Set of Orthogonal Scalar
@@ -94,8 +93,8 @@ Systematic  Analysis  of  the  Spectra of the Lanthanides Doped into
 Single  Crystal  LaF3."  The  Journal  of Chemical Physics 90, no. 7
 (1989): 3443-57. https://doi.org/10.1063/1.455853.
 
-+  Thorne, Anne, Ulf Litzén, and Sveneric Johansson. Spectrophysics:
-Principles  and  Applications.  Springer  Science  & Business Media,
++ Thorne, Anne, Ulf Litzén, and Sveneric Johansson. "Spectrophysics:
+Principles  and  Applications." Springer  Science  & Business Media,
 1999.
 
 + Hansen,   JE,  BR Judd, and Hannah Crosswhite. "Matrix Elements of
@@ -324,12 +323,15 @@ HamiltonianForm;
 
 HamiltonianMatrixPlot;
 HoleElectronConjugation;
+IntermediateMagDipole;
 IntermediateSolver;
 IntermediateOscillatorStrengthED;
+IntermediateOscillatorStrengthMD;
 IonSolver;
 ImportMZip;
 JJBlockMatrix;
 JJBlockMagDip;
+JJBlockMagDipIntermediate;
 JJBlockMatrixFileName;
 
 JJBlockMatrixTable;
@@ -2232,7 +2234,7 @@ Begin["`Private`"]
   The function admits an optional parameter \"FilenameAppendix\" which can be used to modify the filename to which the resulting array is exported to.
   It also admits an optional parameter \"IncludeZeeman\" which can be used to include the Zeeman interaction.
   The option \"Set t2Switch\" can be used to toggle on or off setting the t2 selector automatically or not, the default is True, which replaces the parameter according to numE.
-  The option \"ReturnInBlocks\" can be use to return the matrix in block or flattened form. The default is to return it in flattened form.";
+  The option \"ReturnInBlocks\" can be used to return the matrix in block or flattened form. The default is to return it in flattened form.";
   Options[HamMatrixAssembly] = {
         "FilenameAppendix"->"",
         "IncludeZeeman"->False,
@@ -2288,7 +2290,7 @@ Begin["`Private`"]
         (
           PrintTemporary["Including Zeeman terms ..."];
           {magx, magy, magz} = MagDipoleMatrixAssembly[numE, "ReturnInBlocks" -> OptionValue["ReturnInBlocks"]];
-          blockHam += - TeslaToKayser * (Bx * magx + By * magy + Bz * magz);
+          blockHam += - teslaToKayser * (Bx * magx + By * magy + Bz * magz);
         )
       ];
       Return[blockHam];
@@ -2372,9 +2374,11 @@ Begin["`Private`"]
     )
   ];
 
+  (* ##################### Block assembly ###################### *)
+  (* ########################################################### *)
 
   (* ########################################################### *)
-  (* ################ To Intermediate Coupling ################# *)
+  (* ################   Intermediate Coupling  ################# *)
   
   FreeHam::usage = "FreeHam[JJBlocks, numE] given the JJ blocks of the Hamiltonian for f^n, this function returns a list with all the scalar-simplified versions of the blocks.";
   FreeHam[JJBlocks_List, numE_Integer]:=Module[
@@ -2539,8 +2543,8 @@ Begin["`Private`"]
   IntermediateSolver[numE_Integer, params0_Association, OptionsPattern[]] := Module[
     {ln, simplifier, simpleHam, basis, numHam, eigensys, startTime, endTime, diagonalTime, params=params0, globalBasis, eigenVectors, eigenEnergies, eigenJs, states, groundEnergy, allEnergies, PrintFun},
     (
-      ln    = theLanthanides[[numE]];
-      basis = BasisLSJ[numE, "AsAssociation"->True];
+      ln         = theLanthanides[[numE]];
+      basis      = BasisLSJ[numE, "AsAssociation"->True];
       simplifier = OptionValue["Simplifier"];
       PrintFun   = OptionValue["PrintFun"];
       PrintFun["> IntermediateSolver for ",ln," with ",numE," f-electrons."];
@@ -2584,11 +2588,8 @@ Begin["`Private`"]
     )
   ];
 
- 
-  (* ################ To Intermediate Coupling ################# *)
-  (* ########################################################### *)
 
-  (* ##################### Block assembly ###################### *)
+  (* ################   Intermediate Coupling  ################# *)
   (* ########################################################### *)
 
   (* ########################################################### *)
@@ -2596,7 +2597,7 @@ Begin["`Private`"]
 
   magOp = <||>;
 
-  JJBlockMagDip::usage="JJBlockMagDip[numE, J, Jp] returns the LSJ-reduced matrix element of the magnetic dipole operator between the states with given J and Jp. The option \"Sparse\" can be used to return a sparse matrix. The default is to return a sparse matrix.
+  JJBlockMagDip::usage="JJBlockMagDip[numE, J, Jp] returns an array for the LSJM matrix elements of the magnetic dipole operator between states with given J and Jp. The option \"Sparse\" can be used to return a sparse matrix. The default is to return a sparse matrix.
   See eqn 15.7 in TASS.
   Here it is provided in atomic units in which the Bohr magneton is 1/2.
   \[Mu] = -(1/2) (L + gs S)
@@ -2608,8 +2609,11 @@ Begin["`Private`"]
     braSLJ,   ketSLJ,
     braSL,    ketSL,
     braS,     braL,
+    ketS,     ketL,
     braMJ,    ketMJ,
-    matValue, magMatrix},
+    matValue, magMatrix,
+    summand1, summand2,
+    threejays},
     (
       braSLJs  = AllowedNKSLJMforJTerms[numE,braJ];
       ketSLJs  = AllowedNKSLJMforJTerms[numE,ketJ];
@@ -2623,9 +2627,9 @@ Begin["`Private`"]
         summand1    = If[Or[braJ  != ketJ,
                             braSL != ketSL],
           0,
-          Sqrt[braJ(braJ+1)TPO[braJ]]
+          Sqrt[braJ*(braJ+1)*TPO[braJ]]
         ];
-        (* looking at the string includes checking L=L' S=S' \alpha=\alpha'*)
+        (* looking at the string includes checking L=L', S=S', and \alpha=\alpha'*)
         summand2 = If[braSL!= ketSL,
           0,
           (gs-1) *
@@ -2644,9 +2648,9 @@ Begin["`Private`"]
       {ketSLJ, ketSLJs}
       ];
       If[OptionValue["Sparse"],
-        magMatrix= SparseArray[magMatrix]
+        magMatrix = SparseArray[magMatrix]
       ];
-      Return[magMatrix]
+      Return[magMatrix];
     )
   ]; 
 
@@ -2690,7 +2694,7 @@ Begin["`Private`"]
     Return[fnames];
   );
 
-  MagDipoleMatrixAssembly::usage="MagDipoleMatrixAssembly[numE] returns the matrix representation of the operator - 1/2 (L + gs S) in the f^numE configuration. The function returns a list with three elements corresponding to the x,y,z components of this operator. The option \"FilenameAppendix\" can be used to append a string to the filename from which the function imports from in order to patch together the array. For numE beyond 7 the function returns the same as for the complementary configuration. The option \"ReturnInBlocks\" can be use to return the matrices in blocks. The default is to return the matrices in flattened form.";
+  MagDipoleMatrixAssembly::usage="MagDipoleMatrixAssembly[numE] returns the matrix representation of the operator - 1/2 (L + gs S) in the f^numE configuration. The function returns a list with three elements corresponding to the x,y,z components of this operator. The option \"FilenameAppendix\" can be used to append a string to the filename from which the function imports from in order to patch together the array. For numE beyond 7 the function returns the same as for the complementary configuration. The option \"ReturnInBlocks\" can be used to return the matrices in blocks. The default is to return the matrices in flattened form.";
   Options[MagDipoleMatrixAssembly]={
     "FilenameAppendix"->"",
     "ReturnInBlocks"->False};
@@ -2739,7 +2743,7 @@ Begin["`Private`"]
   MagDipLineStrength::usage="MagDipLineStrength[theEigensys, numE] takes the eigensystem of an ion and the number numE of f-electrons that correspond to it and it calculates the line strength array Stot.
   The option \"Units\" can be set to either \"SI\" (so that the units of the returned array are A/m^2) or to \"Hartree\".
   The option \"States\" can be used to limit the states for which the line strength is calculated. The default, All, calculates the line strength for all states. A second option for this is to provide an index labelling a specific state, in which case only the line strengths between that state and all the others are computed.
-  The returned array should be interpreted in the eigenbasis of the Hamiltonian. As such the element Stot[[i,i]] corresponds to the line strength states |i> and |j>.";
+  The returned array should be interpreted in the eigenbasis of the Hamiltonian. As such the element Stot[[i,i]] corresponds to the line strength states between states |i> and |j>.";
   Options[MagDipLineStrength]={"Reload MagOp" -> False, "Units"->"SI", "States" -> All};
   MagDipLineStrength[theEigensys_List, numE0_Integer, OptionsPattern[]]:=Module[
     {allEigenvecs, Sx, Sy, Sz, Stot ,factor},
@@ -2756,13 +2760,13 @@ Begin["`Private`"]
       allEigenvecs = Transpose[Last /@ theEigensys];
       Which[OptionValue["States"] === All,
         (
-          {Sx,Sy,Sz}   = (ConjugateTranspose[allEigenvecs].#.allEigenvecs) & /@ magOp[numE];
+          {Sx, Sy, Sz} = (ConjugateTranspose[allEigenvecs].#.allEigenvecs) & /@ magOp[numE];
           Stot         = Abs[Sx]^2+Abs[Sy]^2+Abs[Sz]^2;
         ),
         IntegerQ[OptionValue["States"]],
         (
           singleState  = theEigensys[[OptionValue["States"],2]];
-          {Sx,Sy,Sz}   = (ConjugateTranspose[allEigenvecs].#.singleState) & /@ magOp[numE];
+          {Sx, Sy, Sz} = (ConjugateTranspose[allEigenvecs].#.singleState) & /@ magOp[numE];
           Stot         = Abs[Sx]^2+Abs[Sy]^2+Abs[Sz]^2;
         )
       ];
@@ -3115,8 +3119,13 @@ Begin["`Private`"]
       "With Uncertainties"->False
       };
   LoadParameters[Ln_String, OptionsPattern[]]:= Module[
-    {source, params, uncertain, uncertainKeys, uncertainRules},
+    {
+      source, params, uncertain, uncertainKeys, uncertainRules
+    },
     (
+      If[Not[ValueQ[Carnall]],
+        LoadCarnall[];
+      ];
       source = OptionValue["Source"];
       params = Which[source=="Carnall",
               (Association[Carnall["data"][Ln]])
@@ -3287,7 +3296,7 @@ Begin["`Private`"]
 
 
   (* ########################################################### *)
-  (* ####################### Judd-Ofelt ######################## *)
+  (* ###### Optical Transitions in Intermediate Coupling ####### *)
 
   JuddOfeltUkSquared::usage="JuddOfeltUkSquared[numE, params] calculates the matrix elements of the Uk operator in the intermediate eigenstate basis. These are calculated according to equation (7) in Carnall 1965. 
   The function returns a list with the following elements:
@@ -3306,7 +3315,6 @@ Begin["`Private`"]
       ];
       numEH = Min[numE, 14-numE];
       PrintFun = OptionValue["PrintFun"];
-      (* The parameters are assumed to be in the form of the ones for the ground state *)
       PrintFun["> Calculating the intermediate levels for the given parameters ..."];
       {basis, eigenSys} = IntermediateSolver[numE, params];
       (* The change of basis matrix to the eigenstate basis *)
@@ -3344,16 +3352,14 @@ Begin["`Private`"]
     )
   ];
 
-  IntermediateOscillatorStrengthED::usage="IntermediateOscillatorStrengthED[numE, intermediateParams, juddOfeltParams] uses Judd-Ofelt theory to estimate the forced electric dipole oscillator strengths for an ion whose intermediate coupling description is determined by intermediateParams. 
-  The second parameter juddOfeltParams is an asssociation with keys equal to the three Judd-Ofelt intensity parameters {\[CapitalOmega]2, \[CapitalOmega]4, \[CapitalOmega]6} and corresponding values in cm^2.
-  The function returns a square array, oStrengthArray, where oStrengthArray[[i,j]] equals the oscillator strength (which is a dimensionless quantity) between levels |Subscript[\[Psi], i]> and |Subscript[\[Psi], j]>. 
+  IntermediateOscillatorStrengthED::usage="IntermediateOscillatorStrengthED[numE, intermediateParams, juddOfeltParams] uses Judd-Ofelt theory to estimate the forced electric dipole oscillator strengths ions whose intermediate coupling description is determined by intermediateParams. 
+  The third parameter juddOfeltParams is an asssociation with keys equal to the three Judd-Ofelt intensity parameters {\[CapitalOmega]2, \[CapitalOmega]4, \[CapitalOmega]6} and corresponding values in cm^2.
   The local field correction implemented here corresponds to the one given by the virtual cavity model of Lorentz.
   The function returns a list with the following elements:
     - basis : A list with the allowed {SL, J} terms in the f^numE configuration. Equal to BasisLSJ[numE].
     - eigenSys : A list with the eigensystem of the Hamiltonian for the f^n configuration in intermediate coupling.
     - levelLabels : A list with the labels of the major components of the intermediate coupling levels.
-    - oStrengthArray : A square array where the rows and columns correspond to the levels in the basis.
-  In oStrengthArray, the elements below the diagonal represent emission oscillator strengths, and elements above the diagonal represent absorption oscillator strengths.
+    - oStrengthArray : A square arrayt whose elements represent the oscillator strengths between the levels of the intermediate coupling eigenstates such that the element oStrengthArray[[i,j]] is the oscillator strength between the levels |Subscript[\[Psi], i]> and |Subscript[\[Psi], j]>. In this array, the elements below the diagonal represent emission oscillator strengths, and elements above the diagonal represent absorption oscillator strengths.
   The function admits the following three options:
     \"PrintFun\" : A function that will be used to print the progress of the calculations. The default is PrintTemporary.
     \"RefractiveIndex\" : The refractive index of the medium where the transitions are taking place. This may be a number or a function. If a number then the oscillator strengths are calculated for assuming a wavelength-independent refractive index. If a function then the refractive indices are calculated accordingly to the wavelength of each transition (the function must admit a single argument equal to the wavelength in nm). The default is 1.
@@ -3435,7 +3441,119 @@ Begin["`Private`"]
     )
   ];
 
-  (* ####################### Judd-Ofelt ######################## *)
+  JJBlockMagDipIntermediate::usage="JJBlockMagDipIntermediate[numE, J, Jp] returns an array of the LSJ reduced matrix elements of the magnetic dipole operator between states with given J and Jp. The option \"Sparse\" can be used to return a sparse matrix. The default is to return a sparse matrix.";
+  Options[JJBlockMagDipIntermediate] = {"Sparse"->True};
+  JJBlockMagDipIntermediate[numE_, braJ_, ketJ_, OptionsPattern[]] := Module[
+    {
+      braSLJs, ketSLJs, braSLJ, ketSLJ, braSL, ketSL, braS, braL, ketS, ketL, matValue, magMatrix, summand1, summand2
+    },
+  (
+    braSLJs     = AllowedNKSLforJTerms[numE,braJ];
+    ketSLJs     = AllowedNKSLforJTerms[numE,ketJ];
+    magMatrix   = Table[
+      braSL       = braSLJ[[1]];
+      ketSL       = ketSLJ[[1]];
+      {braS,braL} = FindSL[braSL];
+      {ketS,ketL} = FindSL[ketSL];
+      summand1    = If[Or[braJ!=ketJ,braSL!=ketSL],
+        0,
+        Sqrt[braJ*(braJ+1)*TPO[braJ]
+        ]
+      ];
+      (*looking at the string includes checking L=L',S=S',and\alpha=\alpha'*)summand2    = If[braSL!=ketSL,
+        0,
+        (gs-1)*
+        Phaser[braS+braL+ketJ+1]*
+        Sqrt[TPO[braJ]*TPO[ketJ]]*
+        SixJay[{braJ,1,ketJ},{braS,braL,braS}]*
+        Sqrt[braS(braS+1)TPO[braS]]
+      ];
+      matValue = summand1+summand2;
+      matValue = -1/2*matValue;
+      matValue,
+      {braSLJ,braSLJs},
+      {ketSLJ,ketSLJs}
+    ];
+    If[OptionValue["Sparse"],
+      magMatrix=SparseArray[magMatrix]];
+    Return[magMatrix];
+  )
+  ];
+
+  IntermediateMagDipole::usage="IntermediateMagDipole[numE] puts together an array with the reduced matrix elements of the magnetic dipole operator in the intermediate coupling basis for the f^numE configuration. The function admits the two following options:
+    \"Flattened\" (bool) : If True then the returned matrix is flattened. The default is True.
+    \"gs\" (number) : The electronic gyromagnetic ratio. The default is 2.";
+  Options[IntermediateMagDipole] = {"Flattened" -> True, gs -> 2};
+  IntermediateMagDipole[numE_, OptionsPattern[]] := Module[
+    {
+      Js, magDip, braJ, ketJ
+    },
+    (
+      Js      = AllowedJ[numE];
+      magDip  = Table[
+        ReplaceInSparseArray[
+          JJBlockMagDipIntermediate[numE,braJ,ketJ],
+          {gs->OptionValue[gs]}
+          ],
+        {braJ,Js},
+        {ketJ,Js}
+      ];
+      If[OptionValue["Flattened"],
+        magDip = ArrayFlatten[magDip];
+      ];
+      Return[magDip];
+    )
+  ];
+
+
+  IntermediateOscillatorStrengthMD::usage = "IntermediateOscillatorStrengthMD[numE, intermediateParams] uses Judd-Ofelt theory to estimate the forced electric dipole oscillator strengths for an ion whose intermediate coupling description is determined by intermediateParams. 
+  The function returns a square array, oStrengthArray, where oStrengthArray[[i,j]] equals the oscillator strength (which is a dimensionless quantity) between levels |Subscript[\[Psi], i]> and |Subscript[\[Psi], j]>. 
+  The function returns a list with the following elements:
+    - basis : A list with the allowed {SL, J} terms in the f^numE configuration. Equal to BasisLSJ[numE].
+    - eigenSys : A list with the eigensystem of the Hamiltonian for the f^n configuration in intermediate coupling.
+    - levelLabels : A list with the labels of the major components of the intermediate coupling levels.
+    - magDipoleOstrength : A square array whose elements represent the magnetic dipole oscillator strengths between the levels of the intermediate coupling eigenstates such that the element magDipoleOstrength[[i,j]] is the oscillator strength between the levels |Subscript[\[Psi], i]> and |Subscript[\[Psi], j]>. In this array the elements below the diagonal represent emission oscillator strengths, and elements above the diagonal represent absorption oscillator strengths.
+  The function admits the following two options:
+    \"PrintFun\" : A function that will be used to print the progress of the calculations. The default is PrintTemporary.
+    \"RefractiveIndex\" : The refractive index of the medium where the transitions are taking place. This may be a number or a function. If a number then the oscillator strengths are calculated for assuming a wavelength-independent refractive index. If a function then the refractive indices are calculated accordingly to the wavelength of each transition (the function must admit a single argument equal to the wavelength in nm). The default is 1.
+  ";
+  Options[IntermediateOscillatorStrengthMD] = {
+    "PrintFun" -> PrintTemporary
+  };
+  IntermediateOscillatorStrengthMD[numE_, intermediateParams_Association,  OptionsPattern[]] := Module[
+    {
+      PrintFun, eigenSys, eigenEnergies, interLevels, energyDiffs, levelJs, magDipoleOstrength, LSJmultiplets, majorComponentIndices, levelLabels
+    },
+    (
+      PrintFun = OptionValue["PrintFun"];
+      PrintFun["> Calculating the intermediate levels for the given parameters ..."];
+      {basis, eigenSys} = IntermediateSolver[numE, intermediateParams];
+      (* The change of basis matrix to the eigenstate basis *)
+      eigenEnergies  = First /@ eigenSys;
+      interLevels    = Transpose[Last /@ eigenSys];
+      energyDiffs    = Abs@Outer[Subtract, eigenEnergies, eigenEnergies];
+      energyDiffs   *= kayserToHartree;
+      levelJs        = #[[2]] & /@ eigenSys;
+      magDip         = IntermediateMagDipole[numE];
+      magDipoleOstrength = (2/3 *
+        \[Alpha]Fine^2
+        energyDiffs * 
+        Abs[Transpose[interLevels] . magDip . interLevels]^2
+      );
+      magDipoleOstrength = MapIndexed[
+        1/(2 * levelJs[[#2[[1]]]] + 1) * #1 &, 
+        magDipoleOstrength,
+        {2}
+      ];
+      LSJmultiplets = (RemoveTrailingDigits[#[[1]]] <> ToString[InputForm[#[[2]]]]) & /@ basis;
+      majorComponentIndices = Ordering[Abs[#]][[-1]] & /@ Transpose[interLevels];
+      levelLabels = LSJmultiplets[[majorComponentIndices]];
+      Return[{basis, eigenSys, levelLabels, magDipoleOstrength}];
+    )
+  ];
+
+
+  (* ###### Optical Transitions in Intermediate Coupling ####### *)
   (* ########################################################### *)
 
   (* ########################################################### *)

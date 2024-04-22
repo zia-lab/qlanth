@@ -73,7 +73,7 @@
     % Software name
     {\Large\qlanth}\\
     \vspace*{0.5cm}
-    {\large version $\ket{\alpha}^{(6)}$}\\
+    {\large doc version $\ket{\alpha}^{(7)}$}\\
     \vspace*{2cm}
     
     % Additional information
@@ -113,7 +113,7 @@ This code was originally authored by Christopher Dodson and Rashid Zia for their
 This document has 12 sections. \textbf{Section 1} explains the details of the basis in which the Hamiltonian is evaluated. \textbf{Section 2} provides a brief explanation of the \cfps. \textbf{Section 3} explains how the Hamiltonian is put together by first having calculated ``$JJ'$ blocks''. \textbf{Section 4} is dedicated to a theoretical exposition of the effective Hamiltonian with subsections for each of the terms that it contains. \textbf{Section 5} is about the calculation of magnetic dipole transitions. \textbf{Sections 6 and 8} list additional data included in \qlanth. \textbf{Section 7} has additional information about data fitting.  \textbf{Section 9} has a brief comment on units. \textbf{Sections 9 and 10} include a summary of notation and definitions use throughout this document. Finally, \textbf{section 12} contains a printout of the code included in \qlanth.
 
 
-\section{The $\LSJMbasis$ Basis}
+\section{The $\LSJMbasis$ Basis States}
 
 The basis used in \qlanth is the $\LSJMbasis$ basis. As such the basis vectors are common eigenvectors of the operators $\op{L}^2$, $\op{S}^2$, $\op{J}^2$, and $\op{J}_z$. The LS terms allowed in each configuration $\forb^\numE$ are obtained from tables that originate from the original work by Nielson and Koster \cite{nielson_spectroscopic_1963}. In \qlanth these are parsed from the file \codetext{B1F\_ALL.TXT} which is part of the doctoral research of Dobromir Velkov \cite{velkov_multi-electron_2000} in which he recomputed \cfps under the advisory of Brian Judd. 
 
@@ -138,6 +138,16 @@ The order above is exemplar of the ordering in the bases. Notice how the basis v
 In \qlanth the ordered basis used for a given $\forb^\numE$ is provided by \codetext{BasisLSJMJ}. 
 
 \lstinputlisting[language=Mathematica]{./fundefs/BasisLSJMJ.tex}
+
+\subsection{The Intermediate Coupling $\LSJbasis$ Levels}
+
+When the Hamiltonian only includes spherically symmetric terms (or what is the same, when the crystal field is neglected) then the $\Msub{J}$ quantum numbers in the $\LSJMbasis$ basis states are redundant. In this case, often called \textit{intermediate coupling}, the following are the different $\LSJterm{2S+1}{L}{J}$ levels that span the eigenvectors that result from diagonalizing the intermediate coupling Hamiltonian.
+
+\input{LSJlevels.tex}
+
+In \qlanth this basis of levels can be retrieved through the function \codetext{BasisLSJ}. This is the ordered basis used for all intermediate coupling calculations.
+
+\lstinputlisting[language=Mathematica]{./fundefs/BasisLSJ.tex}
 
 \subsection{More quantun numbers}
 
@@ -916,39 +926,9 @@ The $JJ'$ blocks that are generated with this function are then put together by 
 
 Using the cartesian components of the magnetic dipole operator, the matrix elements of the Zeeman term can then be evaluated. This term can be included in the Hamiltonian through an option in \codetext{HamMatrixAssembly}. Since the magnetic dipole operator is calculated in atomic units, and it seeming desirable that the input units of the magnetic field be Tesla, a conversion factor is included so that the final terms be congruent with the energy units assumed in the other terms in the Hamiltonian, namely the pseudo-energy unit Kayser ($\text{cm}^{-1}$). The conversion factor is called \codetext{TeslaToKayser} in the file \codetext{qonstants.m}.
 
-\subsection[Going beyond $f^7$]{Going beyond $f^7$}
+\subsection[Going beyond $f^7$]{Going beyond ${\forb}^7$}
 
 In most cases all matrix elements in \qlanth are only calculated up to and including $\forb^7$. Beyond $\forb^7$ adequate changes of sign are enforced to take into account the equivalence that can be made between $\forb^{\numE}$ and $\forb^{14-\numE}$ as given by \eqnref{eqn:sign change double tensor op} and \eqnref{eqn:sign change tensor op}. 
-
-\begin{mdframed}
-\begin{align} 
-	\ham &= \underbracket{\hamKineticSymbol}_{\text{kinetic}}
-		 + \underbracket{\hamNuclearCoulombSymbol}_{\text{e:shielded nuc}}
-		 + \underbracket{\hamCoulombEESymbol}_{\text{e:e}}
-		 + \underbracket{\hamSpinOrbitSymbol}_{\text{spin-orbit}}
-		 + \underbracket{\hamSpinSpinSymbol}_{
-		 			\substack{
-		 				\text{spin:spin} \\ 
-		 				\text{and spin:other-orbit}
-		 				}
-		 			} 
-         + \underbracket{\hamSOOplusECSOSymbol}_{
-            \substack{
-                \text{spin:other-orbit} \\ 
-                \text{ec-correlated-spin:orbit}
-                }
-         } + \\
-         & \underbracket{\hamTreesSymbol}_\text{Trees effective op} 
-		 + \underbracket{\hamGTwoSymbol}_\text{G${}_2$ effective op} 
-		 + \underbracket{\hamSOSevenSymbol}_\text{$\SO{7}$ effective op} 
-		 + \underbracket{\ham_{\trispoke}}_{\substack{
-            \text{effective} \\
-            \text{three-body}}}
-         + \underbracket{\hamCrystalFieldSymbol}_{\text{crystal field}} 
-         + \underbracket{\hamZeemanSymbol}_{\text{Zeeman}} 
-\label{The very effective Hamiltonian}
-\end{align}  
-\end{mdframed}
 
 This is enforced when the function \codetext{HamMatrixAssembly} is called. In there \codetext{HoleElectronConjugation} is the function responsible for enforcing a global sign flip for the following operators (or equivalently, to their accompanying coefficients):
 \begin{equation}
@@ -962,35 +942,97 @@ In \qlanth this symmetry is taken into account when the function \codetext{HamMa
     \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
 }
 
-\section{Magnetic Dipole Transitions}
+\section{Transitions}
+
+\subsection{Magnetic Dipole Transitions}
 
 \qlanth can also calculate magnetic dipole transitions. With $\hat{\mu} = \{\hat{\mu}_x, \hat{\mu}_y, \hat{\mu}_z\}$ the magnetic dipole operator, the line strength between two eigenstates $\ket{\nu}$ and $\ket{\nu'}$ is defined as (see for example equation 14.31 in \cite{cowan_theory_1981})
 \begin{equation}
 	\lineStrength(\psi,\psi') \DEF \left| \braopket{\psi}{\hat{\mu}}{\psi'} \right|^2 = \left| \braopket{\psi}{\hat{\mu}_x}{\psi'} \right|^2 + \left| \braopket{\psi}{\hat{\mu}_y}{\psi'} \right|^2 + \left| \braopket{\psi}{\hat{\mu}_z}{\psi'} \right|^2
 \end{equation}
 
+
+$\LSJterm{2}{F}{3/2}$
+
 In \qlanth this is computed with the function \codetext{MagDipLineStrength}, which given a set of eigenvectors computes the sum above, and returns an array that contains all possible pairings of $\ket{\psi}$ and $\ket{\psi'}$ in $\lineStrength(\psi,\psi')$.
  
 \lstinputlisting[language=Mathematica]{./fundefs/MagDipLineStrength.tex}
 
-Using the line strength $\lineStrength$ the rate $\AMD$ for the spontaneous transition $\ket{\psi_i} \rightarrow \ket{\psi_f}$ is then given by (from table 7.3 of \cite{thorne_spectrophysics_1999})
+Using the line strength $\lineStrength$ the transition rate $\AMD$ for the spontaneous transition $\ket{\psi_i} \rightsquigarrow \ket{\psi_f}$ is then given by (from table 7.3 of \cite{thorne_spectrophysics_1999})
 \begin{equation}
-\AMD(\ket{\psi_i} \rightarrow \ket{\psi_f}) = \frac{16 \pi^3 \mu_0}{3 h} \frac{n^3}{\lambda^3} \frac{\lineStrength(\psi_i,\psi_f)}{g_i},
+	\tRate{MD}{\psi_i}{\psi_f} = \frac{16 \pi^3 \mu_0}{3 h} \frac{n^3}{\lambda^3} \frac{\lineStrength(\psi_i,\psi_f)}{g_i},
 \end{equation}
 where $\lambda$ is the vacuum-equivalent wavelength of the transition between $\ket{\nu}$ and $\ket{\nu'}$, $n$ the refractive index of the medium containing the ion, and $g_i$ the degeneracy of the initial state $\ket{\psi_i}$. At the fine-grained description that \qlanth uses, $J$ is no longer a good quantum number so $g_i=1$.
 
-\lstinputlisting[language=Mathematica]{./fundefs/MagDipoleRates}
+\lstinputlisting[language=Mathematica]{./fundefs/MagDipoleRates} 
  
 A final quantity of interest is the oscillator strength for the transition between the ground state $\ket{\psi_g}$ and an excited state $\ket{\psi_e}$. The oscillator strength is a dimensionless quantity which is indicative of how strong absorption is. The oscillator strength may be defined for other initial state than the ground state, but since this is the state most likely to be populated in ordinary experimental conditions, this is the initial state that is of more frequent interest. The oscillator strength is given by \cite{carnall_spectral_1965}
 \begin{equation}
-\fMD\left(\ket{\psi_g} \rightarrow \ket{\psi_e}\right) = \frac{8 \pi^2 \me}{3\,hc\,e^2} 
+	\oStrength{MD}{\psi_g}{\psi_e} = \frac{8 \pi^2 \me}{3\,hc\,e^2} 
 	\frac{n}{\lambda}
 	\frac{\lineStrength(\psi_g,\psi_e)}{g_g}
 \end{equation}
 where $g_g$ is the degeneracy of the ground state. At the level of detail that the eigenstates are described in \qlanth where $J$ is no longer a good quantum number, $g_g = 1$. 
 
+In \qlanth the function \codetext{GroundMDOscillatorStrength} implements the calculation of the oscillator strengths from the ground state to all the excited ones.
 
-\lstinputlisting[language=Mathematica]{./fundefs/GroundStateOscillatorStrength}
+\lstinputlisting[language=Mathematica]{./fundefs/GroundMDOscillatorStrength} 
+
+\subsection{Intermediate coupling}
+
+\subsubsection{Forced electric dipole transitions}
+
+Any two eigenfunctions that are approximated within the limits of a single configuration cannot help but have the same parity as they are spanned by basis vectors with definite and shared parity. Analysis of the amplitudes for different transition operators can then inform as to what transitions are forbidden, which are namely those in which the product of the parity of the two participating wavefunctions and that of the transition operator results in odd parity. As such, within the single configuration approximation, since the product of the two participating wavefunctions is always even, then any transition described by an operator of odd parity is forbidden. This is the content of Laporte's parity rule. Since the parity of the magnetic dipole operator is even, then this operator accounts for allowed intra-configuration transitions, and since the parity of the electric dipole operator is odd, then these types of intra-configuration transitions are forbidden.
+
+However, much as configuration interaction is an essential component in the description of the electronic structure, it having a bearing on the energy spectrum and the intra-configuration wavefunctions themselves. Configuration interaction may also be used to bring back into the analysis the fact that the \textit{actual} wavefunctions will also have at least a small part of them in other configurations, even if most of them may be within the ground configuration. It is therefore the case that the \textit{actual} parity of the wavefunctions is mixed, and therefore intra-configuration \footnote{Calling these \textit{intra}-configuration transitions is somewhat of a misnomer since their nature is tied to the fact that the single-configuration description is wanting.} electric dipole transitions are actually allowed. These electric dipole transitions are called \textit{forced} electric dipole transitions.
+
+Judd \cite{judd_optical_1962} and Ofelt \cite{ofelt_intensities_1962} came separately to similar versions of this analysis, and showed after a series of approximations that the forced electric dipole transitions could be described by the intra-configuration matrix elements of the multi-electron unit operators $\op{U}^{(k)}$ (for k=2,4,6) together with a set of three accompanying coefficients $\{\JOk{2},\JOk{4},\JOk{6}\}$. These coefficients have a definite form related to the overlap between the mixed parity parts of the corrected wavefunctions, but they can also be integrated as additional phenomelogical parameters.
+
+Judd-Ofelt theory is based on the intermediate coupling description, and its mathematical expression is the following. Given two intermediate coupling levels $\ket{\alpha SLJ}$ and $\ket{\alpha\mathrlap{'} SL\mathrlap{'}J\mathrlap{'}\,}$, the oscillator strength between them is approximated as \cite{judd_optical_1962} 
+\begin{equation}
+\oStrength{f-ED}{\alpha{LSJ}}{\alpha\mathrlap{'} S\mathrlap{'} L\mathrlap{'} J\mathrlap{'}\,\,} = 
+	\mathcal{R} \frac{8 \pi^2 m_e}{3 h}
+	\frac{\nu}{\tpo{J}}
+	\frac{\chi}{n} 
+	\sum_{k=2,4,6}
+		\JOk{k} 
+		\left|
+			\redbraopket{\forb^\numE \alpha SLJ}
+				{\op{U}^{(k)}}
+				{\forb^\numE \alpha\mathrlap{'} S\mathrlap{'} L\mathrlap{'} J'} 
+		\right|^2,
+\label{eqn:forced-dipole-judd-ofelt}
+\end{equation}
+where $\nu$ is the frequency of the transition, $\chi$ the local field correction, $n$ the refractive index of the crystal host, and $\mathcal{R} = 1$ in the case of absorption and $\mathcal{R} = n^2$ in the case of emission. 
+
+The local field correction $\chi$ accounts for the difference between the macroscopic and microscopic electric fields, in the case of ions embedded for crystals the most common choice is 
+\begin{equation}
+	\chi = \frac{n^2+2}{3}  
+\end{equation}
+and for other environments (or emitters other than ions such as molecules) diferent alternatives are relevant (see \cite{duan_dependence_2006}).
+
+
+\subsubsection{Magnetic dipole transitions}
+
+In atomic units, the intermediate coupling magnetic dipole oscillator strength for a transition between the ground level $\ket{\alpha{LSJ}}$ and an excited level $\ket{\alpha\mathrlap{'} S\mathrlap{'} L\mathrlap{'} J\mathrlap{'}\,\,}$ is given by \cite{rudzikas_theoretical_2007}
+\begin{equation} 
+	\oStrength{MD}{\alpha{LSJ}}{\alpha\mathrlap{'} S\mathrlap{'} L\mathrlap{'} J\mathrlap{'}\,\,} = \frac{2}{3}
+	\frac{
+	\mathcal{E}(
+		\ket{\alpha\mathrlap{'}
+			S\mathrlap{'}
+			L\mathrlap{'}
+			J\mathrlap{'}\,\,})-
+	\mathcal{E}(
+		\ket{\alpha{LSJ})}}
+	{2J+1} 
+	\left|\redbraopket{\alpha{LSJ}}{\frac{1}{2}(\op{L}+g \op{S})}{\alpha\mathrlap{'} S\mathrlap{'} L\mathrlap{'} J\mathrlap{'}\,\,} \right|^2
+\end{equation}
+where $\mathcal{E}(\ket{\alpha{LSJ}})$ is the energy of level $\ket{\alpha{LSJ}}$.
+
+In \qlanth this relationship is implemented in the function \codetext{IntermediateOscillatorStrengthMD}.
+
+\lstinputlisting[language=Mathematica]{./fundefs/IntermediateOscillatorStrengthMD} 
 
 \section{Data fitting}
 
@@ -1201,7 +1243,7 @@ Some constants and conversion values are included in the file \codetext{qonstant
     \overbracket{\,\,\CoulombNonCentral\,\,}^{\text{Coulomb non-central potential}} \\
     \overbracket{\redbraopket{\Lambda LS}{\op{O}}{\Lambda' L'S'}}^{\text{LS-reduced matrix element of operator }\hat{O}\text{ between }{\Lambda LS} \text{ and } {\Lambda' L'S'}} \\
     \overbracket{\redbraopket{\Lambda LSJ}{\op{O}}{\Lambda' L'S'J'}}^{\text{LSJ-reduced matrix element of operator }\hat{O}\text{ between }{\Lambda LSJ} \text{ and } {\Lambda' L'S'J'}} \\
-    \overbracket{\LSterm{2 S + 1}{\alpha{L}}\equiv \ket{\alpha{LS}}}^{\text{Spectroscopic term } {\alpha{LS}} \text{ in Russel-Saunders notation }} \\
+    \overbracket{\LSterm{2 S + 1}{$\alpha$L}\equiv \ket{\alpha{LS}}}^{\text{Spectroscopic term } {\alpha{LS}} \text{ in Russel-Saunders notation }} \\
     \overbracket{\op{X}^{(k)}}^{\text{spherical tensor operator of rank k}} \\
     \overbracket{\op{X}_q^{(k)}}^{\text{q-component of the spherical tensor operator }\op{X}^{(k)}} \\
     \overbracket{\cfp{\lorb^{n-1}\alpha'L'S'}{\lorb^n\alpha{L}{S}}}^{\text{The coefficient of fractional parentage from the parent term }\ket{\lorb^{n-1}\alpha'{L'S'}}\text{ for the daughter term }\ket{\lorb^{n}\alpha{LS}}}  
