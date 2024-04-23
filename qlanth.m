@@ -11,9 +11,9 @@
 |                                                                  |
 +------------------------------------------------------------------+
 This  code  was  initially authored by Christopher Dodson and Rashid
-Zia  and  then  rewritten  by  David Lizarazo in the years 2022-2024
-under  the  advisory  of  Dr.  Zia.  It  has also benefited from the
-discussions with Tharnier Puel.
+Zia  and  then rewritten and expanded by David Lizarazo in the years
+2022-2024  under the advisory of Dr. Zia. It has also benefited from
+the discussions with Tharnier Puel.
 
 It   uses  an  effective  Hamiltonian  to  describe  the  electronic
 structure of lanthanide ions in crystals. This effective Hamiltonian
@@ -116,6 +116,8 @@ https://doi.org/10.1103/PhysRevB.86.125102.
 Anniversary  of  the Judd–Ofelt Theory: An Experimentalist's View of
 the  Formalism  and  Its  Application."  Journal of Luminescence 136
 (2013): 221–39.
+
++ Rudzikas, Zenonas. Theoretical Atomic Spectroscopy, 2007.
 ----------------------------------------------------------------- *)
 
 BeginPackage["qlanth`"];
@@ -292,6 +294,7 @@ ExportmZip;
 fsubk;
 fsupk;
 
+FromArrayToTable;
 FindNKLSTerm;
 FindSL;
 
@@ -317,26 +320,29 @@ GenerateT22Table;
 GenerateThreeBodyTables;
 GenerateThreeBodyTables;
 Generator;
-GroundMDOscillatorStrength;
+GroundMagDipoleOscillatorStrength;
 HamMatrixAssembly;
 HamiltonianForm;
 
 HamiltonianMatrixPlot;
 HoleElectronConjugation;
-IntermediateMagDipole;
-IntermediateSolver;
-IntermediateOscillatorStrengthED;
-IntermediateOscillatorStrengthMD;
 IonSolver;
 ImportMZip;
 JJBlockMatrix;
 JJBlockMagDip;
-JJBlockMagDipIntermediate;
+LevelJJBlockMagDipole;
 JJBlockMatrixFileName;
 
 JJBlockMatrixTable;
 JuddOfeltUkSquared;
 LabeledGrid;
+LevelMagDipoleMatrixAssembly;
+LevelSolver;
+LevelElecDipoleOscillatorStrength;
+LevelMagDipoleLineStrength;
+LevelMagDipoleOscillatorStrength;
+LevelMagDipoleSpotaneousDecayRates;
+LevelSimplerSymbolicHamMatrix;
 ListRepeater;
 LoadAll;
 LoadCFP;
@@ -394,7 +400,6 @@ Reducedt11inf2;
 
 ReplaceInSparseArray;
 SimplerSymbolicHamMatrix;
-SimplerSymbolicIntermediateHamMatrix;
 SOOandECSO;
 SOOandECSOTable;
 Seniority;
@@ -468,7 +473,7 @@ Begin["`Private`"]
 
   ParamPad::usage = "ParamPad[params] takes an association params whose keys are a subset of paramSymbols. The function returns a new association where all the keys not present in paramSymbols, will now be included in the returned association with their values set to zero.
   The function additionally takes an option \"Print\" that if set to True, will print the symbols that were not present in the given association.";
-  Options[ParamPad] = {"Print" -> True}
+  Options[ParamPad] = {"Print" -> True};
   ParamPad[params_, OptionsPattern[]] := (
     notPresentSymbols = Complement[paramSymbols, Keys[params]];
     If[OptionValue["Print"], 
@@ -607,7 +612,7 @@ Begin["`Private`"]
     Return[ReducedUkTable];
   )
 
-  GenerateReducedV1kTable::usage = "GenerateReducedV1kTable[nmax] calculates values for Vk1 and returns an association where the keys are lists of the form {n, SL, SpLp, 1}. If the option \"Export\" is set to True then the resulting data is saved to ./data/ReducedV1kTable.m."
+  GenerateReducedV1kTable::usage = "GenerateReducedV1kTable[nmax] calculates values for Vk1 and returns an association where the keys are lists of the form {n, SL, SpLp, 1}. If the option \"Export\" is set to True then the resulting data is saved to ./data/ReducedV1kTable.m.";
   Options[GenerateReducedV1kTable] = {"Export" -> True, "Progress" -> True};
   GenerateReducedV1kTable[numEmax_Integer:7, OptionsPattern[]]:= (
     numValues = Total[Length[AllowedNKSLTerms[#]]*Length[AllowedNKSLTerms[#]]&/@Range[1, numEmax]];
@@ -810,7 +815,7 @@ Begin["`Private`"]
     )
   ];
 
-  BasisLSJ::usage="BasisLSJ[numE] returns the intermediate coupling basis L-S-J. The function returns a list with each element representing the quantum numbers for each basis vector. Each element is of the form {SL (string in spectroscopic notation), J}.
+  BasisLSJ::usage="BasisLSJ[numE] returns the level basis LSJ. The function returns a list with each element representing the quantum numbers for each basis vector. Each element is of the form {SL (string in spectroscopic notation), J}.
   The option \"AsAssociation\" can be set to True to return the basis as an association with the keys being the allowed J values. The default is False.
     ";
   Options[BasisLSJ]={"AsAssociation"->False};
@@ -1789,7 +1794,7 @@ Begin["`Private`"]
   Prescaling = {P2 -> P2/225, P4 -> P4/1089, P6 -> 25 * P6 / 184041};
 
   GenerateSOOandECSOTable::usage="GenerateSOOandECSOTable[nmax] generates the matrix elements in the |LSJ> basis for the (spin-other-orbit + electrostatically-correlated-spin-orbit) operator. It returns an association where the keys are of the form {n, SL, SpLp, J}. If the option \"Export\" is set to True then the resulting object is saved to the data folder. Since this is a scalar operator, there is no MJ dependence. This dependence only comes into play when the crystal field contribution is taken into account.";
-  Options[GenerateSOOandECSOTable] = {"Export"->False}
+  Options[GenerateSOOandECSOTable] = {"Export"->False};
   GenerateSOOandECSOTable[nmax_, OptionsPattern[]]:= (
     SOOandECSOTable = <||>;
     Do[
@@ -1940,7 +1945,7 @@ Begin["`Private`"]
     )
 
   GenerateCrystalFieldTable::usage = "GenerateCrystalFieldTable[{numEs]] computes the matrix values for the crystal field interaction for f^n configurations the given list of numE in  numEs. The function calculates the association CrystalFieldTable with keys of the form {numE, NKSL, J, M, NKSLp, Jp, Mp}. If the option \"Export\" is set to True, then the result is exported to the data subfolder for the folder in which this package is in. If the option \"Progress\" is set to True then an interactive progress indicator is shown. If \"Compress\" is set to true the exported values are compressed when exporting.";
-  Options[GenerateCrystalFieldTable] = {"Export" -> False, "Progress" -> True, "Compress" -> True}
+  Options[GenerateCrystalFieldTable] = {"Export" -> False, "Progress" -> True, "Compress" -> True};
   GenerateCrystalFieldTable[numEs_List:{1,2,3,4,5,6,7}, OptionsPattern[]]:= (
     ExportFun = 
     If[OptionValue["Compress"],
@@ -2149,7 +2154,7 @@ Begin["`Private`"]
   EnergyStates[numE_, J_]:= AllowedNKSLJMforJTerms[numE, J];
 
   JJBlockMatrixFileName::usage = "JJBlockMatrixFileName[numE] gives the filename for the energy matrix table for an atom with numE f-electrons. The function admits an optional parameter \"FilenameAppendix\" which can be used to modify the filename.";
-  Options[JJBlockMatrixFileName] = {"FilenameAppendix" -> ""}
+  Options[JJBlockMatrixFileName] = {"FilenameAppendix" -> ""};
   JJBlockMatrixFileName[numE_Integer, OptionsPattern[]] := (
     fileApp = OptionValue["FilenameAppendix"];
     fname = FileNameJoin[{moduleDir,
@@ -2378,7 +2383,7 @@ Begin["`Private`"]
   (* ########################################################### *)
 
   (* ########################################################### *)
-  (* ################   Intermediate Coupling  ################# *)
+  (* #################### Level Description #################### *)
   
   FreeHam::usage = "FreeHam[JJBlocks, numE] given the JJ blocks of the Hamiltonian for f^n, this function returns a list with all the scalar-simplified versions of the blocks.";
   FreeHam[JJBlocks_List, numE_Integer]:=Module[
@@ -2435,13 +2440,13 @@ Begin["`Private`"]
   ];
 
  
-  SimplerSymbolicIntermediateHamMatrix::usage = "SimplerSymbolicIntermediateHamMatrix[numE] is provides a variation of HamMatrixAssembly that returns the intermediate Hamiltonian blocks applying a simplifier. The keys of the given association correspond to the different values of J that are possible for f^numE, the values are sparse array that are meant to be interpreted in the basis provided by BasisLSJ.
-  The option \"Simplifier\" is a list of symbols that are set to zero in the intermediate Hamiltoniann description. At a minimum this has to include the crystal field parameters. By default this includes everything except the Slater parameters Fk and the spin orbit coupling \[Zeta].
+  LevelSimplerSymbolicHamMatrix::usage = "LevelSimplerSymbolicHamMatrix[numE] is a variation of HamMatrixAssembly that returns the diagonal JJ Hamiltonian blocks applying a simplifier and with simplifications adequate for the level description. The keys of the given association correspond to the different values of J that are possible for f^numE, the values are sparse array that are meant to be interpreted in the basis provided by BasisLSJ.
+  The option \"Simplifier\" is a list of symbols that are set to zero. At a minimum this has to include the crystal field parameters. By default this includes everything except the Slater parameters Fk and the spin orbit coupling \[Zeta].
   The option \"Export\" controls whether the resulting association is saved to disk, the default is True and the resulting file is saved to the ./hams/ folder. A hash is appended to the filename that corresponds to the simplifier used in the resulting expression. If the option \"Overwrite\" is set to False then these files may be used to quickly retrieve a previously computed case. The file is saved both in .m and .mx format.
   The option \"PrependToFilename\" can be used to append a string to the filename to which the function may export to.
   The option \"Return\" can be used to choose whether the function returns the matrix or not.
   The option \"Overwrite\" can be used to overwrite the file if it already exists.";
-  Options[SimplerSymbolicIntermediateHamMatrix] = {
+  Options[LevelSimplerSymbolicHamMatrix] = {
     "Export" -> True,
     "PrependToFilename" -> "",
     "Overwrite" -> False,
@@ -2456,7 +2461,7 @@ Begin["`Private`"]
       DeleteCases[magneticSymbols,\[Zeta]]
     ]
   };
-  SimplerSymbolicIntermediateHamMatrix[numE_Integer, OptionsPattern[]] := Module[
+  LevelSimplerSymbolicHamMatrix[numE_Integer, OptionsPattern[]] := Module[
     {thisHamAssoc, Js, fname, fnamemx, hash, simplifier},
     (
       simplifier = (#->0)&/@Sort[OptionValue["Simplifier"]];
@@ -2466,8 +2471,8 @@ Begin["`Private`"]
       If[Not[ValueQ[SpinOrbitTable]],LoadSpinOrbit[]];
       If[Not[ValueQ[SpinSpinTable]],LoadSpinSpin[]];
       If[Not[ValueQ[ThreeBodyTable]],LoadThreeBody[]];
-      fname   = FileNameJoin[{moduleDir,"hams",OptionValue["PrependToFilename"]<>"Intermediate-SymbolicMatrix-f"<>ToString[numE]<>"-"<>ToString[hash]<>".m"}];
-      fnamemx = FileNameJoin[{moduleDir,"hams",OptionValue["PrependToFilename"]<>"Intermediate-SymbolicMatrix-f"<>ToString[numE]<>"-"<>ToString[hash]<>".mx"}];
+      fname   = FileNameJoin[{moduleDir,"hams",OptionValue["PrependToFilename"]<>"Level-SymbolicMatrix-f"<>ToString[numE]<>"-"<>ToString[hash]<>".m"}];
+      fnamemx = FileNameJoin[{moduleDir,"hams",OptionValue["PrependToFilename"]<>"Level-SymbolicMatrix-f"<>ToString[numE]<>"-"<>ToString[hash]<>".mx"}];
       If[Or[FileExistsQ[fname],FileExistsQ[fnamemx]]&&Not[OptionValue["Overwrite"]],
       (
         If[OptionValue["Return"],
@@ -2519,15 +2524,15 @@ Begin["`Private`"]
     )
   ];
 
-  IntermediateSolver::usage="IntermediateSolver[numE, params] puts together (or retrieves from disk) the symbolic intermediate Hamiltonian for the f^numE configuration and solves it for the given params returning the resultant energies and eigenstates.
+  LevelSolver::usage="LevelSolver[numE, params] puts together (or retrieves from disk) the symbolic level Hamiltonian for the f^numE configuration and solves it for the given params returning the resultant energies and eigenstates.
   If the option \"Return as states\" is set to False, then the function returns an association whose keys are values for J in f^numE, and whose values are lists with two elements. The first element being equal to the ordered basis for the corresponding subpsace, given as a list of lists of the form {LS string, J}. The second element being another list of two elements, the first element being equal to the energies and the second being equal to the corresponding normalized eigenvectors. The energies given have been subtracted the energy of the ground state.
-  If the option \"Return as states\" is set to True, then the function returns a list with two elements. The first element is the global intermediate coupling basis for the f^numE configuration, given as a list of lists of the form {LS string, J}. The second element is a list of lists with three elements, in each list the first element being equal to the energy, the second being equal to the value of J, and the third being equal to the corresponding normalized eigenvector. The energies given have been subtracted the energy of the ground state, and the states have been sorted in order of increasing energy.
+  If the option \"Return as states\" is set to True, then the function returns a list with three elements. The first element is the global level basis for the f^numE configuration, given as a list of lists of the form {LS string, J}. The second element are the mayor LSJ components in the returned eigenstates. The third element is a list of lists with three elements, in each list the first element being equal to the energy, the second being equal to the value of J, and the third being equal to the corresponding normalized eigenvector (given as a row). The energies given have been subtracted the energy of the ground state, and the states have been sorted in order of increasing energy.
   The following options are admitted:
-  - \"Overwrite Hamiltonian\", if set to True the function will overwrite the symbolic Hamiltonian. Default is False.
-  - \"Return as states\", see description above. Default is True.
-  - \"Simplifier\", this is a list with symbols that are set to zero for defining the parameters kept in the intermediate coupling description.
+    - \"Overwrite Hamiltonian\", if set to True the function will overwrite the symbolic Hamiltonian. Default is False.
+    - \"Return as states\", see description above. Default is True.
+    - \"Simplifier\", this is a list with symbols that are set to zero for defining the parameters kept in the level  description.
   ";
-  Options[IntermediateSolver] = {
+  Options[LevelSolver] = {
     "Overwrite Hamiltonian" -> False,
     "Return as states" -> True,
     "Simplifier" -> Join[
@@ -2540,16 +2545,16 @@ Begin["`Private`"]
     ],
     "PrintFun" -> PrintTemporary
   };
-  IntermediateSolver[numE_Integer, params0_Association, OptionsPattern[]] := Module[
+  LevelSolver[numE_Integer, params0_Association, OptionsPattern[]] := Module[
     {ln, simplifier, simpleHam, basis, numHam, eigensys, startTime, endTime, diagonalTime, params=params0, globalBasis, eigenVectors, eigenEnergies, eigenJs, states, groundEnergy, allEnergies, PrintFun},
     (
       ln         = theLanthanides[[numE]];
       basis      = BasisLSJ[numE, "AsAssociation"->True];
       simplifier = OptionValue["Simplifier"];
       PrintFun   = OptionValue["PrintFun"];
-      PrintFun["> IntermediateSolver for ",ln," with ",numE," f-electrons."];
-      PrintFun["> Loading the symbolic intermediate coupling Hamiltonian ..."];
-      simpleHam  = SimplerSymbolicIntermediateHamMatrix[numE,
+      PrintFun["> LevelSolver for ",ln," with ",numE," f-electrons."];
+      PrintFun["> Loading the symbolic level Hamiltonian ..."];
+      simpleHam  = LevelSimplerSymbolicHamMatrix[numE,
         "Simplifier" -> simplifier,
         "Overwrite"  -> OptionValue["Overwrite Hamiltonian"]
       ];
@@ -2558,11 +2563,11 @@ Begin["`Private`"]
       params    = ParamPad[params,"Print"->True];
       PrintFun[params];
       (* Create the numeric hamiltonian *)
-      PrintFun["> Replacing parameters in the J-blocks of the intermediate coupling Hamiltonian to produce numeric arrays ..."];
+      PrintFun["> Replacing parameters in the J-blocks of the Hamiltonian to produce numeric arrays ..."];
       numHam    = N /@ Map[ReplaceInSparseArray[#, params]&, simpleHam];
       Clear[simpleHam];
       (* Eigensolver *)
-      PrintFun["> Diagonalizing the numerical Hamiltonian within each separat J-subspace ..."];
+      PrintFun["> Diagonalizing the numerical Hamiltonian within each separate J-subspace ..."];
       startTime    = Now;
       eigensys     = Eigensystem /@ numHam;
       endTime      = Now;
@@ -2574,22 +2579,26 @@ Begin["`Private`"]
       PrintFun[">> Diagonalization took ",diagonalTime," seconds."];
       If[OptionValue["Return as states"],
         (
-          PrintFun["> Padding the eigenvectors to correspond to the global intermediate basis ..."];
+          PrintFun["> Padding the eigenvectors to correspond to the level basis ..."];
           eigenVectors  = SparseArray @ BlockDiagonalMatrix[Values[#[[2, 2]] & /@ eigensys]];
           globalBasis   = Flatten[Values[basis], 1];
           eigenEnergies = Flatten[Values[#[[2, 1]] & /@ eigensys]];
           eigenJs       = Flatten[KeyValueMap[ConstantArray[#1, Length[#2[[2, 2]]]] &, eigensys]];
           states        = Transpose[{eigenEnergies, eigenJs, eigenVectors}];
           states        = SortBy[states, First];
-          Return[{globalBasis, states}];
+          eigenVectors  = Transpose[Last/@states];
+          LSJmultiplets = (RemoveTrailingDigits[#[[1]]] <> ToString[InputForm[#[[2]]]]) & /@ globalBasis;
+          majorComponentIndices = Ordering[Abs[#]][[-1]] & /@ eigenVectors;
+          levelLabels           = LSJmultiplets[[majorComponentIndices]];
+          Return[{globalBasis, levelLabels, states}];
         ),
         Return[{basis, eigensys}]
       ];
     )
-  ];
+  ]; 
 
 
-  (* ################   Intermediate Coupling  ################# *)
+  (* #################### Level Description #################### *)
   (* ########################################################### *)
 
   (* ########################################################### *)
@@ -2740,7 +2749,7 @@ Begin["`Private`"]
     )
   ];
 
-  MagDipLineStrength::usage="MagDipLineStrength[theEigensys, numE] takes the eigensystem of an ion and the number numE of f-electrons that correspond to it and it calculates the line strength array Stot.
+  MagDipLineStrength::usage="MagDipLineStrength[theEigensys, numE] takes the eigensystem of an ion and the number numE of f-electrons that correspond to it and calculates the line strength array Stot.
   The option \"Units\" can be set to either \"SI\" (so that the units of the returned array are A/m^2) or to \"Hartree\".
   The option \"States\" can be used to limit the states for which the line strength is calculated. The default, All, calculates the line strength for all states. A second option for this is to provide an index labelling a specific state, in which case only the line strengths between that state and all the others are computed.
   The returned array should be interpreted in the eigenbasis of the Hamiltonian. As such the element Stot[[i,i]] corresponds to the line strength states between states |i> and |j>.";
@@ -2792,21 +2801,24 @@ Begin["`Private`"]
   The option \"Lifetime\" can be used to return the reciprocal of the transition rates. The default is to return the transition rates.";
   Options[MagDipoleRates]={"Units"->"SI", "Lifetime"->False, "RefractiveIndex"->1};
   MagDipoleRates[eigenSys_List, numE0_Integer,OptionsPattern[]]:=Module[
-    {AMD,Stot,eigenEnergies,transitionWaveLengthsInMeters,nRefractive},
+    {
+      AMD, Stot, eigenEnergies,
+      transitionWaveLengthsInMeters, nRefractive
+    },
     (
       nRefractive   = OptionValue["RefractiveIndex"];
       numE          = Min[14-numE0, numE0];
-      Stot          = MagDipLineStrength[eigenSys, numE, "Units"->OptionValue["Units"]];
+      Stot          = MagDipLineStrength[eigenSys, numE, "Units" -> OptionValue["Units"]];
       eigenEnergies = Chop[First/@eigenSys];
-      energyDiffs   = Outer[Subtract,eigenEnergies,eigenEnergies];
+      energyDiffs   = Outer[Subtract, eigenEnergies, eigenEnergies];
       energyDiffs   = ReplaceDiagonal[energyDiffs, Indeterminate];
-      (* Energies assumed in pseudo-energy unit kayser.*)
+      (* Energies assumed in kayser.*)
       transitionWaveLengthsInMeters = 0.01/energyDiffs;
       
       unitFactor    = Which[
       OptionValue["Units"]=="Hartree",
       (
-        (* The bohrRadius factor in SI neede to convert the wavelengths which are assumed in m*)
+        (* The bohrRadius factor in SI needed to convert the wavelengths which are assumed in m*)
         16 \[Pi]^3 (\[Mu]0Hartree /(3 hPlanckFine)) * bohrRadius^3
       ),
       OptionValue["Units"]=="SI",
@@ -2828,14 +2840,14 @@ Begin["`Private`"]
     )
   ];
 
-  GroundMDOscillatorStrength::usage="GroundMDOscillatorStrength[eigenSys, numE] calculates the magnetic diople oscillator strengths between the ground state and the excited states as given by eigenSys.
+  GroundMagDipoleOscillatorStrength::usage="GroundMagDipoleOscillatorStrength[eigenSys, numE] calculates the magnetic diople oscillator strengths between the ground state and the excited states as given by eigenSys.
   Based on equation 8 of Carnall 1965, removing the 2J+1 factor since this degeneracy has been removed by the crystal field. 
   eigenSys is a list of lists with two elements, in each list the first element is the energy and the second one the corresponding eigenvector.
   The energy unit assumed in eigenSys is Kayser.
   The returned array should be interpreted in the eigenbasis of the Hamiltonian. As such the element fMDGS[[i]] corresponds to the oscillator strength between ground state and eigenstate |i>.
   By default this assumes that the refractive index is unity, this may be changed by setting the option \"RefractiveIndex\" to the desired value.";
-  Options[GroundMDOscillatorStrength]={"RefractiveIndex"->1};
-  GroundMDOscillatorStrength[eigenSys_List, numE_Integer, OptionsPattern[]]:=Module[
+  Options[GroundMagDipoleOscillatorStrength]={"RefractiveIndex"->1};
+  GroundMagDipoleOscillatorStrength[eigenSys_List, numE_Integer, OptionsPattern[]]:=Module[
     {eigenEnergies, SMDGS, GSEnergy, energyDiffs, transitionWaveLengthsInMeters, unitFactor, nRefractive},
     (
       eigenEnergies    = First/@eigenSys;
@@ -3204,7 +3216,9 @@ Begin["`Private`"]
 
   HoleElectronConjugation::usage = "HoleElectronConjugation[params] takes the parameters (as an association) that define a configuration and converts them so that they may be interpreted as corresponding to a complentary hole configuration. Some of this can be simply done by changing the sign of the model parameters. In the case of the effective three body interaction the relationship is more complex and is controlled by the value of the isE variable.";
   HoleElectronConjugation[params_] := Module[
-    {newparams = params},
+    {
+      newparams = params
+    },
     (
       flipSignsOf = {\[Zeta], T2, T3, T4, T6, T7, T8};
       flipSignsOf = Join[flipSignsOf, cfSymbols];
@@ -3238,8 +3252,10 @@ Begin["`Private`"]
     "Zeroes" -> {}
   };
   IonSolver[numE_Integer, params0_Association, host_String:"Ln", OptionsPattern[]]:=Module[
-    {ln, simplifier, simpleHam, numHam, eigensys,
-    startTime, endTime, diagonalTime, params=params0, zeroSymbols},
+    {
+      ln, simplifier, simpleHam, numHam, eigensys,
+    startTime, endTime, diagonalTime, params=params0, zeroSymbols
+    },
     (
       ln = theLanthanides[[numE]];
       
@@ -3296,31 +3312,31 @@ Begin["`Private`"]
 
 
   (* ########################################################### *)
-  (* ###### Optical Transitions in Intermediate Coupling ####### *)
+  (* ############# Optical Transitions for Levels ############## *)
 
-  JuddOfeltUkSquared::usage="JuddOfeltUkSquared[numE, params] calculates the matrix elements of the Uk operator in the intermediate eigenstate basis. These are calculated according to equation (7) in Carnall 1965. 
+  JuddOfeltUkSquared::usage="JuddOfeltUkSquared[numE, params] calculates the matrix elements of the Uk operator in the level basis. These are calculated according to equation (7) in Carnall 1965. 
   The function returns a list with the following elements:
     - basis : A list with the allowed {SL, J} terms in the f^numE configuration. Equal to BasisLSJ[numE].
     - eigenSys : A list with the eigensystem of the Hamiltonian for the f^n configuration.
-    - levelLabels : A list with the labels of the major components of the intermediate coupling eigenstates.
-    - UkintermediateSquared : An association with the squared matrix elements of the Uk operators in the intermediate eigenstate basis. The keys being {2, 4, 6} corresponding to the rank of the Uk operator. The basis in which the matrix elements are given is the one corresponding to the intermediate coupling eigenstates given in eigenSys and whose major SLJ components are given in levelLabels. The matrix is symmetric and given as a SymmetrizedArray.
+    - levelLabels : A list with the labels of the major components of the level eigenstates.
+    - LevelUkSquared : An association with the squared matrix elements of the Uk operators in the level eigenbasis. The keys being {2, 4, 6} corresponding to the rank of the Uk operator. The basis in which the matrix elements are given is the one corresponding to the level eigenstates given in eigenSys and whose major SLJ components are given in levelLabels. The matrix is symmetric and given as a SymmetrizedArray.
     The function admits the following options:
     \"PrintFun\" : A function that will be used to print the progress of the calculations. The default is PrintTemporary.";
   Options[JuddOfeltUkSquared] = {"PrintFun" -> PrintTemporary};
   JuddOfeltUkSquared[numE_, params_, OptionsPattern[]] := Module[
-    {eigenChanger, numEH, basis, eigenSys, Js, Ukmat, UkintermediateSquared, kRank, S, L, Sp, Lp, J, Jp, phase, braTerm, ketTerm, levelLabels, eigenVecs, majorComponentIndices},
+    {eigenChanger, numEH, basis, eigenSys, Js, Ukmat, LevelUkSquared, kRank, S, L, Sp, Lp, J, Jp, phase, braTerm, ketTerm, levelLabels, eigenVecs, majorComponentIndices},
     (
       If[Not[ValueQ[ReducedUkTable]],
         LoadUk[]
       ];
       numEH = Min[numE, 14-numE];
       PrintFun = OptionValue["PrintFun"];
-      PrintFun["> Calculating the intermediate levels for the given parameters ..."];
-      {basis, eigenSys} = IntermediateSolver[numE, params];
+      PrintFun["> Calculating the levels for the given parameters ..."];
+      {basis, eigenSys} = LevelSolver[numE, params];
       (* The change of basis matrix to the eigenstate basis *)
       eigenChanger = Transpose[Last /@ eigenSys];
       PrintFun["Calculating the matrix elements of Uk in the physical coupling basis ..."];
-      UkintermediateSquared = <||>;
+      LevelUkSquared = <||>;
       Do[(
         Ukmat = Table[(
             {S, L}   = FindSL[braTerm[[1]]];
@@ -3340,7 +3356,7 @@ Begin["`Private`"]
         ];
         Ukmat = (Transpose[eigenChanger] . Ukmat . eigenChanger)^2;
         Ukmat = Chop@Ukmat;
-        UkintermediateSquared[kRank] = SymmetrizedArray[Ukmat, Dimensions[eigenChanger], Symmetric[{1, 2}]];
+        LevelUkSquared[kRank] = SymmetrizedArray[Ukmat, Dimensions[eigenChanger], Symmetric[{1, 2}]];
         ),
         {kRank, {2, 4, 6}}
       ];
@@ -3348,38 +3364,38 @@ Begin["`Private`"]
       eigenVecs = Last /@ eigenSys;
       majorComponentIndices = Ordering[Abs[#]][[-1]] & /@ eigenVecs;
       levelLabels = LSJmultiplets[[majorComponentIndices]];
-      Return[{basis, eigenSys, levelLabels, UkintermediateSquared}];
+      Return[{basis, eigenSys, levelLabels, LevelUkSquared}];
     )
   ];
 
-  IntermediateOscillatorStrengthED::usage="IntermediateOscillatorStrengthED[numE, intermediateParams, juddOfeltParams] uses Judd-Ofelt theory to estimate the forced electric dipole oscillator strengths ions whose intermediate coupling description is determined by intermediateParams. 
+  LevelElecDipoleOscillatorStrength::usage="LevelElecDipoleOscillatorStrength[numE, levelParams, juddOfeltParams] uses Judd-Ofelt theory to estimate the forced electric dipole oscillator strengths ions whose level description is determined by levelParams. 
   The third parameter juddOfeltParams is an asssociation with keys equal to the three Judd-Ofelt intensity parameters {\[CapitalOmega]2, \[CapitalOmega]4, \[CapitalOmega]6} and corresponding values in cm^2.
   The local field correction implemented here corresponds to the one given by the virtual cavity model of Lorentz.
   The function returns a list with the following elements:
     - basis : A list with the allowed {SL, J} terms in the f^numE configuration. Equal to BasisLSJ[numE].
-    - eigenSys : A list with the eigensystem of the Hamiltonian for the f^n configuration in intermediate coupling.
-    - levelLabels : A list with the labels of the major components of the intermediate coupling levels.
-    - oStrengthArray : A square arrayt whose elements represent the oscillator strengths between the levels of the intermediate coupling eigenstates such that the element oStrengthArray[[i,j]] is the oscillator strength between the levels |Subscript[\[Psi], i]> and |Subscript[\[Psi], j]>. In this array, the elements below the diagonal represent emission oscillator strengths, and elements above the diagonal represent absorption oscillator strengths.
+    - eigenSys : A list with the eigensystem of the Hamiltonian for the f^n configuration in the level description.
+    - levelLabels : A list with the labels of the major components of the calculated levels.
+    - oStrengthArray : A square array whose elements represent the oscillator strengths between levels such that the element oStrengthArray[[i,j]] is the oscillator strength between the levels |Subscript[\[Psi], i]> and |Subscript[\[Psi], j]>. In this array, the elements below the diagonal represent emission oscillator strengths, and elements above the diagonal represent absorption oscillator strengths.
   The function admits the following three options:
     \"PrintFun\" : A function that will be used to print the progress of the calculations. The default is PrintTemporary.
     \"RefractiveIndex\" : The refractive index of the medium where the transitions are taking place. This may be a number or a function. If a number then the oscillator strengths are calculated for assuming a wavelength-independent refractive index. If a function then the refractive indices are calculated accordingly to the wavelength of each transition (the function must admit a single argument equal to the wavelength in nm). The default is 1.
     \"LocalFieldCorrection\" : The local field correction to be used. The default is \"VirtualCavity\". The options are: \"VirtualCavity\" and \"EmptyCavity\".
   The equation implemented here is the one given in eqn. 29 from the review article of Hehlen (2013). See that same article for a discussion on the local field correction.
   ";
-  Options[IntermediateOscillatorStrengthED]={
+  Options[LevelElecDipoleOscillatorStrength]={
     "PrintFun"        -> PrintTemporary,
     "RefractiveIndex" -> 1,
     "LocalFieldCorrection" -> "VirtualCavity"
   };
-  IntermediateOscillatorStrengthED[numE_, intermediateParams_Association, juddOfeltParams_Association, OptionsPattern[]] := Module[
+  LevelElecDipoleOscillatorStrength[numE_, levelParams_Association, juddOfeltParams_Association, OptionsPattern[]] := Module[
     {
-      PrintFun, basis, eigenSys, levelLabels, UkintermediateSquared,eigenEnergies, energyDiffs, oStrengthArray, nRef, \[Chi], nRefs, \[Chi]OverN, groundLevel, const, transitionFrequencies, wavelengthsInNM, fieldCorrectionType
+      PrintFun, basis, eigenSys, levelLabels, LevelUkSquared,eigenEnergies, energyDiffs, oStrengthArray, nRef, \[Chi], nRefs, \[Chi]OverN, groundLevel, const, transitionFrequencies, wavelengthsInNM, fieldCorrectionType
     },
     (
       PrintFun = OptionValue["PrintFun"];
       nRef     = OptionValue["RefractiveIndex"];
       PrintFun["Calculating the Uk^2 matrix elements for the given parameters ..."];
-      {basis, eigenSys, levelLabels, UkintermediateSquared} = JuddOfeltUkSquared[numE, intermediateParams, "PrintFun"->PrintFun];
+      {basis, eigenSys, levelLabels, LevelUkSquared} = JuddOfeltUkSquared[numE, levelParams, "PrintFun"->PrintFun];
       eigenEnergies = First/@eigenSys;
       const         = (8\[Pi]^2)/3 me/hPlanck;
       energyDiffs   = Transpose@Outer[Subtract,eigenEnergies,eigenEnergies];
@@ -3388,9 +3404,9 @@ Begin["`Private`"]
       (* grab the J for each level *)
       levelJs        = #[[2]] & /@ eigenSys;
       oStrengthArray = (
-        juddOfeltParams[\[CapitalOmega]2]*UkintermediateSquared[2]+
-        juddOfeltParams[\[CapitalOmega]4]*UkintermediateSquared[4]+
-        juddOfeltParams[\[CapitalOmega]6]*UkintermediateSquared[6]
+        juddOfeltParams[\[CapitalOmega]2]*LevelUkSquared[2]+
+        juddOfeltParams[\[CapitalOmega]4]*LevelUkSquared[4]+
+        juddOfeltParams[\[CapitalOmega]6]*LevelUkSquared[6]
       );
       oStrengthArray = Abs@(const * transitionFrequencies * oStrengthArray);
       (* it is necessary to divide each oscillator strength by the degeneracy of the initial level *)
@@ -3441,60 +3457,69 @@ Begin["`Private`"]
     )
   ];
 
-  JJBlockMagDipIntermediate::usage="JJBlockMagDipIntermediate[numE, J, Jp] returns an array of the LSJ reduced matrix elements of the magnetic dipole operator between states with given J and Jp. The option \"Sparse\" can be used to return a sparse matrix. The default is to return a sparse matrix.";
-  Options[JJBlockMagDipIntermediate] = {"Sparse"->True};
-  JJBlockMagDipIntermediate[numE_, braJ_, ketJ_, OptionsPattern[]] := Module[
+  LevelJJBlockMagDipole::usage = "LevelJJBlockMagDipole[numE, J, Jp] returns an array of the LSJ reduced matrix elements of the magnetic dipole operator between states with given J and Jp. The option \"Sparse\" can be used to return a sparse matrix. The default is to return a sparse matrix.";
+  Options[LevelJJBlockMagDipole] = {"Sparse"->True};
+  LevelJJBlockMagDipole[numE_, braJ_, ketJ_, OptionsPattern[]] := Module[
     {
-      braSLJs, ketSLJs, braSLJ, ketSLJ, braSL, ketSL, braS, braL, ketS, ketL, matValue, magMatrix, summand1, summand2
+      braSLJs, ketSLJs,
+      braSLJ, ketSLJ,
+      braSL, ketSL,
+      braS, braL, 
+      ketS, ketL,
+      matValue, magMatrix,
+      summand1, summand2
     },
   (
     braSLJs     = AllowedNKSLforJTerms[numE,braJ];
     ketSLJs     = AllowedNKSLforJTerms[numE,ketJ];
     magMatrix   = Table[
-      braSL       = braSLJ[[1]];
-      ketSL       = ketSLJ[[1]];
-      {braS,braL} = FindSL[braSL];
-      {ketS,ketL} = FindSL[ketSL];
-      summand1    = If[Or[braJ!=ketJ,braSL!=ketSL],
-        0,
-        Sqrt[braJ*(braJ+1)*TPO[braJ]
-        ]
-      ];
-      (*looking at the string includes checking L=L',S=S',and\alpha=\alpha'*)summand2    = If[braSL!=ketSL,
-        0,
-        (gs-1)*
-        Phaser[braS+braL+ketJ+1]*
-        Sqrt[TPO[braJ]*TPO[ketJ]]*
-        SixJay[{braJ,1,ketJ},{braS,braL,braS}]*
-        Sqrt[braS(braS+1)TPO[braS]]
-      ];
-      matValue = summand1+summand2;
-      matValue = -1/2*matValue;
-      matValue,
+      (
+        braSL       = braSLJ[[1]];
+        ketSL       = ketSLJ[[1]];
+        {braS,braL} = FindSL[braSL];
+        {ketS,ketL} = FindSL[ketSL];
+        summand1    = If[Or[braJ!=ketJ,braSL!=ketSL],
+          0,
+          Sqrt[braJ*(braJ+1)*TPO[braJ]
+          ]
+        ];
+        (*looking at the string includes checking L=L',S=S',and\alpha=\alpha'*)
+        summand2    = If[braSL!=ketSL,
+          0,
+          (gs-1)*
+          Phaser[braS+braL+ketJ+1]*
+          Sqrt[TPO[braJ]*TPO[ketJ]]*
+          SixJay[{braJ,1,ketJ},{braS,braL,braS}]*
+          Sqrt[braS(braS+1)TPO[braS]]
+        ];
+        matValue = summand1 + summand2;
+        matValue = -1/2 * matValue;
+        matValue
+      ),
       {braSLJ,braSLJs},
       {ketSLJ,ketSLJs}
     ];
     If[OptionValue["Sparse"],
-      magMatrix=SparseArray[magMatrix]];
+      magMatrix = SparseArray[magMatrix]];
     Return[magMatrix];
   )
   ];
 
-  IntermediateMagDipole::usage="IntermediateMagDipole[numE] puts together an array with the reduced matrix elements of the magnetic dipole operator in the intermediate coupling basis for the f^numE configuration. The function admits the two following options:
-    \"Flattened\" (bool) : If True then the returned matrix is flattened. The default is True.
-    \"gs\" (number) : The electronic gyromagnetic ratio. The default is 2.";
-  Options[IntermediateMagDipole] = {"Flattened" -> True, gs -> 2};
-  IntermediateMagDipole[numE_, OptionsPattern[]] := Module[
+  LevelMagDipoleMatrixAssembly::usage = "LevelMagDipoleMatrixAssembly[numE] puts together an array with the reduced matrix elements of the magnetic dipole operator in the level basis for the f^numE configuration. The function admits the two following options:
+    \"Flattened\": If True then the returned matrix is flattened. The default is True.
+    \"gs\": The electronic gyromagnetic ratio. The default is 2.";
+  Options[LevelMagDipoleMatrixAssembly] = {
+    "Flattened" -> True,
+    gs -> 2
+  };
+  LevelMagDipoleMatrixAssembly[numE_, OptionsPattern[]] := Module[
     {
       Js, magDip, braJ, ketJ
     },
     (
       Js      = AllowedJ[numE];
       magDip  = Table[
-        ReplaceInSparseArray[
-          JJBlockMagDipIntermediate[numE,braJ,ketJ],
-          {gs->OptionValue[gs]}
-          ],
+        ReplaceInSparseArray[LevelJJBlockMagDipole[numE, braJ, ketJ], {gs -> OptionValue[gs]}],
         {braJ,Js},
         {ketJ,Js}
       ];
@@ -3505,55 +3530,126 @@ Begin["`Private`"]
     )
   ];
 
-
-  IntermediateOscillatorStrengthMD::usage = "IntermediateOscillatorStrengthMD[numE, intermediateParams] uses Judd-Ofelt theory to estimate the forced electric dipole oscillator strengths for an ion whose intermediate coupling description is determined by intermediateParams. 
-  The function returns a square array, oStrengthArray, where oStrengthArray[[i,j]] equals the oscillator strength (which is a dimensionless quantity) between levels |Subscript[\[Psi], i]> and |Subscript[\[Psi], j]>. 
-  The function returns a list with the following elements:
-    - basis : A list with the allowed {SL, J} terms in the f^numE configuration. Equal to BasisLSJ[numE].
-    - eigenSys : A list with the eigensystem of the Hamiltonian for the f^n configuration in intermediate coupling.
-    - levelLabels : A list with the labels of the major components of the intermediate coupling levels.
-    - magDipoleOstrength : A square array whose elements represent the magnetic dipole oscillator strengths between the levels of the intermediate coupling eigenstates such that the element magDipoleOstrength[[i,j]] is the oscillator strength between the levels |Subscript[\[Psi], i]> and |Subscript[\[Psi], j]>. In this array the elements below the diagonal represent emission oscillator strengths, and elements above the diagonal represent absorption oscillator strengths.
-  The function admits the following two options:
-    \"PrintFun\" : A function that will be used to print the progress of the calculations. The default is PrintTemporary.
-    \"RefractiveIndex\" : The refractive index of the medium where the transitions are taking place. This may be a number or a function. If a number then the oscillator strengths are calculated for assuming a wavelength-independent refractive index. If a function then the refractive indices are calculated accordingly to the wavelength of each transition (the function must admit a single argument equal to the wavelength in nm). The default is 1.
-  ";
-  Options[IntermediateOscillatorStrengthMD] = {
-    "PrintFun" -> PrintTemporary
-  };
-  IntermediateOscillatorStrengthMD[numE_, intermediateParams_Association,  OptionsPattern[]] := Module[
+  LevelMagDipoleLineStrength::usage = "LevelMagDipoleLineStrength[eigenSys, numE] calculates the magnetic dipole line strengths for an ion whose level description is determined by levelParams. The function returns a square array whose elements represent the magnetic dipole line strengths between the levels given in eigenSys such that the element magDipoleLineStrength[[i,j]] is the line strength between the levels |Subscript[\[Psi], i]> and |Subscript[\[Psi], j]>. Eigensys must be such that it consists of a lists of lists where in each list the last element corresponds to the eigenvector of a level (given as a row) in the standard basis for levels of the f^numE configuration.
+  The function admits the following options:
+    \"Units\" : The units in which the line strengths are given. The default is \"SI\". The options are \"SI\" and \"Hartree\". If \"SI\" then the unit of the line strength is (A m^2)^2 = (J/T)^2. If \"Hartree\" then the line strength is given in units of 2 \[Mu]B.";
+  Options[LevelMagDipoleLineStrength] = {
+    "Units"->"SI"
+    };
+  LevelMagDipoleLineStrength[theEigensys_List, numE0_Integer, OptionsPattern[]] := Module[
     {
-      PrintFun, eigenSys, eigenEnergies, interLevels, energyDiffs, levelJs, magDipoleOstrength, LSJmultiplets, majorComponentIndices, levelLabels
+      numE, levelMagOp, allEigenvecs, magDipoleLineStrength, units
     },
     (
-      PrintFun = OptionValue["PrintFun"];
-      PrintFun["> Calculating the intermediate levels for the given parameters ..."];
-      {basis, eigenSys} = IntermediateSolver[numE, intermediateParams];
-      (* The change of basis matrix to the eigenstate basis *)
-      eigenEnergies  = First /@ eigenSys;
-      interLevels    = Transpose[Last /@ eigenSys];
-      energyDiffs    = Abs@Outer[Subtract, eigenEnergies, eigenEnergies];
-      energyDiffs   *= kayserToHartree;
-      levelJs        = #[[2]] & /@ eigenSys;
-      magDip         = IntermediateMagDipole[numE];
-      magDipoleOstrength = (2/3 *
-        \[Alpha]Fine^2
-        energyDiffs * 
-        Abs[Transpose[interLevels] . magDip . interLevels]^2
-      );
-      magDipoleOstrength = MapIndexed[
-        1/(2 * levelJs[[#2[[1]]]] + 1) * #1 &, 
-        magDipoleOstrength,
-        {2}
+      numE         = Min[14-numE0,numE0];
+      levelMagOp   = LevelMagDipoleMatrixAssembly[numE];
+      allEigenvecs = Transpose[Last/@theEigensys];
+      units        = OptionValue["Units"];
+      magDipoleLineStrength         = Transpose[allEigenvecs].levelMagOp.allEigenvecs;
+      magDipoleLineStrength         = Abs[magDipoleLineStrength]^2;
+      Which[
+        units=="SI",
+          Return[4 \[Mu]B^2 * magDipoleLineStrength],
+        units=="Hartree",
+          Return[magDipoleLineStrength]
       ];
-      LSJmultiplets = (RemoveTrailingDigits[#[[1]]] <> ToString[InputForm[#[[2]]]]) & /@ basis;
-      majorComponentIndices = Ordering[Abs[#]][[-1]] & /@ Transpose[interLevels];
-      levelLabels = LSJmultiplets[[majorComponentIndices]];
-      Return[{basis, eigenSys, levelLabels, magDipoleOstrength}];
     )
   ];
 
+  LevelMagDipoleOscillatorStrength::usage = "LevelMagDipoleOscillatorStrength[eigenSys, numE] calculates the  magnetic dipole oscillator strengths for an ion whose level description is determined by levelParams. The refractive index of the medium is relevant, but here it is assumed to be 1, this can be changed through the option \"RefractiveIndex\". eigenSys must consist of a lists of lists with three elements: the first element being the energy of the level, the second element being the J of the level, and the third element being the eigenvector of the level.
+    The function returns a list with the following elements:
+      - basis : A list with the allowed {SL, J} terms in the f^numE configuration. Equal to BasisLSJ[numE].
+      - eigenSys : A list with the eigensystem of the Hamiltonian for the f^n configuration in the level description.
+      - levelLabels : A list with the labels of the major components of the calculated levels.
+      - magDipoleOstrength : A square array whose elements represent the magnetic dipole oscillator strengths between the levels given in eigenSys such that the element magDipoleOstrength[[i,j]] is the oscillator strength between the levels |Subscript[\[Psi], i]> and |Subscript[\[Psi], j]>. In this array the elements below the diagonal represent emission oscillator strengths, and elements above the diagonal represent absorption oscillator strengths. The emission oscillator strengths are negative. The oscillator strength is a dimensionless quantity.
+    The function admits the following option:
+      \"RefractiveIndex\" : The refractive index of the medium where the transitions are taking place. This may be a number or a function. If a number then the oscillator strengths are calculated assuming a wavelength-independent refractive index as given. If a function then the refractive indices are calculated accordingly to the vaccum wavelength of each transition (the function must admit a single argument equal to the wavelength in nm). The default is 1.
+    For reference see equation (27.8) in Rudzikas (2007). The expression for the line strenght is the simplest when using atomic units, (27.8) is missing a factor of \[Alpha]^2.";
+  Options[LevelMagDipoleOscillatorStrength]={
+    "RefractiveIndex" -> 1
+  };
+  LevelMagDipoleOscillatorStrength[eigenSys_, numE_, OptionsPattern[]]:=Module[
+    {
+      eigenEnergies, eigenVecs, levelJs, energyDiffs, magDipoleOstrength, nRef, wavelengthsInNM, nRefs, degenDivisor
+    },
+    (
+      basis         = BasisLSJ[numE];
+      eigenEnergies = First/@eigenSys;
+      nRef          = OptionValue["RefractiveIndex"];
+      eigenVecs     = Last/@eigenSys;
+      levelJs       = #[[2]]&/@eigenSys;
+      energyDiffs   = -Outer[Subtract,eigenEnergies,eigenEnergies];
+      energyDiffs  *= kayserToHartree;
+      magDipoleOstrength = LevelMagDipoleLineStrength[eigenSys, numE, "Units"->"Hartree"];
+      magDipoleOstrength = 2/3 * \[Alpha]Fine^2 * energyDiffs * magDipoleOstrength;
+      degenDivisor       = #1 / ( 2 * levelJs[[#2[[1]]]] + 1 ) &;
+      magDipoleOstrength = MapIndexed[degenDivisor, magDipoleOstrength, {2}];
+      Which[nRef===1,
+        True,
+        NumberQ[nRef],
+          (
+            magDipoleOstrength = nRef * magDipoleOstrength;
+          ),
+        True,
+          (
+            wavelengthsInNM    = Abs[kayserToHartree / energyDiffs] * 10^7;
+            nRefs              = Map[nRef, wavelengthsInNM];
+            magDipoleOstrength = nRefs * magDipoleOstrength;
+          )
+      ];
+      Return[{basis, eigenSys, magDipoleOstrength}];
+    )
+  ];
 
-  (* ###### Optical Transitions in Intermediate Coupling ####### *)
+  LevelMagDipoleSpotaneousDecayRates::usage = "LevelMagDipoleSpotaneousDecayRates[eigenSys, numE] calculates the spontaneous emission rates for the magnetic dipole transitions between the levels given in eigenSys. The function returns a square array whose elements represent the spontaneous emission rates between the levels given in eigenSys such that the element [[i,j]] of the returned array is the rate of spontaneous emission from the level |Subscript[\[Psi], i]> to the level |Subscript[\[Psi], j]>. In this array the elements below the diagonal represent emission rates, and elements above the diagonal are identically zero.
+  The function admits two optional arguments:
+    + \"Units\" : The units in which the rates are given. The default is \"SI\". The options are \"SI\" and \"Hartree\". If \"SI\" then the rates are given in s^-1. If \"Hartree\" then the rates are given in the atomic unit of frequency.
+    + \"RefractiveIndex\" : The refractive index of the medium where the transitions are taking place. This may be a number or a function. If a number then the rates are calculated assuming a wavelength-independent refractive index as given. If a function then the refractive indices are calculated accordingly to the vaccum wavelength of each transition (the function must admit a single argument equal to the wavelength in nm). The default is 1.";
+  Options[LevelMagDipoleSpotaneousDecayRates] = {
+    "Units" -> "SI",
+    "RefractiveIndex" -> 1};
+  LevelMagDipoleSpotaneousDecayRates[eigenSys_List, numE_Integer, OptionsPattern[]] := Module[
+    {
+      levMDlineStrength, eigenEnergies, energyDiffs, levelJs, spontaneousRatesInHartree, spontaneousRatesInSI, degenDivisor, units,
+      nRef, nRefs, wavelengthsInNM
+    },
+    (
+      nRef              = OptionValue["RefractiveIndex"];
+      units             = OptionValue["Units"];
+      levMDlineStrength = LowerTriangularize@LevelMagDipoleLineStrength[eigenSys,numE,"Units"->"Hartree"];
+      levMDlineStrength = SparseArray[levMDlineStrength];
+      eigenEnergies     = First /@ eigenSys;
+      energyDiffs       = Outer[Subtract, eigenEnergies, eigenEnergies];
+      energyDiffs       = kayserToHartree * energyDiffs;
+      energyDiffs       = SparseArray[LowerTriangularize[energyDiffs]];
+      levelJs           = #[[2]]& /@ eigenSys;
+      spontaneousRatesInHartree = 4/3 \[Alpha]Fine^5 * energyDiffs^3 * levMDlineStrength;
+      degenDivisor              = #1 / (2*levelJs[[#2[[1]]]] + 1)&;
+      spontaneousRatesInHartree = MapIndexed[degenDivisor, spontaneousRatesInHartree, {2}];
+      Which[nRef===1,
+        True,
+        NumberQ[nRef],
+          (
+            spontaneousRatesInHartree = nRef^3 * spontaneousRatesInHartree;
+          ),
+        True,
+          (
+            wavelengthsInNM    = Abs[kayserToHartree / energyDiffs] * 10^7;
+            nRefs              = Map[nRef, wavelengthsInNM];
+            spontaneousRatesInHartree = nRefs^3 * spontaneousRatesInHartree;
+          )
+      ];
+      If[units == "SI",
+        (
+          spontaneousRatesInSI = 1/hartreeTime * spontaneousRatesInHartree;
+          Return[SparseArray@spontaneousRatesInSI];
+        ),
+        Return[SparseArray@spontaneousRatesInHartree];
+      ];
+    )
+  ];
+
+  (* ############# Optical Transitions for Levels ############## *)
   (* ########################################################### *)
 
   (* ########################################################### *)
@@ -3607,7 +3703,7 @@ Begin["`Private`"]
     Return[pretty];
   );
 
-  BasisVecInRusselSaunders::usage = "BasisVecInRusselSaunders[basisVec] takes a basis vector in the format {LSstring, Jval, mJval} and returns a human-readable symbol for the corresponding Russel-Saunders term."
+  BasisVecInRusselSaunders::usage = "BasisVecInRusselSaunders[basisVec] takes a basis vector in the format {LSstring, Jval, mJval} and returns a human-readable symbol for the corresponding Russel-Saunders term.";
   BasisVecInRusselSaunders[basisVec_] := (
     {LSstring, Jval, mJval} = basisVec;
     Ket[PrettySaundersSLJmJ[basisVec]]
@@ -3619,7 +3715,7 @@ Begin["`Private`"]
   \"=\", \"`J`\"}], \",\", \nRowBox[{\"mJ\", \"=\", \"`mJ`\"}]}]},\n\
   \"Ket\"]\)"];
 
-  BasisVecInLSJMJ::usage = "BasisVecInLSJMJ[basisVec] takes a basis vector in the format {{{LSstring, Jval}, mJval}, nucSpin} and returns a human-readable symbol for the corresponding LSJMJ term in the form |LS, J=..., mJ=...>."
+  BasisVecInLSJMJ::usage = "BasisVecInLSJMJ[basisVec] takes a basis vector in the format {{{LSstring, Jval}, mJval}, nucSpin} and returns a human-readable symbol for the corresponding LSJMJ term in the form |LS, J=..., mJ=...>.";
   BasisVecInLSJMJ[basisVec_] := (
     {LSstring, Jval, mJval} = basisVec;
     LSJMJTemplate[<|
@@ -3958,6 +4054,36 @@ Begin["`Private`"]
     )
   ];
 
+  FromArrayToTable::usage="FromArrayToTable[array, labels, energies] takes a square array of values and returns a table with the labels of the rows and columns, the energies of the initial and final levels, the level energies, the vacuum wavelength of the transition, and the value of the array. The array must be square and the labels and energies must be compatible with the order implied by the array. The array must be a square array of values. The function returs a list of lists with the following elements:
+    - Initial level index
+    - Final level index
+    - Initial level label
+    - Final level label
+    - Initial level energy
+    - Final level energy
+    - Vacuum wavelength
+    - Value of the array element.
+  Elements in which the array is zero are not included in the return of this function.";
+  FromArrayToTable[array_,labels_,energies_] := Module[
+    {
+      tableFun, atl
+    },
+    (
+      tableFun = {
+        #2[[1]],
+        #2[[2]],
+        labels[[#2[[1]]]],
+        labels[[#2[[2]]]],
+        energies[[#2[[1]]]],
+        energies[[#2[[2]]]],
+        If[#2[[1]]==#2[[2]],"--",10^7/(energies[[#2[[1]]]]-energies[[#2[[2]]]])],
+        #1
+      }&;
+      atl = Select[Flatten[MapIndexed[tableFun,array,{2}],1],#[[-1]]=!=0.&];
+      atl = Append[#,1/#[[-1]]]&/@atl;
+      Return[atl]
+    )
+  ]
   (* ########################## Misc ########################### *)
   (* ########################################################### *)
 
@@ -4095,7 +4221,7 @@ Begin["`Private`"]
   ];
 
   HamiltonianForm::usage="HamiltonianForm[hamMatrix, basisLabels] takes the matrix representation of a hamiltonian together with a set of symbols representing the ordered basis in which the operator is represented. With this it creates a displayed form that has adequately labeled row and columns together with informative values when hovering over the matrix elements using the mouse cursor.";
-  Options[HamiltonianForm]={"Separator"->"","Pivot"->""}
+  Options[HamiltonianForm]={"Separator"->"","Pivot"->""};
   HamiltonianForm[hamMatrix_, basisLabels_List, OptionsPattern[]]:=(
       braLabels=DisplayForm[RowBox[{"\[LeftAngleBracket]",#,"\[RightBracketingBar]"}]]& /@ basisLabels;
       ketLabels=DisplayForm[RowBox[{"\[LeftBracketingBar]",#,"\[RightAngleBracket]"}]]& /@ basisLabels;

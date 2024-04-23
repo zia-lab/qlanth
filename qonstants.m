@@ -23,6 +23,7 @@ eCharge = 1.602176634  * 10^-19;        (* elementary charge in SI *)
 
 bohrRadius    = 5.29177*10^-11;         (* Bohr radius in m *)
 hartreeEnergy = hBar^2 / (me * bohrRadius^2); (* Hartree energy in J *)
+hartreeTime   = hBar / hartreeEnergy; (* Hartree time in s *)
 
 (* Hartree atomic units *)
 hPlanckHartree = 2 \[Pi]; (* Planck's constant in Hartree *)
@@ -32,12 +33,13 @@ eChargeHartree = 1;       (* elementary charge in Hartree *)
 \[Mu]0Hartree  = \[Alpha]Fine^2; (* magnetic permeability in vacuum in Hartree *)
 
 (* some conversion factors *)
-eVtoJoule       = eCharge;
+eVToJoule       = eCharge;
+jouleToeV       = 1 / eVToJoule;
 jouleToHartree  = 1 / hartreeEnergy;
 eVToKayser      = eCharge /( hPlanck * cLight * 100 ); (* 1 eV = 8065.54429 cm^-1 *)
 kayserToeV      = 1 / eVToKayser;
 teslaToKayser   = 2 * \[Mu]B / hPlanck / cLight / 100;
-kayserToHartree = kayserToeV * eVtoJoule * jouleToHartree; 
+kayserToHartree = kayserToeV * eVToJoule * jouleToHartree; 
 hartreeToKayser = 1 / kayserToHartree;
 
 EndPackage[];

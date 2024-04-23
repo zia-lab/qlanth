@@ -16,6 +16,7 @@
 \usepackage{scalerel}
 \usepackage{mdframed}
 \usepackage{pgffor}
+\usetikzlibrary{decorations.pathmorphing}
 \usepackage{lmodern}
 \usepackage[htt]{hyphenat} %Enable hythenation of TT text:
 \usepackage[backend=bibtex,style=alphabetic]{biblatex}
@@ -73,7 +74,7 @@
     % Software name
     {\Large\qlanth}\\
     \vspace*{0.5cm}
-    {\large doc version $\ket{\alpha}^{(7)}$}\\
+    {\large doc version $\ket{\alpha}^{(8)}$}\\
     \vspace*{2cm}
     
     % Additional information
@@ -112,14 +113,17 @@ This code was originally authored by Christopher Dodson and Rashid Zia for their
 
 This document has 12 sections. \textbf{Section 1} explains the details of the basis in which the Hamiltonian is evaluated. \textbf{Section 2} provides a brief explanation of the \cfps. \textbf{Section 3} explains how the Hamiltonian is put together by first having calculated ``$JJ'$ blocks''. \textbf{Section 4} is dedicated to a theoretical exposition of the effective Hamiltonian with subsections for each of the terms that it contains. \textbf{Section 5} is about the calculation of magnetic dipole transitions. \textbf{Sections 6 and 8} list additional data included in \qlanth. \textbf{Section 7} has additional information about data fitting.  \textbf{Section 9} has a brief comment on units. \textbf{Sections 9 and 10} include a summary of notation and definitions use throughout this document. Finally, \textbf{section 12} contains a printout of the code included in \qlanth.
 
+\section{LS coupling}
 
-\section{The $\LSJMbasis$ Basis States}
+\qlanth assumed LS coupling all throughout. It may, however, use two levels of description as the specific situation merits. When the crystal field is neglected it offers an intermediate coupling description in terms of $\LSJbasis$ levels. When the crystal field is included, it then offers an intermediate coupling description in terms of the $\LSJMbasis$ basis states. 
 
-The basis used in \qlanth is the $\LSJMbasis$ basis. As such the basis vectors are common eigenvectors of the operators $\op{L}^2$, $\op{S}^2$, $\op{J}^2$, and $\op{J}_z$. The LS terms allowed in each configuration $\forb^\numE$ are obtained from tables that originate from the original work by Nielson and Koster \cite{nielson_spectroscopic_1963}. In \qlanth these are parsed from the file \codetext{B1F\_ALL.TXT} which is part of the doctoral research of Dobromir Velkov \cite{velkov_multi-electron_2000} in which he recomputed \cfps under the advisory of Brian Judd. 
+\subsection{The $\LSJMbasis$ basis states}
 
-One of the facts that have to be accounted for in a basis that uses L and S as quantum numbers, is that there might be several linearly independent path to couple the electron spin and orbital momenta to add up to given total $L$ and total $S$. For this reason additional labels are necessary to distinguish between these different terms. The simplest way of doing this dates back to the tables of Nielson and Koster \cite{nielson_spectroscopic_1963}, and consists in assigning consecutive integers to degenerate LS terms, with no specific role given to them, except that of discriminating between different degenerate terms. 
+The basis vectors of the $\LSJMbasis$ state basis are common eigenvectors of the operators $\op{L}^2$, $\op{S}^2$, $\op{J}^2$, and $\op{J}_z$. The LS terms allowed in each configuration $\forb^\numE$ are obtained from tables that originate from the original work by Nielson and Koster \cite{nielson_spectroscopic_1963}. In \qlanth these are parsed from the file \codetext{B1F\_ALL.TXT} which is part of the doctoral research of Dobromir Velkov \cite{velkov_multi-electron_2000} in which he recomputed \cfps under the advisory of Brian Judd. 
+
+One of the facts that have to be accounted for in a basis that uses L and S as quantum numbers, is that there might be several linearly independent paths to couple the electron spin and orbital momenta to add up to given total $L$ and total $S$. For this reason additional labels are necessary to distinguish between these different terms. The simplest way of doing this dates back to the tables of Nielson and Koster \cite{nielson_spectroscopic_1963}, and consists in assigning consecutive integers to degenerate LS terms, with no specific role given to them, except that of discriminating between different degenerate terms. 
  
-The following are all the LS terms in the $\forb^{\numE}$ configurations. In the notation used the superscript index before the letter notes the spin multiplicity $2S+1$, the roman letter indicating the value of $L$ in spectroscopic notation ($S\!\!\rightarrow\!\!1, P\!\!\rightarrow\!\!2, D\!\!\rightarrow\!\!3, F\!\!\rightarrow\!\!4, G\!\!\rightarrow\!\!5, H\!\!\rightarrow\!\!6, I\!\!\rightarrow\!\!7, K\!\!\rightarrow\!\!8, L\!\!\rightarrow\!\!9, M\!\!\rightarrow\!\!10, N\!\!\rightarrow\!\!11, O\!\!\rightarrow\!\!12, Q\!\!\rightarrow\!\!3, R\!\!\rightarrow\!\!14, T\!\!\rightarrow\!\!15, U\!\!\rightarrow\!\!16, V\!\!\rightarrow\!\!17$), and the final integer (if present) is the label that discriminates between several degenerate LS. This index we frequently label in the equations contained in this document with the greek letter $\alpha$.
+The following are all the LS terms in the $\forb^{\numE}$ configurations. In the notation used the superscript index before the letter notes the spin multiplicity $2S+1$, the roman letter indicating the value of $L$ in spectroscopic notation ($S\!\!\rightarrow\!\!1, P\!\!\rightarrow\!\!2, D\!\!\rightarrow\!\!3, F\!\!\rightarrow\!\!4, G\!\!\rightarrow\!\!5, H\!\!\rightarrow\!\!6, I\!\!\rightarrow\!\!7, K\!\!\rightarrow\!\!8, L\!\!\rightarrow\!\!9, M\!\!\rightarrow\!\!10, N\!\!\rightarrow\!\!11, O\!\!\rightarrow\!\!12, Q\!\!\rightarrow\!\!3, R\!\!\rightarrow\!\!14, T\!\!\rightarrow\!\!15, U\!\!\rightarrow\!\!16, V\!\!\rightarrow\!\!17$), and the final integer (if present) is the label that discriminates between several degenerate LS. This index we frequently label in the equations contained in this document with the greek letter $\alpha$ (sadly, we prepend it, rather than append it).
 
 \input{fnTerms.tex}   
  
@@ -129,7 +133,7 @@ In \qlanth these terms may be queried through the function \codetext{AllowedNKSL
         \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
     }
 
-In addition to LS the basis vector are also specified by the total angular momentum $J$ (which may go from $\abs{L-S}$ to $\abs{L+S}$). Then for each $J$ there are $2J+1$ projections on the z-axis. For example, the ordered $\LSJMbasis$ basis for $\forb^2$ is the one below. Where the first element is the LS term given as a string, the second equal to $J$, and the third one equal to $\Msub{J}$.
+In addition to LS the $\LSJMbasis$ basis states are also specified by the total angular momentum $J$ (which may go from $\abs{L-S}$ to $\abs{L+S}$). Then for each $J$ there are $2J+1$ projections on the z-axis. For example, the ordered $\LSJMbasis$ basis for $\forb^2$ is the one below. Where the first element is the LS term given as a string, the second equal to $J$, and the third one equal to $\Msub{J}$.
  
 \input{f2BasisbyJ.tex} 
 
@@ -139,19 +143,9 @@ In \qlanth the ordered basis used for a given $\forb^\numE$ is provided by \code
 
 \lstinputlisting[language=Mathematica]{./fundefs/BasisLSJMJ.tex}
 
-\subsection{The Intermediate Coupling $\LSJbasis$ Levels}
-
-When the Hamiltonian only includes spherically symmetric terms (or what is the same, when the crystal field is neglected) then the $\Msub{J}$ quantum numbers in the $\LSJMbasis$ basis states are redundant. In this case, often called \textit{intermediate coupling}, the following are the different $\LSJterm{2S+1}{L}{J}$ levels that span the eigenvectors that result from diagonalizing the intermediate coupling Hamiltonian.
-
-\input{LSJlevels.tex}
-
-In \qlanth this basis of levels can be retrieved through the function \codetext{BasisLSJ}. This is the ordered basis used for all intermediate coupling calculations.
-
-\lstinputlisting[language=Mathematica]{./fundefs/BasisLSJ.tex}
-
 \subsection{More quantun numbers}
 
-Besides using an integer that simply solves the problem of discriminating between degenerate $LS$ terms by enumerating them, it is also possible to add more useful labels that reflect additional symmetries that the f-electron wavefunctions find in the groups $\SO{7}$ and $\Gtwo$.
+Besides using an integer which solves the problem of discriminating between degenerate $LS$ terms by enumerating them but not providing useful information, it is also possible to add more useful labels that reflect additional symmetries that the f-electron wavefunctions find in the groups $\SO{7}$ and $\Gtwo$.
 
 \subsubsection{Seniority $\senior$}
 
@@ -167,21 +161,27 @@ Much as $L$ tells us how a rotation acts on a $L$ wavefunction by mixing differe
 
 In \qlanth the $\RacahW$ and $\RacahU$ are used in order to determine the matrix elements of the $\casimir{\SO{7}}$ and $\casimir{\Gtwo}$ operators.
 
-\subsection{The $\LSJbasis$ intermediate coupling basis}
+\subsection{The $\LSJbasis$ level description}
 
-When only interactions with spherical symmetry are kept (all but the crystal field or external magnetic field) then the total angular momentum $J$ is a good quantum number and all the $\Msub{J}$ projections are degenerate. This allows for a much more frugal description of the eigenstates, in what is traditionally called the intermediate coupling description. Not only the number of basis states that need to be considered is much less than otherwise, but also the diagonalization is more efficient since it can be carried out within subspaces with shared $J$.
+When the Hamiltonian only includes spherically symmetric terms (or what is the same, when the crystal field is neglected) then the $\Msub{J}$ quantum numbers in the $\LSJMbasis$ basis states are redundant. This permits a simplified description of the intermediate coupling eigenstates in terms of $\LSJbasis$ levels. The following are the different $\LSJterm{2S+1}{L}{J}$ levels that span the eigenvectors that result from diagonalizing the Hamiltonian in the level description.
 
-In \qlanth the function \codetext{BasisLSJ} can be used to retrieve the ordered basis that is used in the intermediate coupling description. This function admits the option ``ReturnAsAssociation'' in which the function returns an association where the keys are values of $J$ and the values are lists of lists of the form $\{\text{LS string}, J\}$.
+\input{LSJlevels.tex}
 
-To obtain the blocks (indexed by J) representing the intermediate coupling Hamiltonian, the function \codetext{SimplerSymbolicIntermediateHamMatrix} is included in \qlanth.
+The level picture is a much more frugal description of the eigenstates. Not only the number of basis elements that need to be considered is much less than otherwise, but also the diagonalization is more efficient since it can be carried out within subspaces with shared $J$.
 
-\lstinputlisting[language=Mathematica]{./fundefs/SimplerSymbolicIntermediateHamMatrix.tex} 
+In \qlanth the function \codetext{BasisLSJ} can be used to retrieve the ordered basis that is used for the intermediate coupling description in terms of levels. This function admits the option ``ReturnAsAssociation'' in which the function returns an association where the keys are values of $J$ and the values are lists of lists of the form $\{\text{LS string}, J\}$.
 
-Whereas this description may be calculated without ever making explicit reference to $\Msub{J}$, in \qlanth what is done is that the more verbose description associated with the $\LSJMbasis$ basis is ``downsized'' to obtain the intermediate coupling description. To this aim the following functions in \qlanth are instrumental: \codetext{EigenLever}, \codetext{FreeHam}, \codetext{ListRepeater}, and \codetext{ListLever}.
+\lstinputlisting[language=Mathematica]{./fundefs/BasisLSJ.tex}
 
-The function \codetext{IntermediateSolver} can be used to facilitate the calculation of a specific intermediate coupling level structure given values for the parameters that are kept in the description.
+To obtain the blocks (indexed by J) representing the Hamiltonian in the level description, the function \codetext{LevelSimplerSymbolicHamMatrix} is included in \qlanth.
 
-\lstinputlisting[language=Mathematica]{./fundefs/IntermediateSolver.tex}
+\lstinputlisting[language=Mathematica]{./fundefs/LevelSimplerSymbolicHamMatrix.tex} 
+
+Whereas this description may be calculated without ever making explicit reference to $\Msub{J}$, in \qlanth what is done is that the more verbose description associated with the $\LSJMbasis$ basis is ``downsized'' to obtain the description in terms of levels. To this aim the following functions in \qlanth are instrumental: \codetext{EigenLever}, \codetext{FreeHam}, \codetext{ListRepeater}, and \codetext{ListLever}.
+
+The function \codetext{LevelSolver} can be used to facilitate the calculation of a specific i level structure given values for the parameters that one wishes to keep for the level description.
+
+\lstinputlisting[language=Mathematica]{./fundefs/LevelSolver.tex}
 
 \section{The \cfps} 
 
@@ -264,7 +264,7 @@ In \qlanth these blocks are put together by the function \codetext{JJBlockMatrix
 
 \lstinputlisting[language=Mathematica]{./fundefs/JJBlockMatrix.tex}
 
-Once these blocks have been calculated and saved to disk (in the folder \codetext{./hams/}) the function \codetext{HamMatrixAssembly} takes them, assembles the arrays in block form, and finally flattens it to provide a rank-2 array. This are the arrays that are finally diagonalized to find energies and eigenstates. Through options this function can also return the Hamiltonian in block form, which is useful for the intermediate coupling description.
+Once these blocks have been calculated and saved to disk (in the folder \codetext{./hams/}) the function \codetext{HamMatrixAssembly} takes them, assembles the arrays in block form, and finally flattens it to provide a rank-2 array. This are the arrays that are finally diagonalized to find energies and eigenstates. Through options this function can also return the Hamiltonian in block form, which is useful for the level description of the eigenstates.
 
 \lstinputlisting[language=Mathematica]{./fundefs/HamMatrixAssembly.tex}
 
@@ -924,7 +924,7 @@ The $JJ'$ blocks that are generated with this function are then put together by 
     \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
 }
 
-Using the cartesian components of the magnetic dipole operator, the matrix elements of the Zeeman term can then be evaluated. This term can be included in the Hamiltonian through an option in \codetext{HamMatrixAssembly}. Since the magnetic dipole operator is calculated in atomic units, and it seeming desirable that the input units of the magnetic field be Tesla, a conversion factor is included so that the final terms be congruent with the energy units assumed in the other terms in the Hamiltonian, namely the pseudo-energy unit Kayser ($\text{cm}^{-1}$). The conversion factor is called \codetext{TeslaToKayser} in the file \codetext{qonstants.m}.
+Using the cartesian components of the magnetic dipole operator, the matrix elements of the Zeeman term can then be evaluated. This term can be included in the Hamiltonian through an option in \codetext{HamMatrixAssembly}. Since the magnetic dipole operator is calculated in atomic units, and it seeming desirable that the input units of the magnetic field be Tesla, a conversion factor is included so that the final terms be congruent with the energy units assumed in the other terms in the Hamiltonian, namely the energy pseudo-unit Kayser ($\text{cm}^{-1}$). The conversion factor is called \codetext{teslaToKayser} in the file \codetext{qonstants.m}.
 
 \subsection[Going beyond $f^7$]{Going beyond ${\forb}^7$}
 
@@ -951,9 +951,6 @@ In \qlanth this symmetry is taken into account when the function \codetext{HamMa
 	\lineStrength(\psi,\psi') \DEF \left| \braopket{\psi}{\hat{\mu}}{\psi'} \right|^2 = \left| \braopket{\psi}{\hat{\mu}_x}{\psi'} \right|^2 + \left| \braopket{\psi}{\hat{\mu}_y}{\psi'} \right|^2 + \left| \braopket{\psi}{\hat{\mu}_z}{\psi'} \right|^2
 \end{equation}
 
-
-$\LSJterm{2}{F}{3/2}$
-
 In \qlanth this is computed with the function \codetext{MagDipLineStrength}, which given a set of eigenvectors computes the sum above, and returns an array that contains all possible pairings of $\ket{\psi}$ and $\ket{\psi'}$ in $\lineStrength(\psi,\psi')$.
  
 \lstinputlisting[language=Mathematica]{./fundefs/MagDipLineStrength.tex}
@@ -962,7 +959,7 @@ Using the line strength $\lineStrength$ the transition rate $\AMD$ for the spont
 \begin{equation}
 	\tRate{MD}{\psi_i}{\psi_f} = \frac{16 \pi^3 \mu_0}{3 h} \frac{n^3}{\lambda^3} \frac{\lineStrength(\psi_i,\psi_f)}{g_i},
 \end{equation}
-where $\lambda$ is the vacuum-equivalent wavelength of the transition between $\ket{\nu}$ and $\ket{\nu'}$, $n$ the refractive index of the medium containing the ion, and $g_i$ the degeneracy of the initial state $\ket{\psi_i}$. At the fine-grained description that \qlanth uses, $J$ is no longer a good quantum number so $g_i=1$.
+where $\lambda$ is the vacuum-equivalent wavelength of the transition between $\ket{\nu}$ and $\ket{\nu'}$, $n$ the refractive index of the medium containing the ion, and $g_i$ the degeneracy of the initial state $\ket{\psi_i}$. At the state level of description, $J$ is no longer a good quantum number so $g_i=1$.
 
 \lstinputlisting[language=Mathematica]{./fundefs/MagDipoleRates} 
  
@@ -974,11 +971,11 @@ A final quantity of interest is the oscillator strength for the transition betwe
 \end{equation}
 where $g_g$ is the degeneracy of the ground state. At the level of detail that the eigenstates are described in \qlanth where $J$ is no longer a good quantum number, $g_g = 1$. 
 
-In \qlanth the function \codetext{GroundMDOscillatorStrength} implements the calculation of the oscillator strengths from the ground state to all the excited ones.
+In \qlanth the function \codetext{GroundMagDipoleOscillatorStrength} implements the calculation of the oscillator strengths from the ground state to all the excited ones.
 
-\lstinputlisting[language=Mathematica]{./fundefs/GroundMDOscillatorStrength} 
+\lstinputlisting[language=Mathematica]{./fundefs/GroundMagDipoleOscillatorStrength} 
 
-\subsection{Intermediate coupling}
+\subsection{Level description}
 
 \subsubsection{Forced electric dipole transitions}
 
@@ -988,7 +985,7 @@ However, much as configuration interaction is an essential component in the desc
 
 Judd \cite{judd_optical_1962} and Ofelt \cite{ofelt_intensities_1962} came separately to similar versions of this analysis, and showed after a series of approximations that the forced electric dipole transitions could be described by the intra-configuration matrix elements of the multi-electron unit operators $\op{U}^{(k)}$ (for k=2,4,6) together with a set of three accompanying coefficients $\{\JOk{2},\JOk{4},\JOk{6}\}$. These coefficients have a definite form related to the overlap between the mixed parity parts of the corrected wavefunctions, but they can also be integrated as additional phenomelogical parameters.
 
-Judd-Ofelt theory is based on the intermediate coupling description, and its mathematical expression is the following. Given two intermediate coupling levels $\ket{\alpha SLJ}$ and $\ket{\alpha\mathrlap{'} SL\mathrlap{'}J\mathrlap{'}\,}$, the oscillator strength between them is approximated as \cite{judd_optical_1962} 
+Judd-Ofelt theory is based on the level description, and its mathematical expression is the following. Given two intermediate coupling levels $\ket{\alpha SLJ}$ and $\ket{\alpha\mathrlap{'} SL\mathrlap{'}J\mathrlap{'}\,}$, the oscillator strength between them is approximated as \cite{judd_optical_1962} 
 \begin{equation}
 \oStrength{f-ED}{\alpha{LSJ}}{\alpha\mathrlap{'} S\mathrlap{'} L\mathrlap{'} J\mathrlap{'}\,\,} = 
 	\mathcal{R} \frac{8 \pi^2 m_e}{3 h}
@@ -1014,9 +1011,19 @@ and for other environments (or emitters other than ions such as molecules) difer
 
 \subsubsection{Magnetic dipole transitions}
 
-In atomic units, the intermediate coupling magnetic dipole oscillator strength for a transition between the ground level $\ket{\alpha{LSJ}}$ and an excited level $\ket{\alpha\mathrlap{'} S\mathrlap{'} L\mathrlap{'} J\mathrlap{'}\,\,}$ is given by \cite{rudzikas_theoretical_2007}
+In atomic units, the magnetic dipole line strength between levels $\ket{\alpha{LSJ}}$ and $\ket{\alpha\mathrlap{'} S\mathrlap{'} L\mathrlap{'} J\mathrlap{'}\,\,}$ is given by
 \begin{equation} 
-	\oStrength{MD}{\alpha{LSJ}}{\alpha\mathrlap{'} S\mathrlap{'} L\mathrlap{'} J\mathrlap{'}\,\,} = \frac{2}{3}
+	\lineStrength(\ket{\alpha{LSJ}},\ket{\alpha\mathrlap{'} S\mathrlap{'} L\mathrlap{'} J\mathrlap{'}\,\,}) = 
+	\left|\redbraopket{\alpha{LSJ}}{\frac{1}{2}(\op{L}+g \op{S})}{\alpha\mathrlap{'} S\mathrlap{'} L\mathrlap{'} J\mathrlap{'}\,\,} \right|^2
+\end{equation}
+
+In \qlanth the line strength can be calculated using the function \codetext{LevelMagDipoleLineStrength}.
+
+\lstinputlisting[language=Mathematica]{./fundefs/LevelMagDipoleLineStrength} 
+
+In atomic units, the magnetic dipole oscillator strength for a transition between level $\ket{\alpha{LSJ}}$ and an excited level $\ket{\alpha\mathrlap{'} S\mathrlap{'} L\mathrlap{'} J\mathrlap{'}\,\,}$ is given by \cite{rudzikas_theoretical_2007}
+\begin{equation} 
+	\oStrength{MD}{\alpha{LSJ}}{\alpha\mathrlap{'} S\mathrlap{'} L\mathrlap{'} J\mathrlap{'}\,\,} = \frac{2 n}{3}
 	\frac{
 	\mathcal{E}(
 		\ket{\alpha\mathrlap{'}
@@ -1024,15 +1031,43 @@ In atomic units, the intermediate coupling magnetic dipole oscillator strength f
 			L\mathrlap{'}
 			J\mathrlap{'}\,\,})-
 	\mathcal{E}(
-		\ket{\alpha{LSJ})}}
-	{2J+1} 
-	\left|\redbraopket{\alpha{LSJ}}{\frac{1}{2}(\op{L}+g \op{S})}{\alpha\mathrlap{'} S\mathrlap{'} L\mathrlap{'} J\mathrlap{'}\,\,} \right|^2
+		\ket{\alpha{LSJ}
+		)}}
+	{2J+1}
+	\alphaFine^2
+	\lineStrength\left(\ket{\alpha{LSJ}},\ket{\alpha\mathrlap{'} S\mathrlap{'} L\mathrlap{'} J\mathrlap{'}\,\,}\right)
 \end{equation}
-where $\mathcal{E}(\ket{\alpha{LSJ}})$ is the energy of level $\ket{\alpha{LSJ}}$.
+where $\mathcal{E}(\ket{\alpha{LSJ}})$ is the energy of level $\ket{\alpha{LSJ}}$, $n$ the refractive index of the medium, and $\alphaFine$ the fine structure constant. In obtaining this expression one considers the transition from one state of the initial level into another single state of the final one. Furthermore, here it is assumed that all the states of the initial level are equally populated.
 
-In \qlanth this relationship is implemented in the function \codetext{IntermediateOscillatorStrengthMD}.
+In \qlanth the function \codetext{LevelMagDipoleOscillatorStrength} can be used to calculate these.
 
-\lstinputlisting[language=Mathematica]{./fundefs/IntermediateOscillatorStrengthMD} 
+\lstinputlisting[language=Mathematica]{./fundefs/LevelMagDipoleOscillatorStrength} 
+
+A final quantity of interest is the spontaneous decay rate from one level to a lower lying one. In atomic units this rate is determined by
+\begin{equation}
+	\decayRate{MD}{\alpha{LSJ}}{\alpha\mathrlap{'}
+			S\mathrlap{'}
+			L\mathrlap{'}
+			J\mathrlap{'}} = \frac{4 n^3}{3} 
+			\frac{
+				\left(
+					\mathcal{E}(
+						\ket{\alpha{LSJ}}) - 
+					\mathcal{E}(
+						\ket{\alpha\mathrlap{'}
+							S\mathrlap{'}
+							L\mathrlap{'}
+							J\mathrlap{'}\,\,})
+				\right)^3
+				}
+				{2J+1} 
+		\alphaFine^5
+		\lineStrength\left(\ket{\alpha{LSJ}},\ket{\alpha\mathrlap{'} S\mathrlap{'} L\mathrlap{'} J\mathrlap{'}\,\,}\right).
+\end{equation}
+
+In \qlanth the spotaneous decay rates may be calculated through the function \codetext{LevelMagDipoleSpotaneousDecayRates}.
+
+\lstinputlisting[language=Mathematica]{./fundefs/LevelMagDipoleSpotaneousDecayRates} 
 
 \section{Data fitting}
 
@@ -1065,7 +1100,7 @@ Here is a description of the different steps that this algorithm implements.
   
   \item \textbf{Hamiltonian Assembly and Simplification}: Constructs the Hamiltonian while preserving its block structure, applies simplification rules, and processes the diagonal blocks to retain only free-ion parameters.
   
-  \item \textbf{Intermediate Coupling Basis Calculation}: Computes an intermediate coupling basis using free-ion parameters, aiding in the energy level analysis of the system.
+  \item \textbf{Level Calculation}: Determines the level description using free-ion parameters.
   
   \item \textbf{Compilation and Truncation of Hamiltonian}: Compiles the Hamiltonian and truncates it based on the set truncation energy, optimizing for computational efficiency.
   
@@ -1133,7 +1168,7 @@ The function returns an association with the following keys.
 
     \item \codetext{startValues}: the initial values for the problem variables as given in the input.
 
-    \item \codetext{freeIonSymbols}: symbols used in the intermediate coupling basis.
+    \item \codetext{freeIonSymbols}: symbols used in the intermediate coupling level calculation.
 
     \item \codetext{truncationEnergy}: the energy level at which the Hamiltonian was truncated.
 
@@ -1149,7 +1184,7 @@ The function returns an association with the following keys.
 
     \item \codetext{allVars}: all the symbols defining the Hamiltonian under the applied simplifications.
 
-    \item \codetext{freeBies}: the free-ion parameters used to define the intermediate coupling basis.
+    \item \codetext{freeBies}: the free-ion parameters used to calculate the intermediate coupling levels.
 
     \item \codetext{truncatedDim}: the dimension of the truncated Hamiltonian.
 
