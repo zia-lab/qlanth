@@ -88,6 +88,9 @@ Berkeley: University of California Press, 1981.
 Operators  for  the  Configuration  f^3."  JOSA  B  1, no. 2 (1984):
 261-65. https://doi.org/10.1364/JOSAB.1.000261.
 
++  Morrison,  C. A. "Angular Momentum Theory Applied to Interactions
+in Solids," 1987.
+
 + Carnall,   W.  T.,  G.  L.  Goodman, K. Rajnak, and R. S. Rana. "A
 Systematic  Analysis  of  the  Spectra of the Lanthanides Doped into
 Single  Crystal  LaF3."  The  Journal  of Chemical Physics 90, no. 7
@@ -239,6 +242,7 @@ magneticSymbols       = {Bx, By, Bz, gs, \[Zeta]};
 casimirSymbols        = {\[Alpha], \[Beta], \[Gamma]};
 paramFamilies         = Hold[{racahSymbols, chenSymbols, slaterSymbols, controlSymbols, cfSymbols, TSymbols, pseudoMagneticSymbols, marvinSymbols, casimirSymbols, magneticSymbols}];
 ReleaseHold[Protect /@ paramFamilies];
+crystalGroups = {"C1","Ci","C2","Cs","C2h","D2","C2v","D2h","C4","S4","C4h","D4","C4v","D3d","D4h","C3","C3i","D3","C3v","D3d","C6","C3h","C6h","D6","C6v","D3h","D6h","T","Th","O","Td","Oh"};
 
 (* Parameter usage *)
 paramLines = Select[StringSplit[paramAtlas, "\n"], # != "" &];
@@ -279,6 +283,7 @@ CasimirSO7;
 
 Cqk;
 CrystalField;
+CrystalFieldForm;
 Dk;
 ElectrostaticConfigInteraction;
 Electrostatic;
@@ -375,6 +380,7 @@ MinJ;
 NKCFPPhase;
 
 ParamPad;
+ParseMorrison1987;
 ParseStates;
 ParseStatesByNumBasisVecs;
 ParseStatesByProbabilitySum;
@@ -1767,10 +1773,10 @@ Begin["`Private`"]
       Return[SpinSpinTable];
     );
 
-  (* ########################################################### *)
   (* ###################### Spin-Spin ########################## *)
-
   (* ########################################################### *)
+
+  (* ################################################################## *)
   (* ## Spin-Other-Orbit and Electrostatically-Correlated-Spin-Orbit ## *)
 
   SOOandECSO::usage="SOOandECSO[n, SL, SpLp, J] returns the matrix element <|SL,J|spin-spin|SpLp,J|> for the combined effects of the spin-other-orbit interaction and the electrostatically-correlated-spin-orbit (which originates from configuration interaction effects) within the configuration f^n. This matrix element is independent of MJ. This is obtained by querying the relevant reduced matrix element by querying the association SOOandECSOLSTable and putting in the adequate phase and 6-j symbol. The SOOandECSOLSTable puts together the reduced matrix elements from three operators.
@@ -1814,7 +1820,7 @@ Begin["`Private`"]
   );
 
   (* ## Spin-Other-Orbit and Electrostatically-Correlated-Spin-Orbit ## *)
-  (* ########################################################### *)
+  (* ################################################################## *)
 
   (* ########################################################### *)
   (* ################## Magnetic Interactions ################## *)
@@ -2015,6 +2021,75 @@ Begin["`Private`"]
       ),
     {numE, numEs}
     ]
+  )
+
+
+  ParseMorrison1987::usage="ParseMorrison1987[] parses the data from tables 8.1 and 8.2 of Morrison 1987 and returns a list of crystal field parameters for each point group. The return value of this function is also saved  /data folder with filename crystalFieldFunctionalForms.m. If the option \"Export\" is set to True, then the result is exported to the data subfolder.";
+  Options[ParseMorrison1987]={"Export"->True}
+  ParseMorrison1987[OptionsPattern[]] := (
+    fname = FileNameJoin[{moduleDir,"data","morrison1987.m"}];
+    morrison1987 = Import[fname];
+    tab8p1 = morrison1987["tab8p1"];
+    tab8p1 = StringReplace[tab8p1, {" " -> ""}];
+    tab8p1params = morrison1987["tab8p1params"];
+    tab8p2 = morrison1987["tab8p2"];
+    tab8p2 = StringReplace[tab8p2, {" " -> ""}];
+    tab8p2params = morrison1987["tab8p2params"];
+    
+    crystalSymmetries = <||>;
+    crystalSymmetries["C1"] = morrison1987["C1"];
+    crystalSymmetries["Ci"] = morrison1987["Ci"];
+    Do[(
+      row = StringSplit[row, ","];
+      groupSymbol = row[[1]];
+      crosses = (# == "x" &) /@ Characters[row[[2]]];
+      crystalParams = Sort@Pick[tab8p1params, crosses];
+      crystalSymmetries[groupSymbol] = <|"BqkSqk" -> crystalParams,
+        "constraints" -> {}
+        |>
+      ),
+    {row, StringSplit[tab8p1, "\n"]}];
+    
+    Do[(
+      row = StringSplit[row, ","];
+      groupSymbol = row[[1]];
+      crosses = (# == "x" &) /@ Characters[row[[2]]];
+      crystalParams = Sort@Pick[tab8p2params, crosses];
+      crystalSymmetries[groupSymbol] = <|"BqkSqk" -> crystalParams,
+        "constraints" -> {}
+        |>
+      ),
+    {row, StringSplit[tab8p2, "\n"]}];
+    crystalSymmetries["T"] = morrison1987["T"];
+    crystalSymmetries["Th"] = <|
+      "BqkSqk" -> {B04, B44, B06, B46}, 
+      "constraints" -> {{B44 -> Sqrt[5/14] B04, 
+      B46 -> -Sqrt[(7/2)] B06}, {B44 -> -Sqrt[(5/14)] B04, 
+      B46 -> Sqrt[7/2] B06}}|>;
+    crystalSymmetries["O"] = crystalSymmetries["Th"];
+    crystalSymmetries["Td"] = crystalSymmetries["T"];
+    crystalSymmetries["Oh"] = crystalSymmetries["O"];
+    crystalSymmetries["source"] = morrison1987["source"];
+    If[OptionValue["Export"],
+      Export[FileNameJoin[{moduleDir, "data", "crystalFieldFunctionalForms.m"}], crystalSymmetries];
+    ];
+    Return[crystalSymmetries]
+    )
+
+  CrystalFieldForm::usage="CrystalFieldForm[symmetryGroup] returns an association that describes the crystal field parameters that are necessary to desribe a crystal field for the given symmetry group.
+  
+  The symmetry group is given as a string and should be one of the following: C1, Ci, C2, Cs, C2h, D2, C2v, D2h, C4, S4, C4h, D4, C4v, D3d, D4h, C3, C3i, D3, C3v, D3d, C6, C3h, C6h, D6, C6v, D3h, D6h, T, Th, O, Td, Oh.
+  
+  The returned association has two keys: \"BqkSqk\" whose values is a list with the nonzero Bqk and Sqk parameters, and \"constraints\" whose value is either an empty list, or a lists of replacements rules that are constraints on the Bqk and Sqk parameters.
+  
+  The given \"BqkSqk\" might be parameters that are absent from the single configuration f^n crystal field. To remove these, intersect the list with cfSymbols.
+  
+  This is based on data from Morrision 1987, \"Angular Momentum Theory Applied to Interactions in Solids\".";
+  CrystalFieldForm[symmetryGroupString_] := (
+    If[Not@ValueQ[crystalFieldFunctionalForms],
+      crystalFieldFunctionalForms = Import[FileNameJoin[{moduleDir, "data", "crystalFieldFunctionalForms.m"}]];
+    ];
+    crystalFieldFunctionalForms[symmetryGroupString]
   )
 
   (* ##################### Crystal Field ####################### *)
