@@ -74,7 +74,7 @@
     % Software name
     {\Large\qlanth}\\
     \vspace*{0.5cm}
-    {\large doc version $\ket{\alpha}^{(8)}$}\\
+    {\large doc version $\ket{\alpha}^{(9)}$}\\
     \vspace*{2cm}
     
     % Additional information
@@ -87,7 +87,22 @@
 
 \newpage
 
-\
+\vspace*{\fill}
+
+\begin{center}
+\qlanth may be downloaded
+
+\href{https://github.com/zia-lab/qlanth}{here}
+\vspace{-0.27cm}
+\begin{figure}[h!]
+	\begin{center}
+		\includegraphics[width=0.95\textwidth]{pr_code.png}
+	\end{center}
+\end{figure}
+
+\end{center}
+
+\vspace*{\fill}
 
 \cleardoublepage
 
@@ -101,27 +116,44 @@
 
 \newpage
 
+\vspace*{\fill}
+
 \qlanth is a tool that can be used to estimate the electronic structure of lanthanide ions in crystals. For this purpose it uses a single configuration description and a corresponding effective Hamiltonian. This Hamiltonian aims to describe the observed properties of ions embedded in solids in a picture that imagines them as free-ions but modified by the influence of the lattice in which they find themselves in.
 
 This picture is one that developed and mostly matured in the second half of the last century by the efforts of Giulio Racah, Brian Judd, Hannah Crosswhite, Robert Cowan, Michael Reid, Bill Carnall, Clyde Morrison, Richard Leavitt, Brian Wybourne, and Katherine Rajnak among others. The goal of this tool is to provide a modern implementation of the methods that resulted from their work. This code is written in Wolfram language.
 
-\qlanth also includes data that might be of use to those interested in the single-configuration description of lanthanide ions, separate to their specific use in this code. These data include the \cfps (as calculated by Velkov and parsed here), and reduced matrix elements for all the operators in the effective Hamiltonian. These are provided as standard Mathematica associations that should be simple to use elsewhere.
+Separate to their specific use in this code, \qlanth also includes data that might be of use to those interested in the single-configuration description of lanthanide ions. These data include the \cfps (as calculated by Velkov and parsed here), and reduced matrix elements for all the operators in the effective Hamiltonian. These are provided as standard \mathematica associations that should be simple to use elsewhere.
 
-The included Mathematica notebook \codetext{qlanth.nb} has examples of the capabilities that this tool offers, and the \codetext{/examples} folder includes a series of notebooks for most of the trivalent lanthanide ions in lanthanum fluoride. \LaFthree is remarkable in that it was one of the systems in which a systematic study \cite{carnall_systematic_1989} of all of the trivalent lanthanide ions were studied. 
+The included \mathematica notebook \codetext{qlanth.nb} lists most of the functions included in \qlanth and should be considered complementary to this document. The \codetext{/examples} folder includes notebooks containing the result of this description for most of the trivalent lanthanide ions in lanthanum fluoride. \LaFthree is remarkable in that it was one of the systems in which a systematic study \cite{carnall_systematic_1989} of all of the trivalent lanthanide ions were studied.
 
-This code was originally authored by Christopher Dodson and Rashid Zia for their research into magnetic dipole transitions in lanthanide ions \cite{dodson_magnetic_2012}. Here it has been modified and rewritten by David Lizarazo. It has also benefited from conversations with Tharnier Puel at the University of Iowa.
+This code was originally authored by Christopher Dodson and Rashid Zia for their research into magnetic dipole transitions in lanthanide ions \cite{dodson_magnetic_2012}. Here it has been rewritten and expanded by David Lizarazo. It has also benefited from conversations with Tharnier Puel at the University of Iowa.
 
 This document has 12 sections. \textbf{Section 1} explains the details of the basis in which the Hamiltonian is evaluated. \textbf{Section 2} provides a brief explanation of the \cfps. \textbf{Section 3} explains how the Hamiltonian is put together by first having calculated ``$JJ'$ blocks''. \textbf{Section 4} is dedicated to a theoretical exposition of the effective Hamiltonian with subsections for each of the terms that it contains. \textbf{Section 5} is about the calculation of magnetic dipole transitions. \textbf{Sections 6 and 8} list additional data included in \qlanth. \textbf{Section 7} has additional information about data fitting.  \textbf{Section 9} has a brief comment on units. \textbf{Sections 9 and 10} include a summary of notation and definitions use throughout this document. Finally, \textbf{section 12} contains a printout of the code included in \qlanth.
 
+Besides a fully functional that works out of the box, \qlanth is unique in that it also includes detailed code that can generate from scratch (or close to scratch) the necessary reduced matrix elements that in other codes are simply loaded from other vintages. Great care was taken to comment every loop, variable, procedure, and data provenance. In view of this, the code relevant to the different functions has been interspersed in the parts where they are mentioned.
+
+\vspace*{\fill}
+
+\newpage
+
 \section{LS coupling}
 
-\qlanth assumed LS coupling all throughout. It may, however, use two levels of description as the specific situation merits. When the crystal field is neglected it offers an intermediate coupling description in terms of $\LSJbasis$ levels. When the crystal field is included, it then offers an intermediate coupling description in terms of the $\LSJMbasis$ basis states. 
+In choosing a coupling scheme there are a myriad options, all of them being legitimate in their own right. The art of choosing a useful coupling scheme is then that one of proposing a basis for the angular part of the wavefunctions that will be close to the actual eigenstates of the system. It being necessary to calculate the matrix elements of the relevant operators, choosing a coupling scheme may also be justified by the facility by which these can be calculated.
 
-\subsection{The $\LSJMbasis$ basis states}
+\qlanth uses LS coupling for its calculations. In LS coupling all the orbital angular momenta are added to form the total orbital angular momentum $L$, all the spin angular momenta are added to form the total spin angular momentum $S$, and that these two angular momenta are then put together to form the total angular momentum $J$. The exclusion principle is taken into account in limiting the possible LS terms, and requires no further restrictions. Finally this total angular momentum $J$ is complemented with the quantum number $\Msub{J}$ describing the proyection of $J$ along the z-axis.
 
-The basis vectors of the $\LSJMbasis$ state basis are common eigenvectors of the operators $\op{L}^2$, $\op{S}^2$, $\op{J}^2$, and $\op{J}_z$. The LS terms allowed in each configuration $\forb^\numE$ are obtained from tables that originate from the original work by Nielson and Koster \cite{nielson_spectroscopic_1963}. In \qlanth these are parsed from the file \codetext{B1F\_ALL.TXT} which is part of the doctoral research of Dobromir Velkov \cite{velkov_multi-electron_2000} in which he recomputed \cfps under the advisory of Brian Judd. 
+It is worthwhile remembering here the spectroscopic hierarchy of descriptive elements: \textbf{terms} correspond to $\LSbasis$, \textbf{levels} correspond to $\LSJbasis$, \textbf{states} correspond to $\LSJMbasis$. In principle the  $\LSJMbasis$ description is the primordial one, the $\LSJbasis$ resulting from neglecting all parts of the Hamiltonian that have no spherical symmetry, and the $\LSbasis$ resulting from further neglecting all terms that couple the spin and orbital angular momenta. Note that a \textit{state} is not and \textit{eigen}-state; all of these are assumed to be basis vectors in the specific level of description attached to them.
 
-One of the facts that have to be accounted for in a basis that uses L and S as quantum numbers, is that there might be several linearly independent paths to couple the electron spin and orbital momenta to add up to given total $L$ and total $S$. For this reason additional labels are necessary to distinguish between these different terms. The simplest way of doing this dates back to the tables of Nielson and Koster \cite{nielson_spectroscopic_1963}, and consists in assigning consecutive integers to degenerate LS terms, with no specific role given to them, except that of discriminating between different degenerate terms. 
+Whereas all four quantum numbers $\LSJMbasis$ are required to specify a state, one may, however, use two simpler levels of description as the specific situation merits. When all the parts of the Hamiltonian without spherical symmetry are excluded, then an intermediate coupling description in terms of $\LSJbasis$ levels is sufficient, the $\Msub{J}$ quantum numbers being redundant and with $J$ being a good quantum number. In a second scenario, when in addition to neglecting all parts without spherical symmetry, one also neglects all parts of the Hamiltonian that couple the spin and orbital degrees of freedom, then the $\LSbasis$ terms constitute the most parsimonious description, with $L$ and $S$ being separately conserved quantities.
+
+When a certain level of description has been adopted one can then assume (at one's own peril) that single states, levels, or terms are actual \textit{eigen}-states/levels/terms of the system at hand. This assumption usually results in relatively simple transition rules between states/levels/terms. One may, however, within each level of description, take an alternate route, the \textit{intermediate coupling} route, of seeing how the different states/levels/terms mix in the eigenstates found by diagonalizing the appropriate Hamiltonian.
+
+
+\subsection{$\LSJMbasis$ states}
+
+The basis vectors of the $\LSJMbasis$ basis are common eigenvectors of the operators $\op{L}^2$, $\op{S}^2$, $\op{J}^2$, and $\op{J}_z$. The LS terms allowed in each configuration $\forb^\numE$ are obtained from tables that originate from the original work by Nielson and Koster \cite{nielson_spectroscopic_1963}. In \qlanth these are parsed from the file \codetext{B1F\_ALL.TXT} which is part of the doctoral research of Dobromir Velkov \cite{velkov_multi-electron_2000} in which he recomputed \cfps under the advisory of Brian Judd. 
+
+One of the facts that have to be accounted for in a basis that uses L and S as quantum numbers, is that there might be several linearly independent paths to couple the electron spin and orbital momenta to add up to given total $L$ and total $S$. For this reason additional labels are necessary to distinguish between these different terms. The simplest way of doing this dates back to the tables of Nielson and Koster \cite{nielson_spectroscopic_1963}, and consists in assigning consecutive integers to degenerate LS terms, with no further meaning to them, except that of discriminating between different degenerate terms. 
  
 The following are all the LS terms in the $\forb^{\numE}$ configurations. In the notation used the superscript index before the letter notes the spin multiplicity $2S+1$, the roman letter indicating the value of $L$ in spectroscopic notation ($S\!\!\rightarrow\!\!1, P\!\!\rightarrow\!\!2, D\!\!\rightarrow\!\!3, F\!\!\rightarrow\!\!4, G\!\!\rightarrow\!\!5, H\!\!\rightarrow\!\!6, I\!\!\rightarrow\!\!7, K\!\!\rightarrow\!\!8, L\!\!\rightarrow\!\!9, M\!\!\rightarrow\!\!10, N\!\!\rightarrow\!\!11, O\!\!\rightarrow\!\!12, Q\!\!\rightarrow\!\!3, R\!\!\rightarrow\!\!14, T\!\!\rightarrow\!\!15, U\!\!\rightarrow\!\!16, V\!\!\rightarrow\!\!17$), and the final integer (if present) is the label that discriminates between several degenerate LS. This index we frequently label in the equations contained in this document with the greek letter $\alpha$ (sadly, we prepend it, rather than append it).
 
@@ -137,7 +169,7 @@ In addition to LS the $\LSJMbasis$ basis states are also specified by the total 
  
 \input{f2BasisbyJ.tex} 
 
-The order above is exemplar of the ordering in the bases. Notice how the basis vectors are sorted in order of increasing $J$, so that for instance not all of the basis kets associated with the $\LSterm{3}{P}$ LS term are contiguous. Within each group for a given $J$ the basis kets are then ordered in decreasing $S$, then ordered in increasing $L$, and then according to $\Msub{J}$.
+The order above is exemplar of the ordering in the bases used in \qlanth. Notice how the basis vectors are sorted in order of increasing $J$, so that for instance not all of the basis states associated with the $\LSterm{3}{P}$ LS term are contiguous. Within each group for a given $J$ the basis kets are then ordered in decreasing $S$, then ordered in increasing $L$, and then according to $\Msub{J}$.
 
 In \qlanth the ordered basis used for a given $\forb^\numE$ is provided by \codetext{BasisLSJMJ}. 
 
@@ -145,31 +177,31 @@ In \qlanth the ordered basis used for a given $\forb^\numE$ is provided by \code
 
 \subsection{More quantun numbers}
 
-Besides using an integer which solves the problem of discriminating between degenerate $LS$ terms by enumerating them but not providing useful information, it is also possible to add more useful labels that reflect additional symmetries that the f-electron wavefunctions find in the groups $\SO{7}$ and $\Gtwo$.
+Besides using an integer which solves the problem of discriminating between degenerate $LS$ terms by enumerating them, it is also possible to add more useful labels that reflect additional symmetries that the f-electron wavefunctions find in the groups $\SO{7}$ and $\Gtwo$.
 
 \subsubsection{Seniority $\senior$}
 
-The seniority number connects different LS terms between configurations, so that a term below can be seen as the \textit{senior} of a term above. To determine the seniority of a given term in configuration $\forb^\numE$ one must first find the configuration $\forb^{\tilde{\numE}}$ in which this term appeared. For example $\forb^{5}$ contains six degenerate ${}^2G$ terms. The first time this term appeared was in $\forb^3$, where it had a degeneracy of 2. The 2 degenerate terms in $\forb^3$ would then both have a seniority of $\senior=3$ since they first appeared in $\forb^3$. In consequency two of the six degenerate terms in $\forb^5$ would have the same degeneracy those two in $\forb^3$, and are therefore linked to those previous two. The four remaining ones, are  considered to be \textit{born} in $\forb^5$, and therefore have a seniority $\senior=5$.
+The seniority number connects different LS terms between configurations, so that a term below can be seen as the \textit{senior} of a term above. To determine the seniority of a given term in configuration $\forb^\numE$ one must first find the configuration $\forb^{\tilde{\numE}}$ in which this term appeared. For example $\forb^{5}$ contains six degenerate ${}^2G$ terms. The first time this term appeared was in $\forb^3$, where it had a degeneracy of 2. The 2 degenerate terms in $\forb^3$ would then both have a seniority of $\senior=3$ since they first appeared in $\forb^3$. In consequence two of the six degenerate terms in $\forb^5$ would have the same degeneracy those two in $\forb^3$, and are therefore linked to those previous two. The four remaining ones, are  considered to be \textit{born} in $\forb^5$, and therefore have a seniority $\senior=5$.
 
-These rules seem to be ad-hoc, but they are useful in dealing with the degeneracies in the LS terms as the arrive going up the configurations.
+These rules seem to be ad-hoc, but they are useful in dealing with the degeneracies in the LS terms as the arrive going up the configurations. It provides a useful way of following along what happens to each \textit{branch} of the coupling tree as it grows and withers with increasing number of electrons.
 
-There is, however, a much deeper meaning to the seniority number. It can be shown that the seniority number (more exactly a quantity related to it) is a sort of spin, a quasi-spin, where the spin projections along the `z-axis' correspond to different number of electrons in $\forb^\numE$ configurations. This is a consequence of the Pauli exclusion principle. It is also useful to relate matrix elements of operators in one configuration to those in another, through the use of the Wigner-Eckart theorem. This is an interesting an useful theoretical construct, but the method of fractional parentage (which is what is implemented in $\qlanth$ is well suited also, albeit being somewhat less parsimonious than what the quasi-spin view that seniority can provide. As such $\qlanth$ does not use the seniority numbers that are associated with each LS term.
+There is, however, a much deeper meaning to the seniority number. It can be shown that the seniority number (more exactly a quantity related to it) is a sort of spin, a quasi-spin, where the spin projections along the `z-axis' correspond to different number of electrons in $\forb^\numE$ configurations. This is a consequence of the exclusion principle. It is also useful to relate matrix elements of operators in one configuration to those in another, through the use of the Wigner-Eckart theorem. This is an interesting an useful theoretical construct, but the method of fractional parentage (which is what is implemented in $\qlanth$) is equally adequate, albeit being somewhat less parsimonious than what the quasi-spin view that seniority can provide. As such $\qlanth$ does not use the seniority numbers that are associated with each LS term.
 
 \subsubsection{$\RacahU$ and $\RacahW$}
 
-Much as $L$ tells us how a rotation acts on a $L$ wavefunction by mixing different $\Msub{L}$ components, these other two labels specify how the wavefunctions transform under the operations of these other two groups. The $\RacahW$ label determines how a wavefunction transforms under a rotation in 7-dimensional space, and $\RacahU$ how they transform under an operator of group $\Gtwo$. Without going into the group theoretical details, the irreducible representations of $\SO{7}$ can be represented by triples of integer numbers, and those of $\Gtwo$ as pairs of two integers.
+Much as $L$ tells us how a rotation acts on an $L$ wavefunction by mixing different $\Msub{L}$ components, these other two quantum numbers specify how the wavefunctions transform under the operations of two other two groups. The $\RacahW$ label determines how a wavefunction transforms under a rotation in 7-dimensional space, and $\RacahU$ how they transform under an operator of group $\Gtwo$. Without going into the group theoretical details, the irreducible representations of $\SO{7}$ can be represented by triples of integer numbers, and those of $\Gtwo$ as pairs of two integers.
 
-In \qlanth the $\RacahW$ and $\RacahU$ are used in order to determine the matrix elements of the $\casimir{\SO{7}}$ and $\casimir{\Gtwo}$ operators.
+In \qlanth the $\RacahW$ and $\RacahU$ are used in order to determine the matrix elements of the $\casimir{\SO{7}}$ and $\casimir{\Gtwo}$ Casimir operators.
 
-\subsection{The $\LSJbasis$ level description}
+\subsection{$\LSJbasis$ levels}
 
 When the Hamiltonian only includes spherically symmetric terms (or what is the same, when the crystal field is neglected) then the $\Msub{J}$ quantum numbers in the $\LSJMbasis$ basis states are redundant. This permits a simplified description of the intermediate coupling eigenstates in terms of $\LSJbasis$ levels. The following are the different $\LSJterm{2S+1}{L}{J}$ levels that span the eigenvectors that result from diagonalizing the Hamiltonian in the level description.
 
 \input{LSJlevels.tex}
 
-The level picture is a much more frugal description of the eigenstates. Not only the number of basis elements that need to be considered is much less than otherwise, but also the diagonalization is more efficient since it can be carried out within subspaces with shared $J$.
+The level picture is a much more frugal description of the eigenstates. Not only the number of basis elements that need to be considered is much less than otherwise, but also the diagonalization is more efficient since it can be carried out within subspaces with shared $J$. One needs, however to use adequate degeneracy factors in the relevant calculations.
 
-In \qlanth the function \codetext{BasisLSJ} can be used to retrieve the ordered basis that is used for the intermediate coupling description in terms of levels. This function admits the option ``ReturnAsAssociation'' in which the function returns an association where the keys are values of $J$ and the values are lists of lists of the form $\{\text{LS string}, J\}$.
+In \qlanth the function \codetext{BasisLSJ} can be used to retrieve the ordered basis that is used for the intermediate coupling description in terms of levels.
 
 \lstinputlisting[language=Mathematica]{./fundefs/BasisLSJ.tex}
 
@@ -179,7 +211,7 @@ To obtain the blocks (indexed by J) representing the Hamiltonian in the level de
 
 Whereas this description may be calculated without ever making explicit reference to $\Msub{J}$, in \qlanth what is done is that the more verbose description associated with the $\LSJMbasis$ basis is ``downsized'' to obtain the description in terms of levels. To this aim the following functions in \qlanth are instrumental: \codetext{EigenLever}, \codetext{FreeHam}, \codetext{ListRepeater}, and \codetext{ListLever}.
 
-The function \codetext{LevelSolver} can be used to facilitate the calculation of a specific i level structure given values for the parameters that one wishes to keep for the level description.
+The function \codetext{LevelSolver} can be used to facilitate the calculation of a specific  level structure given values for the parameters that one wishes to keep for the level description, which is often simply termed the ``free-ion'' part of the Hamiltonian.
 
 \lstinputlisting[language=Mathematica]{./fundefs/LevelSolver.tex}
 
@@ -343,7 +375,17 @@ Putting all of this together leads to the following Hamiltonian. In there, ``v-e
 \end{align}  
 \end{mdframed}
 
+For concreteness \figref{fig:Pr_in_LaF3} shows a depiction of a matrix representation of this Hamiltonian for the $\forb^2$ configuration.
+
 It is of some importance to note that the eigenstates that we'll end up with have shoved under the rug all the radial dependence of the wavefunctions. This dependence has been already integrated in the parameters that the Hamiltonian has. 
+
+\begin{figure}[h!]
+	\begin{center}
+		\includegraphics[width=0.85\textwidth]{Prplot.pdf}
+	\end{center}
+	\caption{The matrix representation for $\text{Pr}^{3+}$ in \LaFthree \, in the $\LSJMbasis$ basis.}
+	\label{fig:Pr_in_LaF3} 
+\end{figure}
 
 \subsection{$\hamKineticSymbol$: kinetic energy}
 
@@ -479,7 +521,7 @@ It is of some importance to note that the eigenstates that we'll end up with hav
  
 \subsection{$\hamTreesSymbol, \hamGTwoSymbol, \hamSOSevenSymbol$: electrostatic configuration interaction}
 
-    This is a first term where we take into account the contributions from \confint. Rajnak and Wybourne \cite{rajnak_configuration_1963} showed that \confint of the electrostatic interactions corresponding to two-electron excitations from $\forb^\numE$  can be represented through the Casimir operators of the groups $\SO{3}$, $\Gtwo$, and $\SO{7}$. This borrowed from an earlier insight of Trees\cite{trees_l_1952}, who realized that an addition of a term proportional to $L(L+1)$ improved the energy calculations for the second spectrum of manganese (MII) and the third spectrum of iron (FeIII).
+    This is a first term where we take into account the contributions from \confint. Rajnak and Wybourne \cite{rajnak_configuration_1963} showed that \confint of the electrostatic interactions corresponding to two-electron excitations from $\forb^\numE$  can be represented through the Casimir operators of the groups $\SO{3}$, $\Gtwo$, and $\SO{7}$. This borrowed from an earlier insight of Trees \cite{trees_l_1952}, who realized that an addition of a term proportional to $L(L+1)$ improved the energy calculations for the second spectrum of manganese (MII) and the third spectrum of iron (FeIII).
 
     One of these Casimir operators is the familiar $\op{L}^2$ from $\SO{3}$. In analogy to $\op{L}^2$ in which the quantum number $L$ can be used to determine the eigenvalues, in the cases of $\hamGTwoSymbol$ the necessary state label is the $U$ label of the $LS$ term, and in the case of $\hamSOSevenSymbol$ the necessary label is $W$. If $\Lambda_{\Gtwo}\!(U)$ is used to note the eigenvalue of the Casimir operator of $\Gtwo$ corresponding to label $U$, and $\Lambda_{\SO{7}}\!(W)$ the eigenvalue corresponding to state label $W$, then the matrix elements of $\hamTreesSymbol$, $\hamGTwoSymbol$ and $\hamSOSevenSymbol$ are diagonal in all quantum numbers and are given by
     \begin{align}
@@ -732,7 +774,7 @@ In \qlanth this is all implemented in the function \codetext{GenerateThreeBodyTa
  
  In \codetext{GenerateThreeBodyTables} a special case is made for $\op{t}_2$ and $\op{t}_{11}$ for which primed variants $\op{t}_2'$ and $\op{t}_{11}'$ are calculated differently beyond the half filled shell. In the case of the other operators, beyond $\forb^7$ the matrix elements simply see a global sign flip, whereas in the case of $\op{t}_2'$ and $\op{t}_{11}'$ the \cfps beyond $\forb^7$ are used. This yields the unexpected result that in the $\forb^{12}$ configuration, which corresponds to two holes, there is a non-zero three body operator $\op{t}_2'$. This is an arcane result that was corrected by Judd in 1984 \cite{judd_complete_1984}, but which lingered long enough that important work in the 1980s was calculated with it. When calculations are carried out if $\op{t}_2'$ is used then $\op{t}_2$ should not be used and vice versa.
  
- One additional feature of $\hat{t}_2'$ that needs to be accounted for, is that it doesn't have the simple relationship for conjugate configurations that all the other $\hat{t}_i$ operators have. For the sake of parsimony, and to avoid having to explicitly store matrix elements beyond $\forb^7$ \qlanth takes the approach of adding a control parameter \codetext{t2Switch} which needs to be set to 1 if below or at $\forb^7$ and set to 0 if above $\forb^7$.
+ One additional feature of $\hat{t}_2'$ that needs to be accounted for, is that it doesn't have the simple relationship for conjugate configurations that all the other $\hat{t}_i$ operators have. For the sake of simplicity, and to avoid having to explicitly store matrix elements beyond $\forb^7$ \qlanth takes the approach of adding a control parameter \codetext{t2Switch} which needs to be set to 1 if below or at $\forb^7$ and set to 0 if above $\forb^7$.
  
  \foreach \name in {GenerateThreeBodyTables, ParseJudd1984}{ 
         \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
@@ -871,6 +913,10 @@ In \qlanth this is all implemented in the function \codetext{GenerateThreeBodyTa
 \foreach \name in {Bqk, Sqk, Cqk, CrystalField, ReducedUk}{ 
         \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
     }
+
+Each of the 32 crystallographic point groups requires only a limited number of non-zero crystal field parameters. In \qlanth these can be queried with the use of the function \codetext{CrystalFieldForm}. These were taken from Morrison's work on angular momentum theory \cite{morrison_angular_1987}.
+
+\lstinputlisting[language=Mathematica]{./fundefs/CrystalFieldForm.tex}
 
 
 \subsection{$\hat{\mu}$ and $\hamZeemanSymbol$: the magnetic dipole operator and the Zeeman term}
