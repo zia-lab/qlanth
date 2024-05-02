@@ -1145,9 +1145,10 @@ Options[ClassicalFit] = {
     |>,
     "FreeIonSymbols" -> {F0, F2, F4, F6, \[Zeta]}
 };
-ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_List, startValues_Association, \[Sigma]exp_?NumericQ, constraints_List, OptionsPattern[]]:=
-  (* Module[{accuracyGoal, activeVarIndices, activeVars, activeVarsString, activeVarsWithRange, allFreeEnergies, allFreeEnergiesSorted, allVars, allVarsVec, argsForEvalInsideOfTheIntermediateSystems, argsOfTheIntermediateEigensystems, aVar, aVarPosition, basis, basisChanger, basisChangerBlocks, bestError, bestParams, bestRMS, blockShifts, blockSizes, colIdx, compiledDiagonal, compiledIntermediateFname, constrainedProblemVars, constrainedProblemVarsList, covMat, currentRMS, degressOfFreedom, dependentVars, diagonalBlocks, diagonalScalarBlocks, diff, eigenEnergies, eigenvalueDispenserTemplate, eigenVectors, elevatedIntermediateEigensystems, endTime, fmSol, fmSolAssoc, fractionalWidth, freeBies, freeIenergiesAndMultiplets, freeionSymbols, fullHam, fullSolVec, funcString, ham, hamDim, hamEigenvaluesTemplate, hamString, hess, indepSolVecVec, indepVars, intermediateHam, isolationValues, jobVars, lin, linMat, ln, lnParams, logFilePrefix, logFname, magneticSimplifier, maxFreeEnergy, maxHistory, maxIterations, methodString, methodStringTemplate, minFreeEnergy, minpoly, modelSymbols, multipletAssignments, needlePosition, numBlocks, numQSignature, numReps, solCompendium, openNotebooks, ordering, othersFixed, otherSimplifier, p0, paramBest, paramSigma, perHam, polySols, presentDataIndices, PrintFun, problemVarsPositions, problemVarsQ, problemVarsQString, problemVarsVec, problemVarsWithStartValues, reducedModelSymbols, resultMessage, roundedTruncationEnergy, rowIdx, runningInteractive, shiftToggle, simplifier, slackChan, sol, solAssoc, sols, solWithUncertainty, sortedTruncationIndex, sqdiff, standardValues, starTime, startingValues, startTime, startVarValues, states, steps, symmetrySimplifier, theIntermediateEigensystems, TheIntermediateEigensystems, TheTruncatedAndSignedPathGenerator, thisPoly, threadHeaderTemplate, threadMessage, threadTS, timeTaken, totalVariance, truncadedFname, truncatedIntermediateBasis, truncatedIntermediateHam, truncationEnergy, truncationIndices, truncationUmbral, usingInitialRange, varHash, varIdx, varsWithConstants, varWithValsSignature, \[Lambda]0Vec, \[Lambda]exp}, *)
-  Module[{},
+ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_List, startValues_Association, \[Sigma]exp_?NumericQ, constraints_List, OptionsPattern[]]:=Module[
+  {
+    accuracyGoal, activeVarIndices, activeVars, activeVarsString, activeVarsWithRange, allFreeEnergies, allFreeEnergiesSorted, allVars, allVarsVec, argsForEvalInsideOfTheIntermediateSystems, argsOfTheIntermediateEigensystems, aVar, aVarPosition, basis, basisChanger, basisChangerBlocks, bestError, bestParams, bestRMS, blockShifts, blockSizes, colIdx, compiledDiagonal, compiledIntermediateFname, constrainedProblemVars, constrainedProblemVarsList, covMat, currentRMS, degressOfFreedom, dependentVars, diagonalBlocks, diagonalScalarBlocks, diff, eigenEnergies, eigenvalueDispenserTemplate, eigenVectors, elevatedIntermediateEigensystems, endTime, fmSol, fmSolAssoc, fractionalWidth, freeBies, freeIenergiesAndMultiplets, freeionSymbols, fullHam, fullSolVec, funcString, ham, hamDim, hamEigenvaluesTemplate, hamString, hess, indepSolVecVec, indepVars, intermediateHam, isolationValues, jobVars, lin, linMat, ln, lnParams, logFilePrefix, logFname, magneticSimplifier, maxFreeEnergy, maxHistory, maxIterations, methodString, methodStringTemplate, minFreeEnergy, minpoly, modelSymbols, multipletAssignments, needlePosition, numBlocks, numQSignature, numReps, solCompendium, openNotebooks, ordering, othersFixed, otherSimplifier, p0, paramBest, paramSigma, perHam, polySols, presentDataIndices, PrintFun, problemVarsPositions, problemVarsQ, problemVarsQString, problemVarsVec, problemVarsWithStartValues, reducedModelSymbols, resultMessage, roundedTruncationEnergy, rowIdx, runningInteractive, shiftToggle, simplifier, slackChan, sol, solAssoc, sols, solWithUncertainty, sortedTruncationIndex, sqdiff, standardValues, starTime, startingValues, startTime, startVarValues, states, steps, symmetrySimplifier, theIntermediateEigensystems, TheIntermediateEigensystems, TheTruncatedAndSignedPathGenerator, thisPoly, threadHeaderTemplate, threadMessage, threadTS, timeTaken, totalVariance, truncadedFname, truncatedIntermediateBasis, truncatedIntermediateHam, truncationEnergy, truncationIndices, truncationUmbral, usingInitialRange, varHash, varIdx, varsWithConstants, varWithValsSignature, \[Lambda]0Vec, \[Lambda]exp
+  },
   (
     solCompendium   = <||>;
     addShift      = OptionValue["AddConstantShift"];
@@ -1203,7 +1204,7 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
     solCompendium["maxIterations"]      = maxIterations;
     solCompendium["hamDim"]             = hamDim;
     solCompendium["constraints"]        = constraints;
-    modelSymbols  = Sort[Select[paramSymbols, Not[MemberQ[Join[racahSymbols, chenSymbols,{t2Switch, \[Epsilon],gs}],#]]&]];
+    modelSymbols  = Sort[Select[paramSymbols, Not[MemberQ[Join[racahSymbols, juddOfeltIntensitySymbols, chenSymbols,{t2Switch, \[Epsilon],gs}],#]]&]];
     (* remove the symbols that will be removed by the simplifier, no symbol should remain here that is not in the symbolic Hamiltonian *)
     reducedModelSymbols = Select[modelSymbols, Not[MemberQ[Keys[simplifier],#]]&];
     
@@ -1429,7 +1430,7 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
       constrainedProblemVarsList = Append[constrainedProblemVarsList, \[Epsilon]]
     ];
     
-    indepVars = Complement[pVars, #[[1]] & /@ constraints]; 
+    indepVars = Complement[problemVars, #[[1]] & /@ constraints]; 
     stringPartialVars = ToString/@constrainedProblemVarsList;
     
     paramSols  = {};

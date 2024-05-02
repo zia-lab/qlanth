@@ -88,9 +88,6 @@ Berkeley: University of California Press, 1981.
 Operators  for  the  Configuration  f^3."  JOSA  B  1, no. 2 (1984):
 261-65. https://doi.org/10.1364/JOSAB.1.000261.
 
-+  Morrison,  C. A. "Angular Momentum Theory Applied to Interactions
-in Solids," 1987.
-
 + Carnall,   W.  T.,  G.  L.  Goodman, K. Rajnak, and R. S. Rana. "A
 Systematic  Analysis  of  the  Spectra of the Lanthanides Doped into
 Single  Crystal  LaF3."  The  Journal  of Chemical Physics 90, no. 7
@@ -121,6 +118,10 @@ the  Formalism  and  Its  Application."  Journal of Luminescence 136
 (2013): 221–39.
 
 + Rudzikas, Zenonas. Theoretical Atomic Spectroscopy, 2007.
+
++ Benelli, Cristiano, and Dante Gatteschi. Introduction to Molecular
+Magnetism: From Transition Metals to Lanthanides. John Wiley & Sons,
+2015.
 ----------------------------------------------------------------- *)
 
 BeginPackage["qlanth`"];
@@ -227,7 +228,7 @@ paramSymbols   = ToExpression[StringSplit[#, ":"][[1]]] & /@ paramSymbols;
 Protect /@ paramSymbols;
 
 (* Parameter families *)
-Unprotect[racahSymbols, chenSymbols, slaterSymbols, controlSymbols, cfSymbols, TSymbols, pseudoMagneticSymbols, marvinSymbols, casimirSymbols, magneticSymbols];
+Unprotect[racahSymbols, chenSymbols, slaterSymbols, controlSymbols, cfSymbols, TSymbols, pseudoMagneticSymbols, marvinSymbols, casimirSymbols, magneticSymbols, juddOfeltIntensitySymbols];
 racahSymbols   = {E0, E1, E2, E3};
 chenSymbols    = {wChErrA, wChErrB};
 slaterSymbols  = {F0, F2, F4, F6};
@@ -240,7 +241,8 @@ pseudoMagneticSymbols = {P0, P2, P4, P6};
 marvinSymbols         = {M0, M2, M4};
 magneticSymbols       = {Bx, By, Bz, gs, \[Zeta]};
 casimirSymbols        = {\[Alpha], \[Beta], \[Gamma]};
-paramFamilies         = Hold[{racahSymbols, chenSymbols, slaterSymbols, controlSymbols, cfSymbols, TSymbols, pseudoMagneticSymbols, marvinSymbols, casimirSymbols, magneticSymbols}];
+juddOfeltIntensitySymbols = {\[CapitalOmega]2, \[CapitalOmega]4, \[CapitalOmega]6};
+paramFamilies         = Hold[{racahSymbols, chenSymbols, slaterSymbols, controlSymbols, cfSymbols, TSymbols, pseudoMagneticSymbols, marvinSymbols, casimirSymbols, magneticSymbols, juddOfeltIntensitySymbols}];
 ReleaseHold[Protect /@ paramFamilies];
 crystalGroups = {"C1","Ci","C2","Cs","C2h","D2","C2v","D2h","C4","S4","C4h","D4","C4v","D3d","D4h","C3","C3i","D3","C3v","D3d","C6","C3h","C6h","D6","C6v","D3h","D6h","T","Th","O","Td","Oh"};
 
@@ -380,7 +382,7 @@ MinJ;
 NKCFPPhase;
 
 ParamPad;
-ParseMorrison1987;
+ParseBenelli2015;
 ParseStates;
 ParseStatesByNumBasisVecs;
 ParseStatesByProbabilitySum;
@@ -2023,68 +2025,85 @@ Begin["`Private`"]
     ]
   )
 
-
-  ParseMorrison1987::usage="ParseMorrison1987[] parses the data from tables 8.1 and 8.2 of Morrison 1987 and returns a list of crystal field parameters for each point group. The return value of this function is also saved  /data folder with filename crystalFieldFunctionalForms.m. If the option \"Export\" is set to True, then the result is exported to the data subfolder.";
-  Options[ParseMorrison1987]={"Export"->True}
-  ParseMorrison1987[OptionsPattern[]] := (
-    fname = FileNameJoin[{moduleDir,"data","morrison1987.m"}];
-    morrison1987 = Import[fname];
-    tab8p1 = morrison1987["tab8p1"];
-    tab8p1 = StringReplace[tab8p1, {" " -> ""}];
-    tab8p1params = morrison1987["tab8p1params"];
-    tab8p2 = morrison1987["tab8p2"];
-    tab8p2 = StringReplace[tab8p2, {" " -> ""}];
-    tab8p2params = morrison1987["tab8p2params"];
-    
+  Options[ParseBenelli2015] = {"Export"->False};
+  ParseBenelli2015[OptionsPattern[]] := Module[
+    {
+      fname, crystalSym,
+      crystalSymmetries, parseFun,
+      chars, qk,
+      groupName, family,
+      groupNum,
+      params
+      },
+  (
+    fname      = FileNameJoin[{moduleDir,"data","benelli_and_gatteschi_table3p3.csv"}];
+    crystalSym = Import[fname][[2;;33]];
     crystalSymmetries = <||>;
-    crystalSymmetries["C1"] = morrison1987["C1"];
-    crystalSymmetries["Ci"] = morrison1987["Ci"];
-    Do[(
-      row = StringSplit[row, ","];
-      groupSymbol = row[[1]];
-      crosses = (# == "x" &) /@ Characters[row[[2]]];
-      crystalParams = Sort@Pick[tab8p1params, crosses];
-      crystalSymmetries[groupSymbol] = <|"BqkSqk" -> crystalParams,
-        "constraints" -> {}
-        |>
+    parseFun[txt_] := (
+      chars = Characters[txt];
+      qk    = chars[[-2;;]];
+      If[chars[[1]]=="R",
+      (
+        Return[{ToExpression@StringJoin[{"B",qk[[1]],qk[[2]]}]}]
       ),
-    {row, StringSplit[tab8p1, "\n"]}];
-    
-    Do[(
-      row = StringSplit[row, ","];
-      groupSymbol = row[[1]];
-      crosses = (# == "x" &) /@ Characters[row[[2]]];
-      crystalParams = Sort@Pick[tab8p2params, crosses];
-      crystalSymmetries[groupSymbol] = <|"BqkSqk" -> crystalParams,
-        "constraints" -> {}
-        |>
+      (
+        If[qk[[1]]=="0",
+          Return[{ToExpression@StringJoin[{"B",qk[[1]],qk[[2]]}]}]
+        ];
+        Return[{
+          ToExpression@StringJoin[{"B",qk[[1]],qk[[2]]}],
+          ToExpression@StringJoin[{"S",qk[[1]],qk[[2]]}]
+        }]
+      )]
+    );
+    Do[
+    (
+      groupNum  = Round@ToExpression@row[[1]];
+      groupName = row[[2]];
+      family    = row[[3]];
+      params    = Select[row[[4;;]],#=!=""&];
+      params    = parseFun/@params;
+      params    = <|"BqkSqk"->Sort@Flatten[params],
+        "aliases"->{groupNum},
+        "constraints"->{}|>;
+      If[MemberQ[{"T","Th","O","Td","Oh"},groupName],
+        params["constraints"] = {
+            {B44 ->  Sqrt[5/14] B04, B46 -> -Sqrt[7/2] B06},
+            {B44 -> -Sqrt[5/14] B04, B46 ->  Sqrt[7/2] B06}
+            }
+      ];
+      If[StringContainsQ[groupName,","],
+      (
+        {alias1, alias2}          = StringSplit[groupName,","];
+        crystalSymmetries[alias1] = params;
+        crystalSymmetries[alias1]["aliases"] = {groupNum, alias2};
+        crystalSymmetries[alias2] = params;
+        crystalSymmetries[alias2]["aliases"] = {groupNum, alias1};
       ),
-    {row, StringSplit[tab8p2, "\n"]}];
-    crystalSymmetries["T"] = morrison1987["T"];
-    crystalSymmetries["Th"] = <|
-      "BqkSqk" -> {B04, B44, B06, B46}, 
-      "constraints" -> {{B44 -> Sqrt[5/14] B04, 
-      B46 -> -Sqrt[(7/2)] B06}, {B44 -> -Sqrt[(5/14)] B04, 
-      B46 -> Sqrt[7/2] B06}}|>;
-    crystalSymmetries["O"] = crystalSymmetries["Th"];
-    crystalSymmetries["Td"] = crystalSymmetries["T"];
-    crystalSymmetries["Oh"] = crystalSymmetries["O"];
-    crystalSymmetries["source"] = morrison1987["source"];
+      (
+      crystalSymmetries[groupName] = params;
+      )
+      ]
+    ),
+    {row,crystalSym}];
+    crystalSymmetries["source"] = "Benelli and Gatteschi, 2015, Introduction to Molecular Magnetism, table 3.3.";
     If[OptionValue["Export"],
-      Export[FileNameJoin[{moduleDir, "data", "crystalFieldFunctionalForms.m"}], crystalSymmetries];
+      Export[FileNameJoin[{moduleDir,"data","crystalFieldFunctionalForms.m"}],crystalSymmetries];
     ];
-    Return[crystalSymmetries]
-    )
+    Return[crystalSymmetries];
+  )
+  ] 
 
   CrystalFieldForm::usage="CrystalFieldForm[symmetryGroup] returns an association that describes the crystal field parameters that are necessary to desribe a crystal field for the given symmetry group.
   
-  The symmetry group is given as a string and should be one of the following: C1, Ci, C2, Cs, C2h, D2, C2v, D2h, C4, S4, C4h, D4, C4v, D3d, D4h, C3, C3i, D3, C3v, D3d, C6, C3h, C6h, D6, C6v, D3h, D6h, T, Th, O, Td, Oh.
+  The symmetry group must be given as a string in Schoenflies notation and must be one of C1, Ci, S2, Cs, C1h, C2, C2h, C2v, D2, D2h, S4, C4, C4h, D2d, C4v, D4, D4h, C3, S6, C3h, C3v, D3, D3d, D3h, C6, C6h, C6v, D6, D6h, T, Th, Td, O, Oh.
+   
+  The returned association has three keys: 
+    \"BqkSqk\" whose values is a list with the nonzero Bqk and Sqk parameters;
+    \"constraints\" whose value is either an empty list, or a lists of replacements rules that are constraints on the Bqk and Sqk parameters;
+    \"aliases\" whose value is a list with the integer by which the point group is also known for and an alternate Schoenflies symbol if it exists.
   
-  The returned association has two keys: \"BqkSqk\" whose values is a list with the nonzero Bqk and Sqk parameters, and \"constraints\" whose value is either an empty list, or a lists of replacements rules that are constraints on the Bqk and Sqk parameters.
-  
-  The given \"BqkSqk\" might be parameters that are absent from the single configuration f^n crystal field. To remove these, intersect the list with cfSymbols.
-  
-  This is based on data from Morrision 1987, \"Angular Momentum Theory Applied to Interactions in Solids\".";
+  This uses data from table 3.3 in Benelli and Gatteschi, 2015.";
   CrystalFieldForm[symmetryGroupString_] := (
     If[Not@ValueQ[crystalFieldFunctionalForms],
       crystalFieldFunctionalForms = Import[FileNameJoin[{moduleDir, "data", "crystalFieldFunctionalForms.m"}]];
