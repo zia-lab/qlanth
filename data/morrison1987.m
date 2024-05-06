@@ -1,5 +1,13 @@
 morrison1987 = <|
 	"source" -> "Morrison 1987, Angular Momentum Theory Applied to Interactions in Solids",
+	"groupAliases" -> <|
+		"Ci" -> {"S2"},
+		"Cs" -> {"C1h"},
+		"D2" -> {"V"},
+		"D2h" -> {"Vh"},
+		"D2d" -> {"Vd"},
+		"C3i" -> {"S6"}
+	|>,
 	"tab8p1" ->
 		"C2, x00xxxx00xx00xxxxx
 Cs, 0xxxxx0xx00xxxxxxx
@@ -12,7 +20,7 @@ S4, 000x00000xx00x00xx
 C4h,000x000000000x00xx
 D4, 000x000000000x00x0
 C4v,x00x00x000000x00x0
-D3d,000x00000x000x00x0
+D2d,000x00000x000x00x0
 D4h,000x000000000x00x0",
 	"tab8p1params"-> {B01, B11, S11, B02, B22, S22, B03, B13, S13, B23, S23, B33, S33, B04, B24, S24, B44, S44},
 	"tab8p2" ->

@@ -410,6 +410,7 @@ ReplaceInSparseArray;
 SimplerSymbolicHamMatrix;
 SOOandECSO;
 SOOandECSOTable;
+SOOandECSOLSTable;
 Seniority;
 
 ShiftedLevels;
@@ -1855,7 +1856,6 @@ Begin["`Private`"]
           {M0v, M2v, M4v, P2v, P4v, P6v} = chenDeltas["A"][{numE, SLJ, SLJp}]["wrong"];
           total  = phase * Msixjay(M0v*M0 + M2v*M2 + M4v*M4);
           total += phase * Psixjay(P2v*P2 + P4v*P4 + P6v*P6);
-          total  = total /. Prescaling;
           total  = wChErrA * total + (1 - wChErrA) * (ss + sooandecso)
         )
       ];
@@ -1870,7 +1870,6 @@ Begin["`Private`"]
           {M0v, M2v, M4v, P2v, P4v, P6v} = {0, 0, 0, 0, 0, 0};
           total  = phase * Msixjay(M0v*M0 + M2v*M2 + M4v*M4);
           total += phase * Psixjay(P2v*P2 + P4v*P4 + P6v*P6);
-          total  = total /. Prescaling;
           total  = wChErrB * total + (1 - wChErrB) * (ss + sooandecso)
         )
       ];
@@ -2680,7 +2679,7 @@ Begin["`Private`"]
           eigenJs       = Flatten[KeyValueMap[ConstantArray[#1, Length[#2[[2, 2]]]] &, eigensys]];
           states        = Transpose[{eigenEnergies, eigenJs, eigenVectors}];
           states        = SortBy[states, First];
-          eigenVectors  = Transpose[Last/@states];
+          eigenVectors  = Last /@ states;
           LSJmultiplets = (RemoveTrailingDigits[#[[1]]] <> ToString[InputForm[#[[2]]]]) & /@ globalBasis;
           majorComponentIndices = Ordering[Abs[#]][[-1]] & /@ eigenVectors;
           levelLabels           = LSJmultiplets[[majorComponentIndices]];
