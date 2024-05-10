@@ -221,6 +221,8 @@ Bz: z component of external magnetic field (in T)
 \[CapitalOmega]2: Judd-Ofelt intensity parameter k=2 (in cm^2)
 \[CapitalOmega]4: Judd-Ofelt intensity parameter k=4 (in cm^2)
 \[CapitalOmega]6: Judd-Ofelt intensity parameter k=6 (in cm^2)
+
+nE: number of electrons in a configuration
 ";
 paramSymbols   = StringSplit[paramAtlas, "\n"];
 paramSymbols   = Select[paramSymbols, # != ""& ];
@@ -2211,15 +2213,14 @@ Begin["`Private`"]
       eMatrix = 
         Table[
           (*Condition for a scalar matrix op*)
-          SLterm   =  NKSLJM[[1]];
+          SLterm   = NKSLJM[[1]];
           SpLpterm = NKSLJMp[[1]];
-          MJ       =  NKSLJM[[3]];
+          MJ       = NKSLJM[[3]];
           MJp      = NKSLJMp[[3]];
-          subKron  = 
-            (
+          subKron  = (
               KroneckerDelta[J, Jp] *
               KroneckerDelta[MJ, MJp]
-            );
+                    );
           matValue = 
             If[subKron==0,
               0,
@@ -2843,7 +2844,7 @@ Begin["`Private`"]
   ];
 
   MagDipLineStrength::usage="MagDipLineStrength[theEigensys, numE] takes the eigensystem of an ion and the number numE of f-electrons that correspond to it and calculates the line strength array Stot.
-  The option \"Units\" can be set to either \"SI\" (so that the units of the returned array are A/m^2) or to \"Hartree\".
+  The option \"Units\" can be set to either \"SI\" (so that the units of the returned array are (A m^2)^2) or to \"Hartree\".
   The option \"States\" can be used to limit the states for which the line strength is calculated. The default, All, calculates the line strength for all states. A second option for this is to provide an index labelling a specific state, in which case only the line strengths between that state and all the others are computed.
   The returned array should be interpreted in the eigenbasis of the Hamiltonian. As such the element Stot[[i,i]] corresponds to the line strength states between states |i> and |j>.";
   Options[MagDipLineStrength]={"Reload MagOp" -> False, "Units"->"SI", "States" -> All};
