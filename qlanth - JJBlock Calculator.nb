@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     64064,       1463]
-NotebookOptionsPosition[     58982,       1387]
-NotebookOutlinePosition[     59758,       1411]
-CellTagsIndexPosition[     59715,       1408]
+NotebookDataLength[     47332,       1080]
+NotebookOptionsPosition[     42514,       1008]
+NotebookOutlinePosition[     43290,       1032]
+CellTagsIndexPosition[     43247,       1029]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -96,7 +96,7 @@ Cell[BoxData[{
    3.906729421016581*^9}, {3.913996149608245*^9, 3.9139961544992*^9}, 
    3.9149401396091347`*^9, 3.915112303559952*^9, {3.915711047419332*^9, 
    3.9157111519902563`*^9}, {3.915711233764082*^9, 3.915711245550816*^9}},
- CellLabel->"In[42]:=",ExpressionUUID->"2539f139-b8a7-430c-b1c8-4ad556ecc2d0"],
+ CellLabel->"In[1]:=",ExpressionUUID->"2539f139-b8a7-430c-b1c8-4ad556ecc2d0"],
 
 Cell[CellGroupData[{
 
@@ -134,11 +134,10 @@ Cell[BoxData[
 calculates the tables of matrix elements for the requested f^n_i \
 configurations. The function does not return the matrices themselves. It \
 instead returns an association whose keys are numE and whose values are the \
-filenames where the output of TabulateJJBlockMatrixTables was saved to. When \
-these files are loaded with Get, the following three symbols are thus \
-defined: JJBlockMatrixTable, EnergyStatesTable, and AllowedM.\\n  \
-JJBlockMatrixTable is an association whose keys are of the form {n, J, Jp} \
-and whose values are matrix elements.\"\>", "InformationUsageText",
+filenames where the output of TabulateJJBlockMatrixTables was saved to.The \
+output consists of an association whose keys are of the form {n, J, Jp} and \
+whose values are rectangular arrays given the values of \
+<|LSJMJa|H|L'S'J'MJ'a'|>.\"\>", "InformationUsageText",
              StripOnInput->False,
              LineSpacing->{1.5, 1.5, 3.}],
             FrameMargins->{{10, 10}, {8, 10}}],
@@ -198,7 +197,6 @@ and whose values are matrix elements.\"\>", "InformationUsageText",
                     "qlanth`Private`CFdataFilename", ",", "\" ...\""}], "]"}],
                      ";", 
                     RowBox[{"qlanth`Private`CrystalFieldTable", "=", 
-                    
                     RowBox[{"ImportMZip", "[", 
                     "qlanth`Private`CFdataFilename", "]"}]}], ";", 
                     RowBox[{"PrintTemporary", "[", 
@@ -482,11 +480,10 @@ and whose values are matrix elements.\"\>", "InformationUsageText",
 calculates the tables of matrix elements for the requested f^n_i \
 configurations. The function does not return the matrices themselves. It \
 instead returns an association whose keys are numE and whose values are the \
-filenames where the output of TabulateJJBlockMatrixTables was saved to. When \
-these files are loaded with Get, the following three symbols are thus \
-defined: JJBlockMatrixTable, EnergyStatesTable, and AllowedM.\\n  \
-JJBlockMatrixTable is an association whose keys are of the form {n, J, Jp} \
-and whose values are matrix elements.\"\>", "InformationUsageText",
+filenames where the output of TabulateJJBlockMatrixTables was saved to.The \
+output consists of an association whose keys are of the form {n, J, Jp} and \
+whose values are rectangular arrays given the values of \
+<|LSJMJa|H|L'S'J'MJ'a'|>.\"\>", "InformationUsageText",
              StripOnInput->False,
              LineSpacing->{1.5, 1.5, 3.}],
             FrameMargins->{{10, 10}, {8, 10}}],
@@ -553,10 +550,9 @@ and whose values are matrix elements.\"\>", "InformationUsageText",
 matrix elements for the requested f^n_i configurations. The function does not \
 return the matrices themselves. It instead returns an association whose keys \
 are numE and whose values are the filenames where the output of \
-TabulateJJBlockMatrixTables was saved to. When these files are loaded with \
-Get, the following three symbols are thus defined: JJBlockMatrixTable, \
-EnergyStatesTable, and AllowedM.\n  JJBlockMatrixTable is an association \
-whose keys are of the form {n, J, Jp} and whose values are matrix elements.", 
+TabulateJJBlockMatrixTables was saved to.The output consists of an \
+association whose keys are of the form {n, J, Jp} and whose values are \
+rectangular arrays given the values of <|LSJMJa|H|L'S'J'MJ'a'|>.", 
     "Documentation" -> None, "OwnValues" -> None, "UpValues" -> None, 
     "DownValues" -> 
     Information`InformationValueForm[
@@ -621,8 +617,10 @@ whose keys are of the form {n, J, Jp} and whose values are matrix elements.",
    3.9141915171828957`*^9, 3.914195355569181*^9, 3.9144149291503057`*^9, 
    3.91492664954255*^9, 3.914927814069437*^9, 3.915011617895249*^9, 
    3.915011713208353*^9, {3.915469308091572*^9, 3.915469318741729*^9}, 
-   3.9156522556405907`*^9, 3.915708548913213*^9, 3.915711260786894*^9},
- CellLabel->"Out[11]=",ExpressionUUID->"ed080384-d246-44fa-8d74-eb6ecfcc01b4"]
+   3.9156522556405907`*^9, 3.915708548913213*^9, 3.915711260786894*^9, 
+   3.923755804065699*^9, 3.923755934599596*^9, 3.925294711316922*^9, 
+   3.925295344186964*^9},
+ CellLabel->"Out[11]=",ExpressionUUID->"3f0ff69c-b41e-4ad5-a817-5052e922df70"]
 }, Open  ]],
 
 Cell[BoxData[{
@@ -636,9 +634,13 @@ Cell[BoxData[{
    RowBox[{"doThese", ",", "\[IndentingNewLine]", 
     RowBox[{"\"\<Overwrite\>\"", "->", "True"}], ",", "\[IndentingNewLine]", 
     RowBox[{"\"\<Sparse\>\"", "->", "True"}], ",", "\[IndentingNewLine]", 
-    RowBox[{"\"\<ChenDeltas\>\"", "->", "False"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"\"\<ChenDeltas\>\"", "->", "True"}], ",", "\[IndentingNewLine]", 
+    
     RowBox[{"\"\<Compressed\>\"", "->", "True"}]}], "\[IndentingNewLine]", 
-   "]"}], ";"}]}], "Input",
+   "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Run", "[", "\"\<~/Scripts/pushover done\>\"", "]"}], 
+  ";"}]}], "Input",
  CellChangeTimes->{{3.914415167394353*^9, 3.9144151736446257`*^9}, 
    3.9144248806074*^9, {3.914424932918448*^9, 3.914424933287858*^9}, {
    3.914425829252626*^9, 3.914425829316082*^9}, {3.914426344734047*^9, 
@@ -658,393 +660,12 @@ Cell[BoxData[{
    3.9157105548324537`*^9, 3.9157105550365753`*^9}, {3.915710983333453*^9, 
    3.915710984267219*^9}, {3.9157111615567923`*^9, 3.915711161686943*^9}, {
    3.915711327561455*^9, 3.9157113518608103`*^9}, {3.915744012112834*^9, 
-   3.915744013200865*^9}},
- CellLabel->"In[27]:=",ExpressionUUID->"a9e26d40-488e-4c1f-9208-a7d7f0787290"],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"?", "TabulateManyJJBlockMagDipTables"}]], "Input",
- CellChangeTimes->{{3.916257816157146*^9, 3.916257816357748*^9}},
- CellLabel->"In[94]:=",ExpressionUUID->"3d581095-8650-404d-b734-29ad6d9f443d"],
-
-Cell[BoxData[
- InterpretationBox[
-  StyleBox[
-   FrameBox[
-    DynamicModuleBox[{System`InformationDump`open$$ = False, 
-     System`InformationDump`mouseOver$$ = False}, 
-     PaneSelectorBox[{True->
-      TagBox[GridBox[{
-         {
-          ItemBox[
-           PaneBox[
-            StyleBox["\<\" Symbol\"\>", "InformationTitleText",
-             StripOnInput->False,
-             BaseStyle -> None],
-            FrameMargins->{{4, 0}, {-1, 1}}],
-           BaseStyle->"InformationTitleBackground",
-           StripOnInput->False], 
-          ItemBox["\<\"\"\>",
-           BaseStyle->"InformationTitleBackground",
-           StripOnInput->False]},
-         {
-          ItemBox[
-           PaneBox[
-            
-            StyleBox["\<\"TabulateManyJJBlockMagDipTables[{n1, n2, ...}] \
-calculates the tables of matrix elements for the requested f^n_i \
-configurations. The function does not return the matrices themselves. It \
-instead returns an association whose keys are numE and whose values are the \
-filenames where the output of TabulateManyJJBlockMagDipTables was saved to. \
-The output consists of an association whose keys are of the form {n, J, Jp} \
-and whose values are rectangular arrays given the values of \
-<|LSJMJa|H_dip|L'S'J'MJ'a'|>.\"\>", "InformationUsageText",
-             StripOnInput->False,
-             LineSpacing->{1.5, 1.5, 3.}],
-            FrameMargins->{{10, 10}, {8, 10}}],
-           BaseStyle->"InformationUsageSubtitleBackground",
-           StripOnInput->False], 
-          ItemBox["\<\"\"\>",
-           BaseStyle->"InformationUsageSubtitleBackground",
-           StripOnInput->False]},
-         {
-          PaneBox[
-           TagBox[GridBox[{
-              {
-               StyleBox[
-                TagBox[
-                 TooltipBox[
-                  StyleBox["\<\" Definitions\"\>", "InformationRowLabel",
-                   StripOnInput->False],
-                  "\"Definitions\"",
-                  TooltipStyle->"TextStyling"],
-                 Annotation[#, "Definitions", "Tooltip"]& ], "DialogStyle",
-                StripOnInput->False]},
-              {
-               TemplateBox[{"\"\[ThinSpace]\"", 
-                 GridBox[{{
-                    RowBox[{
-                    RowBox[{"TabulateManyJJBlockMagDipTables", "[", 
-                    RowBox[{"qlanth`Private`ns_", ",", 
-                    RowBox[{"OptionsPattern", "[", "]"}]}], "]"}], ":=", 
-                    RowBox[{"(", 
-                    RowBox[{
-                    RowBox[{"qlanth`Private`fnames", "=", 
-                    RowBox[{"Association", "[", "]"}]}], ";", 
-                    RowBox[{"Do", "[", 
-                    RowBox[{
-                    RowBox[{
-                    RowBox[{"qlanth`Private`ExportFun", "=", 
-                    RowBox[{"If", "[", 
-                    RowBox[{
-                    RowBox[{"OptionValue", "[", "\"Compressed\"", "]"}], ",", 
-                    "ExportMZip", ",", "Export"}], "]"}]}], ";", 
-                    RowBox[{"PrintTemporary", "[", 
-                    
-                    RowBox[{"\"#------- numE = \"", ",", 
-                    "qlanth`Private`numE", ",", "\" -------#\""}], "]"}], ";", 
-                    RowBox[{"qlanth`Private`appendTo", "=", 
-                    RowBox[{
-                    RowBox[{"OptionValue", "[", "\"FilenameAppendix\"", "]"}],
-                     "<>", "\"-magDip\""}]}], ";", 
-                    RowBox[{"qlanth`Private`exportFname", "=", 
-                    RowBox[{"JJBlockMatrixFileName", "[", 
-                    RowBox[{"qlanth`Private`numE", ",", 
-                    
-                    RowBox[{"\"FilenameAppendix\"", "\[Rule]", 
-                    "qlanth`Private`appendTo"}]}], "]"}]}], ";", 
-                    RowBox[{
-                    
-                    RowBox[{"qlanth`Private`fnames", "[", 
-                    "qlanth`Private`numE", "]"}], "=", 
-                    "qlanth`Private`exportFname"}], ";", 
-                    RowBox[{"If", "[", 
-                    RowBox[{
-                    RowBox[{
-                    RowBox[{"FileExistsQ", "[", "qlanth`Private`exportFname", 
-                    "]"}], "&&", 
-                    RowBox[{"!", 
-                    RowBox[{"OptionValue", "[", "\"Overwrite\"", "]"}]}]}], 
-                    ",", 
-                    RowBox[{"Continue", "[", "]"}]}], "]"}], ";", 
-                    RowBox[{"JJBlockMatrixTable", "=", 
-                    
-                    RowBox[{"TabulateJJBlockMagDipTable", "[", 
-                    "qlanth`Private`numE", "]"}]}], ";", 
-                    RowBox[{"If", "[", 
-                    RowBox[{
-                    RowBox[{
-                    
-                    RowBox[{"FileExistsQ", "[", "qlanth`Private`exportFname", 
-                    "]"}], "&&", 
-                    RowBox[{"OptionValue", "[", "\"Overwrite\"", "]"}]}], ",", 
-                    
-                    RowBox[{"DeleteFile", "[", "qlanth`Private`exportFname", 
-                    "]"}]}], "]"}], ";", 
-                    RowBox[{"qlanth`Private`ExportFun", "[", 
-                    
-                    RowBox[{"qlanth`Private`exportFname", ",", 
-                    "JJBlockMatrixTable"}], "]"}], ";"}], ",", 
-                    RowBox[{"{", 
-                    RowBox[{"qlanth`Private`numE", ",", "qlanth`Private`ns"}],
-                     "}"}]}], "]"}], ";", 
-                    RowBox[{"Return", "[", "qlanth`Private`fnames", "]"}], 
-                    ";"}], ")"}]}]}, {" "}}, 
-                  GridBoxAlignment -> {"Columns" -> {{Left}}}, 
-                  DefaultBaseStyle -> "Column", 
-                  GridBoxItemSize -> {
-                   "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}]},
-                "RowDefault"]}
-             },
-             DefaultBaseStyle->"Column",
-             GridBoxAlignment->{"Columns" -> {{Left}}},
-             
-             GridBoxItemSize->{
-              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
-            "Column"],
-           FrameMargins->{{6, 0}, {3, 6}}], "\<\"\"\>"},
-         {
-          PaneBox[GridBox[{
-             {
-              
-              DynamicModuleBox[{System`InformationDump`open$$ = {
-               False, False, False, False, False, False}}, 
-               StyleBox[GridBox[{
-                  {
-                   TagBox[
-                    TooltipBox[
-                    StyleBox["\<\" Options\"\>", "InformationRowLabel",
-                    StripOnInput->False],
-                    "\"Options\"",
-                    TooltipStyle->"TextStyling"],
-                    Annotation[#, "Options", "Tooltip"]& ], 
-                   RowBox[{"{", 
-                    RowBox[{
-                    
-                    RowBox[{"\<\"FilenameAppendix\"\>", 
-                    "\[Rule]", "\<\"\"\>"}], ",", 
-                    RowBox[{"\<\"Overwrite\"\>", "\[Rule]", "False"}], ",", 
-                    RowBox[{"\<\"Compressed\"\>", "\[Rule]", "True"}]}], 
-                    "}"}]},
-                  {
-                   TagBox[
-                    TooltipBox[
-                    StyleBox["\<\" Full Name\"\>", "InformationRowLabel",
-                    StripOnInput->False],
-                    "\"FullName\"",
-                    TooltipStyle->"TextStyling"],
-                    
-                    Annotation[#, "FullName", 
-                    "Tooltip"]& ], \
-"\<\"qlanth`TabulateManyJJBlockMagDipTables\"\>"}
-                 },
-                 AutoDelete->False,
-                 GridBoxAlignment->{"Columns" -> {Right, Left}},
-                 GridBoxDividers->None,
-                 GridBoxItemSize->{"Columns" -> {Automatic, Automatic}},
-                 GridBoxSpacings->{"Columns" -> {
-                    Offset[0.27999999999999997`], {
-                    Offset[0.5599999999999999]}, 
-                    Offset[0.27999999999999997`]}, "Rows" -> {
-                    Offset[0.2], {
-                    Offset[0.8]}, 
-                    Offset[0.2]}}], "DialogStyle",
-                StripOnInput->False],
-               DynamicModuleValues:>{}]}
-            },
-            DefaultBaseStyle->"Column",
-            GridBoxAlignment->{"Columns" -> {{Left}}},
-            GridBoxDividers->{"Columns" -> {{False}}, "Rows" -> {{False}}},
-            
-            GridBoxItemSize->{
-             "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}},
-            GridBoxSpacings->{"Columns" -> {
-                Offset[0.27999999999999997`], {
-                 Offset[0.5599999999999999]}, 
-                Offset[0.27999999999999997`]}, "Rows" -> {
-                Offset[0.2], {
-                 Offset[3.6]}, 
-                Offset[0.2]}}],
-           FrameMargins->{{6, 6}, {6, 3}}], ""},
-         {
-          ItemBox[
-           TagBox[
-            ButtonBox[
-             PaneSelectorBox[{False->
-              
-              DynamicBox[FEPrivate`FrontEndResource[
-               "FEBitmaps", "UpPointerOpener"]], True->
-              
-              DynamicBox[FEPrivate`FrontEndResource[
-               "FEBitmaps", "UpPointerOpenerHot"]]}, Dynamic[
-              System`InformationDump`mouseOver$$]],
-             Alignment->Left,
-             Appearance->{"Default" -> None},
-             
-             ButtonFunction:>FEPrivate`Set[
-              System`InformationDump`open$$, False],
-             Evaluator->Automatic,
-             FrameMargins->{{9, 0}, {0, 0}},
-             ImageMargins->0,
-             ImageSize->Full,
-             Method->"Preemptive"],
-            
-            EventHandlerTag[{
-             "MouseEntered" :> 
-              FEPrivate`Set[System`InformationDump`mouseOver$$, True], 
-              "MouseExited" :> 
-              FEPrivate`Set[System`InformationDump`mouseOver$$, False], 
-              Method -> "Preemptive", PassEventsDown -> Automatic, 
-              PassEventsUp -> True}]],
-           BaseStyle->"InformationTitleBackground",
-           StripOnInput->False], "\[SpanFromLeft]"}
-        },
-        AutoDelete->False,
-        FrameStyle->Directive[
-          GrayLevel[0.8], 
-          Thickness[Tiny]],
-        GridBoxAlignment->{"Columns" -> {Left, Right}, "Rows" -> {{Center}}},
-        GridBoxDividers->{
-         "Columns" -> {{None}}, "Rows" -> {False, {True}, False}},
-        GridBoxItemSize->{
-         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
-       "Grid"], False->
-      TagBox[GridBox[{
-         {
-          ItemBox[
-           PaneBox[
-            StyleBox["\<\" Symbol\"\>", "InformationTitleText",
-             StripOnInput->False],
-            FrameMargins->{{4, 0}, {-1, 1}}],
-           BaseStyle->"InformationTitleBackground",
-           StripOnInput->False], 
-          ItemBox["\<\"\"\>",
-           BaseStyle->"InformationTitleBackground",
-           StripOnInput->False]},
-         {
-          ItemBox[
-           PaneBox[
-            
-            StyleBox["\<\"TabulateManyJJBlockMagDipTables[{n1, n2, ...}] \
-calculates the tables of matrix elements for the requested f^n_i \
-configurations. The function does not return the matrices themselves. It \
-instead returns an association whose keys are numE and whose values are the \
-filenames where the output of TabulateManyJJBlockMagDipTables was saved to. \
-The output consists of an association whose keys are of the form {n, J, Jp} \
-and whose values are rectangular arrays given the values of \
-<|LSJMJa|H_dip|L'S'J'MJ'a'|>.\"\>", "InformationUsageText",
-             StripOnInput->False,
-             LineSpacing->{1.5, 1.5, 3.}],
-            FrameMargins->{{10, 10}, {8, 10}}],
-           BaseStyle->"InformationUsageSubtitleBackground",
-           StripOnInput->False], 
-          ItemBox["\<\"\"\>",
-           BaseStyle->"InformationUsageSubtitleBackground",
-           StripOnInput->False]},
-         {
-          ItemBox[
-           TagBox[
-            ButtonBox[
-             PaneSelectorBox[{False->
-              
-              DynamicBox[FEPrivate`FrontEndResource[
-               "FEBitmaps", "DownPointerOpener"],
-               ImageSizeCache->{10., {2., 8.}}], True->
-              
-              DynamicBox[FEPrivate`FrontEndResource[
-               "FEBitmaps", "DownPointerOpenerHot"],
-               ImageSizeCache->{10., {2., 8.}}]}, Dynamic[
-              System`InformationDump`mouseOver$$]],
-             Alignment->Left,
-             Appearance->{"Default" -> None},
-             
-             ButtonFunction:>FEPrivate`Set[
-              System`InformationDump`open$$, True],
-             Evaluator->Automatic,
-             FrameMargins->{{9, 0}, {0, 0}},
-             ImageMargins->0,
-             ImageSize->Full,
-             Method->"Preemptive"],
-            EventHandlerTag[{
-             "MouseEntered" :> 
-              FEPrivate`Set[System`InformationDump`mouseOver$$, True], 
-              "MouseExited" :> 
-              FEPrivate`Set[System`InformationDump`mouseOver$$, False], 
-              Method -> "Preemptive", PassEventsDown -> Automatic, 
-              PassEventsUp -> True}]],
-           BaseStyle->"InformationTitleBackground",
-           StripOnInput->False], "\[SpanFromLeft]"}
-        },
-        AutoDelete->False,
-        FrameStyle->Directive[
-          GrayLevel[0.8], 
-          Thickness[Tiny]],
-        GridBoxAlignment->{"Columns" -> {Left, Right}, "Rows" -> {{Center}}},
-        GridBoxDividers->{
-         "Columns" -> {{None}}, "Rows" -> {False, {True}, False}},
-        GridBoxItemSize->{
-         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
-       "Grid"]}, Dynamic[System`InformationDump`open$$],
-      BaselinePosition->Baseline,
-      FrameMargins->0,
-      ImageSize->Automatic],
-     DynamicModuleValues:>{}],
-    BaseStyle->"InformationGridFrame",
-    StripOnInput->False], "InformationGridPlain",
-   StripOnInput->False],
-  InformationData[<|
-   "ObjectType" -> "Symbol", "Usage" -> 
-    "TabulateManyJJBlockMagDipTables[{n1, n2, ...}] calculates the tables of \
-matrix elements for the requested f^n_i configurations. The function does not \
-return the matrices themselves. It instead returns an association whose keys \
-are numE and whose values are the filenames where the output of \
-TabulateManyJJBlockMagDipTables was saved to. The output consists of an \
-association whose keys are of the form {n, J, Jp} and whose values are \
-rectangular arrays given the values of <|LSJMJa|H_dip|L'S'J'MJ'a'|>.", 
-    "Documentation" -> None, "OwnValues" -> None, "UpValues" -> None, 
-    "DownValues" -> 
-    Information`InformationValueForm[
-     DownValues, qlanth`TabulateManyJJBlockMagDipTables, {
-      qlanth`TabulateManyJJBlockMagDipTables[
-         Pattern[qlanth`Private`ns, 
-          Blank[]], 
-         OptionsPattern[]] :> (qlanth`Private`fnames = <||>; 
-        Do[qlanth`Private`ExportFun = If[
-             OptionValue["Compressed"], qlanth`ExportMZip, Export]; 
-          PrintTemporary[
-           "#------- numE = ", qlanth`Private`numE, " -------#"]; 
-          qlanth`Private`appendTo = 
-           OptionValue["FilenameAppendix"] <> "-magDip"; 
-          qlanth`Private`exportFname = 
-           qlanth`JJBlockMatrixFileName[
-            qlanth`Private`numE, "FilenameAppendix" -> 
-             qlanth`Private`appendTo]; 
-          qlanth`Private`fnames[qlanth`Private`numE] = 
-           qlanth`Private`exportFname; If[
-            And[
-             FileExistsQ[qlanth`Private`exportFname], 
-             Not[
-              OptionValue["Overwrite"]]], 
-            Continue[]]; 
-          qlanth`JJBlockMatrixTable = 
-           qlanth`TabulateJJBlockMagDipTable[qlanth`Private`numE]; If[
-            And[
-             FileExistsQ[qlanth`Private`exportFname], 
-             OptionValue["Overwrite"]], 
-            DeleteFile[qlanth`Private`exportFname]]; 
-          qlanth`Private`ExportFun[
-           qlanth`Private`exportFname, qlanth`JJBlockMatrixTable]; Null, {
-          qlanth`Private`numE, qlanth`Private`ns}]; 
-        Return[qlanth`Private`fnames]; Null)}], "SubValues" -> None, 
-    "DefaultValues" -> None, "NValues" -> None, "FormatValues" -> None, 
-    "Options" -> {
-     "FilenameAppendix" -> "", "Overwrite" -> False, "Compressed" -> True}, 
-    "Attributes" -> {}, "FullName" -> 
-    "qlanth`TabulateManyJJBlockMagDipTables"|>, False]]], "Output",
- CellChangeTimes->{3.916257817515419*^9, 3.916258147080765*^9},
- CellLabel->"Out[94]=",ExpressionUUID->"9ad9ee71-de71-48c5-9860-cd07cff15fa0"]
-}, Open  ]],
+   3.915744013200865*^9}, {3.923755809745584*^9, 3.923755810195808*^9}, {
+   3.923755841045232*^9, 3.923755843694352*^9}, {3.923771975393258*^9, 
+   3.923771975581258*^9}, {3.925294719656765*^9, 3.9252947218809633`*^9}, {
+   3.92529532852034*^9, 3.9252953301642933`*^9}, {3.925295366059396*^9, 
+   3.9252953687768784`*^9}},
+ CellLabel->"In[13]:=",ExpressionUUID->"a9e26d40-488e-4c1f-9208-a7d7f0787290"],
 
 Cell[TextData[{
  "The following block of code generates tables with the reduced matrix \
@@ -1385,7 +1006,7 @@ Cell[BoxData[
 }, Open  ]]
 }, Open  ]]
 },
-WindowSize->{864, 1057},
+WindowSize->{864, 1052},
 WindowMargins->{{0, Automatic}, {Automatic, 0}},
 TaggingRules-><|"TryRealOnly" -> False|>,
 CellEpilog:>SelectionMove[
@@ -1413,55 +1034,51 @@ Notebook[{
 Cell[CellGroupData[{
 Cell[580, 22, 330, 4, 97, "Title",ExpressionUUID->"f3dab00c-756e-4b1f-9a29-d532363347ff"],
 Cell[913, 28, 1706, 31, 356, "Text",ExpressionUUID->"47503aaa-7b50-458a-bffb-5f91a3d860bc"],
-Cell[2622, 61, 1773, 37, 231, "Input",ExpressionUUID->"2539f139-b8a7-430c-b1c8-4ad556ecc2d0"],
+Cell[2622, 61, 1772, 37, 231, "Input",ExpressionUUID->"2539f139-b8a7-430c-b1c8-4ad556ecc2d0"],
 Cell[CellGroupData[{
-Cell[4420, 102, 267, 4, 41, "Input",ExpressionUUID->"5826bdff-cd17-4a32-9677-5e983098066e"],
-Cell[4690, 108, 23494, 516, 222, "Output",ExpressionUUID->"ed080384-d246-44fa-8d74-eb6ecfcc01b4"]
+Cell[4419, 102, 267, 4, 41, "Input",ExpressionUUID->"5826bdff-cd17-4a32-9677-5e983098066e"],
+Cell[4689, 108, 23285, 514, 198, "Output",ExpressionUUID->"3f0ff69c-b41e-4ad5-a817-5052e922df70"]
 }, Open  ]],
-Cell[28199, 627, 2161, 34, 189, "Input",ExpressionUUID->"a9e26d40-488e-4c1f-9208-a7d7f0787290"],
+Cell[27989, 625, 2570, 42, 210, "Input",ExpressionUUID->"a9e26d40-488e-4c1f-9208-a7d7f0787290"],
+Cell[30562, 669, 1742, 48, 182, "Text",ExpressionUUID->"aae91727-21f3-4450-9a18-c0a40e1ef214"],
 Cell[CellGroupData[{
-Cell[30385, 665, 219, 3, 41, "Input",ExpressionUUID->"3d581095-8650-404d-b734-29ad6d9f443d"],
-Cell[30607, 670, 16408, 375, 198, "Output",ExpressionUUID->"9ad9ee71-de71-48c5-9860-cd07cff15fa0"]
-}, Open  ]],
-Cell[47030, 1048, 1742, 48, 182, "Text",ExpressionUUID->"aae91727-21f3-4450-9a18-c0a40e1ef214"],
+Cell[32329, 721, 1441, 28, 126, "Input",ExpressionUUID->"56653428-3709-4eb1-8b79-bdd94b339174"],
 Cell[CellGroupData[{
-Cell[48797, 1100, 1441, 28, 126, "Input",ExpressionUUID->"56653428-3709-4eb1-8b79-bdd94b339174"],
-Cell[CellGroupData[{
-Cell[50263, 1132, 244, 5, 38, "Print",ExpressionUUID->"7a26d183-94c6-4935-aee9-7bde53eb9156"],
-Cell[50510, 1139, 242, 5, 38, "Print",ExpressionUUID->"2bbe3726-a483-4b40-a6cc-db22fb7f632b"],
-Cell[50755, 1146, 244, 5, 38, "Print",ExpressionUUID->"12636924-53d6-4d97-867e-dfc49fc1e971"],
-Cell[51002, 1153, 242, 5, 38, "Print",ExpressionUUID->"428da91c-725c-4a63-a765-ffea643c6edd"],
-Cell[51247, 1160, 244, 5, 38, "Print",ExpressionUUID->"7e8c8b1d-2d69-4188-b0e9-4c09924b3a98"],
-Cell[51494, 1167, 241, 5, 38, "Print",ExpressionUUID->"80b98d90-2a61-4744-a609-3e9db23942b7"],
-Cell[51738, 1174, 242, 5, 38, "Print",ExpressionUUID->"7604f613-1b92-4eb6-9237-7b8fd953659b"],
-Cell[51983, 1181, 202, 4, 38, "Print",ExpressionUUID->"e090a9a6-a61c-4805-aa83-ac52cf1fdef0"],
-Cell[52188, 1187, 202, 4, 38, "Print",ExpressionUUID->"ae21a297-9087-4f74-a418-374a6caf7325"],
-Cell[52393, 1193, 202, 4, 38, "Print",ExpressionUUID->"a0d09149-2286-4f47-af67-9de553100d65"],
-Cell[52598, 1199, 202, 4, 38, "Print",ExpressionUUID->"8b3d2679-04d3-4a28-b1ad-76dcb3e0c552"],
-Cell[52803, 1205, 200, 4, 38, "Print",ExpressionUUID->"fa8a5a0a-26a1-4282-b03c-4134846d6225"],
-Cell[53006, 1211, 202, 4, 38, "Print",ExpressionUUID->"9ee74d78-eea2-4543-988d-27098452e9f1"],
-Cell[53211, 1217, 204, 4, 38, "Print",ExpressionUUID->"a038c2c5-6d4a-4047-8505-2c6a65e2b51b"],
-Cell[53418, 1223, 200, 4, 38, "Print",ExpressionUUID->"6e64640d-ec7b-4ce5-9e9a-ec8e79c5eb41"],
-Cell[53621, 1229, 200, 4, 38, "Print",ExpressionUUID->"a84118a8-631f-468f-b101-927299c6a1be"],
-Cell[53824, 1235, 202, 4, 38, "Print",ExpressionUUID->"edf32922-9a1c-442e-934e-e002c321b0e6"],
-Cell[54029, 1241, 200, 4, 38, "Print",ExpressionUUID->"5907a026-b250-4745-8943-5ec2a3ccecf9"],
-Cell[54232, 1247, 200, 4, 38, "Print",ExpressionUUID->"a9e3c4ef-8cbd-4230-b2a1-68dd77f8b0cc"],
-Cell[54435, 1253, 200, 4, 38, "Print",ExpressionUUID->"5198557a-c3cf-4c85-8707-f655e735abc2"],
-Cell[54638, 1259, 202, 4, 38, "Print",ExpressionUUID->"fc939829-9c6b-4231-a529-92944a4311fc"],
-Cell[54843, 1265, 206, 4, 38, "Print",ExpressionUUID->"04457b61-04de-4ab1-bd0c-98f0193cc38b"],
-Cell[55052, 1271, 206, 4, 38, "Print",ExpressionUUID->"e2f0c853-be6f-4598-9cd7-6f062b504195"],
-Cell[55261, 1277, 206, 4, 38, "Print",ExpressionUUID->"f54542f0-ff4c-4e91-8224-854de1ac9f3b"],
-Cell[55470, 1283, 203, 4, 38, "Print",ExpressionUUID->"03ce9012-7d21-439e-9d60-fa07c387750b"],
-Cell[55676, 1289, 204, 4, 38, "Print",ExpressionUUID->"55b74e80-14d0-43de-a5d3-ff45f4dc2de6"],
-Cell[55883, 1295, 204, 4, 38, "Print",ExpressionUUID->"49916ef7-3b26-413f-834b-d79f207f24ac"],
-Cell[56090, 1301, 204, 4, 38, "Print",ExpressionUUID->"4b40ebb4-e738-454e-b905-d0e6665a88be"],
-Cell[56297, 1307, 374, 9, 38, "Print",ExpressionUUID->"b8c4c9f1-a17f-4b37-bb08-ee5c5bb8310a"],
-Cell[56674, 1318, 377, 9, 38, "Print",ExpressionUUID->"08d44e08-7e84-4ea3-a12b-d106f306a391"],
-Cell[57054, 1329, 375, 9, 38, "Print",ExpressionUUID->"ec696d13-00c0-4b56-9ebc-3e0f29ec169f"],
-Cell[57432, 1340, 375, 9, 38, "Print",ExpressionUUID->"b4615f73-f391-476f-81d8-14310977f1f5"],
-Cell[57810, 1351, 377, 9, 38, "Print",ExpressionUUID->"c63beca9-41e7-4521-a9fd-43d42537c00d"],
-Cell[58190, 1362, 375, 9, 38, "Print",ExpressionUUID->"2455423f-94e5-4d61-b2bb-640b3244e1bd"],
-Cell[58568, 1373, 374, 9, 38, "Print",ExpressionUUID->"7081aea0-88ea-4a89-a152-3f127b6925d2"]
+Cell[33795, 753, 244, 5, 38, "Print",ExpressionUUID->"7a26d183-94c6-4935-aee9-7bde53eb9156"],
+Cell[34042, 760, 242, 5, 38, "Print",ExpressionUUID->"2bbe3726-a483-4b40-a6cc-db22fb7f632b"],
+Cell[34287, 767, 244, 5, 38, "Print",ExpressionUUID->"12636924-53d6-4d97-867e-dfc49fc1e971"],
+Cell[34534, 774, 242, 5, 38, "Print",ExpressionUUID->"428da91c-725c-4a63-a765-ffea643c6edd"],
+Cell[34779, 781, 244, 5, 38, "Print",ExpressionUUID->"7e8c8b1d-2d69-4188-b0e9-4c09924b3a98"],
+Cell[35026, 788, 241, 5, 38, "Print",ExpressionUUID->"80b98d90-2a61-4744-a609-3e9db23942b7"],
+Cell[35270, 795, 242, 5, 38, "Print",ExpressionUUID->"7604f613-1b92-4eb6-9237-7b8fd953659b"],
+Cell[35515, 802, 202, 4, 38, "Print",ExpressionUUID->"e090a9a6-a61c-4805-aa83-ac52cf1fdef0"],
+Cell[35720, 808, 202, 4, 38, "Print",ExpressionUUID->"ae21a297-9087-4f74-a418-374a6caf7325"],
+Cell[35925, 814, 202, 4, 38, "Print",ExpressionUUID->"a0d09149-2286-4f47-af67-9de553100d65"],
+Cell[36130, 820, 202, 4, 38, "Print",ExpressionUUID->"8b3d2679-04d3-4a28-b1ad-76dcb3e0c552"],
+Cell[36335, 826, 200, 4, 38, "Print",ExpressionUUID->"fa8a5a0a-26a1-4282-b03c-4134846d6225"],
+Cell[36538, 832, 202, 4, 38, "Print",ExpressionUUID->"9ee74d78-eea2-4543-988d-27098452e9f1"],
+Cell[36743, 838, 204, 4, 38, "Print",ExpressionUUID->"a038c2c5-6d4a-4047-8505-2c6a65e2b51b"],
+Cell[36950, 844, 200, 4, 38, "Print",ExpressionUUID->"6e64640d-ec7b-4ce5-9e9a-ec8e79c5eb41"],
+Cell[37153, 850, 200, 4, 38, "Print",ExpressionUUID->"a84118a8-631f-468f-b101-927299c6a1be"],
+Cell[37356, 856, 202, 4, 38, "Print",ExpressionUUID->"edf32922-9a1c-442e-934e-e002c321b0e6"],
+Cell[37561, 862, 200, 4, 38, "Print",ExpressionUUID->"5907a026-b250-4745-8943-5ec2a3ccecf9"],
+Cell[37764, 868, 200, 4, 38, "Print",ExpressionUUID->"a9e3c4ef-8cbd-4230-b2a1-68dd77f8b0cc"],
+Cell[37967, 874, 200, 4, 38, "Print",ExpressionUUID->"5198557a-c3cf-4c85-8707-f655e735abc2"],
+Cell[38170, 880, 202, 4, 38, "Print",ExpressionUUID->"fc939829-9c6b-4231-a529-92944a4311fc"],
+Cell[38375, 886, 206, 4, 38, "Print",ExpressionUUID->"04457b61-04de-4ab1-bd0c-98f0193cc38b"],
+Cell[38584, 892, 206, 4, 38, "Print",ExpressionUUID->"e2f0c853-be6f-4598-9cd7-6f062b504195"],
+Cell[38793, 898, 206, 4, 38, "Print",ExpressionUUID->"f54542f0-ff4c-4e91-8224-854de1ac9f3b"],
+Cell[39002, 904, 203, 4, 38, "Print",ExpressionUUID->"03ce9012-7d21-439e-9d60-fa07c387750b"],
+Cell[39208, 910, 204, 4, 38, "Print",ExpressionUUID->"55b74e80-14d0-43de-a5d3-ff45f4dc2de6"],
+Cell[39415, 916, 204, 4, 38, "Print",ExpressionUUID->"49916ef7-3b26-413f-834b-d79f207f24ac"],
+Cell[39622, 922, 204, 4, 38, "Print",ExpressionUUID->"4b40ebb4-e738-454e-b905-d0e6665a88be"],
+Cell[39829, 928, 374, 9, 38, "Print",ExpressionUUID->"b8c4c9f1-a17f-4b37-bb08-ee5c5bb8310a"],
+Cell[40206, 939, 377, 9, 38, "Print",ExpressionUUID->"08d44e08-7e84-4ea3-a12b-d106f306a391"],
+Cell[40586, 950, 375, 9, 38, "Print",ExpressionUUID->"ec696d13-00c0-4b56-9ebc-3e0f29ec169f"],
+Cell[40964, 961, 375, 9, 38, "Print",ExpressionUUID->"b4615f73-f391-476f-81d8-14310977f1f5"],
+Cell[41342, 972, 377, 9, 38, "Print",ExpressionUUID->"c63beca9-41e7-4521-a9fd-43d42537c00d"],
+Cell[41722, 983, 375, 9, 38, "Print",ExpressionUUID->"2455423f-94e5-4d61-b2bb-640b3244e1bd"],
+Cell[42100, 994, 374, 9, 38, "Print",ExpressionUUID->"7081aea0-88ea-4a89-a152-3f127b6925d2"]
 }, Open  ]]
 }, Open  ]]
 }, Open  ]]

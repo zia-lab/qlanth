@@ -306,7 +306,7 @@ FastIonSolverLaF3[numE_, OptionsPattern[]] := Module[
       WindowSize -> {1600, 800}];
       If[OptionValue["SaveData"],
       (
-        exportFname = FileNameJoin[{workDir,OptionValue["OutputDirectory"], ln <> " in " <> "LaF3" <> appToFname <> ".m"}];
+        exportFname = FileNameJoin[{workDir,OptionValue["OutputDirectory"], ln <> " in " <> "LaF3" <> appToFname <> ".mx"}];
         SelectionMove[nb, After, Notebook];
         NotebookWrite[nb, Cell["Reload Data", "Section", TextAlignment -> Center]];
         NotebookWrite[nb,
@@ -401,7 +401,7 @@ MagneticDipoleTransitions[numE_Integer, OptionsPattern[]]:= (
   header    = {"\[Psi]i:simple","\[Psi]f:simple","\[Psi]i:idx","\[Psi]f:idx","Ei/K","Ef/K","\[Lambda]/nm","\[CapitalDelta]\[Lambda]/nm","\[Tau]/s","AMD/s^-1"};
   ln        = {"Ce","Pr","Nd","Pm","Sm","Eu","Gd","Tb","Dy","Ho","Er","Tm","Yb"}[[numE]];
   {rmsDifference,carnallEnergies,eigenEnergies,ln,
-  carnallAssignments,simplerStateLabels,eigensys,basis,truncatedStates} = Import["./examples/"<>ln<>" in LaF3 - example.m"];
+  carnallAssignments,simplerStateLabels,eigensys,basis,truncatedStates} = Import["./examples/"<>ln<>" in LaF3 - example.mx"];
 
   (* Some of the above are not needed here *)
   Clear[truncatedStates];

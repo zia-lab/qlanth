@@ -157,17 +157,19 @@ TheRightEnergyPath[`varPatterns`]:= (
 	Return[energyRms];
 )"];
 
-AppendToLog[message_, file_String] := 
-  Module[{timestamp = DateString["ISODateTime"], msgString},
+AppendToLog[message_, file_String] := Module[
+  {timestamp = DateString["ISODateTime"], msgString},
+  (
     msgString = ToString[message, InputForm]; (* Convert any expression to a string *)
     OpenAppend[file];
     WriteString[file, timestamp, " - ", msgString, "\n"];
     Close[file];
+  )
   ];
 
 energyAndLabelCostFunTemplate::usage="energyAndLabelCostFunTemplate is a template used to define the cost function that includes both the differences between energies and the differences between labels. The template is used to define a function TheRightSignedPath that takes a list of variables and returns the RMS of the energy differences between the computed and the experimental energies together with a term that depends on the differences between the labels. The template requires the values to the following keys to be provided: `vars` and `varPatterns`";
 energyAndLabelCostFunTemplate = StringTemplate["
-TheRightSignedPath[`varPatterns`]:= Module[
+TheRightSignedPath[`varPatterns`] := Module[
   {energyRms, eigenEnergies, eigenVecs, ordering, states, coarseStates, missingLevels, energyDiffFun, energyFlow, energyPairs, energyAndLabelFun, energyAndLabelFlow, totalAvgCost},
   (
     {eigenEnergies, eigenVecs} = Eigensystem[compHam[`vars`]];
@@ -1146,9 +1148,7 @@ Options[ClassicalFit] = {
     "FreeIonSymbols" -> {F0, F2, F4, F6, \[Zeta]}
 };
 ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_List, startValues_Association, \[Sigma]exp_?NumericQ, constraints_List, OptionsPattern[]]:=Module[
-  {
-    accuracyGoal, activeVarIndices, activeVars, activeVarsString, activeVarsWithRange, allFreeEnergies, allFreeEnergiesSorted, allVars, allVarsVec, argsForEvalInsideOfTheIntermediateSystems, argsOfTheIntermediateEigensystems, aVar, aVarPosition, basis, basisChanger, basisChangerBlocks, bestError, bestParams, bestRMS, blockShifts, blockSizes, colIdx, compiledDiagonal, compiledIntermediateFname, constrainedProblemVars, constrainedProblemVarsList, covMat, currentRMS, degressOfFreedom, dependentVars, diagonalBlocks, diagonalScalarBlocks, diff, eigenEnergies, eigenvalueDispenserTemplate, eigenVectors, elevatedIntermediateEigensystems, endTime, fmSol, fmSolAssoc, fractionalWidth, freeBies, freeIenergiesAndMultiplets, freeionSymbols, fullHam, fullSolVec, funcString, ham, hamDim, hamEigenvaluesTemplate, hamString, hess, indepSolVecVec, indepVars, intermediateHam, isolationValues, jobVars, lin, linMat, ln, lnParams, logFilePrefix, logFname, magneticSimplifier, maxFreeEnergy, maxHistory, maxIterations, methodString, methodStringTemplate, minFreeEnergy, minpoly, modelSymbols, multipletAssignments, needlePosition, numBlocks, numQSignature, numReps, solCompendium, openNotebooks, ordering, othersFixed, otherSimplifier, p0, paramBest, paramSigma, perHam, polySols, presentDataIndices, PrintFun, problemVarsPositions, problemVarsQ, problemVarsQString, problemVarsVec, problemVarsWithStartValues, reducedModelSymbols, resultMessage, roundedTruncationEnergy, rowIdx, runningInteractive, shiftToggle, simplifier, slackChan, sol, solAssoc, sols, solWithUncertainty, sortedTruncationIndex, sqdiff, standardValues, starTime, startingValues, startTime, startVarValues, states, steps, symmetrySimplifier, theIntermediateEigensystems, TheIntermediateEigensystems, TheTruncatedAndSignedPathGenerator, thisPoly, threadHeaderTemplate, threadMessage, threadTS, timeTaken, totalVariance, truncadedFname, truncatedIntermediateBasis, truncatedIntermediateHam, truncationEnergy, truncationIndices, truncationUmbral, usingInitialRange, varHash, varIdx, varsWithConstants, varWithValsSignature, \[Lambda]0Vec, \[Lambda]exp
-  },
+  {accuracyGoal, activeVarIndices, activeVars, activeVarsString, activeVarsWithRange, allFreeEnergies, allFreeEnergiesSorted, allVars, allVarsVec, argsForEvalInsideOfTheIntermediateSystems, argsOfTheIntermediateEigensystems, aVar, aVarPosition, basis, basisChanger, basisChangerBlocks, bestError, bestParams, bestRMS, blockShifts, blockSizes, colIdx, compiledDiagonal, compiledIntermediateFname, constrainedProblemVars, constrainedProblemVarsList, covMat, currentRMS, degressOfFreedom, dependentVars, diagonalBlocks, diagonalScalarBlocks, diff, eigenEnergies, eigenvalueDispenserTemplate, eigenVectors, elevatedIntermediateEigensystems, endTime, fmSol, fmSolAssoc, fractionalWidth, freeBies, freeIenergiesAndMultiplets, freeionSymbols, fullHam, fullSolVec, funcString, ham, hamDim, hamEigenvaluesTemplate, hamString, hess, indepSolVecVec, indepVars, intermediateHam, isolationValues, jobVars, lin, linMat, ln, lnParams, logFilePrefix, logFname, magneticSimplifier, maxFreeEnergy, maxHistory, maxIterations, methodString, methodStringTemplate, minFreeEnergy, minpoly, modelSymbols, multipletAssignments, needlePosition, numBlocks, numQSignature, numReps, solCompendium, openNotebooks, ordering, othersFixed, otherSimplifier, p0, paramBest, paramSigma, perHam, polySols, presentDataIndices, PrintFun, problemVarsPositions, problemVarsQ, problemVarsQString, problemVarsVec, problemVarsWithStartValues, reducedModelSymbols, resultMessage, roundedTruncationEnergy, rowIdx, runningInteractive, shiftToggle, simplifier, slackChan, sol, solAssoc, sols, solWithUncertainty, sortedTruncationIndex, sqdiff, standardValues, starTime, startingValues, startTime, startVarValues, states, steps, symmetrySimplifier, theIntermediateEigensystems, TheIntermediateEigensystems, TheTruncatedAndSignedPathGenerator, thisPoly, threadHeaderTemplate, threadMessage, threadTS, timeTaken, totalVariance, truncadedFname, truncatedIntermediateBasis, truncatedIntermediateHam, truncationEnergy, truncationIndices, truncationUmbral, usingInitialRange, varHash, varIdx, varsWithConstants, varWithValsSignature, \[Lambda]0Vec, \[Lambda]exp},
   (
     solCompendium   = <||>;
     addShift      = OptionValue["AddConstantShift"];
