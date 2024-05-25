@@ -116,24 +116,16 @@ Begin["`Private`"];
       Table[{i, i} -> repValue, {i, 1, Length[matrix]}]];
 
   Options[RoundValueWithUncertainty] = {"SetPrecision" -> False};
-  RoundValueWithUncertainty::usage = 
-    "RoundValueWithUncertainty[x,dx] given a number x together with an \
-  uncertainty dx this function rounds x to the first significant figure \
-  of dx and also rounds dx to have a single significant figure. 
+  RoundValueWithUncertainty::usage = "RoundValueWithUncertainty[x,dx] given a number x together with an uncertainty dx this function rounds x to the first significant figure of dx and also rounds dx to have a single significant figure. 
   The returned value is a list with the form {roundedX, roundedDx}.
-  The option \"SetPrecision\" can be used to control whether the \
-  Mathematica precision of x and dx is also set accordingly to these \
-  rules, otherwise the rounded numbers still have the original \
-  precision of the input values. 
-  If the position of the first significant figure of x is after the \
-  position of the first significant figure of dx, the function returns \
-  {0,dx} with dx rounded to one significant figure.";
+  The option \"SetPrecision\" can be used to control whether the Mathematica precision of x and dx is also set accordingly to these rules, otherwise the rounded numbers still have the original precision of the input values. 
+  If the position of the first significant figure of x is after the position of the first significant figure of dx, the function returns {0,dx} with dx rounded to one significant figure.";
   RoundValueWithUncertainty[x_, dx_, OptionsPattern[]] := Module[
     {xExpo, dxExpo, sigFigs, roundedX, roundedDx, returning},
     (
-      xExpo = RealDigits[x][[2]];
-      dxExpo = RealDigits[dx][[2]];
-      sigFigs = xExpo - dxExpo + 1;
+      xExpo   = RealDigits[x][[2]];
+      dxExpo  = RealDigits[dx][[2]];
+      sigFigs = (xExpo - dxExpo) + 1;
       {roundedX, roundedDx} = If[sigFigs <= 0,
         {0., N@RoundToSignificantFigures[dx, 1]},
         N[

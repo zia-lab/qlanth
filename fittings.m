@@ -1192,7 +1192,7 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
     (* some indices omitted here based on the excludeDataIndices argument *)
     presentDataIndices = Complement[presentDataIndices, excludeDataIndices];
     
-    hamDim                            = Binomial[14, numE];
+    hamDim                              = Binomial[14, numE];
     solCompendium["simplifier"]         = simplifier;
     solCompendium["excludeDataIndices"] = excludeDataIndices;
     solCompendium["startValues"]        = startValues;
@@ -1204,7 +1204,7 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
     solCompendium["maxIterations"]      = maxIterations;
     solCompendium["hamDim"]             = hamDim;
     solCompendium["constraints"]        = constraints;
-    modelSymbols  = Sort[Select[paramSymbols, Not[MemberQ[Join[racahSymbols, juddOfeltIntensitySymbols, chenSymbols,{t2Switch, \[Epsilon],gs}],#]]&]];
+    modelSymbols  = Sort[Select[paramSymbols, Not[MemberQ[Join[racahSymbols, juddOfeltIntensitySymbols, chenSymbols,{t2Switch, \[Epsilon], gs, nE}],#]]&]];
     (* remove the symbols that will be removed by the simplifier, no symbol should remain here that is not in the symbolic Hamiltonian *)
     reducedModelSymbols = Select[modelSymbols, Not[MemberQ[Keys[simplifier],#]]&];
     
@@ -1582,6 +1582,7 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
       )
     ];
     logFname = LogSol[solCompendium, logFilePrefix];
+    PrintFun["Finished ..."];
     Return[solCompendium]; 
   )
 ];

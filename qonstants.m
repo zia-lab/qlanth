@@ -8,7 +8,8 @@ ee         = 1.602176634 * 10^-19;
 theLanthanides = {"Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb"};
 theActinides   = {"Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr"};
 theTrivalents  = {"Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm"};
-specAlphabet   = "SPDFGHIKLMNOQRTUV"
+specAlphabet   = "SPDFGHIKLMNOQRTUV";
+complementaryNumE = {1,13,2,12,3,11,4,10,5,9,6,8,7};
 
 (* SI *)
 hPlanck = 6.62607015 * 10^-34;          (* Planck's constant in J s *)

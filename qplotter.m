@@ -104,9 +104,9 @@ Begin["`Private`"];
     ];
     ListPlot[scatterGroups,
       opts,
-      Frame->True,
-      AxesStyle -> {Directive[Black, Dotted], Automatic},
-      PlotStyle -> groupedColors,
+      Frame      -> True,
+      AxesStyle  -> {Directive[Black, Dotted], Automatic},
+      PlotStyle  -> groupedColors,
       FrameTicks -> frameTicks]
     )
     ]

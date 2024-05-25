@@ -2411,8 +2411,8 @@ Begin["`Private`"]
     )
   ];
 
-  SimplerSymbolicHamMatrix::usage = "SimplerSymbolicHamMatrix[numE, simplifier] is a simple addition to HamMatrixAssembly that applies a given simplification to the full Hamiltonian. simplifier is a list of replacement rules. If the option \"Export\" is set to True, then the function also exports the resulting sparse array to the ./hams/ folder. The option \"PrependToFilename\" can be used to append a string to the filename to which the function may export to. The option \"Return\" can be used to choose whether the function returns the matrix or not. The option \"Overwrite\" can be used to overwrite the file if it already exists. The option \"IncludeZeeman\" can be used to toggle the inclusion of the Zeeman interaction with an external magnetic field.";
-  Options[SimplerSymbolicHamMatrix]={
+  SimplerSymbolicHamMatrix::usage = "SimplerSymbolicHamMatrix[numE, simplifier] is a simple addition to HamMatrixAssembly that applies a given simplification to the full Hamiltonian. simplifier is a list of replacement rules. If the option \"Export\" is set to True, then the function also exports the resulting sparse array to the ./hams/ folder. The option \"PrependToFilename\" can be used to append a string to the filename to which the function may export to. The option \"Return\" can be used to choose whether the function returns the matrix or not. The option \"Overwrite\" can be used to overwrite the file if it already exists, if this options is set to False then this function simply reloads a file that it assumed to be present already in the ./hams folder. The option \"IncludeZeeman\" can be used to toggle the inclusion of the Zeeman interaction with an external magnetic field.";
+  Options[SimplerSymbolicHamMatrix] = {
     "Export"->True, 
     "PrependToFilename"->"", 
     "EorF"->"F",
@@ -2439,9 +2439,12 @@ Begin["`Private`"]
         LoadThreeBody[]
       ];
       
-      fname = FileNameJoin[{moduleDir,"hams",OptionValue["PrependToFilename"]<>"SymbolicMatrix-f"<>ToString[numE]<>".m"}];
-      fnamemx = FileNameJoin[{moduleDir,"hams",OptionValue["PrependToFilename"]<>"SymbolicMatrix-f"<>ToString[numE]<>".mx"}];
-      If[Or[FileExistsQ[fname], FileExistsQ[fnamemx]] && Not[OptionValue["Overwrite"]],
+      fname   = FileNameJoin[{moduleDir, "hams",
+        OptionValue["PrependToFilename"]<>"SymbolicMatrix-f"<>ToString[numE]<>".m"}];
+      fnamemx = FileNameJoin[{moduleDir,"hams", 
+        OptionValue["PrependToFilename"]<> "SymbolicMatrix-f" <> ToString[numE] <> ".mx"}];
+      If[Or[FileExistsQ[fname], FileExistsQ[fnamemx]] 
+        && Not[OptionValue["Overwrite"]],
         (
           If[OptionValue["Return"],
             (
@@ -2457,13 +2460,13 @@ Begin["`Private`"]
                   Print["File ",fname," already exists, and option \"Overwrite\" is set to False, loading file ..."];
                   thisHam = Import[fname];
                   Print["Exporting to file ",fnamemx, " for quicker loading."];
-                  Export[fnamemx,thisHam];
+                  Export[fnamemx, thisHam];
                   Return[thisHam];
                 )
               ]
             ),
             (
-              Print["File ",fname," already exists, skipping ..."];
+              Print["File ", fname, " already exists, skipping ..."];
               Return[Null];
             )
           ]
@@ -2476,9 +2479,9 @@ Begin["`Private`"]
       thisHam = SparseArray[thisHam];
       If[OptionValue["Export"],
       (
-        Print["Exporting to file ",fname, " and to ", fnamemx];
-        Export[fname,thisHam];
-        Export[fnamemx,thisHam];
+        Print["Exporting to file ", fname, " and to ", fnamemx];
+        Export[fname,   thisHam];
+        Export[fnamemx, thisHam];
       )
       ];
       If[OptionValue["Return"],
