@@ -1,36 +1,41 @@
 BeginPackage["misc`"];
+Needs["MaTeX`"];
 
+ArrayBlocker;
+BlockAndIndex;
+BlockArrayDimensionsArray;
+BlockMatrixMultiply;
+BlockTranspose;
+
+EllipsoidBoundingBox;
+EllipsoidBoundingBox2;
 ExportToH5;
-FlattenBasis;
-RecoverBasis;
-FlowMatching;
-SuperIdentity;
-RobustMissingQ;
-ReplaceDiagonal;
-
-GreedyMatching;
-HelperNotebook;
-StochasticMatching;
 ExtractSymbolNames;
+FirstOrderPerturbation;
+FlattenBasis;
+
+FlowMatching;
 GetModificationDate;
+GreedyMatching;
+HamTeX;
+HelperNotebook;
+
+RecoverBasis;
+RemoveTrailingDigits;
+ReplaceDiagonal;
+RobustMissingQ;
+RobustMissingQ;
+
+RoundToSignificantFigures;
+RoundValueWithUncertainty;
+SecondOrderPerturbation;
+StochasticMatching;
+SuperIdentity;
+
 TextBasedProgressBar;
 ToPythonSparseFunction;
-
-FirstOrderPerturbation;
-SecondOrderPerturbation;
-RoundValueWithUncertainty;
-
 ToPythonSymPyExpression;
-RoundToSignificantFigures;
-RobustMissingQ;
-
-BlockMatrixMultiply;
-BlockAndIndex;
 TruncateBlockArray;
-BlockArrayDimensionsArray;
-ArrayBlocker;
-BlockTranspose;
-RemoveTrailingDigits;
 
 Begin["`Private`"];
 
@@ -481,6 +486,79 @@ Begin["`Private`"];
       "    return csr_matrix((data, indices, indptr), shape=shape)"];
     pyCode
     ];
+
+  Options[HamTeX] = {"T2" -> False};
+  HamTeX::usage="HamTeX[numE] returns an image with parsed LaTeX code for the Hamiltonian of the given number of electrons. The option \"T2\" can be used to specify whether the T2 term should be included in the Hamiltonian for the f^12 configuration. The default is False and the option is ignored if the number of electrons is not 12. The function requires the MaTeX package.";
+  HamTeX[nE_, OptionsPattern[]] := (
+    tex = Which[
+      MemberQ[{1, 13}, nE],
+        "\\zeta \\sum_{i=1}^{n}\\left(\\hat{s}_i \\cdot \
+    \\hat{l}_i\\right) \
+    +\\sum_{i=1}^n\\sum_{k=2,4,6}\\sum_{q=-k}^{k}B_q^{(k)}\\mathcal{C}(i)_\
+    q^{(k)}",
+      nE == 2,
+        "\\hat{H}&=\\sum_{k=2,4,6}F^{(k)}\\hat{f}_k 
+    +\\alpha \\hat{L}^2
+    +\\beta \\,\\mathcal{C}\\left(\\mathcal{G}(2)\\right)
+    +\\gamma \\,\\mathcal{C}\\left(\\mathcal{SO}(7)\\right)\\\\
+    &\\quad + \\zeta \\sum_{i=1}^{n}\\left(\\hat{s}_i \\cdot \
+    \\hat{l}_i\\right) 
+    +\\sum_{k=0,2,4}M^{(k)}\\hat{m}_k
+    +\\sum_{k=2,4,6}P^{(k)}\\hat{p}_k \\\\
+    &\\quad\\quad\\quad\\quad\\quad+\\sum_{i=1}^n\\sum_{k=2,4,6}\\sum_{q=-\
+    k}^{k}B_q^{(k)}\\mathcal{C}(i)_q^{(k)}",
+      And[nE == 12, OptionValue["T2"]],
+        "\\hat{H}&=\\sum_{k=2,4,6}F^{(k)}\\hat{f}_k 
+        +T^{(2)}\\hat{t}_2
+        +\\alpha \\hat{L}^2
+        +\\beta \\,\\mathcal{C}\\left(\\mathcal{G}(2)\\right)
+        +\\gamma \\,\\mathcal{C}\\left(\\mathcal{SO}(7)\\right)\\\\
+        &\\quad\\quad\\quad + \\zeta \\sum_{i=1}^{n}\\left(\\hat{s}_i \\cdot \
+        \\hat{l}_i\\right) 
+        +\\sum_{k=0,2,4}M^{(k)}\\hat{m}_k
+        +\\sum_{k=2,4,6}P^{(k)}\\hat{p}_k \\\\
+        &\\quad\\quad\\quad\\quad\\quad\\quad\\quad+\\sum_{i=1}^n\\sum_{k=2,4,\
+        6}\\sum_{q=-k}^{k}B_q^{(k)}\\mathcal{C}(i)_q^{(k)}",
+      And[nE == 12, Not@OptionValue["T2"]],
+        "\\hat{H}&=\\sum_{k=2,4,6}F^{(k)}\\hat{f}_k 
+        +\\alpha \\hat{L}^2
+        +\\beta \\,\\mathcal{C}\\left(\\mathcal{G}(2)\\right)
+        +\\gamma \\,\\mathcal{C}\\left(\\mathcal{SO}(7)\\right)\\\\
+        &\\quad + \\zeta \\sum_{i=1}^{n}\\left(\\hat{s}_i \\cdot \
+        \\hat{l}_i\\right) 
+        +\\sum_{k=0,2,4}M^{(k)}\\hat{m}_k
+        +\\sum_{k=2,4,6}P^{(k)}\\hat{p}_k \\\\
+        &\\quad\\quad\\quad+\\sum_{i=1}^n\\sum_{k=2,4,6}\\sum_{q=-k}^{k}B_q^{(\
+    k)}\\mathcal{C}(i)_q^{(k)}",
+      True,
+        "\\hat{H}&=\\sum_{k=2,4,6}F^{(k)}\\hat{f}_k 
+        +\\sum_{k=2,3,4,6,7,8}T^{(k)}\\hat{t}_k
+        +\\alpha \\hat{L}^2
+        +\\beta \\,\\mathcal{C}\\left(\\mathcal{G}(2)\\right)
+        +\\gamma \\,\\mathcal{C}\\left(\\mathcal{SO}(7)\\right)\\\\
+        &\\quad\\quad\\quad\\quad + \\zeta \\sum_{i=1}^{n}\\left(\\hat{s}_i \
+        \\cdot \\hat{l}_i\\right) 
+        +\\sum_{k=0,2,4}M^{(k)}\\hat{m}_k
+        +\\sum_{k=2,4,6}P^{(k)}\\hat{p}_k \\\\
+        &\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad+\\sum_{i=1}^n\\sum_{\
+        k=2,4,6}\\sum_{q=-k}^{k}B_q^{(k)}\\mathcal{C}(i)_q^{(k)}"
+      ];
+    MaTeX[StringJoin[{"\\begin{aligned}\n", tex, "\n\\end{aligned}"}]]
+    )
+
+  EllipsoidBoundingBox::usage = "EllipsoidBoundingBox[A,\[Kappa]] gives the coordinate intervals that contain the ellipsoid determined by r^T.A.r==\[Kappa]^2. The matrix A must be square NxN, symmetric, and positive definite. The function returns a list with N pairs of numbers, each pair being of the form {-x_i, x_i}.";
+  EllipsoidBoundingBox[Amat_,\[Kappa]_]:=Module[
+    {invAmat, stretchFactors, boundingPlanes, quad},
+      (
+      invAmat = Inverse[Amat];
+      stretchFactors = Sqrt[1/Diagonal[invAmat]];
+      boundingPlanes = DiagonalMatrix[stretchFactors].invAmat;
+      (* The solution is proportional to \[Kappa] *)
+      boundingPlanes = \[Kappa] * boundingPlanes;
+      boundingPlanes = Max /@ Transpose[boundingPlanes];
+      Return[{-#,#}& /@ boundingPlanes]
+    )
+  ];
 
 End[];
 EndPackage[];

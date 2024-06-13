@@ -305,6 +305,7 @@ ExportmZip;
 FindNKLSTerm;
 FindSL;
 FreeHam;
+FreeIonTable;
 FromArrayToTable;
 FtoE;
 
@@ -316,6 +317,7 @@ GenerateCFPTable;
 
 GenerateCrystalFieldTable;
 GenerateElectrostaticTable;
+GenerateFreeIonTable;
 GenerateReducedUkTable;
 GenerateReducedV1kTable;
 GenerateSOOandECSOLSTable;
@@ -360,9 +362,11 @@ LoadCFP;
 LoadCarnall;
 LoadChenDeltas;
 LoadElectrostatic;
+LoadFreeIon;
 LoadGuillotParameters;
 
-LoadParameters;
+LoadLaF3Parameters;
+LoadLiYF4Parameters;
 LoadSOOandECSO;
 LoadSOOandECSOLS;
 LoadSpinOrbit;
@@ -1900,6 +1904,67 @@ Begin["`Private`"]
   (* ########################################################### *)
 
   (* ########################################################### *)
+  (* #################### Free-Ion Energies #################### *)
+  
+  GenerateFreeIonTable::usage="GenerateFreeIonTable[] generates an association for free-ion energies in terms of Slater integrals Fk and spin-orbit parameter \[Zeta]. It returns an association where the keys are of the form {nE, SL, SpLp}. If the option \"Export\" is set to True then the resulting object is saved to the data folder. The free-ion Hamiltonian is the sum of the electrostatic and spin-orbit interactions. The electrostatic interaction is given by the function Electrostatic[{numE, SL, SpLp}] and the spin-orbit interaction is given by the function SpinOrbitTable[{numE, SL, SpLp}]. The values for the electrostatic interaction are taken from the data file ElectrostaticTable.m and the values for the spin-orbit interaction are taken from the data file SpinOrbitTable.m. The values for the free-ion Hamiltonian are then exported to a file \"FreeIonTable.m\" in the data folder of this module. The values are also returned as an association.";
+  Options[GenerateFreeIonTable] = {"Export" -> False};
+  GenerateFreeIonTable[OptionsPattern[]] := Module[
+    {terms, numEH, zetaSign, fname, FreeIonTable},
+    (
+      If[Not[ValueQ[ElectrostaticTable]],
+        LoadElectrostatic[]
+        ];    
+      If[Not[ValueQ[SpinOrbitTable]],
+        LoadSpinOrbit[]
+      ];
+      If[Not[ValueQ[ReducedUkTable]],
+        LoadUk[]
+      ];
+      FreeIonTable = <||>;
+      Do[
+        (
+          terms = AllowedNKSLJTerms[nE];
+          numEH = Min[nE, 14 - nE];
+          zetaSign = If[nE > 7, -1, 1];
+          Do[
+            FreeIonTable[{nE,term[[1]],term[[2]]}] = (
+              Electrostatic[{numEH, term[[1]], term[[1]]}] + 
+                zetaSign * SpinOrbitTable[{numEH, term[[1]], term[[1]], term[[2]]}]
+                ),
+            {term, terms}];
+        ),
+        {nE, 1, 14}
+      ];
+      If[OptionValue["Export"],
+        (
+          fname = FileNameJoin[{moduleDir, "data", "FreeIonTable.m"}];
+          Export[fname, FreeIonTable];
+        )
+      ];
+      Return[FreeIonTable];
+    )
+  ];
+
+  LoadFreeIon::usage = "LoadFreeIon[] loads the free-ion energies from the data folder. The values are stored in the association FreeIonTable.";
+  LoadFreeIon[] := (
+    If[ValueQ[FreeIonTable],
+      Return[]
+    ];
+    PrintTemporary["Loading the association of free-ion energies ..."];
+    FreeIonTableFname = FileNameJoin[{moduleDir, "data", "FreeIonTable.m"}];
+    FreeIonTable = If[!FileExistsQ[FreeIonTableFname],
+      (
+        PrintTemporary[">> FreeIonTable.m not found, generating ..."];
+        GenerateFreeIonTable["Export" -> True]
+      ),
+        Import[FreeIonTableFname]
+    ];
+  );
+ 
+  (* #################### Free-Ion Energies #################### *)
+  (* ########################################################### *)
+
+  (* ########################################################### *)
   (* ##################### Crystal Field ####################### *)
 
   Cqk::usage = "Cqk[numE, q, k, NKSL, J, M, NKSLp, Jp, Mp]. In Wybourne (1965) see equations 6-3, 6-4, and 6-5. Also in TASS see equation 11.53.";
@@ -2451,15 +2516,15 @@ Begin["`Private`"]
               Which[
                 FileExistsQ[fnamemx],
                 (
-                  Print["File ",fnamemx," already exists, and option \"Overwrite\" is set to False, loading file ..."];
+                  Print["File ", fnamemx, " already exists, and option \"Overwrite\" is set to False, loading file ..."];
                   thisHam = Import[fnamemx];
                   Return[thisHam];
                 ),
                 FileExistsQ[fname],
                 (
-                  Print["File ",fname," already exists, and option \"Overwrite\" is set to False, loading file ..."];
+                  Print["File ", fname, " already exists, and option \"Overwrite\" is set to False, loading file ..."];
                   thisHam = Import[fname];
-                  Print["Exporting to file ",fnamemx, " for quicker loading."];
+                  Print["Exporting to file ", fnamemx, " for quicker loading."];
                   Export[fnamemx, thisHam];
                   Return[thisHam];
                 )
@@ -2473,8 +2538,10 @@ Begin["`Private`"]
         )
       ];
       
-      thisHam = HamMatrixAssembly[numE, "Set t2Switch" -> OptionValue["Set t2Switch"], "IncludeZeeman"->OptionValue["IncludeZeeman"]];
-      thisHam = ReplaceInSparseArray[thisHam, simplifier];
+      thisHam = HamMatrixAssembly[numE, "Set t2Switch" -> OptionValue["Set t2Switch"], "IncludeZeeman" -> OptionValue["IncludeZeeman"]];
+      If[Length[simplifier] > 0,
+        thisHam = ReplaceInSparseArray[thisHam, simplifier];
+      ];
       (* This removes zero entries from being included in the sparse array *)
       thisHam = SparseArray[thisHam];
       If[OptionValue["Export"],
@@ -3255,34 +3322,30 @@ Begin["`Private`"]
   (* ##################### Term management ##################### *)
   (* ########################################################### *)
 
-  LoadParameters::usage = "LoadParameters[ln] takes a string with the symbol the element of a trivalent lanthanide ion and returns model parameters for it. It is based on the data for LaF3. If the option \"Free Ion\" is set to True then the function sets all crystal field parameters to zero. Through the option \"gs\" it allows modyfing the electronic gyromagnetic ratio. For completeness this function also computes the E parameters using the F parameters quoted on Carnall.";
-  Options[LoadParameters] = {
-      "Source"->"Carnall",
+  LoadLaF3Parameters::usage = "LoadLaF3Parameters[ln] takes a string with the symbol the element of a trivalent lanthanide ion and returns model parameters for it. It is based on the data for LaF3. If the option \"Free Ion\" is set to True then the function sets all crystal field parameters to zero. Through the option \"gs\" it allows modyfing the electronic gyromagnetic ratio. For completeness this function also computes the E parameters using the F parameters quoted on Carnall.";
+  Options[LoadLaF3Parameters] = {
       "Free Ion"->False,
       "gs"->2.002319304386,
       "With Uncertainties"->False
       };
-  LoadParameters[Ln_String, OptionsPattern[]] := Module[
-    {source, params, uncertain,
+  LoadLaF3Parameters[Ln_String, OptionsPattern[]] := Module[
+    {params, uncertain,
     uncertainKeys, uncertainRules},
     (
       If[Not[ValueQ[Carnall]],
         LoadCarnall[];
       ];
-      source = OptionValue["Source"];
-      params = Which[source=="Carnall",
-              (Association[Carnall["data"][Ln]])
-              ];
+      params = Association[Carnall["data"][Ln]];
       (*If a free ion then all the parameters from the crystal field are set to zero*)
       If[OptionValue["Free Ion"], 
         Do[params[cfSymbol] = 0, {cfSymbol, cfSymbols}]
       ];
       params[F0] = 0;
-      params[M2] = 0.56*params[M0]; (*See Carnall 1989,Table I,caption,probably fixed based on HF values*)
-      params[M4] = 0.31*params[M0]; (*See Carnall 1989,Table I,caption,probably fixed based on HF values*)
+      params[M2] = 0.56 * params[M0]; (*See Carnall 1989,Table I,caption,probably fixed based on HF values*)
+      params[M4] = 0.31 * params[M0]; (*See Carnall 1989,Table I,caption,probably fixed based on HF values*)
       params[P0] = 0;
-      params[P4] = 0.5*params[P2];  (*See Carnall 1989,Table I,caption,probably fixed based on HF values*)
-      params[P6] = 0.1*params[P2];  (*See Carnall 1989,Table I,caption,probably fixed based on HF values*)
+      params[P4] = 0.5 * params[P2];  (*See Carnall 1989,Table I,caption,probably fixed based on HF values*)
+      params[P6] = 0.1 * params[P2];  (*See Carnall 1989,Table I,caption,probably fixed based on HF values*)
       params[gs] = OptionValue["gs"];
       {params[E0], params[E1], params[E2], params[E3]} = FtoE[params[F0], params[F2], params[F4], params[F6]];
       params[E0] = 0;
@@ -3344,6 +3407,14 @@ Begin["`Private`"]
         ];
     )
   ];
+
+  LoadLiYF4Parameters::usage="LoadLiYF4Parameters[ln] takes a string with the symbol the element of a trivalent lanthanide ion and returns model parameters for it. It return the data for LiYF4 from Cheng et al.";
+  LoadLiYF4Parameters[ln_]:=(
+    If[!ValueQ[paramsLiYF4],
+      paramsChengLiYF4 = Import[FileNameJoin[{moduleDir,"data","chengLiYF4.m"}]];
+    ];
+    Return[paramsChengLiYF4[ln]];
+  )
 
   HoleElectronConjugation::usage = "HoleElectronConjugation[params] takes the parameters (as an association) that define a configuration and converts them so that they may be interpreted as corresponding to a complentary hole configuration. Some of this can be simply done by changing the sign of the model parameters. In the case of the effective three body interaction the relationship is more complex and is controlled by the value of the isE variable.";
   HoleElectronConjugation[params_] := Module[
@@ -4735,7 +4806,8 @@ Begin["`Private`"]
     PrintTemporary["Loading the association of matrix elements for spin-orbit ..."];
     SpinOrbitTableFname = FileNameJoin[{moduleDir, "data", "SpinOrbitTable.m"}];
     If[!FileExistsQ[SpinOrbitTableFname],
-      (PrintTemporary[">> SpinOrbitTable.m not found, generating ..."];
+      (
+        PrintTemporary[">> SpinOrbitTable.m not found, generating ..."];
         SpinOrbitTable = GenerateSpinOrbitTable[7, "Export" -> True];
       ),
       SpinOrbitTable = Import[SpinOrbitTableFname];

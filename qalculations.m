@@ -595,6 +595,7 @@ Options[FastIonSolver] = {
   "NotebookSave" -> True,
   "Remove Kramers"     -> True,
   "Append to Filename" -> "",
+  "Energy Uncertainty in K" -> 1,
   "OutputDirectory"    -> "calcs",
   "Max Eigenstates in Table" -> 100,
   "eigenstateTruncationProbability" -> 0.9,
@@ -616,7 +617,7 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
     stateLabels, simplerStateLabels, truncatedStates, truncationTime,
     energyDiagram, appToFname, statesTable, DefaultIfMissing, 
     diffTableData, diffTable, nb, exportFname, tinyexportFname, tinyExport,
-    nbFname
+    nbFname, uncertaintySentence, sigmaRMS, energyUncertaintyTemplate
   },
   (
     paramKeys = Keys[params];
@@ -632,6 +633,13 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
         Print["The number of electrons was not specified in params, exiting ..."];
         Return[Null];
       )
+    ];
+    energyUncertaintyTemplate = StringTemplate["\nWhen fitted the root mean square deviation between the used experimental data and the model energies was `energySigma` K."];
+    sigmaRMS     = OptionValue["Energy Uncertainty in K"];
+    uncertaintySentence = If[
+      sigmaRMS === 0.,
+      "",
+      energyUncertaintyTemplate[<|"energySigma" -> sigmaRMS|>]
     ];
     PrintFun     = OptionValue["PrintFun"];
     makeNotebook = OptionValue["MakeNotebook"];
@@ -711,8 +719,18 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
     eigensys = ShiftedLevels[eigensys];
     (* Sort according to energy *)
     eigensys = SortBy[eigensys, First];
+    energyShift = 0;
+    energyShift = If[
+      MemberQ[Keys[params], \[Epsilon]],
+      Chop[Round[params[\[Epsilon]],0.1]],
+      0.
+    ];
+    If[\[Epsilon]=!=0.,
+      eigensys = ({#[[1]]+energyShift, #[[2]] } & /@ eigensys)
+    ];
     (* Grab just the energies *)
     eigenEnergies = Chop[First /@ eigensys];
+    
     
     (* Energies are doubly degenerate in the case of odd number of electrons, keep only one as long as the option \"Remove Kramers\" is set to True *)
     If[And[OddQ[numE], OptionValue["Remove Kramers"]], 
@@ -744,6 +762,7 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
     
     If[makeNotebook,
     (
+      hamImage = HamTeX[numE, "T2" -> (params[T2]  === 0.)];
       PrintFun["> Putting together results in a notebook ..."];
       energyDiagram = Framed[
             EnergyLevelDiagram[eigensys, "Title" -> title, 
@@ -771,9 +790,12 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
       (* now place all of this in a new notebook *)
       nb = CreateDocument[
       {
-        TextCell[Style[
-          DisplayForm[RowBox[{SuperscriptBox[host <> ":" <> ln, "3+"], "(", SuperscriptBox["f", numE], ")"}]]
-          ], "Title", TextAlignment -> Center
+        TextCell[
+          Style[
+            DisplayForm[RowBox[{SuperscriptBox[host <> ":" <> ln, "3+"], "(", SuperscriptBox["f", numE], ")"}]]
+          ],
+          "Title",
+          TextAlignment -> Center
         ],
         TextCell["Energy Diagram",
           "Section",
@@ -784,6 +806,11 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
         ],
         TextCell["Multiplet Assignments & Energy Levels",
           "Section",
+          TextAlignment -> Center
+        ],
+        TextCell[
+          "The following table shows the multiplet assignments and energies of the eigenstates.\nThe energies are rounded to the nearest K .\nThe coarse label for each states corresponds to the basis state with the largest contribution to the eigenvector."<> uncertaintySentence,
+          "Text",
           TextAlignment -> Center
         ],
         TextCell[diffTable,
@@ -802,6 +829,18 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
         TextCell[statesTable,
             "Output",
             TextAlignment -> Center
+        ],
+        TextCell["Hamiltonian",
+          "Section",
+          TextAlignment -> Center
+        ],
+        TextCell[Show[hamImage, ImageSize -> 600],
+          "Output",
+          TextAlignment -> Center
+        ],
+        TextCell[Select[params, And[# =!= 0, # =!= 0.] &],
+          "Output",
+          TextAlignment -> Center
         ]
       },
       WindowSelected -> True,
