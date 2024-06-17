@@ -2181,6 +2181,7 @@ Begin["`Private`"]
   The returned association has three keys: 
     \"BqkSqk\" whose values is a list with the nonzero Bqk and Sqk parameters;
     \"constraints\" whose value is either an empty list, or a lists of replacements rules that are constraints on the Bqk and Sqk parameters;
+    \"simplifier\" whose value is an association that can be used to set to zero the crystal field parameters that are zero for the given symmetry group;
     \"aliases\" whose value is a list with the integer by which the point group is also known for and an alternate Schoenflies symbol if it exists.
   
   This uses data from table 3.3 in Benelli and Gatteschi, 2015.";
@@ -2188,7 +2189,9 @@ Begin["`Private`"]
     If[Not@ValueQ[crystalFieldFunctionalForms],
       crystalFieldFunctionalForms = Import[FileNameJoin[{moduleDir, "data", "crystalFieldFunctionalForms.m"}]];
     ];
-    crystalFieldFunctionalForms[symmetryGroupString]
+    cfForm = crystalFieldFunctionalForms[symmetryGroupString];
+    simplifier = Association[(# -> 0) &/@ Complement[cfSymbols, cfForm["BqkSqk"]]];
+    Return[Join[cfForm, <|"simplifier"->simplifier|>]];
   )
 
   (* ##################### Crystal Field ####################### *)

@@ -1,15 +1,8 @@
-```
-  +------------------------------------------------------------------+
-  |                                                                  |
-  |                      __                     __     __            |
-  |            ____ _   / /  ____ _   ____     / /_   / /_           |
-  |           / __ `/  / /  / __ `/  / __ \   / __/  / __ \          |
-  |          / /_/ /  / /  / /_/ /  / / / /  / /_   / / / /          |
-  |          \__, /  /_/   \__,_/  /_/ /_/   \__/  /_/ /_/           |
-  |            /_/                                                   |
-  |                                                                  |
-  +------------------------------------------------------------------+
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./figs/banner-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="./figs/banner-light.png">
+  <img alt="Single configuration effective Hamiltonian." src="./figs/banner-dark.png">
+</picture>
 
 `qlanth` is a Mathematica package that can be used to calculate the level structure of lanthanide ions embedded in crystals. For this purpose it uses a single configuration description with the effective Hamiltonian shown below. This Hamiltonian aims to describe the observed properties of ions embedded in solids in a picture that imagines them as free-ions but modified by the influence of the lattice in which they find themselves in.
 
@@ -23,9 +16,9 @@ This picture is one that developed and mostly matured in the second half of the 
 
 `qlanth` also includes data that might be of use to those interested in the single-configuration description of lanthanide ions, separate to their specific use in this code. These data include the coefficients of fractional parentage (as calculated by Velkov and parsed here), and reduced matrix elements for all the operators listed above in the effective Hamiltonian. These are provided as standard Mathematica associations that should be simple to use elsewhere.
 
-The included Mathematica notebook `qlanth.nb` has examples of the capabilities that this package offers, and the `/examples` folder includes a series of notebooks for most of the trivalent lanthanide ions in lanthanum fluoride. LaF3 is remarkable in that it was one of the systems in which a systematic study <a href="https://pubs.aip.org/aip/jcp/article-abstract/90/7/3443/220581"> [Carnall (1989)] </a> of all of the trivalent lanthanide ions were studied. In them, the fact that the parameters for different ions vary in regular fashion, provides some validity to this effective Hamiltonian as a physically reasonable description.
+The included Mathematica notebook `qlanth.nb` has examples of the functions included in this package. The `/examples` folder includes notebooks for several of the trivalent lanthanide ions in LaF3, showing also comparisons against the published results of Carnall. LaF3 is remarkable in that it was one of the systems in which a systematic study <a href="https://pubs.aip.org/aip/jcp/article-abstract/90/7/3443/220581"> [Carnall (1989)] </a> of most of the trivalent lanthanide ions were studied.
 
-`qlanth` can calculate energy levels and accompanying eigenvectors in the LSJMJ basis.
+There is also a documentation document ([qlanth.pdf](https://github.com/zia-lab/qlanth/blob/main/doc/qlanth.pdf)) that contains additional theoretical and practical details.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./figs/Pr3plus-diffs-dark.png">
@@ -50,6 +43,6 @@ The included Mathematica notebook `qlanth.nb` has examples of the capabilities t
 
 ## Acknowledgements
 
-- This code was originally authored by Christopher Dodson and Rashid Zia, and is currently being maintained and expanded by David Lizarazo at Brown University. It has also benefited from the helpful discussions with Tharnier Puel at the University of Iowa.
+- This code was originally authored by Christopher Dodson and Rashid Zia, and was rewritten and expanded by David Lizarazo at Brown University. It has also benefited from the helpful discussions with Tharnier Puel at the University of Iowa.
 
-- This work is suppported by the National Sicence Foundation Grant No. 1922278.
+- This work is supported by the National Sicence Foundation Grant No. 1922278.
