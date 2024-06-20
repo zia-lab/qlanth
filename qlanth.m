@@ -398,7 +398,7 @@ ParseStatesByProbabilitySum;
 
 ParseTermLabels;
 Phaser;
-PrettySaunders;
+PrettySaundersSL;
 PrettySaundersSLJ;
 PrettySaundersSLJmJ;
 
@@ -1185,7 +1185,7 @@ Begin["`Private`"]
   (* ########################################################### *)
   (* ################# Three Body Operators #################### *)
 
-  ParseJudd1984::usage = "This function parses the data from tables 1 and 2 of Judd from Judd, BR, and MA Suskin. \"Complete Set of Orthogonal Scalar Operators for the Configuration f^3\". JOSA B 1, no. 2 (1984): 261-65.\"";
+  ParseJudd1984::usage = "This function parses the data from tables 1 and 2 of Judd from Judd, BR, and MA Suskin. \"Complete Set of Orthogonal Scalar Operators for the Configuration f^3\". JOSA B 1, no. 2 (1984): 261-65.";
   Options[ParseJudd1984] = {"Export" -> False};
   ParseJudd1984[OptionsPattern[]] := (
     ParseJuddTab1[str_] := (
@@ -1420,7 +1420,7 @@ Begin["`Private`"]
    ];
   Return[{ThreeBodyTable, ThreeBodyTables}];
   );
-  
+
   ScalarOperatorProduct::usage = "ScalarOperatorProduct[op1, op2, numE] calculated the innerproduct between the two scalar operators op1 and op2.";
   ScalarOperatorProduct[op1_, op2_, numE_] := Module[
     {terms, S, L, factor, term1, term2},
@@ -3858,6 +3858,31 @@ Begin["`Private`"]
 
   (* ########################################################### *)
   (* ################## Eigensystem analysis ################### *)
+
+  PrettySaundersSL::usage = "PrettySaundersSL[SL] produces a human-redeable symbol for the spectroscopic term SL. SL can be either a string (in RS notation for the term) or a list of two numbers {S, L}. The option \"Representation\" can be used to specify whether the output is given as a symbol or as a ket. The default is \"Ket\".";
+  Options[PrettySaundersSL] = {"Representation" -> "Ket"};
+  PrettySaundersSL[SL_, OptionsPattern[]] := (
+    If[StringQ[SL],
+    (
+      {S,L} = FindSL[SL];
+      L     = StringTake[SL,{2,-1}];
+    ),
+      {S,L}=SL
+    ];
+    pretty = RowBox[{
+        AdjustmentBox[Style[2*S+1,Smaller], BoxBaselineShift->-1, BoxMargins->0],
+        AdjustmentBox[PrintL[L]]
+      }
+    ];
+    pretty = DisplayForm[pretty];
+    pretty = Which[
+      OptionValue["Representation"]=="Ket",
+        Ket[pretty],
+      OptionValue["Representation"]=="Symbol",
+        pretty
+    ];
+    Return[pretty];
+  );
 
   PrettySaundersSLJmJ::usage = "PrettySaundersSLJmJ[{SL, J, mJ}] produces a human-redeable symbol for the given basis vector {SL, J, mJ}.";
   Options[PrettySaundersSLJmJ] = {"Representation" -> "Ket"};
