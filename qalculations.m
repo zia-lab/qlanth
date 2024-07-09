@@ -54,7 +54,7 @@ Options[FastIonSolverLaF3Carnall] = {
 FastIonSolverLaF3Carnall[numE_, OptionsPattern[]] := Module[
   {makeNotebook, eigenstateTruncationProbability, host,
   ln, terms, termNames, carnallEnergies, eigenEnergies, simplerStateLabels,
-  eigensys, basis, assignmentMatches, stateLabels, carnallAssignments},
+  eigensys, basis, assignmentMatches, stateLabels, carnallAssignments, params},
   (
     PrintFun     = OptionValue["PrintFun"];
     makeNotebook = OptionValue["MakeNotebook"];
@@ -77,7 +77,7 @@ FastIonSolverLaF3Carnall[numE_, OptionsPattern[]] := Module[
     
     (*Load the parameters from Carnall*)
     PrintFun["> Loading the fit parameters from Carnall ..."];
-    params = LoadParameters[ln, "Free Ion" -> False];
+    params = LoadLaF3Parameters[ln, "Free Ion" -> False];
     If[numE>7,
       (
         PrintFun["> Conjugating the parameters accounting for the hole-particle equivalence ..."];
@@ -118,7 +118,7 @@ FastIonSolverLaF3Carnall[numE_, OptionsPattern[]] := Module[
     params[\[Sigma]SS] = If[OptionValue["Include spin-spin"], 1, 0];
     
     (*Everything that is not given is set to zero*)
-    params = ParamPad[params, "Print" -> False];
+    params = ParamPad[params, "PrintFun" -> PrintFun];
     PrintFun[params];
     numHam = ReplaceInSparseArray[simpleHam, params];
     If[Not[OptionValue["Sparse"]],
@@ -286,7 +286,7 @@ FastIonSolverLaF3Carnall[numE_, OptionsPattern[]] := Module[
           DisplayForm[RowBox[{SuperscriptBox[host <> ":" <> ln, "3+"], "(", SuperscriptBox["f", numE], ")"}]]
           ], "Title", TextAlignment -> Center
         ],
-        TextCell["Energy Diagram",
+        TextCell["Calculated Energy Diagram",
           "Section",
           TextAlignment -> Center
         ],
@@ -430,7 +430,7 @@ MagneticDipoleTransitionsLaF3Carnall[numE_Integer, OptionsPattern[]]:= (
   magIon["AMD"] = magIon["AMD"]/.{0.->Indeterminate};
   
   PrintFun["Calculating the oscillator strengths for transitions from the ground state ..."];
-  magIon["fMD"] = GroundStateOscillatorStrength[eigensys, numE];
+  magIon["fMD"] = GroundMagDipoleOscillatorStrength[eigensys, numE];
   
   PrintFun["Calculating the natural radiative lifetimes ..."];
   magIon["Radiative lifetimes"] = 1/magIon["AMD"];
@@ -593,6 +593,7 @@ Options[FastIonSolver] = {
   "Explorer" -> False,
   "MakeNotebook" -> True,
   "NotebookSave" -> True,
+  "EnergiesOnly" -> False,
   "Remove Kramers"     -> True,
   "Append to Filename" -> "",
   "Energy Uncertainty in K" -> 1,
@@ -617,7 +618,7 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
     stateLabels, simplerStateLabels, truncatedStates, truncationTime,
     energyDiagram, appToFname, statesTable, DefaultIfMissing, 
     diffTableData, diffTable, nb, exportFname, tinyexportFname, tinyExport,
-    nbFname, uncertaintySentence, sigmaRMS, energyUncertaintyTemplate
+    nbFname, uncertaintySentence, sigmaRMS, energyUncertaintyTemplate, onlyEnergies, originalParams, epiThings
   },
   (
     paramKeys = Keys[params];
@@ -634,7 +635,9 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
         Return[Null];
       )
     ];
-    energyUncertaintyTemplate = StringTemplate["\nWhen fitted the root mean square deviation between the used experimental data and the model energies was `energySigma` K."];
+    NiceSort[params_] := (
+      Association@SortBy[Normal@params, Position[paramSymbols, #[[1]]] &]);
+    energyUncertaintyTemplate = StringTemplate["\nWhen the Hamiltonian was fitted to experimental data, the root mean square deviation between the data and the calculated energies was `energySigma` cm^-1.\nThe red points in the diagram above (if present) indicate the energies of the known experimental data."];
     sigmaRMS     = OptionValue["Energy Uncertainty in K"];
     uncertaintySentence = If[
       sigmaRMS === 0.,
@@ -643,6 +646,7 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
     ];
     PrintFun     = OptionValue["PrintFun"];
     makeNotebook = OptionValue["MakeNotebook"];
+    onlyEnergies = OptionValue["EnergiesOnly"];
     eigenstateTruncationProbability = OptionValue["eigenstateTruncationProbability"];
     maxStatesInTable                = OptionValue["Max Eigenstates in Table"];
     Duplicator[aList_] := Flatten[{#, #} & /@ aList];
@@ -650,6 +654,7 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
     ln        = theLanthanides[[numE]];
     terms     = AllowedNKSLJTerms[Min[numE, 14 - numE]];
     termNames = First /@ terms;
+    
     (* For labeling the states, the degeneracy in some of the terms is elided *)
     PrintFun["> Calculating simpler term labels ..."];
     termSimplifier = Table[termN -> If[StringLength[termN] == 3,
@@ -658,7 +663,7 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
       ],
       {termN, termNames}
     ];
-    
+    originalParams = NiceSort[params]; 
     If[numE>7,
       (
         PrintFun["> Conjugating the parameters accounting for the hole-particle equivalence ..."];
@@ -696,7 +701,7 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
     ];
     
     (*Everything that is not given is set to zero*)
-    params = ParamPad[params, "Print" -> False];
+    params = ParamPad[params, "PrintFun" -> PrintFun];
     PrintFun[params];
     numHam = ReplaceInSparseArray[simpleHam, params];
     If[Not[OptionValue["Sparse"]],
@@ -706,15 +711,40 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
     basis = BasisLSJMJ[numE];
     
     (* Eigensolver *)
-    PrintFun["> Diagonalizing the numerical Hamiltonian ..."];
-    startTime    = Now;
-    eigensys     = Eigensystem[numHam];
-    endTime      = Now;
-    diagonalTime = QuantityMagnitude[endTime - startTime, "Seconds"];
-    PrintFun[">> Diagonalization took ", diagonalTime, " seconds."];
-    eigensys     = Chop[eigensys];
-    eigensys     = Transpose[eigensys];
-    
+    If[onlyEnergies,
+      (
+        PrintFun["> Diagonalizing the numerical Hamiltonian to get just the energies ..."];
+        startTime     = Now;
+        eigenEnergies = Eigenvalues[numHam];
+        endTime       = Now;
+        diagonalTime  = QuantityMagnitude[endTime - startTime, "Seconds"];
+        PrintFun[">> Diagonalization took ", diagonalTime, " seconds."];
+        eigenEnergies = Sort[eigenEnergies];
+        eigenEnergies = eigenEnergies - eigenEnergies[[1]];
+        If[MemberQ[Keys[params], \[Epsilon]],
+              eigenEnergies += params[\[Epsilon]]
+        ];
+        (* Energies are doubly degenerate in the case of odd number of electrons, keep only one as long as the option \"Remove Kramers\" is set to True *)
+        If[And[OddQ[numE], OptionValue["Remove Kramers"]], 
+            (
+            PrintFun["> Since there's an odd number of electrons energies come in pairs, taking just one for each pair ..."];
+            eigenEnergies = eigenEnergies[[;; ;; 2]];
+            )
+        ];
+        Return[eigenEnergies];
+      ),
+      (
+        PrintFun["> Diagonalizing the numerical Hamiltonian ..."];
+        startTime    = Now;
+        eigensys     = Eigensystem[numHam];
+        endTime      = Now;
+        diagonalTime = QuantityMagnitude[endTime - startTime, "Seconds"];
+        PrintFun[">> Diagonalization took ", diagonalTime, " seconds."];
+        eigensys     = Chop[eigensys];
+        eigensys     = Transpose[eigensys];  
+      )
+    ];
+
     (* Shift the baseline energy *)
     eigensys = ShiftedLevels[eigensys];
     (* Sort according to energy *)
@@ -763,11 +793,24 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
     If[makeNotebook,
     (
       hamImage = HamTeX[numE, "T2" -> (params[T2]  === 0.)];
+      epiThings = Which[
+        host == "LaF3",
+        (
+          carnalKey = "appendix:" <> ln <> ":RawTable";
+          numE = 3;
+          expData = {#[[2]], #[[1]], #[[3]]} & /@ Carnall[carnalKey];
+          expData = Select[First /@ expData, NumericQ];
+          {Red, PointSize[0.002], Point[{#, 0.5}]} & /@ expData
+        ),
+        True,
+        {}
+      ];
       PrintFun["> Putting together results in a notebook ..."];
       energyDiagram = Framed[
             EnergyLevelDiagram[eigensys, "Title" -> title, 
             "Explorer" -> OptionValue["Explorer"],
-            "Background" -> White],
+            "Background" -> White,
+            "Epilog"->epiThings],
         Background -> White,
         FrameMargins -> 50];
       appToFname = OptionValue["Append to Filename"];
@@ -782,7 +825,7 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
             Dividers   -> {{False, True, False}, {True, True}}
             ];
       DefaultIfMissing[expr_]:= If[FreeQ[expr, Missing[]], expr,"NA"];
-      diffTableData = Transpose[{simplerStateLabels, eigenEnergies}];
+      diffTableData = Transpose[{simplerStateLabels, Round[#,1] & /@ eigenEnergies}];
       diffTable     = TableForm[diffTableData, 
         TableHeadings -> {None, {"coarse label", 
         "E/\!\(\*SuperscriptBox[\(cm\), \(-1\)]\)"}}];
@@ -797,7 +840,15 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
           "Title",
           TextAlignment -> Center
         ],
-        TextCell["Energy Diagram",
+        TextCell[Show[hamImage, ImageSize -> 600],
+          "Output",
+          TextAlignment -> Center
+        ],
+        TextCell[Select[originalParams, And[# =!= 0, # =!= 0.] &],
+          "Output",
+          TextAlignment -> Center
+        ],
+        TextCell["Calculated Energy Diagram",
           "Section",
           TextAlignment -> Center
         ],
@@ -809,7 +860,7 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
           TextAlignment -> Center
         ],
         TextCell[
-          "The following table shows the multiplet assignments and energies of the eigenstates.\nThe energies are rounded to the nearest K .\nThe coarse label for each states corresponds to the basis state with the largest contribution to the eigenvector."<> uncertaintySentence,
+          "The following table shows the multiplet assignments and energies of the eigenstates.\nThe energies are rounded to the nearest cm^-1 .\nThe coarse label for each state corresponds to the LSJ term with the largest contribution to the corresponding eigenvector."<> uncertaintySentence,
           "Text",
           TextAlignment -> Center
         ],
@@ -829,18 +880,6 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
         TextCell[statesTable,
             "Output",
             TextAlignment -> Center
-        ],
-        TextCell["Hamiltonian",
-          "Section",
-          TextAlignment -> Center
-        ],
-        TextCell[Show[hamImage, ImageSize -> 600],
-          "Output",
-          TextAlignment -> Center
-        ],
-        TextCell[Select[params, And[# =!= 0, # =!= 0.] &],
-          "Output",
-          TextAlignment -> Center
         ]
       },
       WindowSelected -> True,
@@ -976,7 +1015,7 @@ MagneticDipoleTransitions[params_Association, fname_String, OptionsPattern[]]:= 
     magIon["AMD"] = magIon["AMD"]/.{0.->Indeterminate};
 
     PrintFun["Calculating the oscillator strength for transitions from the ground state ..."];
-    magIon["fMD"] = GroundStateOscillatorStrength[eigensys, numE];
+    magIon["fMD"] = GroundMagDipoleOscillatorStrength[eigensys, numE];
 
     PrintFun["Calculating the natural radiative lifetimes ..."];
     magIon["Radiative lifetimes"] = 1./magIon["AMD"];

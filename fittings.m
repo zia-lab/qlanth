@@ -324,14 +324,16 @@ Constrainer[problemVars_, ln_] := (
   Return[Flatten[Rest /@ allCons]]
   )
 
+Options[LogSol] = {"PrintFun" -> PrintTemporary};
 LogSol::usage = "LogSol[expr, solHistory, prefix] saves the given expression to a file. The file is named with the given prefix and a created UUID. The file is saved in the \"log\" directory under the current directory. The file is saved in the format of a .m file. The function returns the name of the file.";
-LogSol[theSolution_, prefix_] := (
-   fname = prefix <> "-sols-" <> CreateUUID[] <> ".m";
-   fname = FileNameJoin[{".", "log", fname}];
-   Print["Saving solution to: ", fname];
-   Export[fname, theSolution];
-   Return[fname];
-   );
+LogSol[theSolution_, prefix_, OptionsPattern[]] := (
+  PrintFun = OptionValue["PrintFun"];
+  fname = prefix <> "-sols-" <> CreateUUID[] <> ".m";
+  fname = FileNameJoin[{".", "log", fname}];
+  PrintFun["Saving solution to: ", fname];
+  Export[fname, theSolution];
+  Return[fname];
+  );
   
 
 FitToHam::usage = "FitToHam[numE, expData, fitToSymbols, simplifier, OptionsPattern[]] fits the model Hamiltonian to the experimental data for the trivalent lanthanide ion with number numE. The experimental data is given in the form of a list of tuples. The first element of the tuple is the energy and the second element is the label. The function saves the results to a file, with the string filePrefix prepended to it, by default this is an empty string, in which case the filePrefix is modified to be the name of the lanthanide.
@@ -1097,6 +1099,7 @@ Options[ClassicalFit] = {
   "AddConstantShift" -> False,
   "SaveEigenvectors" -> False,
   "AppendToLogFile"  -> <||>,
+  "SaveToLog"        -> False,
   "Energy Uncertainty in K" -> Automatic,
   "MagneticSimplifier" -> {
     M2 -> 56/100 M0,
@@ -1191,9 +1194,11 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
                             OptionValue["ThreeBodySimplifier"]
                           ]; 
     
-    truncationEnergy = If[OptionValue["TruncationEnergy"]===Automatic,
-      PrintFun["Truncation energy set to Automatic, using the maximum energy (+20%) in the data ..."];
-      Round[1.2 * Max[Select[First /@ expData, NumericQ[#] &]]],
+    truncationEnergy = If[OptionValue["TruncationEnergy"] === Automatic,
+      (
+        PrintFun["Truncation energy set to Automatic, using the maximum energy (+20%) in the data ..."];
+        Round[1.2 * Max[Select[First /@ expData, NumericQ[#] &]]]
+      ),
       OptionValue["TruncationEnergy"]
       ];
     truncationEnergy = Max[50000, truncationEnergy];
@@ -1222,6 +1227,7 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
     solCompendium["maxIterations"]      = maxIterations;
     solCompendium["hamDim"]             = hamDim;
     solCompendium["constraints"]        = constraints;
+    
     modelSymbols  = Sort[Select[paramSymbols, Not[MemberQ[Join[racahSymbols, juddOfeltIntensitySymbols, chenSymbols,{t2Switch, \[Epsilon], gs, nE}],#]]&]];
     (* remove the symbols that will be removed by the simplifier, no symbol should remain here that is not in the symbolic Hamiltonian *)
     reducedModelSymbols = Select[modelSymbols, Not[MemberQ[Keys[simplifier],#]]&];
@@ -1243,24 +1249,24 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
     Which[refParamsVintage === Automatic,
       (
         PrintFun["Using the automatic vintage with freshly fitted free-ion parameters and others as in LaF3 ..."];
-        lnParams = LoadLaF3Parameters[ln];
-        freeIonSol = FreeIonSolver[expData, numE];
+        lnParams      = LoadLaF3Parameters[ln];
+        freeIonSol    = FreeIonSolver[expData, numE];
         freeIonParams = freeIonSol["bestParams"];
-        lnParams = Join[lnParams, freeIonParams];
+        lnParams      = Join[lnParams, freeIonParams];
       ),
       MemberQ[{List, Association}, Head[RefParams]],
       (
         RefParams = Association[RefParams];
         PrintFun["Using the given parameters as a starting point ..."];
-        lnParams = RefParams;
+        lnParams    = RefParams;
         extraParams = LoadLaF3Parameters[ln];
-        lnParams = Join[extraParams, lnParams];
+        lnParams    = Join[extraParams, lnParams];
       ),
       True,
       (
         (* get the reference parameters from the given vintage *)
         PrintFun["Getting reference free-ion parameters for ", ln, " using ", refParamsVintage, " ..."];
-        lnParams = ParamPad[RefParams[ln]];
+        lnParams = ParamPad[RefParams[ln], "PrintFun" -> PringFun];
       )
     ];
     freeBies = Prepend[Values[(#->(#/.lnParams)) &/@ freeIonSymbols],  numE];
@@ -1278,134 +1284,148 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
     solCompendium["compiledIntermediateFname"] = compiledIntermediateFname;
     
     If[FileExistsQ[compiledIntermediateFname],
-      PrintFun["This ion, free-ion params, and full set of variables have been used before (as determined by {numE, allVars, freeBies, truncationEnergy,simplifier}). Loading the previously saved compiled function and intermediate coupling basis ..."];
+      PrintFun["This ion, free-ion params, and full set of variables have been used before (as determined by {numE, allVars, freeBies, truncationEnergy, simplifier}). Loading the previously saved compiled function and intermediate coupling basis ..."];
       PrintFun["Using : ", compiledIntermediateFname];
       {compileIntermediateTruncatedHam, truncatedIntermediateBasis} = Import[compiledIntermediateFname];,
     (
-      (* grab the Hamiltonian preserving the block structure *)
-      PrintFun["Assembling the Hamiltonian for f^",numE," keeping the block structure ..."];
-      ham          = HamMatrixAssembly[numE, "ReturnInBlocks"->True];
-      (* apply the simplifier *)
-      PrintFun["Simplifying using the aggregate set of simplification rules ..."];
-      ham          = Map[ReplaceInSparseArray[#, simplifier]&, ham, {2}];
-      PrintFun["Zeroing out every symbol in the Hamiltonian that is not a free-ion parameter ..."];
-      (* Get the free ion symbols *)
-      freeIonSimplifier = (#->0) & /@ Complement[reducedModelSymbols, freeIonSymbols];
-      (* Take the diagonal blocks for the intermediate analysis *)
-      PrintFun["Grabbing the diagonal blocks of the Hamiltonian ..."];
-      diagonalBlocks       = Diagonal[ham];
-      (* simplify them to only keep the free ion symbols *)
-      PrintFun["Simplifying the diagonal blocks to only keep the free ion symbols ..."];
-      diagonalScalarBlocks = ReplaceInSparseArray[#,freeIonSimplifier]&/@diagonalBlocks;
-      (* these include the MJ quantum numbers, remove that *)
-      PrintFun["Contracting the basis vectors by removing the MJ quantum numbers from the diagonal blocks ..."];
-      diagonalScalarBlocks = FreeHam[diagonalScalarBlocks, numE];
-      
-      argsOfTheIntermediateEigensystems         = StringJoin[Riffle[Prepend[(ToString[#]<>"v_") & /@ freeIonSymbols,"numE_"],", "]];
-      argsForEvalInsideOfTheIntermediateSystems = StringJoin[Riffle[(ToString[#]<>"v") & /@ freeIonSymbols,", "]];
-      PrintFun["argsOfTheIntermediateEigensystems = ", argsOfTheIntermediateEigensystems];
-      PrintFun["argsForEvalInsideOfTheIntermediateSystems = ", argsForEvalInsideOfTheIntermediateSystems];
-      PrintFun["(if the following fails, it might help to see if the arguments of TheIntermediateEigensystems match the ones shown above)"];
-      
-      (* compile a function that will effectively calculate the spectrum of all of the scalar blocks given the parameters of the free-ion part of the Hamiltonian *)
-      (* compile one function for each of the blocks *)
-      PrintFun["Compiling functions for the diagonal blocks of the Hamiltonian ..."];
-      compiledDiagonal = Compile[Evaluate[freeIonSymbols], Evaluate[N[Normal[#]]]]&/@diagonalScalarBlocks;
-      (* use that to create a function that will calculate the free-ion eigensystem *)
-      TheIntermediateEigensystems[numEv_, F0v_, F2v_, F4v_, F6v_, \[Zeta]v_] := (
-        theNumericBlocks = (#[F0v, F2v, F4v, F6v, \[Zeta]v]&) /@ compiledDiagonal;
-        theIntermediateEigensystems = Eigensystem /@ theNumericBlocks;
-        Js     = AllowedJ[numEv];
-        basisJ = BasisLSJMJ[numEv,"AsAssociation"->True];
-        (* having calculated the eigensystems with the removed degeneracies, put the degeneracies back in explicitly *) 
-        elevatedIntermediateEigensystems = MapIndexed[EigenLever[#1, 2Js[[#2[[1]]]]+1 ]&, theIntermediateEigensystems];
-        (* Identify a single MJ to keep *)
-        pivot         = If[EvenQ[numEv],0,-1/2];
-        LSJmultiplets = (#[[1]]<>ToString[InputForm[#[[2]]]])&/@Select[BasisLSJMJ[numEv],#[[-1]]== pivot &];
-        (* calculate the multiplet assignments that the intermediate basis eigenvectors have *)
-        needlePosition = 0;
-        multipletAssignments = Table[
-          (
-            J         = Js[[idx]];
-            eigenVecs = theIntermediateEigensystems[[idx]][[2]];
-            majorComponentIndices        = Ordering[Abs[#]][[-1]]&/@eigenVecs;
-            majorComponentIndices       += needlePosition;
-            needlePosition              += Length[majorComponentIndices];
-            majorComponentAssignments    = LSJmultiplets[[#]]&/@majorComponentIndices;
-            (* All of the degenerate eigenvectors belong to the same multiplet*)
-            elevatedMultipletAssignments = ListRepeater[majorComponentAssignments, 2J+1];
-            elevatedMultipletAssignments
-          ),
-        {idx, 1, Length[Js]}
+      If[truncationEnergy == Infinity,
+      (
+          ham = HamMatrixAssembly[numE, "ReturnInBlocks" -> False];
+          theSimplifier = simplifier;
+          ham = Normal@ReplaceInSparseArray[ham, simplifier];
+          PrintFun["Compiling a function for the Hamiltonian with no truncation ..."];
+          (* compile a function that will calculate the truncated Hamiltonian given the parameters in allVars, this is the function to be use in fitting *)
+          compileIntermediateTruncatedHam = Compile[Evaluate[allVars], Evaluate[ham]];
+          truncatedIntermediateBasis = SparseArray@IdentityMatrix[Binomial[14, numE]];
+          (* save the compiled function *)
+          PrintFun["Saving the compiled function for the Hamiltonian with no truncation and a placeholder intermediate basis ..."];
+          Export[compiledIntermediateFname, {compileIntermediateTruncatedHam, truncatedIntermediateBasis}];
+      ),
+      (
+        (* grab the Hamiltonian preserving the block structure *)
+        PrintFun["Assembling the Hamiltonian for f^",numE," keeping the block structure ..."];
+        ham          = HamMatrixAssembly[numE, "ReturnInBlocks"->True];
+        (* apply the simplifier *)
+        PrintFun["Simplifying using the aggregate set of simplification rules ..."];
+        ham          = Map[ReplaceInSparseArray[#, simplifier]&, ham, {2}];
+        PrintFun["Zeroing out every symbol in the Hamiltonian that is not a free-ion parameter ..."];
+        (* Get the free ion symbols *)
+        freeIonSimplifier = (#->0) & /@ Complement[reducedModelSymbols, freeIonSymbols];
+        (* Take the diagonal blocks for the intermediate analysis *)
+        PrintFun["Grabbing the diagonal blocks of the Hamiltonian ..."];
+        diagonalBlocks       = Diagonal[ham];
+        (* simplify them to only keep the free ion symbols *)
+        PrintFun["Simplifying the diagonal blocks to only keep the free ion symbols ..."];
+        diagonalScalarBlocks = ReplaceInSparseArray[#,freeIonSimplifier]&/@diagonalBlocks;
+        (* these include the MJ quantum numbers, remove that *)
+        PrintFun["Contracting the basis vectors by removing the MJ quantum numbers from the diagonal blocks ..."];
+        diagonalScalarBlocks = FreeHam[diagonalScalarBlocks, numE];
+        
+        argsOfTheIntermediateEigensystems         = StringJoin[Riffle[Prepend[(ToString[#]<>"v_") & /@ freeIonSymbols,"numE_"],", "]];
+        argsForEvalInsideOfTheIntermediateSystems = StringJoin[Riffle[(ToString[#]<>"v") & /@ freeIonSymbols,", "]];
+        PrintFun["argsOfTheIntermediateEigensystems = ", argsOfTheIntermediateEigensystems];
+        PrintFun["argsForEvalInsideOfTheIntermediateSystems = ", argsForEvalInsideOfTheIntermediateSystems];
+        PrintFun["(if the following fails, it might help to see if the arguments of TheIntermediateEigensystems match the ones shown above)"];
+        
+        (* compile a function that will effectively calculate the spectrum of all of the scalar blocks given the parameters of the free-ion part of the Hamiltonian *)
+        (* compile one function for each of the blocks *)
+        PrintFun["Compiling functions for the diagonal blocks of the Hamiltonian ..."];
+        compiledDiagonal = Compile[Evaluate[freeIonSymbols], Evaluate[N[Normal[#]]]]&/@diagonalScalarBlocks;
+        (* use that to create a function that will calculate the free-ion eigensystem *)
+        TheIntermediateEigensystems[numEv_, F0v_, F2v_, F4v_, F6v_, \[Zeta]v_] := (
+          theNumericBlocks = (#[F0v, F2v, F4v, F6v, \[Zeta]v]&) /@ compiledDiagonal;
+          theIntermediateEigensystems = Eigensystem /@ theNumericBlocks;
+          Js     = AllowedJ[numEv];
+          basisJ = BasisLSJMJ[numEv,"AsAssociation"->True];
+          (* having calculated the eigensystems with the removed degeneracies, put the degeneracies back in explicitly *) 
+          elevatedIntermediateEigensystems = MapIndexed[EigenLever[#1, 2Js[[#2[[1]]]]+1 ]&, theIntermediateEigensystems];
+          (* Identify a single MJ to keep *)
+          pivot         = If[EvenQ[numEv],0,-1/2];
+          LSJmultiplets = (#[[1]]<>ToString[InputForm[#[[2]]]])&/@Select[BasisLSJMJ[numEv],#[[-1]]== pivot &];
+          (* calculate the multiplet assignments that the intermediate basis eigenvectors have *)
+          needlePosition = 0;
+          multipletAssignments = Table[
+            (
+              J         = Js[[idx]];
+              eigenVecs = theIntermediateEigensystems[[idx]][[2]];
+              majorComponentIndices        = Ordering[Abs[#]][[-1]]&/@eigenVecs;
+              majorComponentIndices       += needlePosition;
+              needlePosition              += Length[majorComponentIndices];
+              majorComponentAssignments    = LSJmultiplets[[#]]&/@majorComponentIndices;
+              (* All of the degenerate eigenvectors belong to the same multiplet*)
+              elevatedMultipletAssignments = ListRepeater[majorComponentAssignments, 2J+1];
+              elevatedMultipletAssignments
+            ),
+          {idx, 1, Length[Js]}
+          ];
+          (* put together the multiplet assignments and the energies *)
+          freeIenergiesAndMultiplets = Transpose/@Transpose[{First/@elevatedIntermediateEigensystems, multipletAssignments}];
+          freeIenergiesAndMultiplets = Flatten[freeIenergiesAndMultiplets, 1];
+          (* calculate the change of basis matrix using the intermediate coupling eigenvectors *)
+          basisChanger = BlockDiagonalMatrix[Transpose/@Last/@elevatedIntermediateEigensystems];
+          basisChanger = SparseArray[basisChanger];
+          Return[{theIntermediateEigensystems, multipletAssignments, elevatedIntermediateEigensystems, freeIenergiesAndMultiplets, basisChanger}]
+        );
+        
+        PrintFun["Calculating the intermediate eigensystems for ",ln," using free-ion params from LaF3 ..."];
+        (* calculate intermediate coupling basis using the free-ion params for LaF3 *)
+        {theIntermediateEigensystems, multipletAssignments, elevatedIntermediateEigensystems, freeIenergiesAndMultiplets, basisChanger} = TheIntermediateEigensystems@@freeBies;
+        
+        (* use that intermediate coupling basis to compile a function for the full Hamiltonian *)
+        allFreeEnergies = Flatten[First/@elevatedIntermediateEigensystems];
+        (* important that the intermediate coupling basis have attached energies, which make possible the truncation *)
+        ordering = Ordering[allFreeEnergies];
+        (* sort the free ion energies and determine which indices should be included in the truncation *)
+        allFreeEnergiesSorted          = Sort[allFreeEnergies];
+        {minFreeEnergy, maxFreeEnergy} = MinMax[allFreeEnergies];
+        (* determine the index at which the energy is equal or larger than the truncation energy *)
+        sortedTruncationIndex = Which[
+          truncationEnergy > (maxFreeEnergy-minFreeEnergy),
+          hamDim,
+          True,
+          FirstPosition[allFreeEnergiesSorted - Min[allFreeEnergiesSorted],x_/;x>truncationEnergy,{0},1][[1]]
         ];
-        (* put together the multiplet assignments and the energies *)
-        freeIenergiesAndMultiplets = Transpose/@Transpose[{First/@elevatedIntermediateEigensystems, multipletAssignments}];
-        freeIenergiesAndMultiplets = Flatten[freeIenergiesAndMultiplets, 1];
-        (* calculate the change of basis matrix using the intermediate coupling eigenvectors *)
-        basisChanger = BlockDiagonalMatrix[Transpose/@Last/@elevatedIntermediateEigensystems];
-        basisChanger = SparseArray[basisChanger];
-        Return[{theIntermediateEigensystems, multipletAssignments, elevatedIntermediateEigensystems, freeIenergiesAndMultiplets, basisChanger}]
-      );
-      
-      PrintFun["Calculating the intermediate eigensystems for ",ln," using free-ion params from LaF3 ..."];
-      (* calculate intermediate coupling basis using the free-ion params for LaF3 *)
-      {theIntermediateEigensystems, multipletAssignments, elevatedIntermediateEigensystems, freeIenergiesAndMultiplets, basisChanger} = TheIntermediateEigensystems@@freeBies;
-      
-      (* use that intermediate coupling basis to compile a function for the full Hamiltonian *)
-      allFreeEnergies = Flatten[First/@elevatedIntermediateEigensystems];
-      (* important that the intermediate coupling basis have attached energies, which make possible the truncation *)
-      ordering = Ordering[allFreeEnergies];
-      (* sort the free ion energies and determine which indices should be included in the truncation *)
-      allFreeEnergiesSorted          = Sort[allFreeEnergies];
-      {minFreeEnergy, maxFreeEnergy} = MinMax[allFreeEnergies];
-      (* determine the index at which the energy is equal or larger than the truncation energy *)
-      sortedTruncationIndex = Which[
-        truncationEnergy > (maxFreeEnergy-minFreeEnergy),
-        hamDim,
-        True,
-        FirstPosition[allFreeEnergiesSorted - Min[allFreeEnergiesSorted],x_/;x>truncationEnergy,{0},1][[1]]
-      ];
-      (* the actual energy at which the truncation is made *)
-      roundedTruncationEnergy = allFreeEnergiesSorted[[sortedTruncationIndex]];
-      
-      (* the indices that participate in the truncation *)
-      truncationIndices = ordering[[;;sortedTruncationIndex]];
-      PrintFun["Computing the block structure of the change of basis array ..."];
-      blockSizes         = BlockArrayDimensionsArray[ham];
-      basisChangerBlocks = ArrayBlocker[basisChanger, blockSizes];
-      blockShifts        = First /@ Diagonal[blockSizes];
-      numBlocks          = Length[blockSizes];
-      (* using the ham (with all the symbols) change the basis to the computed one *)
-      PrintFun["Changing the basis of the Hamiltonian to the intermediate coupling basis ..."];
-      (* intermediateHam            = Transpose[basisChanger].ham.basisChanger; *)
-      (* Return[{basisChangerBlocks, ham}]; *)
-      intermediateHam = BlockMatrixMultiply[ham, basisChangerBlocks];
-      PrintFun["Distributing products inside of symbolic matrix elements to keep complexity in check ..."];
-      Do[
-        intermediateHam[[rowIdx, colIdx]] = MapToSparseArray[intermediateHam[[rowIdx, colIdx]], Distribute /@ # &];,
-        {rowIdx, 1, numBlocks},
-        {colIdx, 1, numBlocks}
-      ];
-      intermediateHam = BlockMatrixMultiply[BlockTranspose[basisChangerBlocks],intermediateHam];
-      PrintFun["Distributing products inside of symbolic matrix elements to keep complexity in check ..."];
-      Do[
-        intermediateHam[[rowIdx, colIdx]] = MapToSparseArray[intermediateHam[[rowIdx, colIdx]], Distribute /@ # &];,
-        {rowIdx, 1, numBlocks},
-        {colIdx, 1, numBlocks}
-      ];
-      (* using the truncation indices truncate that one *)
-      PrintFun["Truncating the Hamiltonian ..."];
-      truncatedIntermediateHam = TruncateBlockArray[intermediateHam, truncationIndices, blockShifts];
-      (* these are the basis vectors for the truncated hamiltonian *)
-      PrintFun["Saving the truncated intermediate basis ..."];
-      truncatedIntermediateBasis = basisChanger[[All,truncationIndices]];
-      
-      PrintFun["Compiling a function for the truncated Hamiltonian ..."];
-      (* compile a function that will calculate the truncated Hamiltonian given the parameters in allVars, this is the function to be use in fitting *)
-      compileIntermediateTruncatedHam = Compile[Evaluate[allVars], Evaluate[truncatedIntermediateHam]];
-      (* save the compiled function *)
-      PrintFun["Saving the compiled function for the truncated Hamiltonian and the truncated intermediate basis ..."];
-      Export[compiledIntermediateFname, {compileIntermediateTruncatedHam, truncatedIntermediateBasis}];
+        (* the actual energy at which the truncation is made *)
+        roundedTruncationEnergy = allFreeEnergiesSorted[[sortedTruncationIndex]];
+        
+        (* the indices that participate in the truncation *)
+        truncationIndices = ordering[[;;sortedTruncationIndex]];
+        PrintFun["Computing the block structure of the change of basis array ..."];
+        blockSizes         = BlockArrayDimensionsArray[ham];
+        basisChangerBlocks = ArrayBlocker[basisChanger, blockSizes];
+        blockShifts        = First /@ Diagonal[blockSizes];
+        numBlocks          = Length[blockSizes];
+        (* using the ham (with all the symbols) change the basis to the computed one *)
+        PrintFun["Changing the basis of the Hamiltonian to the intermediate coupling basis ..."];
+        intermediateHam = BlockMatrixMultiply[ham, basisChangerBlocks];
+        PrintFun["Distributing products inside of symbolic matrix elements to keep complexity in check ..."];
+        Do[
+          intermediateHam[[rowIdx, colIdx]] = MapToSparseArray[intermediateHam[[rowIdx, colIdx]], Distribute /@ # &];,
+          {rowIdx, 1, numBlocks},
+          {colIdx, 1, numBlocks}
+        ];
+        intermediateHam = BlockMatrixMultiply[BlockTranspose[basisChangerBlocks],intermediateHam];
+        PrintFun["Distributing products inside of symbolic matrix elements to keep complexity in check ..."];
+        Do[
+          intermediateHam[[rowIdx, colIdx]] = MapToSparseArray[intermediateHam[[rowIdx, colIdx]], Distribute /@ # &];,
+          {rowIdx, 1, numBlocks},
+          {colIdx, 1, numBlocks}
+        ];
+        (* using the truncation indices truncate that one *)
+        PrintFun["Truncating the Hamiltonian ..."];
+        truncatedIntermediateHam = TruncateBlockArray[intermediateHam, truncationIndices, blockShifts];
+        (* these are the basis vectors for the truncated hamiltonian *)
+        PrintFun["Saving the truncated intermediate basis ..."];
+        truncatedIntermediateBasis = basisChanger[[All,truncationIndices]];
+        
+        PrintFun["Compiling a function for the truncated Hamiltonian ..."];
+        (* compile a function that will calculate the truncated Hamiltonian given the parameters in allVars, this is the function to be use in fitting *)
+        compileIntermediateTruncatedHam = Compile[Evaluate[allVars], Evaluate[truncatedIntermediateHam]];
+        (* save the compiled function *)
+        PrintFun["Saving the compiled function for the truncated Hamiltonian and the truncated intermediate basis ..."];
+        Export[compiledIntermediateFname, {compileIntermediateTruncatedHam, truncatedIntermediateBasis}];
+      )
+    ];
     )
     ];
     
@@ -1485,7 +1505,7 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
     degressOfFreedom = Length[presentDataIndices] - Length[problemVars] - 1;
     PrintFun["Fitting for ", Length[presentDataIndices], " data points with ", Length[problemVars], " free parameters.", " The effective degrees of freedom are ", degressOfFreedom, " ..."];
     
-    PrintFun["Starting the fitting process ..."];
+    PrintFun["Fitting model to data ..."];
     startTime   = Now;
     shiftToggle = If[addShift, 1, 0];
     sol = FindMinimum[
@@ -1562,7 +1582,7 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
     ];
     indepSolVecVec = Transpose[{indepSolVec}];
     PrintFun["Calculating the difference between eigenvalues at solution ..."];
-    diff = If[linMat=={},
+    diff = If[linMat == {},
       (\[Lambda]0Vec - \[Lambda]exp)  + \[Epsilon]Best,
       (\[Lambda]0Vec - \[Lambda]exp)  + \[Epsilon]Best + linMat[[presentDataIndices]].(problemVarsVec - indepSolVecVec)
     ];
@@ -1625,7 +1645,10 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
           solCompendium["energies"] = finalEnergies;
       )
     ];
-    logFname = LogSol[solCompendium, logFilePrefix];
+    If[OptionValue["SaveToLog"],
+      PrintFun["Saving the solution to the log file ..."];
+      LogSol[solCompendium, logFilePrefix];
+    ];
     PrintFun["Finished ..."];
     Return[solCompendium]; 
   )
@@ -1859,8 +1882,11 @@ caseConstraintsLiYF4 = <|
     P2 -> 482.
     }, 
   "Dy" -> {
-    F4 -> 0.707 F2, 
-    F6 -> 0.516 F2,
+    (* F4 -> 0.707 F2, 
+    F6 -> 0.516 F2, *)
+    F2 -> 90421,
+    F4 -> 63928,
+    F6 -> 46657,
     \[Alpha] -> 17.9,
     \[Beta] -> -628.,
     \[Gamma] -> 1790.,
@@ -1892,7 +1918,8 @@ caseConstraintsLiYF4 = <|
     \[Beta] -> -665.,
     \[Gamma] -> 1936.,
     M0 -> 4.93, 
-    P2 -> 730.
+    P2 -> 730.,
+    T2 -> 400.
     },
   "Yb" -> {
     B06 -> -23.,
@@ -1929,12 +1956,12 @@ variedSymbolsLiYF4 = <|
     }, 
   "Tb" -> {
     B02, B04, B06, B44, B46,
-    F2,
+    F2, F4, F6,
     \[Zeta]
     }, 
   "Dy" -> {
     B02, B04, B06, B44,
-    F2,
+    F2, F4, F6,
     \[Zeta]
     },
   "Ho" -> {

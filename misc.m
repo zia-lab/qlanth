@@ -168,8 +168,8 @@ Begin["`Private`"];
 
   FirstOrderPerturbation::usage="Given the eigenVectors of a matrix A (which doesn't need to be given) together with a corresponding perturbation matrix perMatrix, this function calculates the first derivative of the eigenvalues with respect to the scale factor of the perturbation matrix. In the sense that the eigenvalues of the matrix A + \[Beta] perMatrix are to first order equal to \[Lambda] + \[Delta]_i \[Beta], where the \[Delta]_i are the returned values. This assuming that the eigenvalues are non-degenerate.";
   FirstOrderPerturbation[eigenVectors_, 
-    perMatrix_] := (Diagonal[
-    eigenVectors . perMatrix . Transpose[eigenVectors]])
+    perMatrix_] := (Chop@Diagonal[
+    Conjugate@eigenVectors . perMatrix . Transpose[eigenVectors]])
 
   SecondOrderPerturbation::usage="Given the eigenValues and eigenVectors of a matrix A (which doesn't need to be given) together with a corresponding perturbation matrix perMatrix, this function calculates the second derivative of the eigenvalues with respect to the scale factor of the perturbation matrix. In the sense that the eigenvalues of the matrix A + \[Beta] perMatrix are to second order equal to \[Lambda] + \[Delta]_i \[Beta] + \[Delta]_i^{(2)}/2 \[Beta]^2, where the \[Delta]_i^{(2)} are the returned values. The eigenvalues and eigenvectors are assumed to be given in the same order, i.e. the ith eigenvalue corresponds to the ith eigenvector. This assuming that the eigenvalues are non-degenerate.";
   SecondOrderPerturbation[eigenValues_, eigenVectors_, perMatrix_] := (
@@ -495,7 +495,7 @@ Begin["`Private`"];
         "\\zeta \\sum_{i=1}^{n}\\left(\\hat{s}_i \\cdot \
     \\hat{l}_i\\right) \
     +\\sum_{i=1}^n\\sum_{k=2,4,6}\\sum_{q=-k}^{k}B_q^{(k)}\\mathcal{C}(i)_\
-    q^{(k)}",
+    q^{(k)} + \\epsilon",
       nE == 2,
         "\\hat{H}&=\\sum_{k=2,4,6}F^{(k)}\\hat{f}_k 
     +\\alpha \\hat{L}^2
@@ -506,7 +506,7 @@ Begin["`Private`"];
     +\\sum_{k=0,2,4}M^{(k)}\\hat{m}_k
     +\\sum_{k=2,4,6}P^{(k)}\\hat{p}_k \\\\
     &\\quad\\quad\\quad\\quad\\quad+\\sum_{i=1}^n\\sum_{k=2,4,6}\\sum_{q=-\
-    k}^{k}B_q^{(k)}\\mathcal{C}(i)_q^{(k)}",
+    k}^{k}B_q^{(k)}\\mathcal{C}(i)_q^{(k)} + \\epsilon",
       And[nE == 12, OptionValue["T2"]],
         "\\hat{H}&=\\sum_{k=2,4,6}F^{(k)}\\hat{f}_k 
         +T^{(2)}\\hat{t}_2
@@ -518,7 +518,7 @@ Begin["`Private`"];
         +\\sum_{k=0,2,4}M^{(k)}\\hat{m}_k
         +\\sum_{k=2,4,6}P^{(k)}\\hat{p}_k \\\\
         &\\quad\\quad\\quad\\quad\\quad\\quad\\quad+\\sum_{i=1}^n\\sum_{k=2,4,\
-        6}\\sum_{q=-k}^{k}B_q^{(k)}\\mathcal{C}(i)_q^{(k)}",
+        6}\\sum_{q=-k}^{k}B_q^{(k)}\\mathcal{C}(i)_q^{(k)} + \\epsilon",
       And[nE == 12, Not@OptionValue["T2"]],
         "\\hat{H}&=\\sum_{k=2,4,6}F^{(k)}\\hat{f}_k 
         +\\alpha \\hat{L}^2
@@ -529,7 +529,7 @@ Begin["`Private`"];
         +\\sum_{k=0,2,4}M^{(k)}\\hat{m}_k
         +\\sum_{k=2,4,6}P^{(k)}\\hat{p}_k \\\\
         &\\quad\\quad\\quad+\\sum_{i=1}^n\\sum_{k=2,4,6}\\sum_{q=-k}^{k}B_q^{(\
-    k)}\\mathcal{C}(i)_q^{(k)}",
+    k)}\\mathcal{C}(i)_q^{(k)} + \\epsilon",
       True,
         "\\hat{H}&=\\sum_{k=2,4,6}F^{(k)}\\hat{f}_k 
         +\\sum_{k=2,3,4,6,7,8}T^{(k)}\\hat{t}_k
@@ -541,7 +541,7 @@ Begin["`Private`"];
         +\\sum_{k=0,2,4}M^{(k)}\\hat{m}_k
         +\\sum_{k=2,4,6}P^{(k)}\\hat{p}_k \\\\
         &\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad+\\sum_{i=1}^n\\sum_{\
-        k=2,4,6}\\sum_{q=-k}^{k}B_q^{(k)}\\mathcal{C}(i)_q^{(k)}"
+        k=2,4,6}\\sum_{q=-k}^{k}B_q^{(k)}\\mathcal{C}(i)_q^{(k)} + \\epsilon"
       ];
     MaTeX[StringJoin[{"\\begin{aligned}\n", tex, "\n\\end{aligned}"}]]
     )

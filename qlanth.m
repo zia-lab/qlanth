@@ -44,7 +44,7 @@ REFERENCES:
 + Condon, E U, and G Shortley. "The Theory of Atomic Spectra." 1935.
 
 + Racah,  Giulio.   "Theory of Complex Spectra. II." Physical Review
-62,      no.      9–10      (November      1,     1942):     438–62.
+62,      no.      9-10      (November      1,     1942):     438-62.
 https://doi.org/10.1103/PhysRev.62.438.
 
 + Racah,   Giulio. "Theory of Complex Spectra. III." Physical Review
@@ -52,11 +52,11 @@ https://doi.org/10.1103/PhysRev.62.438.
 https://doi.org/10.1103/PhysRev.63.367.
 
 + Judd,  B. R.  "Optical Absorption Intensities of Rare-Earth Ions."
-Physical   Review   127,   no.   3   (August   1,   1962):   750–61.
+Physical   Review   127,   no.   3   (August   1,   1962):   750-61.
 https://doi.org/10.1103/PhysRev.127.750.
 
 + Ofelt,  GS.   "Intensities of Crystal Spectra of Rare-Earth Ions."
-The Journal of Chemical Physics 37, no. 3 (1962): 511–20.
+The Journal of Chemical Physics 37, no. 3 (1962): 511-20.
 
 + Rajnak,  K, and BG Wybourne. "Configuration Interaction Effects in
 l^N  Configurations."  Physical  Review  132,  no.  1  (1963):  280.
@@ -70,7 +70,7 @@ for the p^n, d^n, and f^n Configurations", 1963.
 + Carnall,  W To, PR Fields, and BG Wybourne. "Spectral Intensities
 of  the  Trivalent  Lanthanides  and Actinides in Solution. I. Pr3+,
 Nd3+, Er3+, Tm3+, and Yb3+." The Journal of Chemical Physics 42, no.
-11 (1965): 3797–3806. 
+11 (1965): 3797-3806. 
 
 + Judd,   BR.  "Three-Particle  Operators for Equivalent Electrons."
 Physical       Review      141,      no.      1      (1966):      4.
@@ -93,7 +93,7 @@ Systematic  Analysis  of  the  Spectra of the Lanthanides Doped into
 Single  Crystal  LaF3."  The  Journal  of Chemical Physics 90, no. 7
 (1989): 3443-57. https://doi.org/10.1063/1.455853.
 
-+ Thorne, Anne, Ulf Litzén, and Sveneric Johansson. "Spectrophysics:
++ Thorne, Anne, Ulf Litzen, and Sveneric Johansson. "Spectrophysics:
 Principles  and  Applications." Springer  Science  & Business Media,
 1999.
 
@@ -112,10 +112,10 @@ Calculated Emission Rates and Oscillator Strengths." Physical Review
 B     86,     no.     12     (September     5,     2012):    125102.
 https://doi.org/10.1103/PhysRevB.86.125102.
 
-+  Hehlen,  Markus  P,  Mikhail  G  Brik,  and  Karl W Krämer. "50th
-Anniversary  of  the Judd–Ofelt Theory: An Experimentalist's View of
++  Hehlen,  Markus  P,  Mikhail  G  Brik,  and  Karl W Kramer. "50th
+Anniversary  of  the Judd-Ofelt Theory: An Experimentalist's View of
 the  Formalism  and  Its  Application."  Journal of Luminescence 136
-(2013): 221–39.
+(2013): 221-39.
 
 + Rudzikas, Zenonas. Theoretical Atomic Spectroscopy, 2007.
 
@@ -417,6 +417,7 @@ ReducedUkTable;
 ReducedV1kTable;
 Reducedt11inf2;
 ReplaceInSparseArray;
+ScalarLSJMFromLS;
 SOOandECSO;
 SOOandECSOLSTable;
 
@@ -493,13 +494,12 @@ Begin["`Private`"]
 
   ParamPad::usage = "ParamPad[params] takes an association params whose keys are a subset of paramSymbols. The function returns a new association where all the keys not present in paramSymbols, will now be included in the returned association with their values set to zero.
   The function additionally takes an option \"Print\" that if set to True, will print the symbols that were not present in the given association. The default is True.";
-  Options[ParamPad] = {"Print" -> True};
+  Options[ParamPad] = {"PrintFun" -> PrintTemporary};
   ParamPad[params_, OptionsPattern[]] := (
     notPresentSymbols = Complement[paramSymbols, Keys[params]];
-    If[OptionValue["Print"], 
-      Print["Following symbols were not given and are being set to 0: ",
-      notPresentSymbols]
-    ];
+    PrintFun = OptionValue["PrintFun"];
+    PrintFun["Following symbols were not given and are being set to 0: ",
+      notPresentSymbols];
     newParams = Transpose[{paramSymbols, ConstantArray[0, Length[paramSymbols]]}];
     newParams = (#[[1]] -> #[[2]]) & /@ newParams;
     newParams = Association[newParams];
@@ -2561,6 +2561,71 @@ Begin["`Private`"]
     )
   ];
 
+  ScalarLSJMFromLS::usage = "ScalarLSJMFromLS[numE, LSReducedMatrixElements]. Given the LS-reduced matrix elements LSReducedMatrixElements of a scalar operator, this function returns the corresponding LSJM representation. This is returned as a SparseArray.";
+  ScalarLSJMFromLS[numE_, LSReducedMatrixElements_] := Module[
+    {jjBlocktable, NKSLJMs, NKSLJMps, J, Jp, eMatrix, SLterm, SpLpterm, 
+    MJ, MJp, subKron, matValue, Js, howManyJs, blockHam, ii, jj},
+    (
+    SparseDiagonalArray[diagonalElements_] := SparseArray[
+      Table[{i, i} -> diagonalElements[[i]],
+        {i, 1, Length[diagonalElements]}]
+      ];
+    SparseZeroArray[width_, height_] := (
+      SparseArray[
+        Join[
+        Table[{1, i} -> 0, {i, 1, width}],
+        Table[{i, 1} -> 0, {i, 1, height}]
+        ]
+        ]
+      );
+    jjBlockTable = <||>;
+    Do[
+      NKSLJMs  = AllowedNKSLJMforJTerms[numE, J];
+      NKSLJMps = AllowedNKSLJMforJTerms[numE, Jp];
+      If[J != Jp,
+        jjBlockTable[{numE, J, Jp}] = SparseZeroArray[Length[NKSLJMs], Length[NKSLJMps]];
+      Continue[];
+      ];
+      eMatrix = Table[
+        (* Condition for a scalar matrix op *)
+        SLterm = NKSLJM[[1]];
+        SpLpterm = NKSLJMp[[1]];
+        MJ = NKSLJM[[3]];
+        MJp = NKSLJMp[[3]];
+        subKron = (KroneckerDelta[MJ, MJp]);
+        matValue = If[subKron == 0, 
+        0,
+          (
+            Which[MemberQ[Keys[LSReducedMatrixElements], {numE, SLterm, SpLpterm}],
+              LSReducedMatrixElements[{numE, SLterm, SpLpterm}],
+              MemberQ[Keys[LSReducedMatrixElements], {numE, SpLpterm, SLterm}],
+              LSReducedMatrixElements[{numE, SpLpterm, SLterm}],
+              True, 
+              0
+            ]
+          )
+        ];
+        matValue,
+        {NKSLJMp, NKSLJMps},
+        {NKSLJM, NKSLJMs}
+        ];
+      jjBlockTable[{numE, J, Jp}] = SparseArray[eMatrix],
+      {J, AllowedJ[numE]},
+      {Jp, AllowedJ[numE]}
+      ];
+    
+    Js = AllowedJ[numE];
+    howManyJs = Length[Js];
+    blockHam = ConstantArray[0, {howManyJs, howManyJs}];
+    Do[blockHam[[jj, ii]] = jjBlockTable[{numE, Js[[ii]], Js[[jj]]}];,
+      {ii, 1, howManyJs},
+      {jj, 1, howManyJs}];
+    blockHam = ArrayFlatten[blockHam];
+    blockHam = SparseArray[blockHam];
+    Return[blockHam];
+    )
+    ];
+
   (* ##################### Block assembly ###################### *)
   (* ########################################################### *)
 
@@ -2749,7 +2814,7 @@ Begin["`Private`"]
       ];
       (* Everything that is not given is set to zero *)
       PrintFun["> Setting to zero every parameter not given ..."];
-      params    = ParamPad[params,"Print"->True];
+      params    = ParamPad[params, "PrintFun" -> PrintFun];
       PrintFun[params];
       (* Create the numeric hamiltonian *)
       PrintFun["> Replacing parameters in the J-blocks of the Hamiltonian to produce numeric arrays ..."];
@@ -3412,7 +3477,7 @@ Begin["`Private`"]
   ];
 
   LoadLiYF4Parameters::usage="LoadLiYF4Parameters[ln] takes a string with the symbol the element of a trivalent lanthanide ion and returns model parameters for it. It return the data for LiYF4 from Cheng et al.";
-  LoadLiYF4Parameters[ln_]:=(
+  LoadLiYF4Parameters[ln_, OptionsPattern[]]:=(
     If[!ValueQ[paramsLiYF4],
       paramsChengLiYF4 = Import[FileNameJoin[{moduleDir,"data","chengLiYF4.m"}]];
     ];
@@ -3473,7 +3538,7 @@ Begin["`Private`"]
       by SimplerSymbolicHamMatrix has already accounted for this. *)
       
       (* Everything that is not given is set to zero *)
-      params = ParamPad[params, "Print" -> True];
+      params = ParamPad[params];
       PrintFun[params];
       
       (* Enforce the override to the spin-spin contribution to the magnetic interactions *)
