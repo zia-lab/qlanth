@@ -10,10 +10,10 @@
 |                                                                  |
 |                                                                  |
 +------------------------------------------------------------------+
-This  code  was  initially authored by Christopher Dodson and Rashid
-Zia  and  then rewritten and expanded by David Lizarazo in the years
-2022-2024  under the advisory of Dr. Zia. It has also benefited from
-the discussions with Tharnier Puel.
+This code was initially authored by Christopher M. Dodson and Rashid
+Zia, and then rewritten and expanded by Juan David Lizarazo Ferro in
+the  years  2022-2024  under  the advisory of Dr. Rashid Zia. It has
+also benefited from the discussions with Tharnier Puel.
 
 It   uses  an  effective  Hamiltonian  to  describe  the  electronic
 structure of lanthanide ions in crystals. This effective Hamiltonian
@@ -1097,6 +1097,7 @@ Begin["`Private`"]
   In all cases the output is in the shape of a list with enclosed lists having the format {daughter_term, {parent_term_1, CFP_1}, {parent_term_2, CFP_2}, ...}.
   Only the one-body coefficients for f-electrons are provided.
   In all cases it must be that 1 <= n <= 7.
+  These are according to the tables from Nielson & Koster.
   ";
   CFPTerms[numE_] := Part[CFPTable, numE]
   CFPTerms[numE_, SL_] := Module[
@@ -1288,9 +1289,10 @@ Begin["`Private`"]
   GenerateThreeBodyTables::usage = "This function generates the matrix elements for the three body operators using the coefficients of fractional parentage, including those beyond f^7.";
   Options[GenerateThreeBodyTables] = {"Export" -> False};
   GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
-    tiKeys = {"t_{2}", "t_{2}^{'}", "t_{3}", "t_{4}", "t_{6}", "t_{7}", 
-      "t_{8}", "t_{11}", "t_{11}^{'}", "t_{12}", "t_{14}", "t_{15}", 
-      "t_{16}", "t_{17}", "t_{18}", "t_{19}"};
+    tiKeys = {
+      "t_{2}", "t_{2}^{'}", "t_{3}", "t_{4}", "t_{6}", "t_{7}", "t_{8}",
+      "t_{11}", "t_{11}^{'}", "t_{12}", "t_{14}", "t_{15}", "t_{16}",
+      "t_{17}", "t_{18}", "t_{19}"};
     TSymbolsAssoc = AssociationThread[tiKeys -> TSymbols];
     juddOperators = ParseJudd1984[];
     (* op3MatrixElement[SL, SpLp, opSymbol] returns the value for the reduced matrix element of the operator opSymbol for the terms {SL, SpLp} in the f^3 configuration. *)
@@ -1302,7 +1304,7 @@ Begin["`Private`"]
         0];
       Return[val];
     );
-    (* ti: This is the implementation of formula (2) in Judd & Suskin 1984. It computes the matrix elements of ti in f^n by using the matrix elements in f3 and the coefficients of fractional parentage. If the option \"Fast\" is set to True then the values for n>7 are simply computed as the negatives of the values in the complementary configuration; this except for t2 and t11 which are treated as special cases. *)
+    (* ti: This is the implementation of formula (2) in Judd & Suskin 1984. It computes the matrix elements of ti in f^n by using the matrix elements in f^3 and the coefficients of fractional parentage. If the option \"Fast\" is set to True then the values for n>7 are simply computed as the negatives of the values in the complementary configuration; this except for t2 and t11 which are treated as special cases. *)
     Options[ti] = {"Fast" -> True};
     ti[nE_, SL_, SpLp_, tiKey_, opOrder_ : 3, OptionsPattern[]] := Module[
       {nn, S, L, Sp, Lp, 
@@ -1337,7 +1339,7 @@ Begin["`Private`"]
         Return[ nE / (nE - opOrder) * tnk];
       )
     ];
-    (*Calculate the matrix elements of t^i for n up to nmax*)
+    (* Calculate the matrix elements of t^i for n up to nmax *)
     tktable = <||>;
     Do[(
       Do[(
@@ -1345,7 +1347,7 @@ Begin["`Private`"]
           (*Initialize n=1,2 with zeros*)
           0,
           numE == 3,
-          (*Grab matrix elem in f^3 from Judd 1984*)
+          (* Grab matrix elem in f^3 from Judd 1984 *)
           SimplifyFun[op3MatrixElement[SL, SpLp, opKey]],
           True,
           SimplifyFun[ti[numE, SL, SpLp, opKey, If[opKey == "e_{3}", 2, 3]]]
@@ -3488,14 +3490,17 @@ Begin["`Private`"]
   HoleElectronConjugation[params_] := Module[
     {newparams = params},
     (
-      flipSignsOf = {\[Zeta], T2, T3, T4, T6, T7, T8};
-      flipSignsOf = Join[flipSignsOf, cfSymbols];
-      flipped = 
-        Table[(flipper -> - newparams[flipper]), 
+      flipSignsOf = Join[{\[Zeta]}, flipSignsOf, cfSymbols, TSymbols];
+      flipped = Table[
+        (
+          flipper -> - newparams[flipper]
+        ), 
         {flipper, flipSignsOf}
         ];
-      nonflipped = 
-        Table[(flipper -> newparams[flipper]),
+      nonflipped = Table[
+        (
+          flipper -> newparams[flipper]
+        ),
         {flipper, Complement[Keys[newparams], flipSignsOf]}
         ];
       flippedParams = Association[Join[nonflipped, flipped]];
@@ -3961,7 +3966,7 @@ Begin["`Private`"]
         BoxBaselineShift -> -1, BoxMargins -> 0], 
         AdjustmentBox[PrintL[L], BoxMargins -> -0.2], 
         AdjustmentBox[
-        Style[{InputForm[J], mJ}, Small, FontTracking -> "Narrow"], 
+        Style[Row[{InputForm[J], ",", mJ}], Small], 
         BoxBaselineShift -> 1, 
         BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}];
     pretty = DisplayForm[pretty];
@@ -4814,9 +4819,11 @@ Begin["`Private`"]
     Return[Carnall];
   );
 
-  CFP::usage = "CFP[{n, NKSL}] provides a list whose first element echoes NKSL and whose other elements are lists with two elements the first one being the symbol of a parent term and the second being the corresponding coefficient of fractional parentage. n must satisfy 1 <= n <= 7";
+  CFP::usage = "CFP[{n, NKSL}] provides a list whose first element echoes NKSL and whose other elements are lists with two elements the first one being the symbol of a parent term and the second being the corresponding coefficient of fractional parentage. n must satisfy 1 <= n <= 7.
+  These are according to the tables from Nielson & Koster.";
 
-  CFPAssoc::usage = " CFPAssoc is an association where keys are of lists of the form {num_electrons, daugherTerm, parentTerm} and values are the corresponding coefficients of fractional parentage. The terms given in string-spectroscopic notation. If a certain daughter term does not have a parent term, the value is 0. Loaded using LoadCFP[].";
+  CFPAssoc::usage = " CFPAssoc is an association where keys are of lists of the form {num_electrons, daugherTerm, parentTerm} and values are the corresponding coefficients of fractional parentage. The terms given in string-spectroscopic notation. If a certain daughter term does not have a parent term, the value is 0. Loaded using LoadCFP[].
+  These are according to the tables from Nielson & Koster.";
 
   LoadCFP::usage = "LoadCFP[] loads CFP, CFPAssoc, and CFPTable into the session.";
   LoadCFP[] := (

@@ -51,6 +51,8 @@ for fname in ['qlanth.m','fittings.m']:
                 if lines[idx] == '':
                     break
             def_string = '\n'.join(deflines)
+            usage_string = usage_string.replace('\\"',"''")
+            def_string = def_string.replace('\\"',"''")
             functions[function] = (usage_string, def_string)
         idx += 1
         if idx == len(lines):
