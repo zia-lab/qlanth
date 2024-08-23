@@ -100,7 +100,7 @@ FastIonSolverLaF3Carnall[numE_, OptionsPattern[]] := Module[
     C2vsimplifier = {
       B12 -> 0, B14 -> 0, B16 -> 0, B34 -> 0, B36 -> 0, B56 -> 0,
       S12 -> 0, S14 -> 0, S16 -> 0, S22 -> 0, S24 -> 0, S26 -> 0, S34 -> 0, S36 -> 0,S44 -> 0, S46 -> 0, S56 -> 0, S66 -> 0,
-      T11p -> 0, T11 -> 0, T12 -> 0, T14 -> 0, T15 -> 0, T16 -> 0, T18 -> 0, T17 -> 0, T19 -> 0};
+      T11p -> 0, T12 -> 0, T14 -> 0, T15 -> 0, T16 -> 0, T18 -> 0, T17 -> 0, T19 -> 0};
     (* If the necessary symbolicHamiltonian is defined load it, if not, then calculate it *)
     simpleHam = If[
       ValueQ[symbolicHamiltonians[numEH]],
@@ -600,11 +600,12 @@ Options[FastIonSolver] = {
   "OutputDirectory"    -> "calcs",
   "Max Eigenstates in Table" -> 100,
   "eigenstateTruncationProbability" -> 0.9,
+  "AddToExport" -> <||>,
   "SymmetrySimplifier" -> {"C2v",
     {
       B12 -> 0,  B14 -> 0, B16 -> 0, B34 -> 0, B36 -> 0, B56 -> 0,
       S12 -> 0,  S14 -> 0, S16 -> 0, S22 -> 0, S24 -> 0, S26 -> 0, S34 -> 0, S36 -> 0, S44 -> 0,  S46 -> 0, S56 -> 0, S66 -> 0,
-      T11p -> 0, T11 -> 0, T12 -> 0, T14 -> 0, T15 -> 0, T16 -> 0, T18 -> 0, T17 -> 0, T19 -> 0
+      T11p -> 0, T12 -> 0, T14 -> 0, T15 -> 0, T16 -> 0, T18 -> 0, T17 -> 0, T19 -> 0
     }
     }
 }; 
@@ -797,7 +798,6 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
         host == "LaF3",
         (
           carnalKey = "appendix:" <> ln <> ":RawTable";
-          numE = 3;
           expData = {#[[2]], #[[1]], #[[3]]} & /@ Carnall[carnalKey];
           expData = Select[First /@ expData, NumericQ];
           {Red, PointSize[0.002], Point[{#, 0.5}]} & /@ expData
@@ -829,8 +829,38 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
       diffTable     = TableForm[diffTableData, 
         TableHeadings -> {None, {"coarse label", 
         "E/\!\(\*SuperscriptBox[\(cm\), \(-1\)]\)"}}];
-
+      PrintFun[{"numE",numE}];
       (* now place all of this in a new notebook *)
+      exportParams = Select[originalParams, And[# =!= 0, # =!= 0.] &];
+      infoBlurb = Cell[TextData[{
+ "The entire calculated electronic structure is contained in the file that \
+may be loaded in the line below.\nIt loads an association with the following \
+keys:\n\n",
+ StyleBox["\[OpenCurlyDoubleQuote]energies/K\[CloseCurlyDoubleQuote]",
+  FontWeight->"Bold"],
+ " : A list with all the calculated energies, explicitly including Kramers\
+\[CloseCurlyQuote] degeneracy.\n",
+ StyleBox["\[OpenCurlyDoubleQuote]lnSymbol\[CloseCurlyDoubleQuote]",
+  FontWeight->"Bold"],
+ ": The symbol representing the current lanthanide.\n",
+ StyleBox["\[OpenCurlyDoubleQuote]coarseStateLabels\[CloseCurlyDoubleQuote]",
+  FontWeight->"Bold"],
+ ": A list with the largest LSJ contribution to the eigenvectors.\n",
+ StyleBox["\[OpenCurlyDoubleQuote]eigenSystem\[CloseCurlyDoubleQuote]:",
+  FontWeight->"Bold"],
+ " A list of lists, the first element being the energy and the second the \
+eigenvector in the given basis.\n",
+ StyleBox["\[OpenCurlyDoubleQuote]truncatedStates\[CloseCurlyDoubleQuote]",
+  FontWeight->"Bold"],
+ ": A truncated version of the eigenvectors.\n",
+ StyleBox["\[OpenCurlyDoubleQuote]params\[CloseCurlyDoubleQuote]",
+  FontWeight->"Bold"],
+ ": The fitted parameters of the semi-empirical Hamiltonian.\n",
+ StyleBox["\[OpenCurlyDoubleQuote]fitResult\[CloseCurlyDoubleQuote]",
+  FontWeight->"Bold"],
+ ": An association containing the full result of the solver that produced the \
+parameters used here.\n"
+}], "Text", TextAlignment->Center];
       nb = CreateDocument[
       {
         TextCell[
@@ -844,7 +874,7 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
           "Output",
           TextAlignment -> Center
         ],
-        TextCell[Select[originalParams, And[# =!= 0, # =!= 0.] &],
+        TextCell[exportParams,
           "Output",
           TextAlignment -> Center
         ],
@@ -873,7 +903,7 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
             TextAlignment -> Center
         ],
         TextCell[
-            "These are some of the resultant eigenstates which add up to at least a total probability of " <> ToString[eigenstateTruncationProbability] <> ".", 
+            "These are some of the eigenstates, truncated each to add up to at least a total probability of " <> ToString[eigenstateTruncationProbability] <> ".", 
             "Text",
             TextAlignment -> Center
         ],
@@ -890,31 +920,49 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
         exportFname = FileNameJoin[{workDir,OptionValue["OutputDirectory"], ln <> " in " <> host <> appToFname <> ".mx"}];
         SelectionMove[nb, After, Notebook];
         NotebookWrite[nb, Cell["Reload Data", "Section", TextAlignment -> Center]];
+        NotebookWrite[nb, infoBlurb];
         NotebookWrite[nb,
           Cell[(
-            "{eigenEnergies, ln, simplerStateLabels, eigensys, basis, truncatedStates} = Import[FileNameJoin[{NotebookDirectory[],\"" <> StringSplit[exportFname,"/"][[-1]] <> "\"}]];"
+            "lnStructure = Import[FileNameJoin[{NotebookDirectory[],\"" <> StringSplit[exportFname,"/"][[-1]] <> "\"}]];"
             ),"Input"
           ]
         ];
         NotebookWrite[nb,
           Cell[(
-            "Manipulate[First[MinimalBy[truncatedStates, Abs[First[#] - energy] &]], {energy,0}]"
+            "Manipulate[First[MinimalBy[lnStructure[\"truncatedStates\"], Abs[First[#] - energy] &]], {energy,0}]"
             ),"Input"]
         ];
-        (* Move the cursor to the top of the notebook *)
-        SelectionMove[nb, Before, Notebook];
-        Export[exportFname,
-          {eigenEnergies, ln, simplerStateLabels, eigensys, basis, truncatedStates}
-        ];
+        exportAssoc = <|
+          "energies/K" -> eigenEnergies,
+          "lnSymbol" -> ln,
+          "coarseStateLabels" -> simplerStateLabels,
+          "eigenSystem" -> eigensys,
+          "basis" -> basis,
+          "truncatedStates" -> truncatedStates,
+          "params" -> params
+        |>; 
+        If[OptionValue["AddToExport"] =!= <||>,
+          exportAssoc = Join[exportAssoc, OptionValue["AddToExport"]];
+        ]; 
+        Export[exportFname, exportAssoc];
         tinyexportFname = FileNameJoin[
           {workDir, OptionValue["OutputDirectory"], ln <> " in " <> host  <> appToFname <> " - tiny.m"}
         ];
         tinyExport = <|"ln"->ln,
                     "eigenEnergies"-> eigenEnergies,
-                    "simplerStateLabels" -> simplerStateLabels|>;
+                    "simplerStateLabels" -> simplerStateLabels,
+                    "params" -> params|>;
+        If[OptionValue["AddToExport"] =!= <||>,
+          tinyExport = Join[tinyExport, OptionValue["AddToExport"]];
+        ];
         Export[tinyexportFname, tinyExport];
       )
       ];
+      NotebookWrite[nb,
+      Cell["\n\n\nThis notebook was generated on " <> DateString[] <> ".", "Text", TextAlignment -> Right]
+      ];
+      (* Move the cursor to the top of the notebook *)
+      SelectionMove[nb, Before, Notebook];
       If[OptionValue["NotebookSave"],
         (
           nbFname = FileNameJoin[{workDir,
@@ -944,7 +992,6 @@ MagneticDipoleTransitions::usage = "MagneticDipoleTransitions[params, fname] cal
     AMD/s^-1        (* magnetic dipole transition rate in s^-1 *)
 
 The raw data file contains the following keys: 
-    - Line Strength, (* Line strength array *)
     - AMD, (* Magnetic dipole transition rates in 1/s *)
     - fMD, (* Oscillator strengths from ground to excited states *)
     - Radiative lifetimes, (* Radiative lifetimes in s *)
@@ -961,7 +1008,7 @@ The function takes the following options:
     - \"Host\" -> \"CrystalHost\". The host material. Default is LaF3.
     - \"Wavelength Range\" -> {50,2000}. The range of wavelengths in nm for the Manipulate object in the created notebook. Default is {50,2000}.
 
-The function returns an association containing the following keys: Line Strength, AMD, fMD, Radiative lifetimes, Transition Energies / K, Transition Wavelengths in nm.";
+The function returns an association containing the following keys: \"AMD/s^-1\", \"fMD\", \"radLifetimes/s\", \"transitionEnergies/K\", \"transitionWavelengths/nm\".";
 Options[MagneticDipoleTransitions] = {
         "Make Notebook" -> True, 
         "Close Notebook" -> True,
@@ -987,16 +1034,24 @@ MagneticDipoleTransitions[params_Association, fname_String, OptionsPattern[]]:= 
         Return[Null];
         )
     ];
+    Print[{"numE",numE}];
     host           = OptionValue["Host"];
     \[Lambda]Range = OptionValue["Wavelength Range"];
     PrintFun       = OptionValue["Print Function"];
     {\[Lambda]min, \[Lambda]max} = OptionValue["Wavelength Range"];
     
-    header    = {"\[Psi]i:simple","\[Psi]f:simple","\[Psi]i:idx","\[Psi]f:idx","Ei/K","Ef/K","\[Lambda]/nm","\[CapitalDelta]\[Lambda]/nm","\[Tau]/s","AMD/s^-1"};
+    header    = {"\[Psi]i:simple","\[Psi]f:simple","\[Psi]i:idx","\[Psi]f:idx","Ei/K","Ef/K","\[Lambda]/nm","\[CapitalDelta]\[Lambda]/nm","\[Tau]*n^3/s","AMD/n^3/s^-1"};
     ln        = {"Ce","Pr","Nd","Pm","Sm","Eu","Gd","Tb","Dy","Ho","Er","Tm","Yb"}[[numE]];
-    {eigenEnergies, ln, simplerStateLabels, eigensys, basis, truncatedStates} = Import[fname];
+    
+    PrintFun["Loading the data from ", fname, " ..."];
+    lnStructure   = Import[fname];
+    eigenEnergies = lnStructure["energies/K"];
+    simplerStateLabels = lnStructure["coarseStateLabels"];
+    eigensys           = lnStructure["eigenSystem"];
+    fittedParams       = lnStructure["params"];
     
     (* Some of the above are not needed here *)
+    Clear[lnStructure];
     Clear[truncatedStates];
     Clear[basis];
     If[OddQ[numE],
@@ -1011,26 +1066,26 @@ MagneticDipoleTransitions[params_Association, fname_String, OptionsPattern[]]:= 
     magIon["Line Strength"] = MagDipLineStrength[eigensys, numE, "Reload MagOp" -> False, "Units" -> "SI"]; *)
     
     PrintFun["Calculating the M1 spontaneous transition rates ..."];
-    magIon["AMD"] = MagDipoleRates[eigensys, numE, "Units"->"SI","Lifetime"->False];
-    magIon["AMD"] = magIon["AMD"]/.{0.->Indeterminate};
+    magIon["AMD/n^3/s^-1"] = MagDipoleRates[eigensys, numE, "Units"->"SI","Lifetime"->False];
+    magIon["AMD/n^3/s^-1"] = magIon["AMD/n^3/s^-1"]/.{0.->Indeterminate};
 
     PrintFun["Calculating the oscillator strength for transitions from the ground state ..."];
-    magIon["fMD"] = GroundMagDipoleOscillatorStrength[eigensys, numE];
+    magIon["fMD/n"] = GroundMagDipoleOscillatorStrength[eigensys, numE];
 
     PrintFun["Calculating the natural radiative lifetimes ..."];
-    magIon["Radiative lifetimes"] = 1./magIon["AMD"];
+    magIon["radLifetimes*n^3/s"] = 1./magIon["AMD/n^3/s^-1"];
 
     PrintFun["Calculating the transition energies in K ..."];
     transitionEnergies = Outer[Subtract, First/@eigensys, First/@eigensys];
-    magIon["Transition Energies / K"] = ReplaceDiagonal[transitionEnergies, Indeterminate];
+    magIon["transitionEnergies/K"] = ReplaceDiagonal[transitionEnergies, Indeterminate];
 
     PrintFun["Calculating the transition wavelengths in nm ..."];
-    magIon["Transition Wavelengths in nm"] = 10^7/magIon["Transition Energies / K"];
+    magIon["transitionWavelengths/nm"] = 10^7/magIon["transitionEnergies/K"];
     
     energy\[CapitalDelta] = OptionValue["Energy Uncertainty in K"];
     PrintFun["Estimating the uncertainties in \[Lambda]/nm assuming a " <> ToString[energy\[CapitalDelta]] <> " K uncertainty in energies."];
     
-    \[Lambda]uncertainty = energy\[CapitalDelta] * Sqrt[2.] * 10^-7 * magIon["Transition Wavelengths in nm"]^2;
+    \[Lambda]uncertainty = energy\[CapitalDelta] * Sqrt[2.] * 10^-7 * magIon["transitionWavelengths/nm"]^2;
 
     PrintFun["Formatting a tabular output file ..."];
     startTime = Now;
@@ -1042,10 +1097,10 @@ MagneticDipoleTransitions[params_Association, fname_String, OptionsPattern[]]:= 
     allTransitions  = {simpleFromTo,
         fromTo,
         energyPairs,
-        magIon["Transition Wavelengths in nm"],
+        magIon["transitionWavelengths/nm"],
         \[Lambda]uncertainty,
-        magIon["AMD"],
-        magIon["Radiative lifetimes"]
+        magIon["AMD/n^3/s^-1"],
+        magIon["radLifetimes*n^3/s"]
     };
     allTransitions = (Flatten/@Transpose[Flatten[#,1]&/@allTransitions]);
     allTransitions = Select[allTransitions, #[[3]]!=#[[4]]&];
@@ -1149,13 +1204,94 @@ MagneticDipoleTransitions[params_Association, fname_String, OptionsPattern[]]:= 
           WindowTitle    -> "M1 - "<>ln<>" in "<>host,
           WindowSize     -> {1600,800}
         ];
+        reloadDataTemplate = StringTemplate@If[EvenQ[numE],
+          "lnStructure = Import[FileNameJoin[{NotebookDirectory[],\"`ln` in `host` - ql.mx\"}]];",
+          "lnStructure = Import[FileNameJoin[{NotebookDirectory[],\"`ln` in `host` - ql.mx\"}]];
+eigenEnergies = lnStructure[\"energies/K\"][[;;;;2]];
+coarseStateLabels = lnStructure[\"coarseStateLabels\"][[;;;;2]];
+eigensys = lnStructure[\"eigenSystem\"][[;;;;2]];
+truncatedStates = lnStructure[\"truncatedStates\"][[;;;;2]];
+Clear[lnStructure];" 
+        ];
         SelectionMove[nb, After, Notebook];
         NotebookWrite[nb, Cell["Reload Data", "Section", TextAlignment -> Center]];
+        If[OddQ[numE],
+          NotebookWrite[nb, Cell["NOTE: the transition data elides Kramers' degeneracy, only one state from each pair is included.","Text"]];
+        ];
+        magInfoBlurb=Cell[TextData[{
+ "The entire calculated data for magnetic dipole transitions may be loaded in \
+the line below.\nIt loads an association with the following keys:\n\n",
+ StyleBox["\[OpenCurlyDoubleQuote]AMD/n^3/s^-1\[CloseCurlyDoubleQuote]",
+  FontWeight->"Bold"],
+ " : A 2D array where the [[i,j]] element gives the transition rate (in 1/s) \
+(divided by the cube of the refractive index) from initial state i to final \
+state j.\n",
+ StyleBox["\[OpenCurlyDoubleQuote]fMD/n\[CloseCurlyDoubleQuote]",
+  FontWeight->"Bold"],
+ ": A list with the [[i]] element giving the magnetic dipole oscillator \
+strength (divided by the refractive index) between the ground state and state \
+i.\n",
+ StyleBox["\[OpenCurlyDoubleQuote]radLifetimes*n^3/s\[CloseCurlyDoubleQuote]",
+  
+  FontWeight->"Bold"],
+ ": A 2D array where the [[i,j]] element gives the radiative lifetime (in s) \
+(multiplied by the cube of the refractive index) between state i and state j.\
+\n",
+ StyleBox["\[OpenCurlyDoubleQuote]transitionEnergies/K\[CloseCurlyDoubleQuote]\
+:",
+  FontWeight->"Bold"],
+ " A 2D array where the [[i,j]] element gives the energy difference (in Kayser) between \
+state i and state j.\n",
+ StyleBox["\[OpenCurlyDoubleQuote]transitionWavelengths/nm\
+\[CloseCurlyDoubleQuote]",
+  FontWeight->"Bold"],
+ ": A 2D array where the [[i,j]] element gives the vacuum transition wavelength (in nm) \
+between state i and state j.\n",
+"\n",
+"In addition, a comma-separated version of this data is saved in this same directory.\n"
+}], "Text", TextAlignment->Center];
+        infoBlurb = Cell[TextData[{
+ "The entire calculated electronic structure is contained in the file that \
+may be loaded in the line below.\nIt loads an association with the following \
+keys:\n\n",
+ StyleBox["\[OpenCurlyDoubleQuote]energies/K\[CloseCurlyDoubleQuote]",
+  FontWeight->"Bold"],
+ " : A list with all the calculated energies (in Kayser), explicitly including Kramers\
+\[CloseCurlyQuote] degeneracy.\n",
+ StyleBox["\[OpenCurlyDoubleQuote]lnSymbol\[CloseCurlyDoubleQuote]",
+  FontWeight->"Bold"],
+ ": The symbol representing the current lanthanide.\n",
+ StyleBox["\[OpenCurlyDoubleQuote]coarseStateLabels\[CloseCurlyDoubleQuote]",
+  FontWeight->"Bold"],
+ ": A list with the largest LSJ contribution to the eigenvectors.\n",
+ StyleBox["\[OpenCurlyDoubleQuote]eigenSystem\[CloseCurlyDoubleQuote]:",
+  FontWeight->"Bold"],
+ " A list of lists, the first element being the energy and the second the \
+eigenvector in the given basis.\n",
+ StyleBox["\[OpenCurlyDoubleQuote]truncatedStates\[CloseCurlyDoubleQuote]",
+  FontWeight->"Bold"],
+ ": A truncated version of the eigenvectors.\n",
+ StyleBox["\[OpenCurlyDoubleQuote]params\[CloseCurlyDoubleQuote]",
+  FontWeight->"Bold"],
+ ": The fitted parameters of the semi-empirical Hamiltonian.\n",
+ StyleBox["\[OpenCurlyDoubleQuote]fitResult\[CloseCurlyDoubleQuote]",
+  FontWeight->"Bold"],
+ ": An association containing the full result of the solver that produced the \
+parameters used here."
+}], "Text", TextAlignment->Center];
+        NotebookWrite[nb, infoBlurb];
+        NotebookWrite[nb, Cell[(
+              reloadDataTemplate[<|"host"->host,"ln"->ln|>]
+              ),"Input"]];
+        NotebookWrite[nb, magInfoBlurb];
         NotebookWrite[nb, Cell[(
               "magTransitions = Import[FileNameJoin[{NotebookDirectory[],\"" <> StringSplit[rawexportFname,"/"][[-1]] <> "\"}],\""<>rawexportKey<>"\"];"
               ),"Input"]];
+        NotebookWrite[nb, Cell[TextData[{"\n\n\n",
+        StyleBox["This notebook was generated on " <> DateString[] <> ".",
+        FontSlant->"Italic"]}], "Text", TextAlignment->Right]];
         SelectionMove[nb, Before, Notebook];
-        nbFname = FileNameJoin[{DirectoryName[fname], "M1 - "<>ln<>" in "<>"LaF3"<>".nb"}];
+        nbFname = FileNameJoin[{DirectoryName[fname], "M1 - "<>ln<>" in "<>host<>".nb"}];
         endTime = Now;
         PrintFun[">> Creating the notebook took ", QuantityMagnitude[endTime-startTime,"Seconds"]," seconds."];
         PrintFun[">> Saving notebook to ", nbFname, " ..."];

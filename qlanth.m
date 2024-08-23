@@ -39,6 +39,8 @@ results from this code are compared against the published results by
 Carnall  et.  al for the energy levels of lanthinde ions in crystals
 of lanthanum trifluoride.
 
+VERSION: AUGUST 2024
+
 REFERENCES:
 
 + Condon, E U, and G Shortley. "The Theory of Atomic Spectra." 1935.
@@ -147,7 +149,7 @@ M2: 2nd Marvin integral
 M4: 4th Marvin integral
 \[Sigma]SS: spin-spin override, if 0 spin-spin is omitted, if 1 then spin-spin is included
 
-T2:  three-body effective operator parameter T^2 (non-orthogonal)
+T2:  three-body effective operator parameter T^2  (non-orthogonal)
 T2p: three-body effective operator parameter T^2' (orthogonalized T2)
 T3:  three-body effective operator parameter T^3
 T4:  three-body effective operator parameter T^4
@@ -155,8 +157,7 @@ T6:  three-body effective operator parameter T^6
 T7:  three-body effective operator parameter T^7
 T8:  three-body effective operator parameter T^8
 
-T11:  three-body effective operator parameter T^11
-T11p: three-body effective operator parameter T^11'
+T11p: three-body effective operator parameter T^11' (orthogonalized T11)
 T12:  three-body effective operator parameter T^12
 T14:  three-body effective operator parameter T^14
 T15:  three-body effective operator parameter T^15
@@ -238,7 +239,7 @@ controlSymbols = {t2Switch, \[Sigma]SS};
 cfSymbols      = {B02, B04, B06, B12, B14, B16, B22, B24, B26, B34, B36, 
                   B44, B46, B56, B66, 
                   S12, S14, S16, S22, S24, S26, S34, S36, S44, S46, S56, S66};
-TSymbols       = {T2, T2p, T3, T4, T6, T7, T8, T11, T11p, T12, T14, T15, T16, T17, T18, T19};
+TSymbols       = {T2, T2p, T3, T4, T6, T7, T8, T11p, T12, T14, T15, T16, T17, T18, T19};
 pseudoMagneticSymbols = {P0, P2, P4, P6};
 marvinSymbols         = {M0, M2, M4};
 magneticSymbols       = {Bx, By, Bz, gs, \[Zeta]};
@@ -328,7 +329,6 @@ GenerateSpinSpinTable;
 GenerateT22Table;
 GenerateThreeBodyTables;
 
-GenerateThreeBodyTables;
 Generator;
 GroundMagDipoleOscillatorStrength;
 HamMatrixAssembly;
@@ -1154,7 +1154,7 @@ Begin["`Private`"]
     )
   ];
 
-  GenerateSpinOrbitTable::usage = "GenerateSpinOrbitTable[nmax] computes the matrix values for the spin-orbit interaction for f^n configurations up to n = nmax. The function returns an association whose keys are lists of the form {n, SL, SpLp, J}. If export is set to True, then the result is exported to the data subfolder for the folder in which this package is in. It requires ReducedV1kTable to be defined.";
+  GenerateSpinOrbitTable::usage = "GenerateSpinOrbitTable[nmax] computes the matrix elements for the spin-orbit interaction for f^n configurations up to n = nmax. The function returns an association whose keys are lists of the form {n, SL, SpLp, J}. If export is set to True, then the result is exported to the data subfolder for the folder in which this package is in. It requires ReducedV1kTable to be defined.";
   Options[GenerateSpinOrbitTable] = {"Export" -> True};
   GenerateSpinOrbitTable[nmax_Integer:7, OptionsPattern[]] := Module[
     {numE, J, SL, SpLp, exportFname},
@@ -1243,7 +1243,7 @@ Begin["`Private`"]
         Join[{operatorSymbol}, normalValues], {col, tab1[[3 ;;]]}
       ];
     
-    (*Create an association for the matrix elements in the f^3 config*)
+    (*Create an association for the reduced matrix elements in the f^3 config*)
     juddOperators = Association[];
     Do[(
       col      = normalTable[[colIndex]];
@@ -1260,7 +1260,7 @@ Begin["`Private`"]
     ];
     
     (* special case of t2 in f3 *)
-    (* this is the same as getting the matrix elements from Judd 1966 *)
+    (* this is the same as getting the reduced matrix elements from Judd 1966 *)
     numE = 3;
     e3Op      = juddOperators[{3, "e_{3}"}];
     t2prime   = juddOperators[{3, "t_{2}^{'}"}];
@@ -1286,13 +1286,10 @@ Begin["`Private`"]
     Return[juddOperators];
   );
 
-  GenerateThreeBodyTables::usage = "This function generates the matrix elements for the three body operators using the coefficients of fractional parentage, including those beyond f^7.";
+  GenerateThreeBodyTables::usage = "This function generates the reduced matrix elements for the three body operators using the coefficients of fractional parentage, including those beyond f^7.";
   Options[GenerateThreeBodyTables] = {"Export" -> False};
-  GenerateThreeBodyTables[nmax_Integer : 14, OptionsPattern[]] := (
-    tiKeys = {
-      "t_{2}", "t_{2}^{'}", "t_{3}", "t_{4}", "t_{6}", "t_{7}", "t_{8}",
-      "t_{11}", "t_{11}^{'}", "t_{12}", "t_{14}", "t_{15}", "t_{16}",
-      "t_{17}", "t_{18}", "t_{19}"};
+  GenerateThreeBodyTables[OptionsPattern[]] := (
+    tiKeys        = (StringReplace[ToString[#], {"T" -> "t_{", "p" -> "}^{'"}] <> "}") & /@ TSymbols;
     TSymbolsAssoc = AssociationThread[tiKeys -> TSymbols];
     juddOperators = ParseJudd1984[];
     (* op3MatrixElement[SL, SpLp, opSymbol] returns the value for the reduced matrix element of the operator opSymbol for the terms {SL, SpLp} in the f^3 configuration. *)
@@ -1304,7 +1301,7 @@ Begin["`Private`"]
         0];
       Return[val];
     );
-    (* ti: This is the implementation of formula (2) in Judd & Suskin 1984. It computes the matrix elements of ti in f^n by using the matrix elements in f^3 and the coefficients of fractional parentage. If the option \"Fast\" is set to True then the values for n>7 are simply computed as the negatives of the values in the complementary configuration; this except for t2 and t11 which are treated as special cases. *)
+    (* ti: This is the implementation of formula (2) in Judd & Suskin 1984. It computes the reduced matrix elements of ti in f^n by using the reduced matrix elements in f^3 and the coefficients of fractional parentage. If the option \"Fast\" is set to True then the values for n>7 are simply computed as the negatives of the values in the complementary configuration; this except for t2 and t11 which are treated as special cases. *)
     Options[ti] = {"Fast" -> True};
     ti[nE_, SL_, SpLp_, tiKey_, opOrder_ : 3, OptionsPattern[]] := Module[
       {nn, S, L, Sp, Lp, 
@@ -1315,7 +1312,7 @@ Begin["`Private`"]
         {S, L}   = FindSL[SL];
         {Sp, Lp} = FindSL[SpLp];
         fast     = OptionValue["Fast"];
-        numH = 14 - nE;
+        numH     = 14 - nE;
         If[fast && Not[MemberQ[{"t_{2}","t_{11}"},tiKey]] && nE > 7,
           Return[-tktable[{numH, SL, SpLp, tiKey}]]
         ];
@@ -1339,7 +1336,7 @@ Begin["`Private`"]
         Return[ nE / (nE - opOrder) * tnk];
       )
     ];
-    (* Calculate the matrix elements of t^i for n up to nmax *)
+    (* Calculate the reduced matrix elements of t^i for n up to 14 *)
     tktable = <||>;
     Do[(
       Do[(
@@ -1360,10 +1357,10 @@ Begin["`Private`"]
       ];
       PrintTemporary[StringJoin["\[ScriptF]", ToString[numE], " configuration complete"]];
       ),
-      {numE, 1, nmax}
+      {numE, 1, 14}
     ];
     
-    (* Now use those matrix elements to determine their sum as weighted by their corresponding strengths Ti *)
+    (* Now use those reduced matrix elements to determine their sum as weighted by their corresponding strengths Ti *)
     ThreeBodyTable = <||>;
     Do[
       Do[
@@ -1504,7 +1501,7 @@ Begin["`Private`"]
   ];
 
   ReducedSOOandECSOinf2::usage = "ReducedSOOandECSOinf2[SL, SpLp] returns the reduced matrix element corresponding to the operator (T11 + t11 - a13 * z13 / 6) for the terms {SL, SpLp}. This combination of operators corresponds to the spin-other-orbit plus ECSO interaction.
-  The T11 operator corresponds to the spin-other-orbit interaction, and the t11 operator (associated with electrostatically-correlated spin-orbit) originates from configuration interaction analysis. To their sum a factor proportional to the operator z13 is subtracted since its effect is redundant to the spin-orbit interaction. The factor of 1/6 is not on Judd's 1966 paper, but it is on \"Chen, Xueyuan, Guokui Liu, Jean Margerie, and Michael F Reid. \"A Few Mistakes in Widely Used Data Files for Fn Configurations Calculations.\" Journal of Luminescence 128, no. 3 (2008): 421-27\".
+  The T11 operator corresponds to the spin-other-orbit interaction, and the t11 operator (associated with electrostatically-correlated spin-orbit) originates from configuration interaction analysis. To their sum a factor proportional to the operator z13 is subtracted since its effect is redundant to the spin-orbit interaction. The factor of 1/6 is not on Judd's 1968 paper, but it is on \"Chen, Xueyuan, Guokui Liu, Jean Margerie, and Michael F Reid. \"A Few Mistakes in Widely Used Data Files for Fn Configurations Calculations.\" Journal of Luminescence 128, no. 3 (2008): 421-27\".
   The values for the reduced matrix elements of z13 are obtained from Table IX of the same paper. The value for a13 is from table VIII.
   Rigurously speaking the Pk parameters here are subscripted. The conversion to superscripted parameters is performed elsewhere with the Prescaling replacement rules.
   ";
@@ -1781,7 +1778,7 @@ Begin["`Private`"]
     )
   ];
 
-  GenerateSpinSpinTable::usage = "GenerateSpinSpinTable[nmax] generates the matrix elements in the |LSJ> basis for the (spin-other-orbit + electrostatically-correlated-spin-orbit) operator. It returns an association where the keys are of the form {numE, SL, SpLp, J}. If the option \"Export\" is set to True then the resulting object is saved to the data folder. Since this is a scalar operator, there is no MJ dependence. This dependence only comes into play when the crystal field contribution is taken into account.";
+  GenerateSpinSpinTable::usage = "GenerateSpinSpinTable[nmax] generates the reduced matrix elements in the |LSJ> basis for the (spin-other-orbit + electrostatically-correlated-spin-orbit) operator. It returns an association where the keys are of the form {numE, SL, SpLp, J}. If the option \"Export\" is set to True then the resulting object is saved to the data folder. Since this is a scalar operator, there is no MJ dependence. This dependence only comes into play when the crystal field contribution is taken into account.";
   Options[GenerateSpinSpinTable] = {"Export"->False};
   GenerateSpinSpinTable[nmax_, OptionsPattern[]] :=
     (
@@ -1828,7 +1825,7 @@ Begin["`Private`"]
 
   Prescaling = {P2 -> P2/225, P4 -> P4/1089, P6 -> 25 * P6 / 184041};
 
-  GenerateSOOandECSOTable::usage = "GenerateSOOandECSOTable[nmax] generates the matrix elements in the |LSJ> basis for the (spin-other-orbit + electrostatically-correlated-spin-orbit) operator. It returns an association where the keys are of the form {n, SL, SpLp, J}. If the option \"Export\" is set to True then the resulting object is saved to the data folder. Since this is a scalar operator, there is no MJ dependence. This dependence only comes into play when the crystal field contribution is taken into account.";
+  GenerateSOOandECSOTable::usage = "GenerateSOOandECSOTable[nmax] generates the reduced matrix elements in the |LSJ> basis for the (spin-other-orbit + electrostatically-correlated-spin-orbit) operator. It returns an association where the keys are of the form {n, SL, SpLp, J}. If the option \"Export\" is set to True then the resulting object is saved to the data folder. Since this is a scalar operator, there is no MJ dependence. This dependence only comes into play when the crystal field contribution is taken into account.";
   Options[GenerateSOOandECSOTable] = {"Export"->False};
   GenerateSOOandECSOTable[nmax_, OptionsPattern[]] := (
     SOOandECSOTable = <||>;
@@ -2436,7 +2433,7 @@ Begin["`Private`"]
         T3, T4, T6, T7, T8, P0, P2, P4, P6, gs, 
         \[Alpha], \[Beta], \[Gamma], B02, B04, B06, B12, B14, B16, 
         B22, B24, B26, B34, B36, B44, B46, B56, B66, S12, S14, S16, S22, 
-        S24, S26, S34, S36, S44, S46, S56, S66, T11, T11p, T12, T14, T15, T16, 
+        S24, S26, S34, S36, S44, S46, S56, S66, T11p, T12, T14, T15, T16, 
         T17, T18, T19, Bx, By, Bz};
       params0 = AssociationThread[allVars, allVars];
       If[nf > 7, 
@@ -3013,7 +3010,7 @@ Begin["`Private`"]
   The returned array should be interpreted in the eigenbasis of the Hamiltonian. As such the element Stot[[i,i]] corresponds to the line strength states between states |i> and |j>.";
   Options[MagDipLineStrength]={"Reload MagOp" -> False, "Units"->"SI", "States" -> All};
   MagDipLineStrength[theEigensys_List, numE0_Integer, OptionsPattern[]] := Module[
-    {allEigenvecs, Sx, Sy, Sz, Stot, factor},
+    {numE, allEigenvecs, Sx, Sy, Sz, Stot, factor},
     (
       numE = Min[14-numE0, numE0];
       (*If not loaded then load it, *)
@@ -3490,7 +3487,7 @@ Begin["`Private`"]
   HoleElectronConjugation[params_] := Module[
     {newparams = params},
     (
-      flipSignsOf = Join[{\[Zeta]}, flipSignsOf, cfSymbols, TSymbols];
+      flipSignsOf = Join[{\[Zeta]} , cfSymbols, TSymbols];
       flipped = Table[
         (
           flipper -> - newparams[flipper]
@@ -3709,7 +3706,7 @@ Begin["`Private`"]
           ];
           \[Chi]OverN    = \[Chi] / nRef;
           oStrengthArray = \[Chi]OverN * oStrengthArray;
-          (* the refractive index participates different in absorption and in emission *)
+          (* the refractive index participates differently in absorption and in emission *)
           aFunction      = If[#2[[1]]>#2[[2]], #1 * nRef^2, #1]&;
           oStrengthArray = MapIndexed[aFunction, oStrengthArray, {2}];
         ),
@@ -4045,13 +4042,19 @@ Begin["`Private`"]
   ParseStatesByNumBasisVecs::usage = "ParseStatesByNumBasisVecs[eigenSys, basis, numBasisVecs, roundTo] takes a list of eigenstates (given in eigenSys) in terms of their coefficients in the given basis and returns a list of the same states in terms of their energy and the coefficients at most numBasisVecs basis vectors. By default roundTo is 0.01 and this is the value used to round the amplitude coefficients. eigenSys is a list of lists with two elements, in each list the first element is the energy and the second one the corresponding eigenvector.
   The option \"Coefficients\" can be used to specify whether the coefficients are given as \"Amplitudes\" or \"Probabilities\". The default is \"Amplitudes\".
   ";
-  Options[ParseStatesByNumBasisVecs] = {"Coefficients" -> "Amplitudes", "Representation" -> "Ket"};
+  Options[ParseStatesByNumBasisVecs] = {
+    "Coefficients" -> "Amplitudes",
+    "Representation" -> "Ket",
+    "ReturnAs" -> "Dot"
+    };
   ParseStatesByNumBasisVecs[eigensys_List, basis_List, numBasisVecs_Integer, roundTo_Real : 0.01, OptionsPattern[]] := Module[
     {parsedStates, energy, eigenVec, 
     probs, amplitudes, ordering, 
+    returnAs, 
     chosenIndices, majorComponents, 
     majorAmplitudes, majorRep},
     (
+      returnAs     = OptionValue["ReturnAs"];
       parsedStates = Table[(
         {energy, eigenVec} = state;
         energy             = Chop[energy];
@@ -4077,7 +4080,12 @@ Begin["`Private`"]
             majorThings = majorThings * 100*"%"
           )
         ];
-        majorRep           = majorThings . majorComponents;
+        majorRep  = Which[
+                    returnAs == "Dot",
+                      majorThings . majorComponents,
+                    returnAs == "List",
+                      Transpose[{Reverse@majorThings, Reverse@majorComponents}]
+                    ];
         {energy, majorRep}
         ),
         {state, eigensys}];
@@ -4246,7 +4254,14 @@ Begin["`Private`"]
       importKey     = baseName <> ".m";
       zipImportName = StringReplace[filename, ".m"->".zip"];
       mImportName   = StringReplace[zipImportName, ".zip"->".m"];
-      If[FileExistsQ[mImportName],
+      mxImportName  = StringReplace[zipImportName, ".zip"->".mx"];
+      Which[
+        FileExistsQ[mxImportName],
+      (
+        PrintTemporary[".mx version exists already, importing that instead ..."];
+        Return[Import[mxImportName]];
+      ),
+        FileExistsQ[mImportName],
       (
         PrintTemporary[".m version exists already, importing that instead ..."];
         Return[Import[mImportName]];
@@ -4254,9 +4269,12 @@ Begin["`Private`"]
       ];
       imported = Import[zipImportName, importKey];
       If[OptionValue["Leave Uncompressed"],
-        Export[mImportName, imported]
+        (
+          Export[mImportName, imported];
+          Export[mxImportName, imported];
+        )
       ];
-      Return[imported]
+      Return[imported];
     )
   ];
 
@@ -4976,7 +4994,7 @@ Begin["`Private`"]
       (PrintTemporary[">> ThreeBodyTable.m not found, generating ..."];
         {ThreeBodyTable, ThreeBodyTables} = GenerateThreeBodyTables[14, "Export" -> True];
       ),
-      ThreeBodyTable = Import[ThreeBodyFname];
+      ThreeBodyTable  = Import[ThreeBodyFname];
       ThreeBodyTables = Import[ThreeBodiesFname];
     ];
   );

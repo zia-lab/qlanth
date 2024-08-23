@@ -8,8 +8,7 @@ import shutil
 
 thesis_fundef_folder = '/Users/juan/david-thesis/fundefs'
 thesis_code_folder = '/Users/juan/david-thesis/code'
-code_files = ['qlanth.m', 'fittings.m', 'misc.m', 'qalculations.m', 'qonstants.m', 'qplotter.m',
-              'fitting-LiYF4-and-LaF3.m']
+code_files = ['qlanth.m', 'fittings.m', 'misc.m', 'qalculations.m', 'qonstants.m', 'qplotter.m']
 
 figures_from_to = [
     ('/Users/juan/ZiaLab/Codebase/qlanth/doc/pr_code.png',
