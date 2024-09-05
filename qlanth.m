@@ -13,7 +13,14 @@
 This code was initially authored by Christopher M. Dodson and Rashid
 Zia, and then rewritten and expanded by Juan David Lizarazo Ferro in
 the  years  2022-2024  under  the advisory of Dr. Rashid Zia. It has
-also benefited from the discussions with Tharnier Puel.
+also  benefited  from  the  discussions  with  Tharnier  Puel at the
+University of Iowa.
+
+It   grew   out  of  a  collaboration  sponsored  by  the  NSF  (NSF
+DMR-1922025)   between  the  groups  of  Dr.  Rashid  Zia  at  Brown
+University,  the Quantum Engineering Laboratory at the University of
+Pennsylvania  led  by  Dr. Lee Bassett, and the group of Dr. Michael
+Flatté at the University of Iowa.
 
 It   uses  an  effective  Hamiltonian  to  describe  the  electronic
 structure of lanthanide ions in crystals. This effective Hamiltonian
@@ -39,7 +46,7 @@ results from this code are compared against the published results by
 Carnall  et.  al for the energy levels of lanthinde ions in crystals
 of lanthanum trifluoride.
 
-VERSION: AUGUST 2024
+VERSION: SEPTEMBER 2024
 
 REFERENCES:
 

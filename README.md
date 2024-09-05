@@ -45,4 +45,6 @@ There is also a documentation document ([qlanth.pdf](https://github.com/zia-lab/
 
 - This code was originally authored by Christopher Dodson and Rashid Zia, and was rewritten and expanded by David Lizarazo at Brown University. It has also benefited from the helpful discussions with Tharnier Puel at the University of Iowa.
 
-- This work is supported by the National Sicence Foundation Grant No. 1922278.
+- qlanth was developed under a collaboration between  the  groups  of  Dr.  Rashid  Zia  at  Brown University,  the Quantum Engineering Laboratory at the University of Pennsylvania  led  by  Dr. Lee Bassett, and the group of Dr. Michael Flatté at the University of Iowa.
+
+- This work is supported by the National Science Foundation Grant No. DMR-1922025.
