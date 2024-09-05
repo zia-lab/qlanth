@@ -3,13 +3,32 @@
 
 \RequirePackage{mathrsfs}
 \RequirePackage{mathtools}
+\usepackage{wrapfig}
 \usepackage{cancel}
 \usepackage{dutchcal}
+\usepackage{longtable}
+\usepackage{csvsimple}
+\usepackage{multicol}
+\usepackage{supertabular}
+\usepackage{fontawesome}
+\usepackage{marginnote}
 \usepackage{tikz}
-\usepackage{xcolor}
+\usepackage{pgfkeys}
 \usepackage{scalerel}
 \usepackage{lmodern}
+\usepackage{rotating}
+\usepackage{lscape}
 \usepackage{xspace}
+\usepackage[version=4]{mhchem}
+\usepackage{{Carrickc,lettrine}}
+\renewcommand\LettrineFontHook{{\Carrickcfamily}}
+\usepackage[
+    colorinlistoftodos,  % Adds colors to the list of todos
+    textwidth=2.5cm,  % Sets the width of the notes
+    backgroundcolor=yellow!20,  % Background color of the notes
+    linecolor=orange,  % Line color around the notes
+    bordercolor=blue  % Border color of the notes
+]{todonotes}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%% CUSTOM SYMBOLS %%%%%%%%%%%%
@@ -42,12 +61,25 @@
 
 
 \newcommand{\eqnref}[1]{\textcolor{orange}{$\mathcal{E}$qn-\ref{#1}}}
+\newcommand{\semiref}{\textcolor{orange}{$\mathcal{E}$qn-1.1-\ref{eqn:hamiltonian}}\xspace}
 \newcommand{\figuref}[1]{\textcolor{orange}{$\mathcal{F}$ig-\ref{#1}}}
+\newcommand{\tableref}[1]{\textcolor{blue}{Table~\ref{#1}}}
+
+\newcommand{\iu}{i}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%% THESES %%%%%%%%%%
+
+\newcommand{\margincolor}{\textcolor{blue}}
+
+\newcommand{\marginspacer}{0.5cm}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%% MISC %%%%%%%%%%%%
 
-\newcommand{\colora}[1]{\opcolor{#1}}
+\newcommand{\fncross}{\codetext{fncross}\xspace}
+\newcommand{\colora}[1]{\paramcolor{#1}}
+\newcommand{\etal}{\textit{et al.}\xspace}
 \newcommand{\colorb}[1]{\textcolor{red}{#1}}
 \newcommand{\colorc}[1]{\textcolor{green}{#1}}
 \newcommand{\qlanth}{\textbf{\texttt{qlanth}}\xspace}
@@ -56,6 +88,12 @@
 \newcommand{\RacahW}{\boldsymbol{\mathcal{W}}}
 \newcommand{\Gtwo}{\mathcal{G}_2}
 \newcommand{\LaFthree}{LaF${}_3$\xspace}
+\newcommand{\liyorite}{LiYF${}_4$\xspace}
+\newcommand{\ZZZ}[1]{\textcolor{red}{!!!: #1}}
+\newcommand{\codetext}[1]{{\color{BlueViolet} \texttt{#1}}} 
+
+\newcommand{\bill}{Carnall \textit{et al.} \cite{carnall_systematic_1989}\xspace}
+\newcommand{\cheng}{Cheng \textit{et al.} \cite{cheng_crystal-field_2016}\xspace}
 
 \newcommand{\cfps}{{coefficients of fractional parentage}\xspace}
 
@@ -64,12 +102,16 @@
 \newcommand{\recite}[1]{\citep{#1}} % To customize citation style
 \newcommand{\citeref}[1]{Ref. \![\!\!\citenum{#1}]} % add Ref to citenum
 \newcommand{\citeeqn}[1]{eqn.~\ref{#1}}
+\newcommand{\refappendix}[1]{\textcolor{purple}{Appendix~\ref{#1}}}
+\newcommand{\chapterref}[1]{\textcolor{purple}{Chapter~\ref{#1}}}
+\newcommand{\appendixref}[1]{\textcolor{purple}{Appendix~\ref{#1}}}
+\newcommand{\sectionref}[1]{\textcolor{purple}{Section~\ref{#1}}}
 \newcommand{\figref}[1]{Fig.~\ref{#1}} % add Fig to cited figure
 \newcommand{\figrefsub}[2]{Fig.~\ref{#1}#2} % add Fig to cited figure with panels
 \newcommand{\latin}[1]{\textit{#1}}
 \newcommand{\lorb}{\underbar{$\ell$}}
 \newcommand{\sspin}{\underbar{$\mathcal{s}$}}
-\newcommand{\forb}{\underbar{$\text{f}$}}
+\newcommand{\forb}{\underbar{\text{f}}}
 \newcommand{\ql}{\texttt{qlanth }}
 \newcommand{\muBohr}{\mu_\text{B}}
 
@@ -81,6 +123,8 @@
 
 \newcommand{\icm}{\text{cm}^{-1}}
 \newcommand{\SI}[2]{{#1}\text{#2}}
+\newcommand{\invcm}{\,\text{cm}^{-1}}
+\newcommand{\degcelsius}{{}^\circ\text{C}}
 
 %%%%%%%%%% UNITS %%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -114,7 +158,7 @@
 
 \newcommand{\eV}{\text{eV}}
 \newcommand{\numE}{\mathcal{n}}
-\newcommand{\Kayser}{\text{K}}
+\newcommand{\Kayser}{\mathcal{K}}
 \newcommand{\confint}{\textit{configuration-interaction}\xspace}
 \newcommand{\ecso}{\textit{electrostatically-correlated-spin-orbit}\xspace}
 \newcommand{\soo}{\textit{spin-other-orbit}\xspace}
@@ -134,6 +178,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%% Group Theory %%%%%%%
 \newcommand{\SO}[1]{\mathcal{S\!O}(#1)} % special orthogonal group in R^n
+\newcommand{\groupSymbol}[2]{\mathcal{#1}_{#2}}
 %%%%%%% Group Theory %%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -171,7 +216,7 @@
 \newcommand{\ket}[1]{|#1\rangle} % Ket
 \newcommand{\braket}[2]{\langle #1|#2\rangle} % BraKet
 \newcommand{\braopket}[3]{\langle #1|#2|#3\rangle} % BraKet with operator in the middle
-\newcommand{\op}[1]{\hat{#1}} % operator
+\newcommand{\op}[1]{\opcolor{\hat{#1}}} % operator
 \newcommand{\redbraopket}[3]{\langle #1|\!|#2|\!|#3\rangle}
 \newcommand{\kronecker}[2]{\delta(#1,#2)} % Kronecker delta
 \newcommand{\Msub}[1]{M_{\!{#1}}}
@@ -181,44 +226,64 @@
 \newcommand{\LSJbasis}{\ket{LSJ}}
 \newcommand{\LSbasis}{\ket{LS}}
 
-\newcommand{\Ckq}[2]{\mathcal{C}^{(#1)}_{#2}}
-\newcommand{\Ck}[1]{\mathcal{C}^{(#1)}}
-\newcommand{\Cktwo}{\mathcal{C}^{(k+2)}}
+\newcommand{\Ckq}[2]{\opcolor{\mathcal{C}^{(#1)}_{#2}}}
+\newcommand{\Ck}[1]{\opcolor{\mathcal{C}^{(#1)}}}
+\newcommand{\Cktwo}{\opcolor{\mathcal{C}^{(k+2)}}}
 \newcommand{\wdouble}[3]{\op{w}_{#1}^{({#2},{#3})}}
 \newcommand{\Ykq}{\textrm{Y}^{(k)}_q}
 \newcommand{\Akq}{\mathcal{A}^{(k)}_q}
 
-\newcommand{\lineStrength}{\hat{\mathcal{S}}}
+\newcommand{\lineStrength}{\opcolor{\hat{\mathcal{S}}}}
 \newcommand{\oStrength}[3]{\text{f}_\text{#1}\left(\ket{#2} \rightsquigarrow \ket{#3}\right)}
 \newcommand{\decayRate}[3]{\Gamma_\text{#1}\left(\ket{#2} \rightsquigarrow \ket{#3}\right)}
 \newcommand{\tRate}[3]{\text{A}_\text{#1}\left(\ket{#2} \rightsquigarrow \ket{#3}\right)}
 
-\newcommand{\opcolor}{\textcolor{blue}}
+
+\newcommand{\paramcolor}{\textcolor{blue}}
+\newcommand{\opcolor}{\textcolor{purple}}
 
 \newcommand{\AMD}{\text{A}_\text{MD}}
 \newcommand{\fMD}{\text{f}_\text{MD}}
 
-\newcommand{\Bkq}[2]{\opcolor{B^{(#1)}_{#2}}}
-\newcommand{\Skq}[2]{\opcolor{S^{(#1)}_{#2}}}
-\newcommand{\Bcomplexkq}[2]{\opcolor{\mathcal{B}^{(#1)}_{#2}}}
-\newcommand{\Mk}[1]{\opcolor{M^{(#1)}}}
-\newcommand{\Tk}[1]{\opcolor{T^{(#1)}}}
-\newcommand{\Pk}[1]{\opcolor{P^{(#1)}}}
-\newcommand{\Fk}{\opcolor{{F^{(k)}}}}
-\newcommand{\Ek}{\opcolor{{E_{k}}}}
-\newcommand{\spinZeta}{\opcolor{{\zeta}}}
-\newcommand{\JOk}[1]{\opcolor{\Omega_{(#1)}}}
-\newcommand{\casimirAlpha}{\opcolor{{\alpha}}}
-\newcommand{\casimirBeta}{\opcolor{{\beta}}}
-\newcommand{\casimirGamma}{\opcolor{{\gamma}}}
-\newcommand{\Txyz}[3]{\hat{\mathcal{T}}^{(#1#2)}_{\,#3}}
-\newcommand{\txyz}[3]{\hat{\mathcal{t}}^{(#1#2)}_{\,#3}}
+\newcommand{\Bkq}[2]{\paramcolor{B^{(#1)}_{#2}}}
+\newcommand{\Skq}[2]{\paramcolor{S^{(#1)}_{#2}}}
+\newcommand{\Param}{\paramcolor{\mathcal{P}}}
+\newcommand{\Bcomplexkq}[2]{\paramcolor{\mathcal{B}^{(#1)}_{#2}}}
+
+\newcommand{\Mk}[1]{\paramcolor{\mathcal{M}^{(#1)}}}
+\newcommand{\mk}[1]{\opcolor{\op{m}_{#1}}}
+
+\newcommand{\Tk}[1]{\paramcolor{T^{(#1)}}}
+\newcommand{\tk}[1]{\opcolor{\op{t}_{#1}}}
+
+\newcommand{\Pk}[1]{\paramcolor{P^{(#1)}}}
+\newcommand{\pk}[1]{\opcolor{\opcolor{\hat{p}_{#1}}}}
+
+
+\newcommand{\Fk}[1]{\paramcolor{{F^{(#1)}}}}
+\newcommand{\fk}[1]{\opcolor{\op{f}_{#1}}}
+
+\newcommand{\Ek}[1]{\paramcolor{{E_{#1}}}}
+\newcommand{\ek}[1]{\opcolor{{\hat{e}_{#1}}}}
+
+\newcommand{\spinZeta}{\paramcolor{{\zeta}}}
+\newcommand{\JOk}[1]{\paramcolor{\Omega_{(#1)}}}
+\newcommand{\casimirAlpha}{\paramcolor{{\alpha}}}
+\newcommand{\casimirBeta}{\paramcolor{{\beta}}}
+\newcommand{\casimirGamma}{\paramcolor{{\gamma}}}
+
+\newcommand{\Txyz}[3]{\opcolor{\hat{\mathcal{T}}^{(#1#2)}_{\,#3}}}
+\newcommand{\txyz}[3]{\opcolor{\hat{\mathcal{t}}^{(#1#2)}_{\,#3}}}
 \newcommand{\CoulombNonCentral}{\hat{\mathfrak{C}}}
+
+\usepackage{makecell}
+
+\newcommand{\trion}[1]{\textrm{#1}^{3+}}
 
 \newcommand{\sixj}[6]{\begin{Bmatrix} #1 & #2 & #3 \\ #4 & #5 & #6 \end{Bmatrix}}
 \newcommand{\threej}[6]{\begin{pmatrix} #1 & #2 & #3 \\ #4 & #5 & #6 \end{pmatrix}}
 
-\newcommand{\fn}{$\underbar{f}^n$}
+\newcommand{\fn}{$\underbar{f}^n$\xspace}
 \newcommand{\fourcornersymbol}[5]{{}_{#1}^{#2}{\kern-0.1em}{#3}_{#4}^{#5}}
 \newcommand{\LSterm}[2]{{}^{#1}{\kern-0.1em}{\text{#2}}}
 \newcommand{\LSJterm}[3]{{}^{#1}{\kern-0.1em}{\text{#2}}_{#3}}
@@ -228,7 +293,8 @@
 
 % Hamiltonians:
 
-\newcommand{\ham}{\hat{\mathcal{H}}} % Main ham
+\newcommand{\hamilton}{semi-empirical Hamiltonian\xspace}
+\newcommand{\ham}{\opcolor{\hat{\mathcal{H}}}} % Main ham
 
 \newcommand{\hamKineticSymbol}{\ham_\text{k}}
 \newcommand{\hamKinetic}{\sum_{i=1}^\numE \frac{\op{p}_i^2}{2m}} % Kinetic energy
@@ -236,10 +302,10 @@
 \newcommand{\hamNuclearCoulombSymbol}{\ham_\text{e:sn}}
 \newcommand{\hamNuclearCoulomb}{\sum_{i=1}^\numE V_\textrm{sn}(r_i)} % Central potential of shielded nuclear charge
 
-\newcommand{\casimir}[1]{\,\mathcal{C}(#1)} % symbol use to represent the Casimir opertor of a group
+\newcommand{\casimir}[1]{{\,\mathcal{\op{C}}}(#1)} % symbol use to represent the Casimir opertor of a group
 
 \newcommand{\hamCoulombEESymbol}{\ham_\text{e:e}}
-\newcommand{\hamCoulombEE}{\sum_{i>j}^{\numE,\numE} \frac{e^2}{\norm{\vec{r}_i-\vec{r}_j}} = \sum_{k=0,2,4,6} \Fk\op{f}_k } 
+\newcommand{\hamCoulombEE}{\sum_{i>j}^{\numE,\numE} \frac{e^2}{\norm{\vec{r}_i-\vec{r}_j}} = \sum_{k=0,2,4,6} \Fk{k}\fk{k} } 
 
 \newcommand{\hamTreesSymbol}{\ham_{\SO{3}}}
 
@@ -254,22 +320,22 @@
             11,12,14,15, \\
             16,17,18,19
             }
-        } \Tk{k} \op{t}_k}
+        } \Tk{k} \tk{k}}
 
-\newcommand{\hamGTwoSymbol}{\ham_{\text{G}_2}}
-\newcommand{\hamSOSevenSymbol}{\ham_{\SO{7}}}
+\newcommand{\hamGTwoSymbol}{\opcolor\ham_{\Gtwo}}
+\newcommand{\hamSOSevenSymbol}{\opcolor\ham_{\SO{7}}}
 
-\newcommand{\hamSpinSpinSpinOtherOrbitSymbol}{\ham_{\text{s:s-s:oo}}}
-\newcommand{\hamSpinSpinSpinOtherOrbit}{\sum_{k=0,2,4} \Mk{k} \op{m}_k} 
+\newcommand{\hamSpinSpinSpinOtherOrbitSymbol}{\opcolor{\ham}_{\text{s:s-s:oo}}}
+\newcommand{\hamSpinSpinSpinOtherOrbit}{\sum_{k=0,2,4} \Mk{k} \mk{k}} 
 
-\newcommand{\hamSpinSpinSymbol}{\ham_{\text{s:s}}}
-\newcommand{\hamECSOSymbol}{\ham_{\text{ecs:o}}}
-\newcommand{\hamSpinSpin}{\sum_{k=0,2,4} \Mk{k} \op{m}^{ss}_k} 
+\newcommand{\hamSpinSpinSymbol}{\opcolor{\ham}_{\text{s:s}}}
+\newcommand{\hamECSOSymbol}{\opcolor{\ham}_{\text{ecs:o}}}
+\newcommand{\hamSpinSpin}{\sum_{k=0,2,4} \Mk{k} \mk{k}^{ss}} 
 
-\newcommand{\hamSpinOtherOrbitSymbol}{\ham_\text{s:oo}}
+\newcommand{\hamSpinOtherOrbitSymbol}{\opcolor{\ham_\text{s:oo}}}
 
-\newcommand{\hamSOOplusECSOSymbol}{\ham_\text{s:oo{$\oplus$}ecs:o}}
-\newcommand{\hamSOOplusECSO}{\sum_{k=2,4,6} \Pk{k} \op{p}_k + \sum_{k=0,2,4} \Mk{k} \op{m}_k } 
+\newcommand{\hamSOOplusECSOSymbol}{\opcolor{\ham}_\text{s:oo{$\oplus$}ecs:o}}
+\newcommand{\hamSOOplusECSO}{\sum_{k=2,4,6} \Pk{k} \pk{k} + \sum_{k=0,2,4} \Mk{k} \mk{k} } 
 
 \newcommand{\hamZeemanSymbol}{\ham_{\text{Z}}}
 \newcommand{\hamZeeman}{\mu_B \vec{B}\cdot\left(\op{L} + g_s \op{S}\right)}
@@ -295,7 +361,7 @@
 	left=3.3cm, % Inner margin
 	right=3.3cm, % Outer margin
 	top=3.3cm, % Top margin
-	bottom=3.3cm, % Bottom margin
+	bottom=3.3cm % Bottom margin
 	%showframe, % Uncomment to show how the type block is set on the page
 }
 
