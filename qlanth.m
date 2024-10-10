@@ -280,6 +280,7 @@ AllowedSLJMTerms;
 AllowedSLJTerms;
 AllowedSLTerms;
 
+AngularMomentumMatrices;
 BasisLSJ;
 BasisLSJMJ;
 BasisTableGenerator;
@@ -352,6 +353,7 @@ JJBlockMatrixFileName;
 JJBlockMatrixTable;
 JuddOfeltUkSquared;
 LabeledGrid;
+LandeFactor;
 
 LevelElecDipoleOscillatorStrength;
 LevelJJBlockMagDipole;
@@ -513,6 +515,59 @@ Begin["`Private`"]
     newParams = Join[newParams, params];
     Return[newParams];
     )
+
+  (* ########################################################### *)
+  (* #################### Angular Momentum ##################### *)
+  
+  AngularMomentumMatrices::usage = "AngularMomentumMatrices[j] gives the matrix representation for the angular momentum operators Jx, Jy, and Jz for a given angular momentum j in the basis of eigenvectors of jz. j may be a half-integer or an integer.
+  The options are \"Sparse\" which defaults to False and \"Order\" which defaults to \"HighToLow\". 
+  The option \"Order\" can be set to \"LowToHigh\" to get the matrices in the order from -jay to jay otherwise they are returned in the order jay to -jay.
+  The function returns a list {JxMatrix, JyMatrix, JzMatrix} with the matrix representations for the cartesian components of the angular momentum operator.";
+  Options[AngularMomentumMatrices] = {
+    "Sparse" -> False,
+    "Order" -> "HighToLow"};
+  AngularMomentumMatrices[jay_, OptionsPattern[]] := Module[
+    {
+      JxMatrix, JyMatrix, JzMatrix, 
+      JPlusMatrix, JMinusMatrix, 
+      m1, m2,
+      ArrayInverter
+    }, 
+    (
+      ArrayInverter = #[[-1 ;; 1 ;; -1, -1 ;; 1 ;; -1]] &;
+      JPlusMatrix   = Table[
+        If[m2 == m1 + 1, 
+          Sqrt[(jay - m1) (jay + m1 + 1)], 
+          0
+          ], 
+        {m1, jay, -jay, -1}, 
+        {m2, jay, -jay, -1}];
+      JMinusMatrix = Table[
+        If[m2 == m1 - 1, 
+          Sqrt[(jay + m1) (jay - m1 + 1)], 
+          0
+          ], 
+        {m1, jay, -jay, -1}, 
+        {m2, jay, -jay, -1}];
+      JxMatrix = (JPlusMatrix + JMinusMatrix)/2;
+      JyMatrix = (JMinusMatrix - JPlusMatrix)/(2 I);
+      JzMatrix = DiagonalMatrix[Table[m, {m, jay, -jay, -1}]];
+      If[OptionValue["Sparse"],
+        {JxMatrix, JyMatrix, JzMatrix} = SparseArray /@ {JxMatrix, JyMatrix, JzMatrix}
+      ];
+      If[OptionValue["Order"] == "LowToHigh",
+        {JxMatrix, JyMatrix, JzMatrix} = ArrayInverter /@ {JxMatrix, JyMatrix, JzMatrix};
+      ];
+      Return[{JxMatrix, JyMatrix, JzMatrix}];
+    )
+  ];
+ 
+  LandeFactor::usage="LandeFactor[J, L, S] gives the Lande factor for a given total angular momentum J, orbital angular momentum L, and spin S.";
+  LandeFactor[J_, L_, S_] := (3/2) + (S*(S + 1) - L*(L + 1))/(2*J*(J + 1));
+  
+  (* #################### Angular Momentum ##################### *)
+  (* ########################################################### *)
+
 
   (* ########################################################### *)
   (* ###################### Racah Algebra ###################### *)
@@ -3612,7 +3667,7 @@ Begin["`Private`"]
       numEH = Min[numE, 14-numE];
       PrintFun = OptionValue["PrintFun"];
       PrintFun["> Calculating the levels for the given parameters ..."];
-      {basis, eigenSys} = LevelSolver[numE, params];
+      {basis, majorComponents, eigenSys} = LevelSolver[numE, params];
       (* The change of basis matrix to the eigenstate basis *)
       eigenChanger = Transpose[Last /@ eigenSys];
       PrintFun["Calculating the matrix elements of Uk in the physical coupling basis ..."];
