@@ -3735,7 +3735,8 @@ Begin["`Private`"]
       PrintFun["Calculating the Uk^2 matrix elements for the given parameters ..."];
       {basis, eigenSys, levelLabels, LevelUkSquared} = JuddOfeltUkSquared[numE, levelParams, "PrintFun"->PrintFun];
       eigenEnergies = First/@eigenSys;
-      const         = (8\[Pi]^2)/3 me/hPlanck;
+      (* converted to cm^-2 *)
+      const         = (8\[Pi]^2)/3 me/hPlanck * 10^(-4);
       energyDiffs   = Transpose@Outer[Subtract,eigenEnergies,eigenEnergies];
       (* since energies are assumed in Kayser, speed of light needs to be in cm/s, so that the frequencies are in 1/s *)
       transitionFrequencies = energyDiffs*cLight*100;
