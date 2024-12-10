@@ -231,6 +231,14 @@ Bz: z component of external magnetic field (in T)
 \[CapitalOmega]6: Judd-Ofelt intensity parameter k=6 (in cm^2)
 
 nE: number of electrons in a configuration
+
+E0p: orthogonalized E0
+E1p: orthogonalized E1
+E2p: orthogonalized E2
+E3p: orthogonalized E3
+\[Alpha]p: orthogonalized \[Alpha]
+\[Beta]p: orthogonalized \[Beta]
+\[Gamma]p: orthogonalized \[Gamma]
 ";
 paramSymbols   = StringSplit[paramAtlas, "\n"];
 paramSymbols   = Select[paramSymbols, # != ""& ];
@@ -238,7 +246,7 @@ paramSymbols   = ToExpression[StringSplit[#, ":"][[1]]] & /@ paramSymbols;
 Protect /@ paramSymbols;
 
 (* Parameter families *)
-Unprotect[racahSymbols, chenSymbols, slaterSymbols, controlSymbols, cfSymbols, TSymbols, pseudoMagneticSymbols, marvinSymbols, casimirSymbols, magneticSymbols, juddOfeltIntensitySymbols];
+Unprotect[racahSymbols, chenSymbols, slaterSymbols, controlSymbols, cfSymbols, TSymbols, pseudoMagneticSymbols, marvinSymbols, casimirSymbols, magneticSymbols, juddOfeltIntensitySymbols,mostlyOrthogonalSymbols];
 racahSymbols   = {E0, E1, E2, E3};
 chenSymbols    = {wChErrA, wChErrB};
 slaterSymbols  = {F0, F2, F4, F6};
@@ -252,7 +260,11 @@ marvinSymbols         = {M0, M2, M4};
 magneticSymbols       = {Bx, By, Bz, gs, \[Zeta]};
 casimirSymbols        = {\[Alpha], \[Beta], \[Gamma]};
 juddOfeltIntensitySymbols = {\[CapitalOmega]2, \[CapitalOmega]4, \[CapitalOmega]6};
-paramFamilies         = Hold[{racahSymbols, chenSymbols, slaterSymbols, controlSymbols, cfSymbols, TSymbols, pseudoMagneticSymbols, marvinSymbols, casimirSymbols, magneticSymbols, juddOfeltIntensitySymbols}];
+mostlyOrthogonalSymbols = Join[{E0p, E1p, E2p, E3p, \[Alpha]p, \[Beta]p, \[Gamma]p}, 
+  {T2p, T3, T4, T6, T7, T8, T11p, T12, T14, T15, T16, T17, T18, T19},
+  cfSymbols];
+
+paramFamilies         = Hold[{racahSymbols, chenSymbols, slaterSymbols, controlSymbols, cfSymbols, TSymbols, pseudoMagneticSymbols, marvinSymbols, casimirSymbols, magneticSymbols, juddOfeltIntensitySymbols, mostlyOrthogonalSymbols}];
 ReleaseHold[Protect /@ paramFamilies];
 crystalGroups = {"C1","Ci","C2","Cs","C2h","D2","C2v","D2h","C4","S4","C4h","D4","C4v","D3d","D4h","C3","C3i","D3","C3v","D3d","C6","C3h","C6h","D6","C6v","D3h","D6h","T","Th","O","Td","Oh"};
 
@@ -2475,20 +2487,98 @@ Begin["`Private`"]
 
   HamMatrixAssembly::usage = "HamMatrixAssembly[numE] returns the Hamiltonian matrix for the f^n_i configuration. The matrix is returned as a SparseArray. 
   The function admits an optional parameter \"FilenameAppendix\" which can be used to modify the filename to which the resulting array is exported to.
-  It also admits an optional parameter \"IncludeZeeman\" which can be used to include the Zeeman interaction. The default is False
+  It also admits an optional parameter \"IncludeZeeman\" which can be used to include the Zeeman interaction. The default is False.
   The option \"Set t2Switch\" can be used to toggle on or off setting the t2 selector automatically or not, the default is True, which replaces the parameter according to numE.
   The option \"ReturnInBlocks\" can be used to return the matrix in block or flattened form. The default is to return it in flattened form.";
   Options[HamMatrixAssembly] = {
         "FilenameAppendix"->"",
         "IncludeZeeman"->False,
         "Set t2Switch"->True,
-        "ReturnInBlocks"->False};
+        "ReturnInBlocks"->False,
+        "OperatorBasis"->"Legacy"};
   HamMatrixAssembly[nf_, OptionsPattern[]] := Module[
-    {numE, ii, jj, howManyJs, Js, blockHam},
+    {numE, ii, jj, howManyJs, Js, blockHam, opBasis},
     (
       (*#####################################*)
       ImportFun = ImportMZip;
+      opBasis = OptionValue["OperatorBasis"];
+      If[Not[MemberQ[{"Legacy", "MostlyOrthogonal", "Orthogonal"}, opBasis]],
+        Print["Operator basis ", opBasis, " not recognized, using \"Legacy\" basis."];
+        opBasis = "Legacy";
+      ];
+      If[opBasis == "Orthogonal",
+        Print["Operator basis \"Orthogonal\" not implemented yet, aborting ..."];
+        Return[Null];
+      ];
       (*#####################################*)
+      If[opBasis == "MostlyOrthogonal",
+        (
+          blockHam = HamMatrixAssembly[nf, 
+          "OperatorBasis" -> "Legacy", 
+          "FilenameAppendix" -> OptionValue["FilenameAppendix"], 
+          "IncludeZeeman" -> OptionValue["IncludeZeeman"], 
+          "Set t2Switch" -> OptionValue["Set t2Switch"], 
+          "ReturnInBlocks" -> OptionValue["ReturnInBlocks"]];
+          paramChanger = <|
+              F0 -> 1/91 (54 E1p+91 E0p+78 \[Gamma]p),
+              F2 -> 15/392 (140 E1p+20020 E2p+1540 E3p+770 \[Alpha]p-70 \[Gamma]p+22 Sqrt[2] T2p-11 Sqrt[2] nf T2p),
+              F4 -> 99/490 (70 E1p-9100 E2p+280 E3p+140 \[Alpha]p-35 \[Gamma]p+4 Sqrt[2] T2p-2 Sqrt[2] nf T2p),
+              F6 -> (5577 (20 E1p+700 E2p-140 E3p-70 \[Alpha]p-10 \[Gamma]p-2 Sqrt[2] T2p + Sqrt[2] nf T2p))/7000,
+              \[Zeta]  -> \[Zeta],
+              \[Alpha] -> (5 \[Alpha]p)/4,
+              \[Beta]  -> -6  (5 \[Alpha]p + \[Beta]p),
+              \[Gamma] -> 5/2 (2 \[Beta]p + 5 \[Gamma]p),
+              T2 -> T2p,
+              T3 -> T3,
+              T4 -> T4,
+              T6 -> T6,
+              T7 -> T7,
+              T8 -> T8,
+              M0 -> M0,
+              M2 -> M2,
+              M4 -> M4,
+              P2 -> P2,
+              P4 -> P4,
+              P6 -> P6,
+              B02 -> B02,
+              B04 -> B04,
+              B06 -> B06,
+              B12 -> B12,
+              B14 -> B14,
+              B16 -> B16,
+              B22 -> B22,
+              B24 -> B24,
+              B26 -> B26,
+              B34 -> B34,
+              B36 -> B36,
+              B44 -> B44,
+              B46 -> B46,
+              B56 -> B56,
+              B66 -> B66,
+              S12 -> S12,
+              S14 -> S14,
+              S16 -> S16,
+              S22 -> S22,
+              S24 -> S24,
+              S26 -> S26,
+              S34 -> S34,
+              S36 -> S36,
+              S44 -> S44,
+              S46 -> S46,
+              S56 -> S56,
+              S66 -> S66
+            |>;
+          blockHamMO = Which[
+            OptionValue["ReturnInBlocks"] == False,
+            ReplaceInSparseArray[blockHam, paramChanger],
+            OptionValue["ReturnInBlocks"] == True,
+            Map[ReplaceInSparseArray[#, paramChanger]&, blockHam, {2}]
+          ];
+          Return[blockHamMO];
+        )
+      ];
+      (*#####################################*)
+      
       (*hole-particle equivalence enforcement*)
       numE = nf;
       allVars = {E0, E1, E2, E3, \[Zeta], F0, F2, F4, F6, M0, M2, M4, T2, T2p,
@@ -2540,7 +2630,13 @@ Begin["`Private`"]
     )
   ];
 
-  SimplerSymbolicHamMatrix::usage = "SimplerSymbolicHamMatrix[numE, simplifier] is a simple addition to HamMatrixAssembly that applies a given simplification to the full Hamiltonian. simplifier is a list of replacement rules. If the option \"Export\" is set to True, then the function also exports the resulting sparse array to the ./hams/ folder. The option \"PrependToFilename\" can be used to append a string to the filename to which the function may export to. The option \"Return\" can be used to choose whether the function returns the matrix or not. The option \"Overwrite\" can be used to overwrite the file if it already exists, if this options is set to False then this function simply reloads a file that it assumed to be present already in the ./hams folder. The option \"IncludeZeeman\" can be used to toggle the inclusion of the Zeeman interaction with an external magnetic field.";
+  SimplerSymbolicHamMatrix::usage = "SimplerSymbolicHamMatrix[numE, simplifier] is a simple addition to HamMatrixAssembly that applies a given simplification to the full Hamiltonian. simplifier is a list of replacement rules. 
+  If the option \"Export\" is set to True, then the function also exports the resulting sparse array to the ./hams/ folder.
+  The option \"PrependToFilename\" can be used to append a string to the filename to which the function may export to.
+  The option \"Return\" can be used to choose whether the function returns the matrix or not.
+  The option \"Overwrite\" can be used to overwrite the file if it already exists, if this options is set to False then this function simply reloads a file that it assumed to be present already in the ./hams folder.
+  The option \"IncludeZeeman\" can be used to toggle the inclusion of the Zeeman interaction with an external magnetic field.
+  The option \"OperatorBasis\" can be used to choose the basis in which the operator is expressed. The default is the \"Legacy\" basis. Order alternatives being: \"MostlyOrthogonal\" and \"Orthogonal\". In the \"Legacy\" alternative the operators used are the same as in Carnall's work. In the \"MostlyOrthogonal\"  all operators are orthogonal except those corresponding to the Mk and Pk parameters. In the \"Orthogonal\" basis all operators are orthogonal, with the operators corresponding to the Mk and Pk parameters replaced by zi operators and accompanying ai coefficients. The \"Orthogonal\" option has not been implemented yet.";
   Options[SimplerSymbolicHamMatrix] = {
     "Export"->True, 
     "PrependToFilename"->"", 
@@ -2548,7 +2644,9 @@ Begin["`Private`"]
     "Overwrite" -> False,
     "Return" -> True,
     "Set t2Switch" -> False,
-    "IncludeZeeman" -> False};
+    "IncludeZeeman" -> False,
+    "OperatorBasis" -> "Legacy"
+    };
   SimplerSymbolicHamMatrix[numE_Integer, simplifier_List, OptionsPattern[]] := Module[
     {thisHam,fname, fnamemx},
     (
@@ -2568,10 +2666,28 @@ Begin["`Private`"]
         LoadThreeBody[]
       ];
       
+      opBasis = OptionValue["OperatorBasis"];
+      If[Not[MemberQ[{"Legacy", "MostlyOrthogonal", "Orthogonal"}, opBasis]],
+        Print["Operator basis ", opBasis, " not recognized, using \"Legacy\" basis."];
+        opBasis = "Legacy";
+      ];
+      If[opBasis == "Orthogonal",
+        Print["Operator basis \"Orthogonal\" not implemented yet, aborting ..."];
+        Return[Null];
+      ];
+      
+      fnamePrefix = Which[
+        opBasis == "Legacy",
+        "SymbolicMatrix-f",
+        opBasis == "MostlyOrthogonal",
+        "SymbolicMatrix-mostly-orthogonal-f",
+        opBasis == "Orthogonal",
+        "SymbolicMatrix-orthogonal-f"
+      ];
       fname   = FileNameJoin[{moduleDir, "hams",
-        OptionValue["PrependToFilename"]<>"SymbolicMatrix-f"<>ToString[numE]<>".m"}];
+        OptionValue["PrependToFilename"] <> fnamePrefix <> ToString[numE] <> ".m"}];
       fnamemx = FileNameJoin[{moduleDir,"hams", 
-        OptionValue["PrependToFilename"]<> "SymbolicMatrix-f" <> ToString[numE] <> ".mx"}];
+        OptionValue["PrependToFilename"] <> fnamePrefix <> ToString[numE] <> ".mx"}];
       If[Or[FileExistsQ[fname], FileExistsQ[fnamemx]] 
         && Not[OptionValue["Overwrite"]],
         (
@@ -2602,7 +2718,7 @@ Begin["`Private`"]
         )
       ];
       
-      thisHam = HamMatrixAssembly[numE, "Set t2Switch" -> OptionValue["Set t2Switch"], "IncludeZeeman" -> OptionValue["IncludeZeeman"]];
+      thisHam = HamMatrixAssembly[numE, "Set t2Switch" -> OptionValue["Set t2Switch"], "IncludeZeeman" -> OptionValue["IncludeZeeman"], "OperatorBasis" -> opBasis];
       If[Length[simplifier] > 0,
         thisHam = ReplaceInSparseArray[thisHam, simplifier];
       ];
@@ -4140,7 +4256,7 @@ Begin["`Private`"]
         majorComponents    = Pick[majorComponents, nonZ];
         If[OptionValue["Coefficients"] == "Probabilities",
           (
-            majorThings = majorThings * 100*"%"
+            majorThings = majorThings * 100 * "%";
           )
         ];
         majorRep  = Which[

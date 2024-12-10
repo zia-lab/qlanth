@@ -1,5 +1,5 @@
 BeginPackage["misc`"];
-Needs["MaTeX`"];
+(* Needs["MaTeX`"]; *)
 
 ArrayBlocker;
 BlockAndIndex;

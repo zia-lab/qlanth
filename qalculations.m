@@ -1309,8 +1309,6 @@ parameters used here."
   )
 ];
 
-(* This script has two functions, used to fit for the data of LaF3 and LiYF4 *)
-
 FitLaF3[]:=(
     If[
         Not[ValueQ[PrintToOutputNb]],
@@ -1326,7 +1324,7 @@ FitLaF3[]:=(
     saveEigenvectors = False;
     filePrefix = If[withSpinSin == 1,
         "pathfinder-constraints-with-spinspin-and-no-truncation",
-        "pathfinder-constraints-with-spinspin-and-no-truncation"
+        "pathfinder-constraints-without-spinspin-and-no-truncation"
     ];
     \[Sigma]exp = 1.0;
     trunEnergy = Infinity;
@@ -1502,7 +1500,7 @@ FitLaF3[]:=(
     ),
     {numE0, doThese}];
     Return[{varModels, truncatedSols}];
-)
+);
 
 FitLiYF4[]:=(
     If[
@@ -1725,3 +1723,336 @@ FitLiYF4[]:=(
     {numE0, doThese}];
     Return[{varModels, truncatedSols}];
     );
+
+
+FitLaF3RestrictedOrthogonal[]:=(
+    If[
+        Not[ValueQ[PrintToOutputNb]],
+        PrintToOutputNb = HelperNotebook["Lanthanides : OUT"];
+    ];
+    PrintAndDefine[message_] := (
+        progressMessage = ToString[ln] <> ": " <> ToString[message];
+        PrintToOutputNb[message];
+    );
+    Off[N::preclg];
+    withSpinSin = 1;
+    restart = False;
+    saveEigenvectors = False;
+    filePrefix = If[withSpinSin == 1,
+        "restricted-orthogonal-pathfinder-constraints-with-spinspin-and-no-truncation",
+        "restricted-orthogonal-pathfinder-constraints-without-spinspin-and-no-truncation"
+    ];
+    \[Sigma]exp = 1.0;
+    trunEnergy  = Infinity;
+    fitOrder = "Pr Nd Dy Ce Sm Ho Er Tm Yb Tb Eu Gd Pm";
+    fitOrder = "Pr Nd Dy Ce Sm Ho Er Tm Yb Tb Eu Gd";
+    fitOrder = Position[theLanthanides, #][[1, 1]] & /@ StringSplit[fitOrder, " "];
+    doThese = fitOrder;
+    
+    linearParams       = Join[{\[Alpha]p,\[Beta]p,\[Gamma]p}, cfSymbols, TSymbols, pseudoMagneticSymbols, marvinSymbols];
+    quadraticParams    = {};
+    interpolatedParams = Join[{E1p,E2p,E3p},{\[Zeta]}];
+    
+    varModels = <||>;
+    If[Not[restart],
+    varModel = AssociationThread[{B02, B04, B06, B22, B24, B26, B44, B46, B66, E1p,
+        E2p, E3p, M0, P2, T2p, T3, T4, T6, T7, 
+        T8, \[Alpha]p, \[Beta]p, \[Gamma]p, \[Zeta]}, 
+        ConstantArray[<|"data" -> {}, "function" -> Null|>, 24]];
+    truncatedSols = <||>;
+    ];
+    
+    Do[
+    (
+        numE = numE0;
+        ln   = theLanthanides[[numE]];
+        PrintAndDefine[Style["Working on "<>ln<>" ...", Red]];
+        If[ln == "Pm",
+            (
+                pmSol = <||>;
+                pmSol["hamDim"] = Binomial[14, numE];
+                pmSol["numE"] = numE;
+                pmSol["problemVars"] = variedSymbols["Nd"];
+                pmSol["bestParamsWithConstraints"] = <||>;
+                pmSol["bestRMS"] = 0;
+                pmSol["bestRMSwithTruncation"] = 0;
+                pmSol["fittedLevels"] = 0;
+                pmSol["solWithUncertainty"] = {};
+                Do[
+                (
+                    bestP = varModel[pVar]["function"][numE];
+                    pmSol["bestParamsWithConstraints"][pVar] = bestP;
+                ),
+                {pVar, variedSymbols["Nd"]}];
+                pmSol["bestParamsWithConstraints"][\[Epsilon]] = 0;
+                constrainedMsandPs = ("MagneticSimplifier" /. 
+                    Options[ClassicalFit]) /. 
+                pmSol["bestParamsWithConstraints"];
+                pmSol["bestParamsWithConstraints"] = Join[pmSol["bestParamsWithConstraints"], 
+                    Association@constrainedMsandPs];
+                
+                pmSol["bestParams"] = Normal@pmSol["bestParamsWithConstraints"];
+                pmSol["bestRMSwithFullDiagonalization"] = 0;
+                pmSol["constraints"] = {};
+                LogSol[pmSol, filePrefix <> "/" <> "Pm" <> "-" <> ToString[trunEnergy]];
+                truncatedSols[numE] = pmSol;
+                Continue[];
+            )
+            ];
+        pVars = variedSymbols[ln];
+        constraints = Association@caseConstraints[ln];
+        fixedConstraints = Keys@Select[constraints, NumericQ];
+        
+        mostyOvalues = Association@Table[(param -> varModel[param]["function"][numE]), {param, Keys[varModel]}];
+        nonOvalues   = FromMostlyOrthogonalToNonOrthogonal[mostyOvalues, numE];
+        
+        Do[
+          (
+            constraints[fixedCon] = nonOvalues[fixedCon] 
+          ), 
+        {fixedCon, fixedConstraints}];
+        
+        constraints = Normal[constraints];
+        
+        carnalKey = "appendix:" <> ln <> ":RawTable";
+        expData = {#[[2]], #[[1]], #[[3]]} & /@ Carnall[carnalKey];
+        If[OddQ[numE],
+            expData = Flatten[{#, #} & /@ expData, 1]
+            ];
+        presentDataIndices = Flatten[Position[expData, {_?(NumericQ[#] &), _, _}]];
+        excludedDataIndices = If[OddQ[numE],
+            Flatten[
+            Position[Flatten[{#, #} & /@ (Last /@ Carnall[carnalKey]), 1], 
+            "not included"]],
+            Flatten[Position[Last /@ Carnall[carnalKey], "not included"]]
+            ];
+        independentVars = Variables[pVars /. constraints];
+        startValues = AssociationThread[independentVars, 
+            independentVars /. LoadLaF3Parameters[ln]];
+        thisSolution = ClassicalFit[numE,
+            expData,
+            excludedDataIndices,
+            pVars,
+            startValues,
+            constraints,
+            "SaveEigenvectors" -> saveEigenvectors,
+            "AddConstantShift" -> True,
+            "SignatureCheck" -> False,
+            "Energy Uncertainty in K" -> \[Sigma]exp,
+            "OtherSimplifier" -> (("OtherSimplifier" /. 
+                Options[ClassicalFit]) /. (\[Sigma]SS -> _) :> (\[Sigma]SS ->
+                    withSpinSin)),
+            "MaxIterations" -> 1000,
+            "SaveToLog" -> False,
+            "MaxHistory" -> 1000,
+            "FilePrefix" -> 
+            filePrefix <> "/" <> ln <> "-" <> ToString[trunEnergy],
+            "TruncationEnergy" -> trunEnergy,
+            "PrintFun" -> PrintAndDefine];
+        thisSolution["bestParams"] = Append[thisSolution["bestParams"], (nE -> numE)];
+        thisSolution["bestParamsWithConstraints"][nE] = numE;
+        If[(2 <= numE <= 12),
+            (constrainedMsandPs = ("MagneticSimplifier" /. 
+                Options[ClassicalFit]) /. thisSolution["bestParamsWithConstraints"];
+            thisSolution["bestParamsWithConstraints"] = 
+            Join[thisSolution["bestParamsWithConstraints"], 
+            Association@constrainedMsandPs];
+            )
+            ];
+        
+        PrintAndDefine[">> Computing energies with full diagonalization ..."];
+        params = thisSolution["bestParamsWithConstraints"];
+        eigenEnergies = FastIonSolver[params,
+            "EnergiesOnly" -> True,
+            "MakeNotebook" -> False,
+            "PrintFun" -> PrintAndDefine,
+            "Append to Filename" -> "fitting-" <> ln,
+            "Remove Kramers" -> False,
+            "Energy Uncertainty in K" -> \[Sigma]exp,
+            "Explorer" -> False
+            ];
+        
+        PrintAndDefine[">> Calculating full diagonalization RMS ..."];
+        fullDiffs = (eigenEnergies[[;; Length[expData]]] - 
+            First /@ expData)[[
+            Complement[presentDataIndices, excludedDataIndices]]];
+        fullRMSsquared = Sqrt[Total[fullDiffs^2]/thisSolution["degreesOfFreedom"]];
+        thisSolution["bestRMSwithTruncation"] = thisSolution["bestRMS"];
+        thisSolution["energiesWithTruncation"] = thisSolution["energies"];
+        thisSolution["excludedDataIndices"] = excludedDataIndices;
+        thisSolution["bestRMSwithFullDiagonalization"] = fullRMSsquared;
+        thisSolution["energiesWithFullDiagonalization"] = eigenEnergies;
+        thisSolution = KeyDrop[thisSolution, {"bestRMS", "energies"}];
+        truncatedSols[numE0] = thisSolution;
+        LogSol[thisSolution, filePrefix <> "/" <> ln <> "-" <> ToString[trunEnergy]];
+        
+        PrintAndDefine["> Updating param model functions ..."];
+        bestParams = Association@thisSolution["bestParams"];
+        mostlyOparams = FromNonOrthogonalToMostlyOrthogonal[bestParams, numE];
+        Do[
+        (
+            If[Not[MemberQ[Keys[varModel], pVar]],
+            Continue[];
+            ];
+            varModel[pVar]["data"] = 
+            DeleteDuplicates@
+            Append[varModel[pVar]["data"], {numE, mostlyOparams[pVar]}];
+            numData = Length[varModel[pVar]["data"]];
+            varModel[pVar]["data"] = Select[varModel[pVar]["data"], FreeQ[#, Missing] &];
+            If[numData > 0,
+            (
+                order = Which[
+                    numData == 1,
+                    0,
+                    numData == 2,
+                    1,
+                    numData >= 3,
+                    2];
+                varModel[pVar]["function"] = Which[
+                    MemberQ[linearParams, pVar],
+                        NonlinearModelFit[varModel[pVar]["data"], a0 + a1 x, {a0, a1}, x],
+                    MemberQ[quadraticParams, pVar],
+                        NonlinearModelFit[varModel[pVar]["data"], a0 + a1 x + a2 x^2, {a0, a1, a2}, x],
+                    MemberQ[interpolatedParams, pVar],
+                        Interpolation[varModel[pVar]["data"], InterpolationOrder -> order]
+                    ]
+            )
+            ];
+        ),
+        {pVar, Keys[varModel]}
+        ];
+        varModels[ln] = varModel; 
+        Run["~/Scripts/pushover \"finished fitting " <> ln <> "\""];
+    ),
+    {numE0, doThese}];
+    Return[{varModels, truncatedSols}];
+);
+
+FromNonOrthogonalToMostlyOrthogonal::usage="FromNonOrthogonalToMostlyOrthogonal[nonOparams, nE] takes  an association of parameters corresponding to the non-orthogonal version of the Hamiltonian and returns an association for the parameters in the mostly-orthogonal representation (E0p, E1p, E2p, \[Alpha]p, \[Beta]p, \[Gamma]p). 
+Mostly orthogonal is meant here in the sense that the Pk and Mk parameters are not orthogonal within themselves although they are to the other parameters.
+The function takes the following arguments: 
+    - nonOparams: an association with keys equal to non-orthogonal parameter symbols and associated values. 
+    - nE: the number of electrons in the corresponding configuration.
+The function returns and association for the parameters that can be reasonably computed given the input.    
+";
+FromNonOrthogonalToMostlyOrthogonal[nonOparams_, nE_] := Module[
+  {paramChanger, mostlyOparams, nnE = nE},
+  (
+    paramChanger = <|
+      E0p -> F0 - (4 F2)/195 - (2 F4)/143 - (100 F6)/5577 - (24 \[Alpha])/13 - \[Beta]/13 - (6 \[Gamma])/65, 
+      E1p -> (14 F2)/405 + (7 F4)/297 + (350 F6)/11583 + (4 \[Alpha])/5 + \[Beta]/30 + \[Gamma]/25, 
+      E2p -> F2/2025 - F4/3267 + (175 F6)/1656369, 
+      E3p -> F2/135 + (2 F4)/1089 - (175 F6)/42471 - T2/(35 Sqrt[2]) + (nnE T2)/(70 Sqrt[2]) - (2 \[Alpha])/5, 
+      \[Alpha]p -> (4 \[Alpha])/5, 
+      \[Beta]p  -> -4 \[Alpha] - \[Beta]/6, 
+      \[Gamma]p -> (8 \[Alpha])/5 + \[Beta]/15 + (2 \[Gamma])/25,
+      B02 -> B02,
+      B04 -> B04,
+      B06 -> B06,
+      B12 -> B12,
+      B14 -> B14,
+      B16 -> B16,
+      B22 -> B22,
+      B24 -> B24,
+      B26 -> B26,
+      B34 -> B34,
+      B36 -> B36,
+      B44 -> B44,
+      B46 -> B46,
+      B56 -> B56,
+      B66 -> B66,
+      S12 -> S12,
+      S14 -> S14,
+      S16 -> S16,
+      S22 -> S22,
+      S24 -> S24,
+      S26 -> S26,
+      S34 -> S34,
+      S36 -> S36,
+      S44 -> S44,
+      S46 -> S46,
+      S56 -> S56,
+      S66 -> S66,
+      \[Zeta] -> \[Zeta],
+      T2p -> T2,
+      T3 -> T3,
+      T4 -> T4,
+      T6 -> T6,
+      T7 -> T7,
+      T8 -> T8,
+      M0 -> M0,
+      M2 -> M2,
+      M4 -> M4,
+      P2 -> P2,
+      P4 -> P4,
+      P6 -> P6
+      |>;
+      paramChanger = Select[paramChanger, ContainsAll[Keys[nonOparams], Variables[#]] &];
+    mostlyOparams = Expand /@ (paramChanger /. nonOparams);
+    Return[mostlyOparams];
+)
+];
+
+FromMostlyOrthogonalToNonOrthogonal::usage="FromMostlyOrthogonalToNonOrthogonal[mostlyOparams_, nE] takes  an association of parameters corresponding to the mostly-orthogonal version of the Hamiltonian and returns an association for the parameters in the non-orthogonal representation (F0, F2, F4, F6, \[Alpha], \[Beta], \[Gamma], ...). Mostly orthogonal is meant here in the sense that the Pk and Mk parameters are not orthogonal within themselves although they are to the other parameters.
+The function takes the following arguments: 
+    - mostlyOparams: an association with keys equal to mostly-orthogonal parameter symbols and associated values. 
+    - nE: the number of electrons in the corresponding configuration.
+The function returns and association for the parameters that can be reasonably computed given the input. 
+";
+FromMostlyOrthogonalToNonOrthogonal[mostlyOparams_, nE_]:=Module[
+  {paramChanger, nonOparams, nnE = nE},
+  (
+    paramChanger = <|
+        F0 -> 1/91 (54 E1p+91 E0p+78 \[Gamma]p),
+        F2 -> 15/392 (140 E1p+20020 E2p+1540 E3p+770 \[Alpha]p-70 \[Gamma]p+22 Sqrt[2] T2p-11 Sqrt[2] nnE T2p),
+        F4 -> 99/490 (70 E1p-9100 E2p+280 E3p+140 \[Alpha]p-35 \[Gamma]p+4 Sqrt[2] T2p-2 Sqrt[2] nnE T2p),
+        F6 -> (5577 (20 E1p+700 E2p-140 E3p-70 \[Alpha]p-10 \[Gamma]p-2 Sqrt[2] T2p + Sqrt[2] nnE T2p))/7000,
+        \[Zeta]  -> \[Zeta],
+        \[Alpha] -> (5 \[Alpha]p)/4,
+        \[Beta]  -> -6  (5 \[Alpha]p + \[Beta]p),
+        \[Gamma] -> 5/2 (2 \[Beta]p + 5 \[Gamma]p),
+        T2 -> T2p,
+        T3 -> T3,
+        T4 -> T4,
+        T6 -> T6,
+        T7 -> T7,
+        T8 -> T8,
+        M0 -> M0,
+        M2 -> M2,
+        M4 -> M4,
+        P2 -> P2,
+        P4 -> P4,
+        P6 -> P6,
+        B02 -> B02,
+        B04 -> B04,
+        B06 -> B06,
+        B12 -> B12,
+        B14 -> B14,
+        B16 -> B16,
+        B22 -> B22,
+        B24 -> B24,
+        B26 -> B26,
+        B34 -> B34,
+        B36 -> B36,
+        B44 -> B44,
+        B46 -> B46,
+        B56 -> B56,
+        B66 -> B66,
+        S12 -> S12,
+        S14 -> S14,
+        S16 -> S16,
+        S22 -> S22,
+        S24 -> S24,
+        S26 -> S26,
+        S34 -> S34,
+        S36 -> S36,
+        S44 -> S44,
+        S46 -> S46,
+        S56 -> S56,
+        S66 -> S66
+      |>;
+      paramChanger = Select[paramChanger,ContainsAll[Keys[mostlyOparams],Variables[#]]&];
+    nonOparams = Expand/@(paramChanger/.mostlyOparams);
+    Return[nonOparams];
+  )
+];
