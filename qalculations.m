@@ -651,6 +651,7 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
     eigenstateTruncationProbability = OptionValue["eigenstateTruncationProbability"];
     maxStatesInTable                = OptionValue["Max Eigenstates in Table"];
     Duplicator[aList_] := Flatten[{#, #} & /@ aList];
+    
     host      = OptionValue["Host"];
     ln        = theLanthanides[[numE]];
     terms     = AllowedNKSLJTerms[Min[numE, 14 - numE]];
@@ -669,7 +670,7 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
       (
         PrintFun["> Conjugating the parameters accounting for the hole-particle equivalence ..."];
         params = HoleElectronConjugation[params];
-        params[t2Switch] = 0;
+        params[t2Switch] = (numE-2)/(numE-7);
       ),
       params[t2Switch] = 1;
     ];
@@ -1928,6 +1929,301 @@ FitLaF3RestrictedOrthogonal[]:=(
     Return[{varModels, truncatedSols}];
 );
 
+FitLaF3MostlyOrthogonal::usage="FitLaF3MostlyOrthogonal[] fits the LaF3 data using the mostly-orthogonal operator basis. 
+The function admits two options: \"FitOrder\" and \"MaxIterations\". The first one is a string with the order of the lanthanides to be fitted, and the second one is the maximum number of iterations for the fitting routine. The default values are \"Pr Nd Dy Ce Sm Ho Er Tm Yb Tb Eu Gd Pm\" and 1000, respectively.
+The results of fitting every ion are saved to files in the directory \"mostly-orthogonal-pathfinder-constraints-with-spinspin-and-no-truncation\" or \"mostly-orthogonal-pathfinder-constraints-without-spinspin-and-no-truncation\". The results are saved in the form of an association with the following keys:
+- simplifier
+- excludeDataIndices
+- startValues
+- freeIonSymbols
+- truncationEnergy
+- numE
+- expData
+- problemVars
+- maxIterations
+- hamDim
+- constraints
+- allVars
+- freeBies
+- compiledIntermediateFname
+- presentDataIndices
+- degreesOfFreedom
+- solWithUncertainty
+- truncatedDim
+- fittedLevels
+- actualSteps
+- paramSols
+- rmsHistory
+- Appendix
+- timeTaken/s
+- bestParams
+- bestParamsWithConstraints
+- bestRMSwithTruncation
+- energiesWithTruncation
+- excludedDataIndices
+- bestRMSwithFullDiagonalization
+- energiesWithFullDiagonalization
+The function returns a list with two elements. The first element being an association with containing the regression models that were built to the several model parameters during fitting, and the second element being an association with the results (as associations with the keys listed above) of the fitting for each lanthanide ion.";
+Options[FitLaF3MostlyOrthogonal] = {
+  "FitOrder" -> "Pr Nd Dy Ce Sm Ho Er Tm Yb Tb Eu Gd Pm",
+  "MaxIterations" -> 1000};
+FitLaF3MostlyOrthogonal[OptionsPattern[]]:=Module[
+  {
+    withSpinSin,
+    restart,
+    saveEigenvectors,
+    filePrefix,
+    \[Sigma]exp,
+    trunEnergy,
+    fitOrder,
+    doThese,
+    linearParams,
+    quadraticParams,
+    interpolatedParams,
+    varModels,
+    varModel,
+    truncatedSols,
+    numE0,
+    numE,
+    ln,
+    pmSol,
+    pVar,
+    bestP,
+    constrainedMsandPs,
+    pVars,
+    constraints,
+    fixedConstraints,
+    carnalKey,
+    expData,
+    presentDataIndices,
+    excludedDataIndices,
+    independentVars,
+    startValues,
+    thisSolution,
+    bestParams,
+    params,
+    eigenEnergies,
+    fullDiffs,
+    numFreeVars,
+    numData,
+    fullRMSsquared,
+    order
+},
+(
+    If[
+        Not[ValueQ[PrintToOutputNb]],
+        PrintToOutputNb = HelperNotebook["Lanthanides : OUT"];
+    ];
+    PrintAndDefine[message_] := (
+        progressMessage = ToString[ln] <> ": " <> ToString[message];
+        PrintToOutputNb[message];
+    );
+    Off[N::preclg];
+    withSpinSin = 1;
+    restart = False;
+    saveEigenvectors = False;
+    filePrefix = If[withSpinSin == 1,
+        "mostly-orthogonal-pathfinder-constraints-with-spinspin-and-no-truncation",
+        "mostly-orthogonal-pathfinder-constraints-without-spinspin-and-no-truncation"
+    ];
+    \[Sigma]exp = 1.0;
+    trunEnergy  = Infinity;
+    fitOrder = OptionValue["FitOrder"];
+    fitOrder = Position[theLanthanides, #][[1, 1]] & /@ StringSplit[fitOrder, " "];
+    doThese  = fitOrder;
+    
+    linearParams       = Join[{\[Alpha]p, \[Beta]p, \[Gamma]p}, cfSymbols, TSymbols, pseudoMagneticSymbols, marvinSymbols];
+    quadraticParams    = {};
+    interpolatedParams = Join[{E1p, E2p, E3p}, {\[Zeta]}];
+    
+    varModels = <||>;
+    If[Not[restart],
+    varModel = AssociationThread[{
+        B02, B04, B06, B22, B24, B26, B44, B46, B66, 
+        E1p, E2p, E3p, 
+        M0, P2, 
+        T2p, T3, T4, T6, T7, T8,
+        \[Alpha]p, \[Beta]p, \[Gamma]p,
+        \[Zeta]}, 
+        ConstantArray[<|"data" -> {}, "function" -> Null|>, 24]];
+    truncatedSols = <||>;
+    ];
+    
+    Do[
+    (
+        numE = numE0;
+        ln   = theLanthanides[[numE]];
+        PrintAndDefine[Style["Working on "<>ln<>" ...", Red]];
+        (* remember to modify this one, too!*)
+        If[ln == "Pm",
+            (
+                pmSol = <||>;
+                pmSol["hamDim"] = Binomial[14, numE];
+                pmSol["numE"] = numE;
+                pmSol["problemVars"] = variedSymbolsMO["Nd"];
+                pmSol["bestParamsWithConstraints"] = <||>;
+                pmSol["bestRMS"] = 0;
+                pmSol["bestRMSwithTruncation"] = 0;
+                pmSol["fittedLevels"] = 0;
+                pmSol["solWithUncertainty"] = {};
+                Do[
+                (
+                    bestP = varModel[pVar]["function"][numE];
+                    pmSol["bestParamsWithConstraints"][pVar] = bestP;
+                ),
+                {pVar, variedSymbolsMO["Nd"]}];
+                pmSol["bestParamsWithConstraints"][\[Epsilon]] = 0;
+                constrainedMsandPs = ("MagneticSimplifier" /. 
+                    Options[MostlyOrthogonalFit]) /. 
+                pmSol["bestParamsWithConstraints"];
+                pmSol["bestParamsWithConstraints"] = Join[pmSol["bestParamsWithConstraints"], 
+                    Association@constrainedMsandPs];
+                
+                pmSol["bestParams"] = Normal@pmSol["bestParamsWithConstraints"];
+                pmSol["bestRMSwithFullDiagonalization"] = 0;
+                pmSol["constraints"] = {};
+                LogSol[pmSol, filePrefix <> "/" <> "Pm" <> "-" <> ToString[trunEnergy]];
+                truncatedSols[numE] = pmSol;
+                Continue[];
+            )
+            ];
+        pVars = variedSymbolsMO[ln];
+        constraints = Association@caseConstraintsMO[ln];
+        fixedConstraints = Keys@Select[constraints, NumericQ];
+        
+        Do[constraints[fixedCon] = varModel[fixedCon]["function"][numE], 
+        {fixedCon, fixedConstraints}];
+        constraints = Normal[constraints];
+        
+        carnalKey = "appendix:" <> ln <> ":RawTable";
+        expData = {#[[2]], #[[1]], #[[3]]} & /@ Carnall[carnalKey];
+        If[OddQ[numE],
+            expData = Flatten[{#, #} & /@ expData, 1]
+            ];
+        presentDataIndices = Flatten[Position[expData, {_?(NumericQ[#] &), _, _}]];
+        excludedDataIndices = If[OddQ[numE],
+            Flatten[
+            Position[Flatten[{#, #} & /@ (Last /@ Carnall[carnalKey]), 1], 
+            "not included"]],
+            Flatten[Position[Last /@ Carnall[carnalKey], "not included"]]
+            ];
+        independentVars = Variables[pVars /. constraints];
+        startValues = AssociationThread[independentVars, 
+            independentVars /. FromNonOrthogonalToMostlyOrthogonal[LoadLaF3Parameters[ln], numE]];
+        thisSolution = MostlyOrthogonalFit[numE,
+            expData,
+            excludedDataIndices,
+            pVars,
+            startValues,
+            constraints,
+            "SaveEigenvectors" -> saveEigenvectors,
+            "AddConstantShift" -> True,
+            "SignatureCheck" -> False,
+            "Energy Uncertainty in K" -> \[Sigma]exp,
+            "OtherSimplifier" -> (("OtherSimplifier" /. 
+                Options[MostlyOrthogonalFit]) /. (\[Sigma]SS -> _) :> (\[Sigma]SS ->
+                    withSpinSin)),
+            "MaxIterations" -> OptionValue["MaxIterations"],
+            "SaveToLog" -> False,
+            "MaxHistory" -> 1000,
+            "FilePrefix" -> filePrefix <> "/" <> ln <> "-" <> ToString[trunEnergy],
+            "TruncationEnergy" -> trunEnergy,
+            "PrintFun" -> PrintAndDefine];
+        thisSolution["bestParams"] = Append[thisSolution["bestParams"], (nE -> numE)];
+        thisSolution["bestParamsWithConstraints"][nE] = numE;
+        If[(2 <= numE <= 12),
+            (constrainedMsandPs = ("MagneticSimplifier" /. 
+                Options[MostlyOrthogonalFit]) /. thisSolution["bestParamsWithConstraints"];
+            thisSolution["bestParamsWithConstraints"] = 
+            Join[thisSolution["bestParamsWithConstraints"], 
+            Association@constrainedMsandPs];
+            )
+            ];
+        
+        PrintAndDefine[">> Computing energies with full diagonalization ..."];
+        params = thisSolution["bestParamsWithConstraints"];
+        eigenEnergies = FastIonSolver[params,
+            "EnergiesOnly" -> True,
+            "MakeNotebook" -> False,
+            "PrintFun" -> PrintAndDefine,
+            "Append to Filename" -> "fitting-" <> ln,
+            "Remove Kramers" -> False,
+            "Energy Uncertainty in K" -> \[Sigma]exp,
+            "Explorer" -> False
+            ];
+        
+        PrintAndDefine[">> Calculating full diagonalization RMS ..."];
+        fullDiffs = (eigenEnergies[[;; Length[expData]]] - 
+            First /@ expData)[[
+            Complement[presentDataIndices, excludedDataIndices]]];
+        numFreeVars = Length[thisSolution["problemVars"]];
+        numData = Length[thisSolution["presentDataIndices"]];
+        Which[
+          OddQ[numE],
+          (
+            Print["ATTENTION: Odd number of electrons, disregarding Kramers' degeneracy for calculation of sigma ..."];
+            fullRMSsquared = Sqrt[Total[fullDiffs[[;;;;2]]^2]/(numData/2 - numFreeVars - 1)];
+            thisSolution["bestRMS"] = Sqrt[
+              thisSolution["bestRMS"]^2 * 
+              thisSolution["degreesOfFreedom"] /
+              (numData - 2*numFreeVars - 2)];
+            thisSolution["degreesOfFreedom"] = numData/2 - numFreeVars - 1;
+          ),
+          True,
+          (
+            fullRMSsquared = Sqrt[Total[fullDiffs^2]/(thisSolution["degreesOfFreedom"])]
+          )  
+        ];
+        thisSolution["bestRMSwithTruncation"] = thisSolution["bestRMS"];
+        thisSolution["energiesWithTruncation"] = thisSolution["energies"];
+        thisSolution["excludedDataIndices"] = excludedDataIndices;
+        thisSolution["bestRMSwithFullDiagonalization"] = fullRMSsquared;
+        thisSolution["energiesWithFullDiagonalization"] = eigenEnergies;
+        thisSolution = KeyDrop[thisSolution, {"bestRMS", "energies"}];
+        truncatedSols[numE0] = thisSolution;
+        LogSol[thisSolution, filePrefix <> "/" <> ln <> "-" <> ToString[trunEnergy]];
+        
+        PrintAndDefine["> Updating param model functions ..."];
+        bestParams = Association@thisSolution["bestParams"];
+        Do[
+        (
+            If[Not[MemberQ[Keys[bestParams], pVar]],
+            Continue[];
+            ];
+            varModel[pVar]["data"] = 
+            DeleteDuplicates@
+            Append[varModel[pVar]["data"], {numE, bestParams[pVar]}];
+            numData = Length[varModel[pVar]["data"]];
+            If[numData > 0,
+            (
+                order = Which[
+                    numData == 1,
+                    0,
+                    numData == 2,
+                    1,
+                    numData >= 3,
+                    2];
+                varModel[pVar]["function"] = Which[
+                    MemberQ[linearParams, pVar],
+                        NonlinearModelFit[varModel[pVar]["data"], a0 + a1 x, {a0, a1}, x],
+                    MemberQ[quadraticParams, pVar],
+                        NonlinearModelFit[varModel[pVar]["data"], a0 + a1 x + a2 x^2, {a0, a1, a2}, x],
+                    MemberQ[interpolatedParams, pVar],
+                        Interpolation[varModel[pVar]["data"], InterpolationOrder -> order]
+                    ]
+            )
+            ];
+        ),
+        {pVar, pVars}
+        ];
+        varModels[ln] = varModel; 
+        Run["~/Scripts/pushover \"finished fitting " <> ln <> "\""];
+    ),
+    {numE0, doThese}];
+    Return[{varModels, truncatedSols}];
+)
+];
+
 FromNonOrthogonalToMostlyOrthogonal::usage="FromNonOrthogonalToMostlyOrthogonal[nonOparams, nE] takes  an association of parameters corresponding to the non-orthogonal version of the Hamiltonian and returns an association for the parameters in the mostly-orthogonal representation (E0p, E1p, E2p, \[Alpha]p, \[Beta]p, \[Gamma]p). 
 Mostly orthogonal is meant here in the sense that the Pk and Mk parameters are not orthogonal within themselves although they are to the other parameters.
 The function takes the following arguments: 
@@ -2056,3 +2352,271 @@ FromMostlyOrthogonalToNonOrthogonal[mostlyOparams_, nE_]:=Module[
     Return[nonOparams];
   )
 ];
+
+Options[SimulatedAnnealingSolver] = {
+  "corral" -> 0.01,
+  "maxIterations" -> 200,
+  "superCycles" -> 1,
+  "maxTimeInMin" -> 5
+};
+SimulatedAnnealingSolver[numE_,OptionsPattern[]]:=(
+  (* corral controls how much the parameters are constrained based on the original solution *)
+  corral        = OptionValue["corral"]; 
+  maxIterations =  OptionValue["maxIterations"];
+  (* when using the simulated annealing method this number of attempts are tried out*)
+  superCycles   = OptionValue["superCycles"];
+  (* each of those attempts is time constrained *)
+  maxTimeInMin  = OptionValue["maxTimeInMin"]; 
+  (* such that that part of the solver takes about superCycles * maxTimeInMin minutes *)
+  ln = theLanthanides[[numE]];
+  
+  Print["Loading previously found solution ..."];
+  truncatedSols = Import["/Users/juan/ZiaLab/Codebase/qlanth/LaF3-final-fit-mostly-orthogonal.m"]["truncatedSols"];
+  {compiledHam, intermediateBasis} = Import[truncatedSols[numE]["compiledIntermediateFname"]];
+  sol = truncatedSols[numE]["bestParamsWithConstraints"];
+  problemVars = Append[truncatedSols[numE]["problemVars"], \[Epsilon]];
+  expData     = First/@truncatedSols[numE]["expData"];
+  presentDataIndices  = truncatedSols[numE]["presentDataIndices"];
+  excludedDataIndices = truncatedSols[numE]["excludedDataIndices"];
+  relevantDataIndices = Complement[presentDataIndices,excludedDataIndices];
+  degsOfFree          = If[OddQ[numE],
+        Length[relevantDataIndices]/2 - Length[problemVars],
+        Length[relevantDataIndices]   - Length[problemVars]
+  ];
+  Wich[
+    ln == "Er",
+    CostFun[
+      B02num_?NumericQ,B04num_?NumericQ,B06num_?NumericQ,B22num_?NumericQ,
+      B24num_?NumericQ,B26num_?NumericQ,B44num_?NumericQ,B46num_?NumericQ,B66num_?NumericQ,
+      E1pnum_?NumericQ,E2pnum_?NumericQ,E3pnum_?NumericQ,
+      M0num_?NumericQ,P2num_?NumericQ,
+      T2pnum_?NumericQ,T3num_?NumericQ,T4num_?NumericQ,T6num_?NumericQ,T7num_?NumericQ,T8num_?NumericQ,
+      \[Alpha]pnum_?NumericQ,\[Beta]pnum_?NumericQ,\[Gamma]pnum_?NumericQ,
+      \[Zeta]num_?NumericQ,\[Epsilon]num_?NumericQ]:=(
+    eigenValues = Sort@Eigenvalues@compiledHam[B02num,B04num,B06num,B22num,B24num,B26num,B44num,B46num,B66num,E1pnum,E2pnum,E3pnum,M0num,P2num,T2pnum,T3num,T4num,T6num,T7num,T8num,\[Alpha]pnum,\[Beta]pnum,\[Gamma]pnum,\[Zeta]num];
+      eigenValues = (eigenValues-eigenValues[[1]]+\[Epsilon]num)[[;;Length[expData]]];
+      diffs       = (eigenValues-expData)[[relevantDataIndices]];
+      theCost     = Total[diffs^2];
+      Return[theCost]
+    );,
+    ln == "Nd",
+    CostFun[
+      B02num_?NumericQ,B04num_?NumericQ,B06num_?NumericQ,B22num_?NumericQ,
+      B24num_?NumericQ,B26num_?NumericQ,B44num_?NumericQ,B46num_?NumericQ,B66num_?NumericQ,
+      E1pnum_?NumericQ,E2pnum_?NumericQ,E3pnum_?NumericQ,
+      M0num_?NumericQ,P2num_?NumericQ,
+      T2pnum_?NumericQ,T3num_?NumericQ,T4num_?NumericQ,T6num_?NumericQ,T7num_?NumericQ,T8num_?NumericQ,
+      \[Alpha]pnum_?NumericQ,\[Beta]pnum_?NumericQ,\[Gamma]pnum_?NumericQ,
+      \[Zeta]num_?NumericQ,\[Epsilon]num_?NumericQ]:=(
+    eigenValues = Sort@Eigenvalues@compiledHam[B02num,B04num,B06num,B22num,B24num,B26num,B44num,B46num,B66num,E1pnum,E2pnum,E3pnum,M0num,P2num,T2pnum,T3num,T4num,T6num,T7num,T8num,\[Alpha]pnum,\[Beta]pnum,\[Gamma]pnum,\[Zeta]num];
+      eigenValues = (eigenValues-eigenValues[[1]]+\[Epsilon]num)[[;;Length[expData]]];
+      diffs       = (eigenValues-expData)[[relevantDataIndices]];
+      theCost     = Total[diffs^2];
+      Return[theCost]
+    ); 
+  ]
+
+  Options[ProgressNotebook] = {"Basic" -> True};
+  ProgressNotebook[
+    OptionsPattern[]] := (nb = 
+      Which[OptionValue["Basic"], 
+      CreateDocument[({Dynamic[
+          TextCell[
+            If[Length[paramSols] > 0, 
+            TableForm[
+              Prepend[Transpose[{stringPartialVars, 
+                paramSols[[-1]]}], {"RMS", rmsHistory[[-1]]}]], ""], 
+            "Output"], 
+          TrackedSymbols :> {paramSols, stringPartialVars},
+          UpdateInterval -> 0.5
+          ]}), WindowSize -> {600, 1000}, WindowSelected -> True, 
+        TextAlignment -> Center, WindowTitle -> "Solver Progress"], 
+      True, CreateDocument[({"", Dynamic[
+          Framed[progressMessage], UpdateInterval -> 0.5], 
+          Dynamic[GraphicsColumn[{ListPlot[rmsHistory, 
+              PlotMarkers -> "OpenMarkers", Frame -> True, 
+              FrameLabel -> {"Iteration", "RMS"}, ImageSize -> 800, 
+              AspectRatio -> 1/3, FrameStyle -> Directive[Thick, 15], 
+              PlotLabel -> 
+              If[Length[rmsHistory] != 0, rmsHistory[[-1]], ""]], 
+            ListPlot[(#/#[[1]]) & /@ Transpose[paramSols], 
+              Joined -> True, PlotRange -> {All, {-5, 5}}, 
+              Frame -> True, ImageSize -> 800, AspectRatio -> 1, 
+              FrameStyle -> Directive[Thick, 15], 
+              FrameLabel -> {"Iteration", "Params"}]}], 
+          TrackedSymbols :> {rmsHistory, paramSols},
+          UpdateInterval -> 0.5], 
+          Dynamic[TextCell[
+            If[Length[paramSols] > 0, 
+            TableForm[Transpose[{stringPartialVars, paramSols[[-1]]}]],
+              ""], "Output"], 
+          TrackedSymbols :> {paramSols, stringPartialVars},
+          UpdateInterval -> 0.5
+          ]}), WindowSize -> {600, 1000}, WindowSelected -> True, 
+        TextAlignment -> Center, WindowTitle -> "Solver Progress"]];
+    Return[nb];
+    );
+   
+  AddToList[list_, element_, maxSize_, addOnlyNew_ : True] := 
+    Module[{tempList = If[
+        addOnlyNew, If[Length[list] == 0,
+        {element}, 
+        If[element != list[[-1]], Append[list, element], list]], 
+        Append[list, element]]}, 
+    If[Length[tempList] > maxSize, 
+      Drop[tempList, Length[tempList] - maxSize], tempList]];
+
+  runningInteractive = True;
+  stringPartialVars = ToString /@ problemVars;
+  paramSols = {};
+  rmsHistory = {};
+  openNotebooks = 
+    If[runningInteractive, ("WindowTitle" /. NotebookInformation[#]) & /@
+      Notebooks[], {}];
+  If[Not[MemberQ[openNotebooks, "Solver Progress"]], 
+    ProgressNotebook["Basic" -> False]];
+
+  bestSigma = Infinity;
+  bestSol = {};
+  atlas = {};
+
+  maxHistory = Infinity;
+  steps = 0;
+  paramSols = {};
+  rmsHistory = {};
+  maxTimeInSec = maxTimeInMin*60;
+  seeds = {};
+  Do[(
+    corrals = Table[
+      (
+      centerValue = sol[var];
+      varName = ToExpression[(ToString[var] <> "opt")];
+      If[centerValue < 0,
+        (((1 + corral)*centerValue) <= 
+          varName <= ((1 - corral) centerValue)),
+        (((1 + corral)*centerValue) >= 
+          varName >= ((1 - corral) centerValue))
+        ]
+      ), {var, problemVars}];
+    corrals[[-1]] = (-30. <= \[Epsilon]opt <= 30.);
+    
+    startValues = Table[(
+      centerValue = sol[var];
+      If[centerValue > 0,
+        RandomReal[{centerValue*(1 - corral), centerValue*(1 + corral)}],
+        RandomReal[{centerValue*(1 + corral), 
+          centerValue*(1 - corral)}]
+        ]), {var, problemVars}];
+    startValues[[-1]] = 0.;
+    seed = RandomInteger[{1, 10000}];
+    seeds = Append[seeds, seed];
+    
+    Print["Running FindMinimum with the simulated annealing method ..."];
+    minSol = 
+    TimeConstrained[
+      NMinimize[
+      Join[{CostFun[B02opt, B04opt, B06opt, B22opt, B24opt, B26opt, 
+          B44opt, B46opt, B66opt, E1popt, E2popt, E3popt, M0opt, P2opt, 
+          T2popt, T3opt, T4opt, T6opt, T7opt, 
+          T8opt, \[Alpha]popt, \[Beta]popt, \[Gamma]popt, \[Zeta]opt, \
+  \[Epsilon]opt]}, corrals],
+      {B02opt, B04opt, B06opt, B22opt, B24opt, B26opt, B44opt, B46opt, 
+        B66opt, E1popt, E2popt, E3popt, M0opt, P2opt, T2popt, T3opt, 
+        T4opt, T6opt, T7opt, 
+        T8opt, \[Alpha]popt, \[Beta]popt, \[Gamma]popt, \[Zeta]opt, \
+  \[Epsilon]opt},
+      Method -> {"SimulatedAnnealing", "RandomSeed" -> seed},
+      MaxIterations -> maxIterations,
+      StepMonitor :>
+        (
+        steps += 1;
+        currentSqSum = 1/2*theCost;
+        currentRMS = Sqrt[currentSqSum/degsOfFree];
+        currentParams = {B02opt, B04opt, B06opt, B22opt, B24opt, 
+          B26opt, B44opt, B46opt, B66opt, E1popt, E2popt, E3popt, 
+          M0opt, P2opt, T2popt, T3opt, T4opt, T6opt, T7opt, 
+          T8opt, \[Alpha]popt, \[Beta]popt, \[Gamma]popt, \[Zeta]opt, \
+  \[Epsilon]opt};
+        AbortProtect[(
+          
+          paramSols = 
+            AddToList[paramSols, currentParams, maxHistory, True];
+          
+          rmsHistory = 
+            AddToList[rmsHistory, currentRMS, maxHistory, True];
+          atlas = Append[atlas, {currentRMS, paramSols}];
+          )];
+        If[currentRMS < bestSigma,
+          AbortProtect[(
+            bestSol = currentParams;
+            bestSigma = currentRMS
+            )]
+          ]
+        )
+      ],
+      maxTimeInSec,
+      {bestSigma, AssociationThread[problemVars, bestSol]}
+      ];
+    )
+  , {supercycle, 1, superCycles}];
+
+  startValues = Values@minSol[[2]];
+  Print["Running FindMinimum with automatic method, polishing the best solution found through simulated annealing ..."];
+  paramSols = {};
+  rmsHistory = {};  
+  refinedSol  = TimeConstrained[
+  FindMinimum[
+    CostFun[B02opt,B04opt,B06opt,B22opt,B24opt,B26opt,B44opt,B46opt,B66opt,
+            E1popt,E2popt,E3popt,
+            M0opt,P2opt,
+            T2popt,T3opt,T4opt,T6opt,T7opt,T8opt,
+            \[Alpha]popt,\[Beta]popt,\[Gamma]popt,
+            \[Zeta]opt,
+            \[Epsilon]opt],
+    Transpose[{{B02opt,B04opt,B06opt,B22opt,B24opt,B26opt,B44opt,B46opt,B66opt,
+                E1popt,E2popt,E3popt,
+                M0opt,P2opt,
+                T2popt,T3opt,T4opt,T6opt,T7opt,T8opt,
+                \[Alpha]popt,\[Beta]popt,\[Gamma]popt,
+                \[Zeta]opt,
+                \[Epsilon]opt},
+                startValues}],
+    Method        -> Automatic,
+    MaxIterations -> maxIterations,
+    StepMonitor :>
+  (
+    steps+=1;
+    currentSqSum  = 1/2*theCost;
+    currentRMS    = Sqrt[currentSqSum/degsOfFree];
+    currentParams = {B02opt,B04opt,B06opt,B22opt,B24opt,B26opt,B44opt,B46opt,B66opt,
+                     E1popt,E2popt,E3popt,
+                     M0opt,P2opt,
+                     T2popt,T3opt,T4opt,T6opt,T7opt,T8opt,
+                     \[Alpha]popt,\[Beta]popt,\[Gamma]popt,
+                     \[Zeta]opt,
+                     \[Epsilon]opt};
+    AbortProtect[(
+      paramSols     = AddToList[paramSols,currentParams,maxHistory,True];
+      rmsHistory    = AddToList[rmsHistory,currentRMS,maxHistory,True];
+    )];
+    If[
+      currentRMS < bestSigma,
+      AbortProtect[
+        (
+        bestSol=currentParams;
+        bestSigma = currentRMS
+        )
+      ]
+    ]
+  )
+  ],
+  maxTimeInSec,
+  {bestSigma,AssociationThread[problemVars,bestSol]}
+  ];
+
+  Return[{
+    "bestSigma" -> bestSigma,
+    "bestSolution" -> AssociationThread[problemVars,bestSol]
+    "Simulated Annealing Atlas" -> atlas
+    }];
+);

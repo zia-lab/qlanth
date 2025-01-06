@@ -2491,11 +2491,11 @@ Begin["`Private`"]
   The option \"Set t2Switch\" can be used to toggle on or off setting the t2 selector automatically or not, the default is True, which replaces the parameter according to numE.
   The option \"ReturnInBlocks\" can be used to return the matrix in block or flattened form. The default is to return it in flattened form.";
   Options[HamMatrixAssembly] = {
-        "FilenameAppendix"->"",
-        "IncludeZeeman"->False,
-        "Set t2Switch"->True,
-        "ReturnInBlocks"->False,
-        "OperatorBasis"->"Legacy"};
+        "FilenameAppendix" -> "",
+        "IncludeZeeman"    -> False,
+        "Set t2Switch"     -> True,
+        "ReturnInBlocks"   -> False,
+        "OperatorBasis"    -> "Legacy"};
   HamMatrixAssembly[nf_, OptionsPattern[]] := Module[
     {numE, ii, jj, howManyJs, Js, blockHam, opBasis},
     (
@@ -2519,55 +2519,95 @@ Begin["`Private`"]
           "IncludeZeeman" -> OptionValue["IncludeZeeman"], 
           "Set t2Switch" -> OptionValue["Set t2Switch"], 
           "ReturnInBlocks" -> OptionValue["ReturnInBlocks"]];
-          paramChanger = <|
+          paramChanger = Which[
+            nf < 7,
+            <|
               F0 -> 1/91 (54 E1p+91 E0p+78 \[Gamma]p),
-              F2 -> 15/392 (140 E1p+20020 E2p+1540 E3p+770 \[Alpha]p-70 \[Gamma]p+22 Sqrt[2] T2p-11 Sqrt[2] nf T2p),
-              F4 -> 99/490 (70 E1p-9100 E2p+280 E3p+140 \[Alpha]p-35 \[Gamma]p+4 Sqrt[2] T2p-2 Sqrt[2] nf T2p),
-              F6 -> (5577 (20 E1p+700 E2p-140 E3p-70 \[Alpha]p-10 \[Gamma]p-2 Sqrt[2] T2p + Sqrt[2] nf T2p))/7000,
+              F2 -> (15/392 * 
+                (
+                  140   E1p  +
+                  20020 E2p +
+                  1540  E3p  +
+                  770 \[Alpha]p -
+                  70 \[Gamma]p  +
+                  22 Sqrt[2] T2p -
+                  11 Sqrt[2] nf T2p t2Switch -
+                  11 Sqrt[2] (14-nf) T2p (1 - t2Switch)
+                )
+              ),
+              F4 -> (99/490 *
+                (
+                  70   E1p - 
+                  9100 E2p +
+                  280  E3p +
+                  140 \[Alpha]p - 
+                  35 \[Gamma]p  + 
+                  4 Sqrt[2] T2p -
+                  2 Sqrt[2] nf T2p t2Switch -
+                  2 Sqrt[2] (14-nf) T2p (1-t2Switch)
+                )
+                ),
+              F6 -> (5577/7000 * 
+                (
+                  20  E1p +
+                  700 E2p -
+                  140 E3p -
+                  70 \[Alpha]p -
+                  10 \[Gamma]p -
+                  2 Sqrt[2] T2p +
+                  Sqrt[2] nf T2p t2Switch +
+                  Sqrt[2] (14-nf) T2p (1-t2Switch)
+                )
+                ),
               \[Zeta]  -> \[Zeta],
               \[Alpha] -> (5 \[Alpha]p)/4,
               \[Beta]  -> -6  (5 \[Alpha]p + \[Beta]p),
               \[Gamma] -> 5/2 (2 \[Beta]p + 5 \[Gamma]p),
-              T2 -> T2p,
-              T3 -> T3,
-              T4 -> T4,
-              T6 -> T6,
-              T7 -> T7,
-              T8 -> T8,
-              M0 -> M0,
-              M2 -> M2,
-              M4 -> M4,
-              P2 -> P2,
-              P4 -> P4,
-              P6 -> P6,
-              B02 -> B02,
-              B04 -> B04,
-              B06 -> B06,
-              B12 -> B12,
-              B14 -> B14,
-              B16 -> B16,
-              B22 -> B22,
-              B24 -> B24,
-              B26 -> B26,
-              B34 -> B34,
-              B36 -> B36,
-              B44 -> B44,
-              B46 -> B46,
-              B56 -> B56,
-              B66 -> B66,
-              S12 -> S12,
-              S14 -> S14,
-              S16 -> S16,
-              S22 -> S22,
-              S24 -> S24,
-              S26 -> S26,
-              S34 -> S34,
-              S36 -> S36,
-              S44 -> S44,
-              S46 -> S46,
-              S56 -> S56,
-              S66 -> S66
-            |>;
+              T2 -> 0
+            |>,
+          nf >= 7,
+            <|
+              F0 -> 1/91 (54 E1p+91 E0p+78 \[Gamma]p),
+              F2 -> (15/392 * 
+                (
+                  140   E1p  +
+                  20020 E2p +
+                  1540  E3p  +
+                  770 \[Alpha]p -
+                  70 \[Gamma]p  +
+                  22 Sqrt[2] T2p -
+                  11 Sqrt[2] nf T2p
+                )
+              ),
+              F4 -> (99/490 *
+                (
+                  70   E1p - 
+                  9100 E2p +
+                  280  E3p +
+                  140 \[Alpha]p - 
+                  35 \[Gamma]p  + 
+                  4 Sqrt[2] T2p -
+                  2 Sqrt[2] nf T2p
+                )
+                ),
+              F6 -> (5577/7000 * 
+                (
+                  20  E1p +
+                  700 E2p -
+                  140 E3p -
+                  70 \[Alpha]p -
+                  10 \[Gamma]p -
+                  2 Sqrt[2] T2p +
+                  Sqrt[2] nf T2p
+                )
+                ),
+              \[Zeta]  -> \[Zeta],
+              \[Alpha] -> (5 \[Alpha]p)/4,
+              \[Beta]  -> -6  (5 \[Alpha]p + \[Beta]p),
+              \[Gamma] -> 5/2 (2 \[Beta]p + 5 \[Gamma]p),
+              T2 -> 0
+            |>     
+          ];
           blockHamMO = Which[
             OptionValue["ReturnInBlocks"] == False,
             ReplaceInSparseArray[blockHam, paramChanger],
@@ -3661,7 +3701,7 @@ Begin["`Private`"]
     Return[paramsChengLiYF4[ln]];
   )
 
-  HoleElectronConjugation::usage = "HoleElectronConjugation[params] takes the parameters (as an association) that define a configuration and converts them so that they may be interpreted as corresponding to a complentary hole configuration. Some of this can be simply done by changing the sign of the model parameters. In the case of the effective three body interaction the relationship is more complex and is controlled by the value of the isE variable.";
+  HoleElectronConjugation::usage = "HoleElectronConjugation[params] takes the parameters (as an association) that define a configuration and converts them so that they may be interpreted as corresponding to a complentary hole configuration. Some of this can be simply done by changing the sign of the model parameters. In the case of the effective three body interaction the relationship is more complex and is controlled by the value of the t2Switch variable.";
   HoleElectronConjugation[params_] := Module[
     {newparams = params},
     (

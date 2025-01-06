@@ -436,7 +436,7 @@ Begin["`Private`"];
     standardForm = StandardFormExpression[expr];
     StringReplace[standardForm, {
       "Power[" -> "Pow(",
-      "Sqrt[" -> "sqrt(",
+      "Sqrt[" -> "sq(",
       "[" -> "(",
       "]" -> ")",
       "\\" -> "",
@@ -445,37 +445,37 @@ Begin["`Private`"];
       "/" -> "/" (*Ensure division is represented with a slash*)}]];
 
   ToPythonSparseFunction[sparseArray_SparseArray, funName_] := 
-    Module[{data, rowPointers, columnIndices, dimensions, pyCode, vars, 
-      varList, dataPyList, 
-      colIndicesPyList},(*Extract unique symbolic variables from the \
-  SparseArray*)
-    vars = Union[Cases[Normal[sparseArray], _Symbol, Infinity]];
-    varList = StringRiffle[ToString /@ vars, ", "];
-    (*varList=ToPythonSymPyExpression/@varList;*)
-    (*Convert data to SymPy compatible strings*)
-    dataPyList = 
-      StringRiffle[
-      ToPythonSymPyExpression /@ Normal[sparseArray["NonzeroValues"]], 
-      ", "];
-    colIndicesPyList = 
-      StringRiffle[
-      ToPythonSymPyExpression /@ (Flatten[
-          Normal[sparseArray["ColumnIndices"]] - 1]), ", "];
-    (*Extract sparse array properties*)
+    Module[{
+      rowPointers,
+      dimensions,
+      pyCode,
+      vars, 
+      varList,
+      dataPyList, 
+      colIndicesPyList
+      },
+    (* Extract unique symbolic variables from the SparseArray *)
+    vars       = Union[Cases[Normal[sparseArray], _Symbol, Infinity]];
+    varList    = StringRiffle[ToString /@ vars, ", "];
+    (* Convert data to SymPy compatible strings *)
+    dataPyList = StringRiffle[ToPythonSymPyExpression /@ Normal[sparseArray["NonzeroValues"]], ",\n        "];
+    colIndicesPyList = StringRiffle[
+      ToPythonSymPyExpression /@ (Flatten[Normal[sparseArray["ColumnIndices"]] - 1]), ", "];
+    (* Extract sparse array properties *)
     rowPointers = Normal[sparseArray["RowPointers"]];
     dimensions = Dimensions[sparseArray];
-    (*Create Python code string*)pyCode = StringJoin[
+    (*Create Python code string*)
+    pyCode = StringJoin[
       "#!/usr/bin/env python3\n\n",
       "from scipy.sparse import csr_matrix\n",
-      "from sympy import *\n",
       "import numpy as np\n",
       "\n",
-      "sqrt = np.sqrt\n",
+      "sq = np.sqrt\n",
       "\n",
       "def ", funName, "(",
       varList,
       "):\n",
-      "    data = np.array([", dataPyList, "])\n",
+      "    data = np.array([\n        ", dataPyList, "\n        ])\n",
       "    indices = np.array([",
       colIndicesPyList,
       "])\n",
@@ -483,7 +483,7 @@ Begin["`Private`"];
       StringRiffle[ToString /@ rowPointers, ", "], "])\n",
       "    shape = (", StringRiffle[ToString /@ dimensions, ", "],
       ")\n",
-      "    return csr_matrix((data, indices, indptr), shape=shape)"];
+      "    return csr_matrix((data, indices, indptr), shape=shape)\n"];
     pyCode
     ];
 

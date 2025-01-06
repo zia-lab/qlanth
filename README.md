@@ -4,7 +4,7 @@
   <img alt="Single configuration effective Hamiltonian." src="./figs/banner-dark.png">
 </picture>
 
-`qlanth` is a Mathematica package that can be used to calculate the level structure of lanthanide ions embedded in crystals. For this purpose it uses a single configuration description with the effective Hamiltonian shown below. This Hamiltonian aims to describe the observed properties of ions embedded in solids in a picture that imagines them as free-ions but modified by the influence of the lattice in which they find themselves in.
+`qlanth` is a Mathematica package that can be used to calculate the level structure of lanthanide ions embedded in crystals. For this purpose it uses a single configuration description (with  configuration-interaction corrections) with the effective Hamiltonian shown below. This Hamiltonian aims to describe the observed properties of ions embedded in solids in a picture that imagines them as free-ions but modified by the influence of the lattice in which they find themselves in.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./figs/hamiltonian-dark.png">
@@ -14,11 +14,13 @@
 
 This picture is one that developed and mostly matured in the second half of the last century from the efforts of Brian Judd, Hannah Crosswhite, Michael Reid, Bill Carnall, Brian Wybourne, Katherine Rajnak, and others. The goal of this code is to provide a modern implementation of the calculations that resulted from their work, with the aim of fixing some small errors that might have been included at the time these calculations were made. It also aims to provide useful electronic versions of the data these Hamiltonians may produce, including energies and eigenvectors.
 
-`qlanth` also includes data that might be of use to those interested in the single-configuration description of lanthanide ions, separate to their specific use in this code. These data include the coefficients of fractional parentage (as calculated by Velkov and parsed here), and reduced matrix elements for all the operators listed above in the effective Hamiltonian. These are provided as standard Mathematica associations that should be simple to use elsewhere.
+`qlanth` also includes data that might be of use to those interested in the single-configuration description of lanthanide ions, independent of their specific use in this code. These data include the coefficients of fractional parentage (as calculated by Velkov and parsed here), and reduced matrix elements for all the operators listed above in the effective Hamiltonian. These are provided as standard Mathematica associations that should be simple to use elsewhere.
 
-The included Mathematica notebook `qlanth.nb` has examples of the functions included in this package. The `/examples` folder includes notebooks for several of the trivalent lanthanide ions in LaF3, showing also comparisons against the published results of Carnall. LaF3 is remarkable in that it was one of the systems in which a systematic study <a href="https://pubs.aip.org/aip/jcp/article-abstract/90/7/3443/220581"> [Carnall (1989)] </a> of most of the trivalent lanthanide ions were studied.
+The included Mathematica notebook `qlanth.nb` has examples of the functions included in this package. The `/examples` folder includes notebooks for several of the trivalent lanthanide ions in LaF3, showing also comparisons against the published results of Carnall. LaF3 (lanthanum trifluoride) is remarkable in that it was one of the systems in which a systematic study <a href="https://pubs.aip.org/aip/jcp/article-abstract/90/7/3443/220581"> [Carnall (1989)] </a> of most of the trivalent lanthanide ions were studied.
 
 There is also a documentation document ([qlanth.pdf](https://github.com/zia-lab/qlanth/blob/main/doc/qlanth.pdf)) that contains additional theoretical and practical details.
+
+The folder `/pyql` includes Python versions of the symbolic arrays that represent the semi-empirical Hamiltonian in the different f configurations.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./figs/Pr3plus-diffs-dark.png">
