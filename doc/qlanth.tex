@@ -117,7 +117,7 @@
     
     % Include the image
     {\Large\qlanth}\\
-    {\large doc version $\ket{\alpha}^{(15)}$} \\
+    {\large doc version $\ket{\alpha}^{(16)}$} \\
     \vspace*{0.5cm}
     \includegraphics[width=0.6\textwidth]{ion_in_lattice.jpg}  % Adjust the size as needed
     \vspace*{0.4cm} % More vertical space a
@@ -141,7 +141,7 @@ $\,$ \\
 \hrulefill \\
 \vspace{0.2cm}
 Providence, Rhode Island \\
-\codetext{2024 AD}
+\codetext{2025 AD}
 \end{center}
 
 \newpage
@@ -190,7 +190,7 @@ This work was sponsored by the \\ \textbf{National Science Foundation} \\ Grant 
 
 \vspace*{\fill}
 
-\qlanth is a tool that can be used to estimate the electronic structure of lanthanide ions in crystals. For this purpose it uses a single configuration description and a corresponding effective Hamiltonian. This Hamiltonian aims to describe the observed properties of ions embedded in solids in a picture that imagines them as free-ions modified by the influence of the lattice in which they find themselves in.
+\qlanth is a tool that can be used to estimate the electronic structure of lanthanide ions in crystals. I uses an effective Hamiltonian limited to a single-configuration with included configuration-interaction corrections. This Hamiltonian aims to describe the observed properties of ions embedded in solids in a picture that imagines them as free-ions modified by the influence of the lattice in which they find themselves in.
 
 This picture of lanthanide ions is one that developed and mostly matured in the second half of the last century by the efforts of 
 John Slater,\footnote{\cite{slater_theory_1929}}
@@ -207,7 +207,7 @@ Brian Wybourne,\footnote{\cite{carnall_spectral_1965,conway_low-lying_1963,rajna
 Richard Trees,\footnote{\cite{trees_l_1952,trees_spin-spin_1951,trees_comparison_1958}}
 and Katherine Rajnak\footnote{\cite{rajnak_configuration_1963,rajnak_electrostatically_1964,rajnak_configuration_1964,rajnak_configuration_1965}} among others. The goal of this tool is to provide a modern implementation of the methods that resulted from their work. This code is written in Wolfram language.
 
-Separate to their specific use in this code, \qlanth also includes data that might be of use to those interested in the single-configuration description of lanthanide ions. These data include the \cfps (as calculated by Velkov and parsed here), and reduced matrix elements for all the operators in the effective Hamiltonian. These are provided as standard \mathematica associations that should be simple to use elsewhere. One feature of \qlanth is that symbolic expressions are maintined up to the very last moment where numerical approximations are inevitable. As such, the symbolic expressions that result for the matrix representation of the Hamiltonian, result in linear combinations of the model parameters with symbolic coefficients.
+Separate to their specific use in this code, \qlanth also includes data that might be of use to those interested in the single-configuration description of lanthanide ions. These data include the \cfps (as calculated by Velkov and parsed here), and reduced matrix elements for all the operators in the effective Hamiltonian. These are provided as standard \mathematica associations that should be simple to use elsewhere. One feature of \qlanth is that symbolic expressions are maintained up to the very last moment where numerical approximations are inevitable. As such, the symbolic expressions that result for the matrix representation of the Hamiltonian, result in linear combinations of the model parameters with symbolic coefficients.
 
 The included \mathematica notebook \codetext{qlanth.nb} lists most of the functions included in \qlanth and should be considered complementary to this document. The \codetext{/examples} folder includes notebooks containing the result of this description for most of the trivalent lanthanide ions in lanthanum fluoride. \LaFthree is remarkable in that it was one of the systems in which a systematic study \cite{carnall_systematic_1989} of all of the trivalent lanthanide ions were studied.
 
@@ -993,7 +993,7 @@ In the semi-empirical approach embodied by $\qlanth$, calculating these quantiti
         \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
     }
 
-    The function \codetext{GenerateSpinSpinTable} calls the function \codetext{SpinSpin} over all possible combinations of the arguments $\{\numE, SL, S'L', J\}$. In turn the function \codetext{SpinSpin} queries the precomputed values of the the double tensor $\Txyz{2}{2}{}$ which are stored in the association \codetext{T22Table}. 
+    The function \codetext{GenerateSpinSpinTable} calls the function \codetext{SpinSpin} over all possible combinations of the arguments $\{\numE, SL, S'L', J\}$. In turn the function \codetext{SpinSpin} queries the precomputed values of the double tensor $\Txyz{2}{2}{}$ which are stored in the association \codetext{T22Table}. 
 
 
     \foreach \name in {GenerateSpinSpinTable, SpinSpin}{ 
@@ -1306,9 +1306,50 @@ The $JJ'$ blocks that are generated with this function are then put together by 
 
 Using the cartesian components of the magnetic dipole operator, the matrix elements of the Zeeman term can then be evaluated. This term can be included in the Hamiltonian through an option in \codetext{HamMatrixAssembly}. Since the magnetic dipole operator is calculated in atomic units, and it seeming desirable that the input units of the magnetic field be Tesla, a conversion factor is included so that the final terms be congruent with the energy units assumed in the other terms in the Hamiltonian, namely the energy pseudo-unit \index{Kayser} Kayser ($\text{cm}^{-1}$). The conversion factor is called \codetext{teslaToKayser} in the file \codetext{qonstants.m}.
 
+\subsection{Alternative operator bases}
+
+ One feature from the operators used in \eqnref{eqn:hamiltonian} is that when data is fit to this model, the parameters are correlated. This has the consequence that using a partial set of operators (say those describing the free-ion part) results in parameter values that change noticeably (by perhaps 10\%) when additional interactions are brought into the analysis. The \hamilton as written in \eqnref{eqn:hamiltonian} can be described as a linear combination of a basis set of operators. Correlations in fitted parameters may be removed by using a different operator basis, with this having the added benefit or reducing parameters uncertainties \cite{newman_operator_1982}. This removal of correlations is achieved by making the basis operators pair-wise orthogonal between themselves.\footnote{Two operators $\hat{\mathcal{O}}_1$ and $\hat{\mathcal{O}}_2$ are orthogonal if $\text{tr}(\hat{\mathcal{O}}_1^\dagger \hat{\mathcal{O}}_2) = 0$.} \index{orthogonal operators}
+
+The operators $\op{f}_k$, $\hat{L}^2$, $\casimir{\Gtwo} $, $\casimir{\SO{7}}$, and $\op{t}_2$ can be made orthogonal among themselves as prescribed by Judd, Crosswhite, and Suskin \cite{judd_orthogonalized_1984,judd_complete_1984}. In there the change in the operator basis has an accompanying relationship between the coefficients in the old and the new bases, as given below. (Note the $\numE$ dependence on the equation for $\OEk{3}$.) 
+\begin{align}
+    \OEk{1} &= \frac{4\alpha}{5}+\frac{\beta}{30}+\frac{\gamma}{25}+\frac{14\Fk{2}}{405} \notag \\
+    &\quad +\frac{7\Fk{4}}{297} +\frac{350\Fk{6}}{11583} \\
+    \OEk{2} &= \frac{\Fk{2}}{2025}-\frac{\Fk{4}}{3267}+\frac{175\Fk{6}}{1656369} \\
+    \OEk{3} &= -\frac{2\alpha}{5}+\frac{\Fk{2}}{135}+\frac{2\Fk{4}}{1089} \notag \\
+    & \quad -\frac{175\Fk{6}}{42471} +\frac{\numE\Tk{2}}{70\sqrt{2}}-\frac{\Tk{2}}{35\sqrt{2}} \\
+    \OcasimirAlpha &= \frac{4\alpha}{5} \\
+    \OcasimirBeta &= -4\alpha-\frac{\beta}{6} \\
+    \OcasimirGamma &= \frac{8\alpha}{5}+\frac{\beta}{15}+\frac{2\gamma}{25} \\
+    \OTk{2} & = \Tk{2} \label{eq: T2 prime}
+\end{align}
+
+(In general, if a new operator basis $\hat{O}'$ is defined by a linear transformation $\mathcal{M}$ of the original basis $\hat{O}$ such that $\hat{O}' = \mathcal{M} \hat{O}$, then for a given linear combination of the original operator basis, $\mathcal{H} = \vec{\eta} \cdot \hat{O}$, a new linear combination $\vec{\eta}'$ of the new operator basis $\hat{O}'$, can be defined such that $\vec{\eta} \cdot \hat{O} = \vec{\eta'} \cdot \hat{O'}$ by taking $\vec{\eta'} = \left(\mathcal{M}^{-1}\right)^T \vec{\eta}$.)
+
+Using these coefficients and their accompanying operators, the \hamilton is now
+\begin{align}
+    \ham_{\text{eff}}^\perp &=  \ham_{0}
+     + \sum_{k=0,2,4,6} \OEk{k} \hat{e}_{k}^\perp
+     + \spinZeta \sum_{i=1}^N  \paren{ \hat{s}_i \cdot \hat{l}_i} \nonumber \\
+     &\,\,  + \OcasimirAlpha \hat{\alpha}^\perp 
+      + \OcasimirBeta \hat{\beta}^\perp
+       + \OcasimirGamma \hat{\gamma}^\perp \nonumber \\
+     &\,\,\,\,  + {\opcolor{T^{(2)}_\perp}}\op{t}_2^\perp 
+      + \hamEffectiveThreeBody \nonumber \\
+     &\,\,\,\,\,\, 
+     + \hamSOOplusECSO \nonumber \\
+     &\,\,\,\,\,\,\,\,  + \hamCrystalFieldALT.
+    \label{eqn:mostly-orthogonal-hamiltonian}
+\end{align}
+
+Some operators remain unchanged in this parametrization, specifically $\op{C}_q^k$, $\op{t}_k$ ($k\neq2$), and the spin-orbit term. However some operators are still non-orthogonal. Operators from different \textit{families} are mutually orthogonal, and all pairs within each family are orthogonal as well. Nevertheless, any two operators from either $\op{m}_k$ or $\op{p}_k$ are non-orthogonal. This residual non-orthogonality in the Hamiltonian can be resolved using the $\hat{z}_i$ operators, originally introduced by Judd in his discussion of intra-atomic magnetic interactions \cite{judd_intra-atomic_1968}. This parametrization, which leaves $\op{m}_k$ or $\op{p}_k$ as they are, is therefore not entirely orthogonal, and we refer to it as the \textit{mostly}-orthogonal Hamiltonian. \index{mostly orthogonal basis}
+
+In \qlanth the symbolic array that represents the \textit{mostly}-orthogonal Hamiltonian can be obtained with the adequate setting of the option \codetext{OperatorBasis} in \codetext{HamMatrixAssembly}. In that option, the standard operator basis (i.e. the one use by \bill) is termed the \textit{legacy} basis.
+
+\lstinputlisting[language=Mathematica]{./fundefs/HamMatrixAssembly.tex}
+
 \section{Coordinate system}\label{section:coord-sys}
 
-Before adding interactions that don't have spherical symmetry, the orientation of the coordinate system is irrelevant. At the point when the crystal field is added, this orientation becomes relevant in the sense that only certain orientations of the coordinate system yield an expression for the crystal field potential in its simplest form\footnote{Of course, the crystal field potential can be expressed in any rotated coordinate system, but in these the potential would include additional $\Ckq{k}{q}$ with linear combinations of the $\Bkq{k}{q}$}. To accomplish this the z-axis needs to be taken as one of the principal axis of symmetry\footnote{A principal axis is a symmetry axis having the most rotational symmetry in the relevant symmetry group. For example, in cubic groups, the principal axis is the 111 diagonal.}. To complete the orientation of the coodrinate system, the the x-axis. Furthermore, certain choices for the orientation of the coordinate system also allow one to make certain crystal field parameters real, or to fix their sign.
+Before adding interactions lacking spherical symmetry, the orientation of the coordinate system is irrelevant. At the point when the crystal field is added, this orientation becomes relevant in the sense that only certain orientations of the coordinate system yield an expression for the crystal field potential in its simplest form\footnote{Of course, the crystal field potential can be expressed in any rotated coordinate system, but in these the potential would include additional $\Ckq{k}{q}$ with linear combinations of the $\Bkq{k}{q}$}. To accomplish this the z-axis needs to be taken as one of the principal axis of symmetry\footnote{A principal axis is a symmetry axis having the most rotational symmetry in the relevant symmetry group. For example, in cubic groups, the principal axis is the 111 diagonal.}. To complete the orientation of the coordinate system, the x and y axes are chosen as symmetry axes perpendicular to the z-axis. Furthermore, certain choices for the orientation of the coordinate system also allow one to make certain crystal field parameters real, or to fix their sign.
 
 \begin{figure}[h]
 	\centering
@@ -1699,7 +1740,7 @@ Similarly, \cheng compiled data for \liyorite. In \qlanth model parameters for \
 
 \section{\codetext{sparsefn.py}}\label{section:sparsefn}
 
-	\qlanth is also accompanied by seven Python scripts \codetext{sparsef[1-7].py}. Each of these contains a single function \codetext{effective\_hamiltonian\_f[1-7]} which returns a sparse array for given values for the model parameters.
+	\qlanth is also accompanied by seven Python scripts \codetext{sparsef[1-7].py}. Each of these contains a function \codetext{effective\_hamiltonian\_f[1-7]} which returns a sparse array (using this data structure as provided by \codetext{scipy}) for given values for the model parameters.
 	
 	There is an eight Python script called \codetext{basisLSJMJ.py} which contains a dictionary whose keys are f1, f2, f3, f4, f5, f6, and f7, and whose values are lists that contain the ordered basis in which the array produced by the \codetext{sparsefn.py} should be understood to be in. Each basis vector is a list with three elements \{LS string in NK notation, $J$, $\Msub{J}$\}.
 
