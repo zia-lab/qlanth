@@ -135,7 +135,6 @@ Magnetism: From Transition Metals to Lanthanides. John Wiley & Sons,
 
 BeginPackage["DavidLizarazo`qlanth`"];
 Get[FileNameJoin[{DirectoryName[$InputFileName], "qonstants.m"}]]
-Get[FileNameJoin[{DirectoryName[$InputFileName], "qplotter.m"}]]
 Get[FileNameJoin[{DirectoryName[$InputFileName], "misc.m"}]]
 
 paramAtlas = "

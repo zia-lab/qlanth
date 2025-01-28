@@ -28,7 +28,6 @@ BeginPackage["DavidLizarazo`fittings`"];
 
 Get[FileNameJoin[{DirectoryName[$InputFileName],"qlanth.m"}]];
 Get[FileNameJoin[{DirectoryName[$InputFileName],"qonstants.m"}]];
-Get[FileNameJoin[{DirectoryName[$InputFileName],"qplotter.m"}]];
 Get[FileNameJoin[{DirectoryName[$InputFileName],"misc.m"}]];
 
 LoadCarnall[];
