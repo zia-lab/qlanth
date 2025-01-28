@@ -45,11 +45,11 @@ git clone --depth 1 https://github.com/zia-lab/qlanth.git
 - Create and install a `.paclet` for Mathematica by issuing the following commands within a notebook (replacing `pathToRepo` with the adequate directory):
 ```
 Needs["PacletTools`"];
-pathToRepo = "~/Downloads/qlanth/'; (* mutatis mutandis *)
+pathToRepo = "~/Downloads/qlanth/"; (* mutatis mutandis *)
 pathToBuild = FileNameJoin[{pathToRepo,"build","DavidLizarazo__qlanth"}];
 CreatePacletArchive[pathToBuild];
 pathToPaclet = FileNames[FileNameJoin[{pathToRepo, "build", "/*.paclet"}]][[1]]
-PacletInstall[pathToPaclet];
+PacletInstall[pathToPaclet, ForceVersionInstall -> True];
 Needs["DavidLizarazo`qlanth`"];
 ```
 - See documentation therein. Probably going straight to `HamMatrixAssembly` and `BasisLSJMJ` are the first things to try. The first function provides the matrix representation of the Hamiltonian for f^n, and the second function provides the labels for the ordered basis in which the representation is given.

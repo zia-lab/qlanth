@@ -361,6 +361,7 @@ JJBlockMagDip;
 JJBlockMatrix;
 JJBlockMatrixFileName;
 JJBlockMatrixTable;
+JuddCFPPhase;
 JuddOfeltUkSquared;
 LabeledGrid;
 LandeFactor;
@@ -2142,15 +2143,25 @@ Begin["`Private`"]
         CrystalFieldTable = <||>;
         Do[
           (
-            numiter+= 1;
-            CrystalFieldTable[{numE, NKSL, J, M, NKSLp, Jp, Mp}] = CrystalField[numE, NKSL, J, M, NKSLp, Jp, Mp];
+            numiter+=1;
+            {S,L}   = FindSL[NKSL];
+            {Sp,Lp} = FindSL[NKSLp];
+            CrystalFieldTable[{numE,NKSL,J,M,NKSLp,Jp,Mp}] = 
+              Which[
+                Abs[M-Mp]>6,
+                0,
+                Abs[S-Sp]!=0,
+                0,
+                True,
+                CrystalField[numE,NKSL,J,M,NKSLp,Jp,Mp]
+              ];
           ),
-        {J, MinJ[numE], MaxJ[numE]},
+        {J,  MinJ[numE], MaxJ[numE]},
         {Jp, MinJ[numE], MaxJ[numE]},
-        {M, AllowedMforJ[J]},
+        {M,  AllowedMforJ[J]},
         {Mp, AllowedMforJ[Jp]},
-        {NKSL , First /@ AllowedNKSLforJTerms[numE, J]},
-        {NKSLp, First /@ AllowedNKSLforJTerms[numE, Jp]}
+        {NKSL, First/@AllowedNKSLforJTerms[numE,J]},
+        {NKSLp, First/@AllowedNKSLforJTerms[numE,Jp]}
         ];
         If[And[OptionValue["Progress"],frontEndAvailable],
           NotebookDelete[progBar]
@@ -5112,7 +5123,7 @@ Begin["`Private`"]
     ThreeBodiesFname = FileNameJoin[{moduleDir, "data", "ThreeBodyTables.m"}];
     If[!FileExistsQ[ThreeBodyFname],
       (PrintTemporary[">> ThreeBodyTable.m not found, generating ..."];
-        {ThreeBodyTable, ThreeBodyTables} = GenerateThreeBodyTables[14, "Export" -> True];
+        {ThreeBodyTable, ThreeBodyTables} = GenerateThreeBodyTables["Export" -> True];
       ),
       ThreeBodyTable  = Import[ThreeBodyFname];
       ThreeBodyTables = Import[ThreeBodiesFname];
