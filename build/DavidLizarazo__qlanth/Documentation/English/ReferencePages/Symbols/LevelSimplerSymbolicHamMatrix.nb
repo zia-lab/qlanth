@@ -1,0 +1,1674 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     60848,       1664]
+NotebookOptionsPosition[     56210,       1574]
+NotebookOutlinePosition[     58618,       1627]
+CellTagsIndexPosition[     58532,       1622]
+WindowTitle->LevelSimplerSymbolicHamMatrix
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[GridBox[{
+   {GridBox[{
+      {
+       ItemBox[Cell[BoxData[
+         RowBox[{
+          TemplateBox[{12},
+           "Spacer1"], Cell["DAVID LIZARAZO/QLANTH SYMBOL", "PacletNameCell",
+           TextAlignment->Center,ExpressionUUID->
+           "f8760578-010f-474e-8d42-36cfd9ef4029"], 
+          TemplateBox[{8},
+           "Spacer1"]}]],
+         TextAlignment->Center,ExpressionUUID->
+         "40802434-2d10-4a2f-b033-fc45299f4afa"],
+        Background->RGBColor[0.490196, 0.576471, 0.690196],
+        ItemSize->Full], ""}
+     },
+     GridBoxAlignment->{"Rows" -> {{Center}}},
+     GridBoxItemSize->{"Columns" -> {Full, 
+         Scaled[0.02]}, "Rows" -> {{2.5}}}], Cell[TextData[{
+     Cell[BoxData[
+      TagBox[
+       ActionMenuBox[
+        FrameBox[Cell[TextData[{
+          "See Also",
+          " ",
+          Cell[BoxData[
+           GraphicsBox[
+            {GrayLevel[0.66667], Thickness[0.13], 
+             LineBox[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]},
+            AspectRatio->1,
+            ImageSize->20,
+            PlotRange->{{-3, 4}, {-1, 1}}]],ExpressionUUID->
+           "b1289ec3-08bc-4295-abf0-37ee0b5c2625"]
+         }],ExpressionUUID->"e808ae62-d175-46af-9c70-72bb69f64836"],
+         StripOnInput->False],{
+        StyleBox[
+          "\"HamMatrixAssembly\"", "SeeAlsoRelated", StripOnInput -> False] :> 
+         Documentation`HelpLookup[
+          "paclet:DavidLizarazo/qlanth/ref/HamMatrixAssembly"], 
+         StyleBox["\"BasisLSJ\"", "SeeAlsoRelated", StripOnInput -> False] :> 
+         Documentation`HelpLookup["paclet:DavidLizarazo/qlanth/ref/BasisLSJ"]},
+        Appearance->None,
+        MenuAppearance->Automatic,
+        MenuStyle->"SeeAlso"],
+       MouseAppearanceTag["LinkHand"]]],
+      LineSpacing->{1.4, 0},ExpressionUUID->
+      "c5ee030b-262e-41ca-acdd-e50ba9847053"],
+     "\[ThickSpace]\[ThickSpace]\[ThickSpace]\[ThickSpace]\[ThickSpace]\
+\[ThickSpace]",
+     Cell[BoxData[
+      TagBox[
+       ActionMenuBox[
+        FrameBox[Cell[TextData[{
+          "URL",
+          " ",
+          Cell[BoxData[
+           GraphicsBox[
+            {GrayLevel[0.66667], Thickness[0.13], 
+             LineBox[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]},
+            AspectRatio->1,
+            ImageSize->20,
+            PlotRange->{{-3, 4}, {-1, 1}}]],ExpressionUUID->
+           "68e379ea-a48d-4f3d-99ed-42a199484cd8"]
+         }],ExpressionUUID->"0f361fea-dc0c-46f8-a0f6-f3db00611747"],
+         StripOnInput->False],{
+        "\"DavidLizarazo/qlanth/ref/LevelSimplerSymbolicHamMatrix\"" :> None, 
+         "\"Copy Wolfram Documentation Center URL\"" :> 
+         Module[{DocumentationSearch`Private`nb$}, 
+           DocumentationSearch`Private`nb$ = 
+            NotebookPut[
+             Notebook[{
+               Cell["DavidLizarazo/qlanth/ref/LevelSimplerSymbolicHamMatrix"]}\
+, Visible -> DocumentationBuild`Make`Private`visible$1387978]]; 
+           SelectionMove[DocumentationSearch`Private`nb$, All, Notebook]; 
+           FrontEndTokenExecute[DocumentationSearch`Private`nb$, "Copy"]; 
+           NotebookClose[DocumentationSearch`Private`nb$]; Null], Delimiter, 
+         "\"Copy web URL\"" :> 
+         Module[{DocumentationSearch`Private`nb$}, 
+           DocumentationSearch`Private`nb$ = 
+            NotebookPut[
+             Notebook[{
+               Cell[BoxData[
+                 MakeBoxes[
+                  Hyperlink[
+                   "http://reference.wolfram.com/language/DavidLizarazo/\
+qlanth/ref/LevelSimplerSymbolicHamMatrix.html"], StandardForm]], "Input", 
+                 TextClipboardType -> "PlainText"]}, Visible -> 
+               DocumentationBuild`Make`Private`visible$1387978]]; 
+           SelectionMove[DocumentationSearch`Private`nb$, All, Notebook]; 
+           FrontEndTokenExecute[DocumentationSearch`Private`nb$, "Copy"]; 
+           NotebookClose[DocumentationSearch`Private`nb$]; Null], 
+         "\"Go to web URL\"" :> 
+         FrontEndExecute[{
+           NotebookLocate[{
+             URL[If[TrueQ[False], 
+                 "http://reference.wolfram.com/system-modeler/", 
+                 "http://reference.wolfram.com/language/"] <> 
+               "DavidLizarazo/qlanth/ref/LevelSimplerSymbolicHamMatrix" <> 
+               ".html"], None}]}]},
+        Appearance->None,
+        MenuAppearance->Automatic,
+        MenuStyle->"URLMenu"],
+       MouseAppearanceTag["LinkHand"]]],
+      LineSpacing->{1.4, 0},ExpressionUUID->
+      "9de02a13-7519-48e9-96c7-7874c8be3414"]
+    }], "AnchorBar",
+     CacheGraphics->False,ExpressionUUID->
+     "2dd3890b-95e1-464c-bff8-11cb7599484a"]}
+  }]], "AnchorBarGrid",
+ GridBoxOptions->{GridBoxItemSize->{"Columns" -> {
+     Scaled[0.65], {
+      Scaled[0.34]}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}}, 
+   "RowsIndexed" -> {}}},
+ CellID->1,ExpressionUUID->"f7515b44-a986-405e-9aec-6e2733365f3c"],
+
+Cell["DavidLizarazo`qlanth`", "ContextNameCell",ExpressionUUID->"3b5e139c-c086-407c-8a92-d8a39c54020c"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[GridBox[{
+   {Cell[TextData[{
+     Cell[
+     "LevelSimplerSymbolicHamMatrix", "ObjectName",ExpressionUUID->
+      "79a0b938-899a-4c1a-aee4-5d589a403dbe"],
+     Cell[BoxData[
+      TemplateBox[{8},
+       "Spacer1"]],ExpressionUUID->"2733dc6d-57a7-4247-9798-d54372c92d5a"],
+     Cell[BoxData[
+     ""], "ObjectNameTranslation",ExpressionUUID->
+      "df3765ef-11b5-433d-adad-f46ec48d808a"]
+    }],ExpressionUUID->"8658db9c-572f-4e9d-ae85-0e5dde203ddc"], 
+    "\[SpanFromLeft]"}
+  }]], "ObjectNameGrid",ExpressionUUID->"8b3055ed-080d-4d73-9739-\
+d164862a8661"],
+
+Cell[BoxData[GridBox[{
+   {"", Cell[TextData[{
+     Cell[BoxData[
+      RowBox[{
+       TemplateBox[{
+         Cell[
+          TextData["LevelSimplerSymbolicHamMatrix"]], 
+         "paclet:DavidLizarazo/qlanth/ref/LevelSimplerSymbolicHamMatrix", 
+         "DavidLizarazo Package Symbol"},
+        "PackageLink",
+        BaseStyle->"InlineFormula"], "[", "numE", "]"}]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "99a418c8-1bbb-446f-b015-a0c6ab3af508"],
+     " \[LineSeparator]is a variation of HamMatrixAssembly that returns the \
+diagonal ",
+     StyleBox["JJ",
+      FontSlant->"Italic"],
+     " Hamiltonian blocks applying a simplifier and with simplifications \
+adequate for the level description. The result is given as an association \
+with keys equal to the value of ",
+     StyleBox["J",
+      FontSlant->"Italic"],
+     " and values equal to arrays representing the Hamiltonian that describes \
+the levels. The values are sparse array are meant to be interpreted in the \
+basis provided by ",
+     Cell[BoxData[
+      RowBox[{"BasisLSJ", "[", 
+       RowBox[{"numE", ",", " ", 
+        RowBox[{"\"\<AsAssociation\>\"", " ", "->", " ", "True"}]}], "]"}]], 
+      "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "d0538738-d1ed-4730-bbe1-6be00df53ee0"]
+    }],ExpressionUUID->"cdebecc6-6558-4ec1-ac99-9fa17a296cce"]}
+  }]], "Usage",
+ CellID->1540595315,ExpressionUUID->"d138f6d9-4aa8-4c57-b896-4c7b49b50970"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[Cell[BoxData[
+ ButtonBox[Cell[TextData[{
+   Cell[BoxData[
+    DynamicBox[ToBoxes[
+      If[
+       MatchQ[
+        CurrentValue[
+         EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, 
+         Closed], 
+        Alternatives[Open, True]], 
+       Style[
+        Graphics[{
+          Thickness[0.18], 
+          RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+          Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+         PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+        0.68 Inherited], 
+       Rotate[
+        Style[
+         Graphics[{
+           Thickness[0.18], 
+           RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+           Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+          PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+         0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+     ImageSizeCache->{
+      13.600000000000001`, {-0.1685058593749993, 13.768505859375}}]],
+    ExpressionUUID->"e55d41be-3e71-483a-ab4f-b3d959bb8755"],
+   Cell[BoxData[
+    TemplateBox[{1},
+     "Spacer1"]],ExpressionUUID->"740e3241-8bfa-41d0-a167-2cf21fe22727"],
+   "Details and Options"
+  }], "NotesFrameText",ExpressionUUID->"1e79d62b-c5eb-4ad5-9046-072825e5c312"],
+  Appearance->{Automatic, None, "Normal", Automatic},
+  BaseStyle->None,
+  ButtonFunction:>(FrontEndExecute[{
+     FrontEnd`SelectionMove[
+      FrontEnd`SelectedNotebook[], All, ButtonCell], 
+     FrontEndToken["OpenCloseGroup"], 
+     FrontEnd`SelectionMove[
+      FrontEnd`SelectedNotebook[], After, CellContents]}]& ),
+  Evaluator->None,
+  Method->
+   "Preemptive"]],ExpressionUUID->"33c66267-1028-4044-b9f7-afb4b8ff1796"]], \
+"NotesSection",
+ WholeCellGroupOpener->True,
+ CellGroupingRules->{"SectionGrouping", 50},
+ CacheGraphics->False,
+ CellID->1539811030,ExpressionUUID->"77b3be27-5af8-4480-b643-a96e2ae1b395"],
+
+Cell["\<\
+This may be calculated more simply from scratch, but the approach here is to \
+use the symbolic array that has been computed for the description of the \
+states, and decimate that to obtain the Hamiltonian that describes the levels.\
+\>", "Notes",
+ CellID->575127326,ExpressionUUID->"c625d9b1-83a8-47b5-b854-9ab231c157c5"],
+
+Cell[TextData[{
+ "Options\[LineSeparator]",
+ Cell[BoxData[GridBox[{
+    {Cell[
+     "      ", "TableRowIcon",ExpressionUUID->
+      "40ed6464-8767-4668-9aee-17f2130395cb"], "\"\<Export\>\"", "True", 
+     Cell["\<\
+Whether the function saves the result to disk. This is saved to the /hams/ \
+folder, and a has corresponding to to the applied simplifier is attached to \
+the filename.\
+\>", "TableText",ExpressionUUID->"a66e8eee-bace-4c0e-9ed9-382671f8a6df"]},
+    {Cell[
+     "      ", "TableRowIcon",ExpressionUUID->
+      "0acc82e8-a882-474e-8a04-3fdf999f344e"], "\"\<PrependToFilename\>\"", 
+     "\"\<\>\"", Cell["\<\
+String prepended to the filename to which the result of the calculation may \
+be saved to.\
+\>", "TableText",ExpressionUUID->"b757ac00-b048-4816-9710-c212cf6a3094"]},
+    {Cell[
+     "      ", "TableRowIcon",ExpressionUUID->
+      "ef1798a6-bcca-4d62-82d1-65220afc6362"], "\"\<Overwrite\>\"", "False", 
+     Cell["\<\
+Whether the function will overwrite the calculated Hamiltonian. Only \
+applicable if \"Export\" is set to True.\
+\>", "TableText",ExpressionUUID->"f0f708fc-11cb-434b-b0d7-166ca24d539c"]},
+    {Cell[
+     "      ", "TableRowIcon",ExpressionUUID->
+      "bdf46c52-e245-41bc-84ff-b0bbc1bc9ecd"], "\"\<Return\>\"", "True", 
+     Cell["\<\
+It might be undesirable that the function returns its result, this option can \
+be set to make the function return None instead.\
+\>", "TableText",ExpressionUUID->"e3ea61b5-6312-418b-b411-f5f4b3e23f7c"]},
+    {Cell[
+     "      ", "TableRowIcon",ExpressionUUID->
+      "b7a8af25-fe8f-4097-9a32-d5c88043036c"], "\"\<Simplifier\>\"", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"everything", " ", "except", " ", "F2"}], ",", " ", "F4", ",", 
+       " ", "F6", ",", " ", 
+       RowBox[{"and", " ", "\[Zeta]"}]}], "}"}], Cell["\<\
+A list of symbols that are removed from the Hamiltonian to obtain the level \
+Hamiltonian.\
+\>", "TableText",ExpressionUUID->"aacbd617-0705-4073-ac87-cf90347c870f"]}
+   }]], "3ColumnTableMod",
+  GridBoxOptions->{
+  GridBoxBackground->{
+   "Columns" -> {{None}}, "Rows" -> {None, None, None, None, {None}}},
+  GridBoxDividers->{"Rows" -> {{True, True, True, True, True, True}}}},
+  ExpressionUUID->"f6240a54-356c-4aef-9c56-29812a7078a7"]
+}], "Notes",
+ CellID->1553783148,ExpressionUUID->"639301fc-cf93-492b-b81d-ecddcbc33407"]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, Closed]]]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  DynamicBox[ToBoxes[
+    If[
+     MatchQ[
+      CurrentValue[
+       EvaluationNotebook[], {
+       TaggingRules, "Openers", "PrimaryExamplesSection"}, Open], 
+      Alternatives[True, Open]], 
+     Style[
+      Graphics[{
+        Thickness[0.18], 
+        RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+        Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+       PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+      0.68 Inherited], 
+     Rotate[
+      Style[
+       Graphics[{
+         Thickness[0.18], 
+         RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+         Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+        PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+       0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+   ImageSizeCache->{
+    13.600000000000001`, {4.251494140625001, 9.348505859375}}]],
+  ExpressionUUID->"ea795a94-1fac-4b28-958f-a33d607ce26f"],
+ Cell[BoxData[
+  TemplateBox[{1},
+   "Spacer1"]],ExpressionUUID->"a40c20c0-3649-4693-9e3d-3bd6d2bca3e0"],
+ "Examples",
+ "\[NonBreakingSpace]\[NonBreakingSpace]",
+ Cell["(1)", "ExampleCount",ExpressionUUID->
+  "417b280f-a1eb-486b-a238-b954a902b113"]
+}], "PrimaryExamplesSection",
+ WholeCellGroupOpener->True,
+ CacheGraphics->False,
+ CellTags->"PrimaryExamplesSection",
+ CellID->278551213,ExpressionUUID->"44a1e048-2d72-43f8-88a6-2adbe45c12e2"],
+
+Cell[BoxData[
+ RowBox[{"Needs", "[", "\"\<DavidLizarazo`qlanth`\>\"", "]"}]], "Input", \
+"ExampleInitialization",
+ CellLabel->"In[1]:=",
+ CellID->1876137159,ExpressionUUID->"2ac06e9f-b7e8-427e-a414-9b0ea59cdf0e"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  DynamicBox[ToBoxes[
+    If[
+     MatchQ[
+      CurrentValue[
+       EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"},
+        Closed], 
+      Alternatives[Open, True]], 
+     Style[
+      Graphics[{
+        Thickness[0.18], 
+        RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+        Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+       PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+      0.68 Inherited], 
+     Rotate[
+      Style[
+       Graphics[{
+         Thickness[0.18], 
+         RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+         Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+        PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+       0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+   ImageSizeCache->{
+    13.600000000000001`, {4.551318359375001, 9.048681640625}}]],
+  ExpressionUUID->"94a1a225-5215-4076-b593-f05f567ec886"],
+ Cell[BoxData[
+  TemplateBox[{1},
+   "Spacer1"]],ExpressionUUID->"20b7b58b-c302-49b5-9c7d-7f1116f0bfb8"],
+ "Basic Examples",
+ "\[NonBreakingSpace]\[NonBreakingSpace]",
+ Cell["(1)", "ExampleCount",ExpressionUUID->
+  "f6e16950-2ad2-4b94-8b7a-e27b2f2984d8"]
+}], "ExampleSection", "ExampleSection",
+ WholeCellGroupOpener->True,
+ CacheGraphics->False,
+ CellID->95886431,ExpressionUUID->"761cddc0-0e6f-4e1d-8943-dd0a873798d4"],
+
+Cell[BoxData[
+ RowBox[{"These", " ", "are", " ", "the", " ", "matrices", " ", "describing", 
+  " ", "the", " ", "levels", " ", "in", " ", 
+  RowBox[{
+   SuperscriptBox["f", "2"], "."}]}]], "ExampleText",
+ CellID->244776045,ExpressionUUID->"134af378-1587-44d8-a0cc-eccddb479d8a"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"levelHamiltonian", "=", 
+   RowBox[{"LevelSimplerSymbolicHamMatrix", "[", 
+    RowBox[{"2", ",", 
+     RowBox[{"\"\<Export\>\"", "->", "False"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"levelBasis", "=", 
+   RowBox[{"BasisLSJ", "[", 
+    RowBox[{"2", ",", 
+     RowBox[{"\"\<AsAssociation\>\"", "->", "True"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Js", "=", 
+   RowBox[{"AllowedJ", "[", "2", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"HamiltonianForm", "[", 
+    RowBox[{
+     RowBox[{"levelHamiltonian", "[", "#", "]"}], ",", 
+     RowBox[{"levelBasis", "[", "#", "]"}]}], "]"}], "&"}], "/@", 
+  "Js"}]}], "Input",
+ CellProlog:>Needs["DavidLizarazo`qlanth`"],
+ CellLabel->"In[1]:=",
+ CellID->1519804310,ExpressionUUID->"37d95834-e61d-4fda-95be-4d0b117b2801"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"File \"\>", 
+   "\[InvisibleSpace]", \
+"\<\"/Users/juan/ZiaLab/Codebase/qlanth/Kernel/hams/Level-SymbolicMatrix-f2-\
+8752262908669096800.mx\"\>", 
+   "\[InvisibleSpace]", "\<\" already exists, and option \\\"Overwrite\\\" is \
+set to False, loading file ...\"\>"}],
+  SequenceForm[
+  "File ", "/Users/juan/ZiaLab/Codebase/qlanth/Kernel/hams/Level-\
+SymbolicMatrix-f2-8752262908669096800.mx", 
+   " already exists, and option \"Overwrite\" is set to False, loading file \
+..."],
+  Editable->False]], "Print",
+ CellLabel->"During evaluation of In[708]:=",
+ CellID->1180540752,ExpressionUUID->"c1ca2b8c-e69f-4202-8c07-da48198926ca"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   TagBox[GridBox[{
+      {"\<\"\"\>", 
+       TagBox[
+        RowBox[{"\[LeftBracketingBar]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"3P\"\>", ",", "0"}], "}"}], "\[RightAngleBracket]"}],
+        DisplayForm], 
+       TagBox[
+        RowBox[{"\[LeftBracketingBar]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"1S\"\>", ",", "0"}], "}"}], "\[RightAngleBracket]"}],
+        DisplayForm]},
+      {
+       TagBox[
+        RowBox[{"\[LeftAngleBracket]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"3P\"\>", ",", "0"}], "}"}], "\[RightBracketingBar]"}],
+        DisplayForm], 
+       TagBox[
+        TooltipBox[
+         RowBox[{
+          FractionBox[
+           RowBox[{"43", " ", "F2"}], "195"], "+", 
+          FractionBox[
+           RowBox[{"19", " ", "F4"}], "429"], "-", 
+          FractionBox[
+           RowBox[{"875", " ", "F6"}], "5577"], "-", "\[Zeta]"}],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3P\"", ",", "0"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3P\"", ",", "0"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"3P", 0}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"3P", 0}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ], 
+       TagBox[
+        TooltipBox[
+         RowBox[{
+          RowBox[{"-", "2"}], " ", 
+          SqrtBox["3"], " ", "\[Zeta]"}],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3P\"", ",", "0"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"1S\"", ",", "0"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"3P", 0}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"1S", 0}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ]},
+      {
+       TagBox[
+        RowBox[{"\[LeftAngleBracket]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"1S\"\>", ",", "0"}], "}"}], "\[RightBracketingBar]"}],
+        DisplayForm], 
+       TagBox[
+        TooltipBox[
+         RowBox[{
+          RowBox[{"-", "2"}], " ", 
+          SqrtBox["3"], " ", "\[Zeta]"}],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"1S\"", ",", "0"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3P\"", ",", "0"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"1S", 0}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"3P", 0}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ], 
+       TagBox[
+        TooltipBox[
+         RowBox[{
+          FractionBox[
+           RowBox[{"56", " ", "F2"}], "195"], "+", 
+          FractionBox[
+           RowBox[{"28", " ", "F4"}], "143"], "+", 
+          FractionBox[
+           RowBox[{"1400", " ", "F6"}], "5577"]}],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"1S\"", ",", "0"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"1S\"", ",", "0"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"1S", 0}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"1S", 0}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ]}
+     },
+     AutoDelete->False,
+     GridBoxAlignment->{"Columns" -> {{Center}}},
+     GridBoxFrame->{"Columns" -> {{True}}, "Rows" -> {{True}}},
+     GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+    "Grid"], ",", 
+   TagBox[GridBox[{
+      {"\<\"\"\>", 
+       TagBox[
+        RowBox[{"\[LeftBracketingBar]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"3P\"\>", ",", "1"}], "}"}], "\[RightAngleBracket]"}],
+        DisplayForm]},
+      {
+       TagBox[
+        RowBox[{"\[LeftAngleBracket]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"3P\"\>", ",", "1"}], "}"}], "\[RightBracketingBar]"}],
+        DisplayForm], 
+       TagBox[
+        TooltipBox[
+         RowBox[{
+          FractionBox[
+           RowBox[{"43", " ", "F2"}], "195"], "+", 
+          FractionBox[
+           RowBox[{"19", " ", "F4"}], "429"], "-", 
+          FractionBox[
+           RowBox[{"875", " ", "F6"}], "5577"], "-", 
+          FractionBox["\[Zeta]", "2"]}],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3P\"", ",", "1"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3P\"", ",", "1"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"3P", 1}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"3P", 1}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ]}
+     },
+     AutoDelete->False,
+     GridBoxAlignment->{"Columns" -> {{Center}}},
+     GridBoxFrame->{"Columns" -> {{True}}, "Rows" -> {{True}}},
+     GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+    "Grid"], ",", 
+   TagBox[GridBox[{
+      {"\<\"\"\>", 
+       TagBox[
+        RowBox[{"\[LeftBracketingBar]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"3P\"\>", ",", "2"}], "}"}], "\[RightAngleBracket]"}],
+        DisplayForm], 
+       TagBox[
+        RowBox[{"\[LeftBracketingBar]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"3F\"\>", ",", "2"}], "}"}], "\[RightAngleBracket]"}],
+        DisplayForm], 
+       TagBox[
+        RowBox[{"\[LeftBracketingBar]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"1D\"\>", ",", "2"}], "}"}], "\[RightAngleBracket]"}],
+        DisplayForm]},
+      {
+       TagBox[
+        RowBox[{"\[LeftAngleBracket]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"3P\"\>", ",", "2"}], "}"}], "\[RightBracketingBar]"}],
+        DisplayForm], 
+       TagBox[
+        TooltipBox[
+         RowBox[{
+          FractionBox[
+           RowBox[{"43", " ", "F2"}], "195"], "+", 
+          FractionBox[
+           RowBox[{"19", " ", "F4"}], "429"], "-", 
+          FractionBox[
+           RowBox[{"875", " ", "F6"}], "5577"], "+", 
+          FractionBox["\[Zeta]", "2"]}],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3P\"", ",", "2"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3P\"", ",", "2"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"3P", 2}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"3P", 2}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ], 
+       TagBox[
+        TooltipBox["0",
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3P\"", ",", "2"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3F\"", ",", "2"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"3P", 2}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"3F", 2}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ], 
+       TagBox[
+        TooltipBox[
+         FractionBox[
+          RowBox[{"3", " ", "\[Zeta]"}], 
+          SqrtBox["2"]],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3P\"", ",", "2"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"1D\"", ",", "2"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"3P", 2}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"1D", 2}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ]},
+      {
+       TagBox[
+        RowBox[{"\[LeftAngleBracket]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"3F\"\>", ",", "2"}], "}"}], "\[RightBracketingBar]"}],
+        DisplayForm], 
+       TagBox[
+        TooltipBox["0",
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3F\"", ",", "2"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3P\"", ",", "2"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"3F", 2}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"3P", 2}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ], 
+       TagBox[
+        TooltipBox[
+         RowBox[{
+          RowBox[{"-", 
+           FractionBox[
+            RowBox[{"14", " ", "F2"}], "585"]}], "-", 
+          FractionBox[
+           RowBox[{"7", " ", "F4"}], "429"], "-", 
+          FractionBox[
+           RowBox[{"350", " ", "F6"}], "16731"], "-", 
+          RowBox[{"2", " ", "\[Zeta]"}]}],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3F\"", ",", "2"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3F\"", ",", "2"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"3F", 2}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"3F", 2}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ], 
+       TagBox[
+        TooltipBox[
+         RowBox[{
+          RowBox[{"-", 
+           SqrtBox["6"]}], " ", "\[Zeta]"}],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3F\"", ",", "2"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"1D\"", ",", "2"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"3F", 2}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"1D", 2}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ]},
+      {
+       TagBox[
+        RowBox[{"\[LeftAngleBracket]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"1D\"\>", ",", "2"}], "}"}], "\[RightBracketingBar]"}],
+        DisplayForm], 
+       TagBox[
+        TooltipBox[
+         FractionBox[
+          RowBox[{"3", " ", "\[Zeta]"}], 
+          SqrtBox["2"]],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"1D\"", ",", "2"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3P\"", ",", "2"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"1D", 2}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"3P", 2}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ], 
+       TagBox[
+        TooltipBox[
+         RowBox[{
+          RowBox[{"-", 
+           SqrtBox["6"]}], " ", "\[Zeta]"}],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"1D\"", ",", "2"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3F\"", ",", "2"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"1D", 2}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"3F", 2}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ], 
+       TagBox[
+        TooltipBox[
+         RowBox[{
+          FractionBox[
+           RowBox[{"307", " ", "F2"}], "2925"], "-", 
+          FractionBox["F4", "13"], "+", 
+          FractionBox[
+           RowBox[{"175", " ", "F6"}], "1521"]}],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"1D\"", ",", "2"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"1D\"", ",", "2"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"1D", 2}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"1D", 2}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ]}
+     },
+     AutoDelete->False,
+     GridBoxAlignment->{"Columns" -> {{Center}}},
+     GridBoxFrame->{"Columns" -> {{True}}, "Rows" -> {{True}}},
+     GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+    "Grid"], ",", 
+   TagBox[GridBox[{
+      {"\<\"\"\>", 
+       TagBox[
+        RowBox[{"\[LeftBracketingBar]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"3F\"\>", ",", "3"}], "}"}], "\[RightAngleBracket]"}],
+        DisplayForm]},
+      {
+       TagBox[
+        RowBox[{"\[LeftAngleBracket]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"3F\"\>", ",", "3"}], "}"}], "\[RightBracketingBar]"}],
+        DisplayForm], 
+       TagBox[
+        TooltipBox[
+         RowBox[{
+          RowBox[{"-", 
+           FractionBox[
+            RowBox[{"14", " ", "F2"}], "585"]}], "-", 
+          FractionBox[
+           RowBox[{"7", " ", "F4"}], "429"], "-", 
+          FractionBox[
+           RowBox[{"350", " ", "F6"}], "16731"], "-", 
+          FractionBox["\[Zeta]", "2"]}],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3F\"", ",", "3"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3F\"", ",", "3"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"3F", 3}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"3F", 3}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ]}
+     },
+     AutoDelete->False,
+     GridBoxAlignment->{"Columns" -> {{Center}}},
+     GridBoxFrame->{"Columns" -> {{True}}, "Rows" -> {{True}}},
+     GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+    "Grid"], ",", 
+   TagBox[GridBox[{
+      {"\<\"\"\>", 
+       TagBox[
+        RowBox[{"\[LeftBracketingBar]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"3F\"\>", ",", "4"}], "}"}], "\[RightAngleBracket]"}],
+        DisplayForm], 
+       TagBox[
+        RowBox[{"\[LeftBracketingBar]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"3H\"\>", ",", "4"}], "}"}], "\[RightAngleBracket]"}],
+        DisplayForm], 
+       TagBox[
+        RowBox[{"\[LeftBracketingBar]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"1G\"\>", ",", "4"}], "}"}], "\[RightAngleBracket]"}],
+        DisplayForm]},
+      {
+       TagBox[
+        RowBox[{"\[LeftAngleBracket]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"3F\"\>", ",", "4"}], "}"}], "\[RightBracketingBar]"}],
+        DisplayForm], 
+       TagBox[
+        TooltipBox[
+         RowBox[{
+          RowBox[{"-", 
+           FractionBox[
+            RowBox[{"14", " ", "F2"}], "585"]}], "-", 
+          FractionBox[
+           RowBox[{"7", " ", "F4"}], "429"], "-", 
+          FractionBox[
+           RowBox[{"350", " ", "F6"}], "16731"], "+", 
+          FractionBox[
+           RowBox[{"3", " ", "\[Zeta]"}], "2"]}],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3F\"", ",", "4"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3F\"", ",", "4"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"3F", 4}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"3F", 4}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ], 
+       TagBox[
+        TooltipBox["0",
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3F\"", ",", "4"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3H\"", ",", "4"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"3F", 4}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"3H", 4}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ], 
+       TagBox[
+        TooltipBox[
+         RowBox[{
+          SqrtBox[
+           FractionBox["11", "3"]], " ", "\[Zeta]"}],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3F\"", ",", "4"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"1G\"", ",", "4"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"3F", 4}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"1G", 4}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ]},
+      {
+       TagBox[
+        RowBox[{"\[LeftAngleBracket]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"3H\"\>", ",", "4"}], "}"}], "\[RightBracketingBar]"}],
+        DisplayForm], 
+       TagBox[
+        TooltipBox["0",
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3H\"", ",", "4"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3F\"", ",", "4"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"3H", 4}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"3F", 4}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ], 
+       TagBox[
+        TooltipBox[
+         RowBox[{
+          RowBox[{"-", 
+           FractionBox[
+            RowBox[{"53", " ", "F2"}], "585"]}], "-", 
+          FractionBox[
+           RowBox[{"155", " ", "F4"}], "4719"], "+", 
+          FractionBox[
+           RowBox[{"2975", " ", "F6"}], "184041"], "-", 
+          RowBox[{"3", " ", "\[Zeta]"}]}],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3H\"", ",", "4"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3H\"", ",", "4"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"3H", 4}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"3H", 4}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ], 
+       TagBox[
+        TooltipBox[
+         RowBox[{
+          RowBox[{"-", 
+           SqrtBox[
+            FractionBox["10", "3"]]}], " ", "\[Zeta]"}],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3H\"", ",", "4"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"1G\"", ",", "4"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"3H", 4}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"1G", 4}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ]},
+      {
+       TagBox[
+        RowBox[{"\[LeftAngleBracket]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"1G\"\>", ",", "4"}], "}"}], "\[RightBracketingBar]"}],
+        DisplayForm], 
+       TagBox[
+        TooltipBox[
+         RowBox[{
+          SqrtBox[
+           FractionBox["11", "3"]], " ", "\[Zeta]"}],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"1G\"", ",", "4"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3F\"", ",", "4"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"1G", 4}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"3F", 4}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ], 
+       TagBox[
+        TooltipBox[
+         RowBox[{
+          RowBox[{"-", 
+           SqrtBox[
+            FractionBox["10", "3"]]}], " ", "\[Zeta]"}],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"1G\"", ",", "4"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3H\"", ",", "4"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"1G", 4}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"3H", 4}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ], 
+       TagBox[
+        TooltipBox[
+         RowBox[{
+          RowBox[{"-", 
+           FractionBox[
+            RowBox[{"22", " ", "F2"}], "195"]}], "+", 
+          FractionBox[
+           RowBox[{"1459", " ", "F4"}], "14157"], "+", 
+          FractionBox[
+           RowBox[{"1750", " ", "F6"}], "61347"]}],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"1G\"", ",", "4"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"1G\"", ",", "4"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"1G", 4}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"1G", 4}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ]}
+     },
+     AutoDelete->False,
+     GridBoxAlignment->{"Columns" -> {{Center}}},
+     GridBoxFrame->{"Columns" -> {{True}}, "Rows" -> {{True}}},
+     GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+    "Grid"], ",", 
+   TagBox[GridBox[{
+      {"\<\"\"\>", 
+       TagBox[
+        RowBox[{"\[LeftBracketingBar]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"3H\"\>", ",", "5"}], "}"}], "\[RightAngleBracket]"}],
+        DisplayForm]},
+      {
+       TagBox[
+        RowBox[{"\[LeftAngleBracket]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"3H\"\>", ",", "5"}], "}"}], "\[RightBracketingBar]"}],
+        DisplayForm], 
+       TagBox[
+        TooltipBox[
+         RowBox[{
+          RowBox[{"-", 
+           FractionBox[
+            RowBox[{"53", " ", "F2"}], "585"]}], "-", 
+          FractionBox[
+           RowBox[{"155", " ", "F4"}], "4719"], "+", 
+          FractionBox[
+           RowBox[{"2975", " ", "F6"}], "184041"], "-", 
+          FractionBox["\[Zeta]", "2"]}],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3H\"", ",", "5"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3H\"", ",", "5"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"3H", 5}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"3H", 5}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ]}
+     },
+     AutoDelete->False,
+     GridBoxAlignment->{"Columns" -> {{Center}}},
+     GridBoxFrame->{"Columns" -> {{True}}, "Rows" -> {{True}}},
+     GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+    "Grid"], ",", 
+   TagBox[GridBox[{
+      {"\<\"\"\>", 
+       TagBox[
+        RowBox[{"\[LeftBracketingBar]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"3H\"\>", ",", "6"}], "}"}], "\[RightAngleBracket]"}],
+        DisplayForm], 
+       TagBox[
+        RowBox[{"\[LeftBracketingBar]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"1I\"\>", ",", "6"}], "}"}], "\[RightAngleBracket]"}],
+        DisplayForm]},
+      {
+       TagBox[
+        RowBox[{"\[LeftAngleBracket]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"3H\"\>", ",", "6"}], "}"}], "\[RightBracketingBar]"}],
+        DisplayForm], 
+       TagBox[
+        TooltipBox[
+         RowBox[{
+          RowBox[{"-", 
+           FractionBox[
+            RowBox[{"53", " ", "F2"}], "585"]}], "-", 
+          FractionBox[
+           RowBox[{"155", " ", "F4"}], "4719"], "+", 
+          FractionBox[
+           RowBox[{"2975", " ", "F6"}], "184041"], "+", 
+          FractionBox[
+           RowBox[{"5", " ", "\[Zeta]"}], "2"]}],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3H\"", ",", "6"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3H\"", ",", "6"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"3H", 6}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"3H", 6}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ], 
+       TagBox[
+        TooltipBox[
+         RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+          RowBox[{
+           SqrtBox[
+            FractionBox["3", "2"]], " ", "\[Zeta]"}]}],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3H\"", ",", "6"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"1I\"", ",", "6"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"3H", 6}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"1I", 6}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ]},
+      {
+       TagBox[
+        RowBox[{"\[LeftAngleBracket]", 
+         RowBox[{"{", 
+          RowBox[{"\<\"1I\"\>", ",", "6"}], "}"}], "\[RightBracketingBar]"}],
+        DisplayForm], 
+       TagBox[
+        TooltipBox[
+         RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+          RowBox[{
+           SqrtBox[
+            FractionBox["3", "2"]], " ", "\[Zeta]"}]}],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"1I\"", ",", "6"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"3H\"", ",", "6"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"1I", 6}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"3H", 6}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ], 
+       TagBox[
+        TooltipBox[
+         RowBox[{
+          FractionBox[
+           RowBox[{"77", " ", "F2"}], "585"], "+", 
+          FractionBox[
+           RowBox[{"35", " ", "F4"}], "1573"], "+", 
+          FractionBox[
+           RowBox[{"3325", " ", "F6"}], "184041"]}],
+         TagBox[
+          RowBox[{
+            TagBox[
+             RowBox[{"\[LeftAngleBracket]", 
+               RowBox[{"{", 
+                 RowBox[{"\"1I\"", ",", "6"}], "}"}], 
+               "\[RightBracketingBar]"}], DisplayForm], "", 
+            TagBox[
+             RowBox[{"\[LeftBracketingBar]", 
+               RowBox[{"{", 
+                 RowBox[{"\"1I\"", ",", "6"}], "}"}], 
+               "\[RightAngleBracket]"}], DisplayForm]}], DisplayForm]],
+        Annotation[#, 
+         DisplayForm[
+          RowBox[{
+            DisplayForm[
+             
+             RowBox[{"\[LeftAngleBracket]", {"1I", 6}, 
+               "\[RightBracketingBar]"}]], "", 
+            DisplayForm[
+             
+             RowBox[{"\[LeftBracketingBar]", {"1I", 6}, 
+               "\[RightAngleBracket]"}]]}]], "Tooltip"]& ]}
+     },
+     AutoDelete->False,
+     GridBoxAlignment->{"Columns" -> {{Center}}},
+     GridBoxFrame->{"Columns" -> {{True}}, "Rows" -> {{True}}},
+     GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+    "Grid"]}], "}"}]], "Output",
+ CellLabel->"Out[1]=",
+ CellID->747004231,ExpressionUUID->"e4782396-0c03-441e-9d91-48bc6c21ffb3"]
+}, Open  ]]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"}, 
+  Closed]]]]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "PrimaryExamplesSection"}, 
+  Closed]]]],
+
+Cell[BoxData[GridBox[{
+   {
+    DynamicBox[FEPrivate`ImportImage[
+      FrontEnd`FileName[{"Documentation", "FooterIcons"}, 
+       "RelatedFunction.png"]],
+     ImageSizeCache->{50., {26.47265625, 33.52734375}}], GridBox[{
+      {
+       StyleBox[
+        RowBox[{"See", " ", "Also"}], "SeeAlsoSection"]},
+      {Cell[TextData[{
+        Cell[BoxData[
+         TemplateBox[{
+           Cell[
+            TextData["HamMatrixAssembly"]], 
+           "paclet:DavidLizarazo/qlanth/ref/HamMatrixAssembly", 
+           "DavidLizarazo Package Symbol"},
+          "PackageLink",
+          BaseStyle->"InlineFormula"]], "InlineFormula",
+         FontFamily->"Source Sans Pro",ExpressionUUID->
+         "0c3e3fe9-0d1e-4c63-8d03-ee9ebaf81184"],
+        "\[NonBreakingSpace]",
+        StyleBox[
+        "\[MediumSpace]\[FilledVerySmallSquare]\[MediumSpace]", 
+         "InlineSeparator"],
+        " ",
+        Cell[BoxData[
+         TemplateBox[{
+           Cell[
+            TextData["BasisLSJ"]], "paclet:DavidLizarazo/qlanth/ref/BasisLSJ",
+            "DavidLizarazo Package Symbol"},
+          "PackageLink",
+          BaseStyle->"InlineFormula"]], "InlineFormula",
+         FontFamily->"Source Sans Pro",
+         CellTags->"9762e11b-dbf7-4889-85f5-ff0774c4e677",ExpressionUUID->
+         "031ef8a9-a8b1-453c-9025-da5d87accc87"]
+       }], "SeeAlso",ExpressionUUID->"6913b575-b3fb-49ae-ab0c-589eb9863b50"]}
+     }]}
+  }]], "SeeAlsoSection",ExpressionUUID->"a11ff59e-7146-44ee-beb6-\
+f284f90b0573"],
+
+Cell[" ", "FooterCell",ExpressionUUID->"1fa1b60c-c0b4-4318-8cc0-87e2346d4cb4"]
+},
+Saveable->False,
+ScreenStyleEnvironment->"Working",
+WindowSize->{900, 830},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+WindowTitle->"LevelSimplerSymbolicHamMatrix",
+TaggingRules->{
+ "ModificationHighlight" -> False, "ColorType" -> "", "LinkTrails" -> "", 
+  "ExampleCounter" -> 1, 
+  "Openers" -> {
+   "PrimaryExamplesSection" -> Open, "ExampleSection" -> {"0" -> Open}, 
+    "AllOptsTable" -> Closed, "NotesSection" -> Closed}, "NewStyles" -> True, 
+  "CitationPopupData" -> $Failed, "ShowCitation" -> False, "HasOptions" -> 
+  True, "RootCaptions" -> "", "HeaderCoreAreaLink" -> {}, 
+  "Metadata" -> {
+   "built" -> "{2025, 1, 25, 15, 55, 41.902979}", 
+    "history" -> {"1.0.0", "", "", ""}, "context" -> "DavidLizarazo`qlanth`", 
+    "keywords" -> {}, "specialkeywords" -> {}, 
+    "tutorialcollectionlinks" -> {}, "index" -> True, "label" -> 
+    "David Lizarazo/qlanth Symbol", "language" -> "en", "paclet" -> 
+    "DavidLizarazo/qlanth", "status" -> "None", "summary" -> 
+    "LevelSimplerSymbolicHamMatrix[numE] is a variation of HamMatrixAssembly \
+that returns the diagonal JJ Hamiltonian blocks applying a simplifier and \
+with simplifications adequate for the level description. The result is given \
+as an association with keys equal to the value of J and values equal to \
+arrays representing the Hamiltonian that describes the levels. The values are \
+sparse array are meant to be interpreted in the basis provided by \
+BasisLSJ[numE, \"AsAssociation\" -> True]", "synonyms" -> {}, 
+    "tabletags" -> {}, "title" -> "LevelSimplerSymbolicHamMatrix", 
+    "titlemodifier" -> "", "metadescription" -> "", "windowtitle" -> 
+    "LevelSimplerSymbolicHamMatrix", "type" -> "Symbol", "uri" -> 
+    "DavidLizarazo/qlanth/ref/LevelSimplerSymbolicHamMatrix"}},
+FrontEndVersion->"14.1 for Mac OS X ARM (64-bit) (July 16, 2024)",
+StyleDefinitions->FrontEnd`FileName[{"Wolfram"}, "Reference.nb", 
+  CharacterEncoding -> "UTF-8"],
+ExpressionUUID->"f0c22f5b-6d44-4f83-bcd7-d9090160a74d"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "PrimaryExamplesSection"->{
+  Cell[12369, 308, 1437, 38, 34, "PrimaryExamplesSection",ExpressionUUID->"44a1e048-2d72-43f8-88a6-2adbe45c12e2",
+   CellTags->"PrimaryExamplesSection",
+   CellID->278551213]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"PrimaryExamplesSection", 58332, 1615}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[597, 21, 4837, 113, 50, "AnchorBarGrid",ExpressionUUID->"f7515b44-a986-405e-9aec-6e2733365f3c",
+ CellID->1],
+Cell[5437, 136, 103, 0, 22, "ContextNameCell",ExpressionUUID->"3b5e139c-c086-407c-8a92-d8a39c54020c"],
+Cell[CellGroupData[{
+Cell[5565, 140, 572, 14, 57, "ObjectNameGrid",ExpressionUUID->"8b3055ed-080d-4d73-9739-d164862a8661"],
+Cell[6140, 156, 1476, 34, 167, "Usage",ExpressionUUID->"d138f6d9-4aa8-4c57-b896-4c7b49b50970",
+ CellID->1540595315]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7653, 195, 1917, 48, 34, "NotesSection",ExpressionUUID->"77b3be27-5af8-4480-b643-a96e2ae1b395",
+ CellGroupingRules->{"SectionGrouping", 50},
+ CellID->1539811030],
+Cell[9573, 245, 332, 5, 70, "Notes",ExpressionUUID->"c625d9b1-83a8-47b5-b854-9ab231c157c5",
+ CellID->575127326],
+Cell[9908, 252, 2334, 50, 70, "Notes",ExpressionUUID->"639301fc-cf93-492b-b81d-ecddcbc33407",
+ CellID->1553783148]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, Closed]]]],
+Cell[CellGroupData[{
+Cell[12369, 308, 1437, 38, 34, "PrimaryExamplesSection",ExpressionUUID->"44a1e048-2d72-43f8-88a6-2adbe45c12e2",
+ CellTags->"PrimaryExamplesSection",
+ CellID->278551213],
+Cell[13809, 348, 212, 4, 29, "Input",ExpressionUUID->"2ac06e9f-b7e8-427e-a414-9b0ea59cdf0e",
+ CellID->1876137159],
+Cell[CellGroupData[{
+Cell[14046, 356, 1414, 37, 29, "ExampleSection",ExpressionUUID->"761cddc0-0e6f-4e1d-8943-dd0a873798d4",
+ CellID->95886431],
+Cell[15463, 395, 278, 5, 37, "ExampleText",ExpressionUUID->"134af378-1587-44d8-a0cc-eccddb479d8a",
+ CellID->244776045],
+Cell[CellGroupData[{
+Cell[15766, 404, 880, 25, 81, "Input",ExpressionUUID->"37d95834-e61d-4fda-95be-4d0b117b2801",
+ CellID->1519804310],
+Cell[16649, 431, 678, 15, 39, "Print",ExpressionUUID->"c1ca2b8c-e69f-4202-8c07-da48198926ca",
+ CellID->1180540752],
+Cell[17330, 448, 37063, 1075, 402, "Output",ExpressionUUID->"e4782396-0c03-441e-9d91-48bc6c21ffb3",
+ CellID->747004231]
+}, Open  ]]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"}, Closed]]]]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "PrimaryExamplesSection"}, Closed]]]],
+Cell[54635, 1532, 1490, 38, 70, "SeeAlsoSection",ExpressionUUID->"a11ff59e-7146-44ee-beb6-f284f90b0573"],
+Cell[56128, 1572, 78, 0, 70, "FooterCell",ExpressionUUID->"1fa1b60c-c0b4-4318-8cc0-87e2346d4cb4"]
+}
+]
+*)
+
+(* End of internal cache information *)
+

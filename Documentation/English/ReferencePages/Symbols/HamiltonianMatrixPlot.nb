@@ -1,0 +1,2136 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     81580,       2128]
+NotebookOptionsPosition[     75289,       1993]
+NotebookOutlinePosition[     76051,       2018]
+CellTagsIndexPosition[     75971,       2013]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["HamiltonianMatrixPlot", "ObjectName",
+ CellID->867870499,ExpressionUUID->"ce47ecbd-bbe4-46eb-8721-da37eb6d3c94"],
+
+Cell[TextData[{
+ Cell["   ", "ModInfo",ExpressionUUID->"3e880e8f-100b-4a3f-a4a5-41d69386e026"],
+ Cell[BoxData[
+  RowBox[{
+   ButtonBox["HamiltonianMatrixPlot",
+    BaseStyle->"Link",
+    ButtonData->"paclet:DavidLizarazo/qlanth/ref/HamiltonianMatrixPlot"], "[", 
+   RowBox[{"squareArray", ",", " ", "basisLabels"}], "]"}]], "InlineFormula",
+  ExpressionUUID->"b17fcad5-b39e-49fd-b837-54fd5c9bd668"],
+ " \[LineSeparator]creates a matrix plot of the given squareArray assumed to \
+be a matrix representation in an ordered basis with basisLabels."
+}], "Usage",
+ CellChangeTimes->{{3.946119473952753*^9, 3.946119539236796*^9}, {
+  3.946119704298831*^9, 3.946119704298882*^9}},
+ CellID->590546269,ExpressionUUID->"85c2496e-1790-4433-80fa-99a868e9cec0"],
+
+Cell[TextData[{
+ "Options\[LineSeparator]",
+ Cell[BoxData[GridBox[{
+    {Cell[
+     "      ", "ModInfo",ExpressionUUID->
+      "aa431786-e176-4016-96b8-1de5a6cb95d9"], "\"\<Hover\>\"", "True", 
+     Cell["\<\
+Hovering over the matrix elements shows information for the element under the \
+mouse cursor.\
+\>", "TableText",ExpressionUUID->"9b248d12-7f63-4617-aac5-550cbcbcf505"]},
+    {Cell[
+     "      ", "ModInfo",ExpressionUUID->
+      "31a33d2b-744c-4a70-96de-b78553bb384c"], "\"\<OverlayValues\>\"", 
+     "True", Cell["\<\
+If True and  then the values are overlayed over the colored plot, this might \
+make for a busy plot, so it's useful to be able to disable this.\
+\>", "TableText",ExpressionUUID->"c2a4b02d-51c4-494e-b0dd-3c2562992724"]},
+    {Cell[
+     "      ", "ModInfo",ExpressionUUID->
+      "3deb5a5f-44bc-4b3b-9d9a-0b5fa9cf0425"], 
+     RowBox[{"Options", "[", "MatrixPlot", "]"}], "XXXX", Cell[
+     "XXXX", "TableText",ExpressionUUID->
+      "68840cd6-50d2-481a-899c-0b1150aaf99b"]}
+   }]], "3ColumnTableMod",
+  CellChangeTimes->{{3.9461188903266582`*^9, 3.946118896122007*^9}, {
+   3.946119034385357*^9, 3.946119066508403*^9}, {3.946119139702289*^9, 
+   3.946119219563354*^9}, {3.946119397309772*^9, 3.946119426084198*^9}},
+  ExpressionUUID->"2e697bac-6929-46c8-a2b6-5981cfd3e72d"]
+}], "Notes",
+ CellChangeTimes->{{3.94664019229181*^9, 3.946640194090301*^9}, {
+  3.946824493185958*^9, 3.946824493248145*^9}},
+ CellID->1789210296,ExpressionUUID->"04abff9e-33b1-4f50-af9d-d21292c01b61"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "See Also",
+ Cell[BoxData[
+  TemplateBox[{"SeeAlso", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell[
+       "Insert links to any related reference (function) pages.", 
+        "MoreInfoText"], BaseStyle -> "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "41df6fbe-166c-420a-9883-6449f47681fa"]
+}], "SeeAlsoSection",
+ CellID->43935931,ExpressionUUID->"434c0ae4-14c7-4136-9b06-780b1359aca8"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["HamiltonianForm",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/HamiltonianForm"]], 
+  "InlineSeeAlsoFunction",
+  TaggingRules->{"PageType" -> "Function"},ExpressionUUID->
+  "1fed59d2-5a44-4112-8d41-5855ec3c2d23"],
+ Cell[BoxData[
+  RowBox[{
+  Cell[TextData[StyleBox[
+   " \[FilledVerySmallSquare] ", "InlineSeparator"]],ExpressionUUID->
+    "94dc183e-dec1-4ca8-aaeb-80edbe1c2886"], 
+   DynamicModuleBox[{$CellContext`nbobj$$ = NotebookObject[
+    "36a4d69d-85aa-4c44-a5c5-9a5f42cdd43d", 
+     "ff95d7e0-27ab-463e-a20f-bc6bf1c82a1c"], $CellContext`cellobj$$ = 
+    CellObject[
+    "757581ce-ff67-4f48-bf17-6020dd9d91af", 
+     "ba8dcf23-7313-4208-afd7-19016950123b"]}, 
+    TemplateBox[{
+      GraphicsBox[{{
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         CircleBox[{0, 0}]}, {
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         LineBox[{{0, 0.62}, {0, -0.62}}]}, {
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         LineBox[{{-0.62, 0}, {0.62, 0}}]}}, 
+       ImagePadding -> {{1., 1.}, {2.4, 1.}}, ImageSize -> 16, 
+       PlotRange -> {{-1.06, 1.06}, {-1.06, 1.06}}, 
+       BaselinePosition -> (Center -> 
+        Center)], $CellContext`nbobj$$, $CellContext`cellobj$$},
+     "InlineListingAddButton"],
+    Initialization:>($CellContext`nbobj$$ = 
+      EvaluationNotebook[]; $CellContext`cellobj$$ = EvaluationCell[])]}]], 
+  "InlineListingAddButton",ExpressionUUID->
+  "757581ce-ff67-4f48-bf17-6020dd9d91af"]
+}], "SeeAlso",
+ CellChangeTimes->{{3.946118820137505*^9, 3.946118826582217*^9}},
+ CellID->1844301396,ExpressionUUID->"61155972-7a08-4553-8a0b-dcd7892c6013"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Tech Notes",
+ Cell[BoxData[
+  TemplateBox[{"TechNotes", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell["Insert links to related tech notes.", "MoreInfoText"], BaseStyle -> 
+       "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "b404709d-ab08-49e0-a324-d71f267f2a8a"]
+}], "TechNotesSection",
+ CellID->394601774,ExpressionUUID->"1ae92888-379a-424d-b051-811267368626"],
+
+Cell["XXXX", "Tutorials",
+ CellID->642513682,ExpressionUUID->"2aead56f-61f0-4795-9655-67fa960a01b7"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Related Guides", "MoreAboutSection",
+ CellID->1179676258,ExpressionUUID->"306892e7-33da-46aa-b400-7d8b2741a865"],
+
+Cell["XXXX", "MoreAbout",
+ CellID->1249839102,ExpressionUUID->"4261d140-b5b7-45aa-89f5-a7b6f40b67e8"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Related Links",
+ Cell[BoxData[
+  TemplateBox[{"RelatedLinks", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell[
+       "Insert links to any related page, including web pages.", 
+        "MoreInfoText"], BaseStyle -> "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "2493b2f0-dfe6-444d-bb9c-6d9f39124e5c"]
+}], "RelatedLinksSection",
+ CellID->1508236007,ExpressionUUID->"b6f4efe0-92d8-4315-a963-3cd49987c02c"],
+
+Cell["XXXX", "RelatedLinks",
+ CellID->25600461,ExpressionUUID->"732c26bb-4706-47b8-9e76-0e729d6f331a"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Examples Initialization",
+ Cell[BoxData[
+  TemplateBox[{"ExamplesInitialization", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell[
+       "Input that is to be evaluated before any examples are run, e.g. \
+Needs[\[Ellipsis]].", "MoreInfoText"], BaseStyle -> "IFrameBox"]], 
+     "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "43f0f9ff-a051-453d-a4f3-79f8843edab3"]
+}], "ExamplesInitializationSection",
+ CellID->770218627,ExpressionUUID->"eeef0309-6e99-4409-aa26-f399f15e4085"],
+
+Cell[BoxData[
+ RowBox[{"Needs", "[", "\"\<DavidLizarazo`qlanth`\>\"", 
+  "]"}]], "ExampleInitialization",
+ CellID->33039873,ExpressionUUID->"1a78987a-346e-4989-ae26-1d530251b409"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[GridBox[{
+    {
+     StyleBox[
+      RowBox[{"Basic", " ", "Examples"}], "PrimaryExamplesSection"], 
+     ButtonBox[
+      RowBox[{
+       RowBox[{"More", " ", "Examples"}], " ", "\[RightTriangle]"}],
+      BaseStyle->"ExtendedExamplesLink",
+      ButtonData:>"ExtendedExamples"]}
+   }],
+  $Line = 0; Null]], "PrimaryExamplesSection",
+ CellID->1250364585,ExpressionUUID->"77489b61-1c65-479c-967c-cb01552e3ce2"],
+
+Cell["The J = 1 matrix representations for angular momentum . ", "ExampleText",
+ CellChangeTimes->{{3.946119549105068*^9, 3.9461195495303507`*^9}, {
+  3.946119596348795*^9, 3.946119621945733*^9}},
+ CellID->1195931029,ExpressionUUID->"b61041fa-f0dd-490d-8b36-b19907de3139"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"HamiltonianMatrixPlot", "[", 
+    RowBox[{
+     RowBox[{"Abs", "[", "#", "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "2"}], ",", 
+       RowBox[{"-", "1"}], ",", "0", ",", "1", ",", "2"}], "}"}], ",", 
+     RowBox[{"\"\<OverlayValues\>\"", "->", "False"}]}], "]"}], "&"}], "/@", 
+  RowBox[{"(", 
+   RowBox[{"AngularMomentumMatrices", "[", 
+    RowBox[{"2", ",", 
+     RowBox[{"\"\<Order\>\"", "->", "\"\<LowToHigh\>\""}]}], "]"}], 
+   ")"}]}]], "Input",
+ CellChangeTimes->{{3.946119237263152*^9, 3.946119337304965*^9}, {
+  3.946119369949028*^9, 3.946119375354854*^9}, {3.946119560501259*^9, 
+  3.946119590022451*^9}},
+ CellLabel->"In[13]:=",
+ CellID->1713352130,ExpressionUUID->"21889a64-bbad-4c76-b296-7c6acf9c7fd3"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   GraphicsBox[RasterBox[CompressedData["
+1:eJxTTMoPSmVmYGBghWIQGwI+2FNKH2yKXSs86bV9QUNTwTPBR/Yb5Liev385
+iWJz0emHVSLr3B/esmdAAdRzD7HmD1b3EEvTOr4ANPaGQw==
+     "], {{0, 0}, {5, 5}}, {0, 1}],
+    BaseStyle->{FontFamily -> "Arial"},
+    Epilog->{
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{0, 4}, {1, 5}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "2"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "2"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -2, "\[RightAngleBracket]"}]], "=",
+           0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{1, 4}, {2, 5}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "2"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "1"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "1"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -1, "\[RightAngleBracket]"}]], "=",
+           1}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{2, 4}, {3, 5}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "2"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "0", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 0, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{3, 4}, {4, 5}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "2"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "1", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 1, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{4, 4}, {5, 5}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "2"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "2", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 2, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{0, 3}, {1, 4}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "1"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "2"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "1"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -2, "\[RightAngleBracket]"}]], "=",
+           1}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{1, 3}, {2, 4}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "1"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "1"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -1, "\[RightAngleBracket]"}]], "=",
+           0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{2, 3}, {3, 4}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "1"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "0", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", 
+          SqrtBox[
+           FractionBox["3", "2"]]}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 0, "\[RightAngleBracket]"}]], "=", 
+          Rational[3, 2]^Rational[1, 2]}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{3, 3}, {4, 4}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "1"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "1", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 1, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{4, 3}, {5, 4}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "1"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "2", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 2, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{0, 2}, {1, 3}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "0", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "2"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 0, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -2, "\[RightAngleBracket]"}]], "=",
+           0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{1, 2}, {2, 3}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "0", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "1"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", 
+          SqrtBox[
+           FractionBox["3", "2"]]}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 0, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -1, "\[RightAngleBracket]"}]], "=",
+           Rational[3, 2]^Rational[1, 2]}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{2, 2}, {3, 3}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "0", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "0", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 0, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 0, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{3, 2}, {4, 3}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "0", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "1", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", 
+          SqrtBox[
+           FractionBox["3", "2"]]}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 0, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 1, "\[RightAngleBracket]"}]], "=", 
+          Rational[3, 2]^Rational[1, 2]}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{4, 2}, {5, 3}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "0", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "2", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 0, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 2, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{0, 1}, {1, 2}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "1", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "2"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -2, "\[RightAngleBracket]"}]], "=",
+           0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{1, 1}, {2, 2}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "1", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "1"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -1, "\[RightAngleBracket]"}]], "=",
+           0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{2, 1}, {3, 2}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "1", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "0", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", 
+          SqrtBox[
+           FractionBox["3", "2"]]}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 0, "\[RightAngleBracket]"}]], "=", 
+          Rational[3, 2]^Rational[1, 2]}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{3, 1}, {4, 2}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "1", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "1", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 1, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{4, 1}, {5, 2}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "1", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "2", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "1"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 2, "\[RightAngleBracket]"}]], "=", 
+          1}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{0, 0}, {1, 1}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "2", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "2"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -2, "\[RightAngleBracket]"}]], "=",
+           0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{1, 0}, {2, 1}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "2", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "1"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -1, "\[RightAngleBracket]"}]], "=",
+           0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{2, 0}, {3, 1}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "2", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "0", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 0, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{3, 0}, {4, 1}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "2", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "1", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "1"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 1, "\[RightAngleBracket]"}]], "=", 
+          1}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{4, 0}, {5, 1}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "2", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "2", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 2, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ]},
+    Frame->True,
+    FrameLabel->{None, None},
+    FrameTicks->{{{{4.5, 
+         FormBox[
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "2"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TraditionalForm]}, {3.5, 
+         FormBox[
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "1"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TraditionalForm]}, {2.5, 
+         FormBox[
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "0", "\[RightBracketingBar]"}], 
+           DisplayForm], TraditionalForm]}, {1.5, 
+         FormBox[
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "1", "\[RightBracketingBar]"}], 
+           DisplayForm], TraditionalForm]}, {0.5, 
+         FormBox[
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "2", "\[RightBracketingBar]"}], 
+           DisplayForm], TraditionalForm]}}, None}, {None, {{0.5, 
+         FormBox[
+          TagBox[
+           RotationBox[
+            RowBox[{"\[LeftBracketingBar]", 
+              RowBox[{"-", "2"}], "\[RightAngleBracket]"}], BoxRotation -> 
+            1.5707963267948966`], DisplayForm], TraditionalForm]}, {1.5, 
+         FormBox[
+          TagBox[
+           RotationBox[
+            RowBox[{"\[LeftBracketingBar]", 
+              RowBox[{"-", "1"}], "\[RightAngleBracket]"}], BoxRotation -> 
+            1.5707963267948966`], DisplayForm], TraditionalForm]}, {2.5, 
+         FormBox[
+          TagBox[
+           RotationBox[
+            RowBox[{"\[LeftBracketingBar]", "0", "\[RightAngleBracket]"}], 
+            BoxRotation -> 1.5707963267948966`], DisplayForm], 
+          TraditionalForm]}, {3.5, 
+         FormBox[
+          TagBox[
+           RotationBox[
+            RowBox[{"\[LeftBracketingBar]", "1", "\[RightAngleBracket]"}], 
+            BoxRotation -> 1.5707963267948966`], DisplayForm], 
+          TraditionalForm]}, {4.5, 
+         FormBox[
+          TagBox[
+           RotationBox[
+            RowBox[{"\[LeftBracketingBar]", "2", "\[RightAngleBracket]"}], 
+            BoxRotation -> 1.5707963267948966`], DisplayForm], 
+          TraditionalForm]}}}},
+    GridLinesStyle->Directive[
+      GrayLevel[0.5, 0.4]],
+    Method->{
+     "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+      "DefaultBoundaryStyle" -> Automatic, 
+      "DefaultGraphicsInteraction" -> {
+       "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+        "Effects" -> {
+         "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+          "Droplines" -> {
+           "freeformCursorMode" -> True, 
+            "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+      "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+      "RangePadding" -> Scaled[0.05]}], ",", 
+   GraphicsBox[RasterBox[CompressedData["
+1:eJxTTMoPSmVmYGBghWIQGwI+2FNKH2yKXSs86bV9QUNTwTPBR/Yb5Liev385
+iWJz0emHVSLr3B/esmdAAdRzD7HmD1b3EEvTOr4ANPaGQw==
+     "], {{0, 0}, {5, 5}}, {0, 1}],
+    BaseStyle->{FontFamily -> "Arial"},
+    Epilog->{
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{0, 4}, {1, 5}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "2"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "2"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -2, "\[RightAngleBracket]"}]], "=",
+           0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{1, 4}, {2, 5}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "2"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "1"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "1"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -1, "\[RightAngleBracket]"}]], "=",
+           1}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{2, 4}, {3, 5}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "2"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "0", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 0, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{3, 4}, {4, 5}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "2"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "1", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 1, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{4, 4}, {5, 5}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "2"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "2", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 2, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{0, 3}, {1, 4}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "1"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "2"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "1"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -2, "\[RightAngleBracket]"}]], "=",
+           1}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{1, 3}, {2, 4}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "1"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "1"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -1, "\[RightAngleBracket]"}]], "=",
+           0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{2, 3}, {3, 4}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "1"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "0", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", 
+          SqrtBox[
+           FractionBox["3", "2"]]}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 0, "\[RightAngleBracket]"}]], "=", 
+          Rational[3, 2]^Rational[1, 2]}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{3, 3}, {4, 4}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "1"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "1", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 1, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{4, 3}, {5, 4}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "1"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "2", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 2, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{0, 2}, {1, 3}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "0", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "2"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 0, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -2, "\[RightAngleBracket]"}]], "=",
+           0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{1, 2}, {2, 3}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "0", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "1"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", 
+          SqrtBox[
+           FractionBox["3", "2"]]}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 0, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -1, "\[RightAngleBracket]"}]], "=",
+           Rational[3, 2]^Rational[1, 2]}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{2, 2}, {3, 3}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "0", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "0", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 0, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 0, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{3, 2}, {4, 3}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "0", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "1", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", 
+          SqrtBox[
+           FractionBox["3", "2"]]}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 0, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 1, "\[RightAngleBracket]"}]], "=", 
+          Rational[3, 2]^Rational[1, 2]}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{4, 2}, {5, 3}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "0", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "2", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 0, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 2, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{0, 1}, {1, 2}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "1", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "2"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -2, "\[RightAngleBracket]"}]], "=",
+           0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{1, 1}, {2, 2}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "1", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "1"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -1, "\[RightAngleBracket]"}]], "=",
+           0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{2, 1}, {3, 2}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "1", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "0", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", 
+          SqrtBox[
+           FractionBox["3", "2"]]}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 0, "\[RightAngleBracket]"}]], "=", 
+          Rational[3, 2]^Rational[1, 2]}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{3, 1}, {4, 2}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "1", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "1", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 1, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{4, 1}, {5, 2}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "1", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "2", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "1"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 2, "\[RightAngleBracket]"}]], "=", 
+          1}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{0, 0}, {1, 1}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "2", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "2"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -2, "\[RightAngleBracket]"}]], "=",
+           0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{1, 0}, {2, 1}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "2", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "1"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -1, "\[RightAngleBracket]"}]], "=",
+           0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{2, 0}, {3, 1}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "2", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "0", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 0, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{3, 0}, {4, 1}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "2", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "1", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "1"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 1, "\[RightAngleBracket]"}]], "=", 
+          1}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{4, 0}, {5, 1}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "2", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "2", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 2, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ]},
+    Frame->True,
+    FrameLabel->{None, None},
+    FrameTicks->{{{{4.5, 
+         FormBox[
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "2"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TraditionalForm]}, {3.5, 
+         FormBox[
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "1"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TraditionalForm]}, {2.5, 
+         FormBox[
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "0", "\[RightBracketingBar]"}], 
+           DisplayForm], TraditionalForm]}, {1.5, 
+         FormBox[
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "1", "\[RightBracketingBar]"}], 
+           DisplayForm], TraditionalForm]}, {0.5, 
+         FormBox[
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "2", "\[RightBracketingBar]"}], 
+           DisplayForm], TraditionalForm]}}, None}, {None, {{0.5, 
+         FormBox[
+          TagBox[
+           RotationBox[
+            RowBox[{"\[LeftBracketingBar]", 
+              RowBox[{"-", "2"}], "\[RightAngleBracket]"}], BoxRotation -> 
+            1.5707963267948966`], DisplayForm], TraditionalForm]}, {1.5, 
+         FormBox[
+          TagBox[
+           RotationBox[
+            RowBox[{"\[LeftBracketingBar]", 
+              RowBox[{"-", "1"}], "\[RightAngleBracket]"}], BoxRotation -> 
+            1.5707963267948966`], DisplayForm], TraditionalForm]}, {2.5, 
+         FormBox[
+          TagBox[
+           RotationBox[
+            RowBox[{"\[LeftBracketingBar]", "0", "\[RightAngleBracket]"}], 
+            BoxRotation -> 1.5707963267948966`], DisplayForm], 
+          TraditionalForm]}, {3.5, 
+         FormBox[
+          TagBox[
+           RotationBox[
+            RowBox[{"\[LeftBracketingBar]", "1", "\[RightAngleBracket]"}], 
+            BoxRotation -> 1.5707963267948966`], DisplayForm], 
+          TraditionalForm]}, {4.5, 
+         FormBox[
+          TagBox[
+           RotationBox[
+            RowBox[{"\[LeftBracketingBar]", "2", "\[RightAngleBracket]"}], 
+            BoxRotation -> 1.5707963267948966`], DisplayForm], 
+          TraditionalForm]}}}},
+    GridLinesStyle->Directive[
+      GrayLevel[0.5, 0.4]],
+    Method->{
+     "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+      "DefaultBoundaryStyle" -> Automatic, 
+      "DefaultGraphicsInteraction" -> {
+       "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+        "Effects" -> {
+         "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+          "Droplines" -> {
+           "freeformCursorMode" -> True, 
+            "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+      "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+      "RangePadding" -> Scaled[0.05]}], ",", 
+   GraphicsBox[RasterBox[CompressedData["
+1:eJxTTMoPSmVmYGBghWIQGwI+2NOaflglss794S17BhRAubl9Lzm9bRLe2Me5
+3DYsnf7UvjU4sEle8BzN/TPU3E+r8MdFAwBY2WwV
+     "], {{0, 0}, {5, 5}}, {0, 1}],
+    BaseStyle->{FontFamily -> "Arial"},
+    Epilog->{
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{0, 4}, {1, 5}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "2"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "2"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "2"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -2, "\[RightAngleBracket]"}]], "=",
+           2}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{1, 4}, {2, 5}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "2"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "1"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -1, "\[RightAngleBracket]"}]], "=",
+           0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{2, 4}, {3, 5}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "2"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "0", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 0, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{3, 4}, {4, 5}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "2"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "1", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 1, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{4, 4}, {5, 5}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "2"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "2", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 2, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{0, 3}, {1, 4}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "1"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "2"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -2, "\[RightAngleBracket]"}]], "=",
+           0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{1, 3}, {2, 4}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "1"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "1"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "1"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -1, "\[RightAngleBracket]"}]], "=",
+           1}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{2, 3}, {3, 4}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "1"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "0", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 0, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{3, 3}, {4, 4}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "1"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "1", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 1, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{4, 3}, {5, 4}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "1"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "2", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", -1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 2, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{0, 2}, {1, 3}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "0", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "2"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 0, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -2, "\[RightAngleBracket]"}]], "=",
+           0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{1, 2}, {2, 3}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "0", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "1"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 0, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -1, "\[RightAngleBracket]"}]], "=",
+           0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{2, 2}, {3, 3}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "0", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "0", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 0, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 0, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{3, 2}, {4, 3}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "0", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "1", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 0, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 1, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{4, 2}, {5, 3}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "0", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "2", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 0, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 2, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{0, 1}, {1, 2}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "1", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "2"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -2, "\[RightAngleBracket]"}]], "=",
+           0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{1, 1}, {2, 2}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "1", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "1"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -1, "\[RightAngleBracket]"}]], "=",
+           0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{2, 1}, {3, 2}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "1", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "0", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 0, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{3, 1}, {4, 2}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "1", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "1", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "1"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 1, "\[RightAngleBracket]"}]], "=", 
+          1}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{4, 1}, {5, 2}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "1", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "2", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 1, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 2, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{0, 0}, {1, 1}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "2", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "2"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -2, "\[RightAngleBracket]"}]], "=",
+           0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{1, 0}, {2, 1}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "2", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", 
+             RowBox[{"-", "1"}], "\[RightAngleBracket]"}], DisplayForm], 
+          "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", -1, "\[RightAngleBracket]"}]], "=",
+           0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{2, 0}, {3, 1}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "2", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "0", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 0, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{3, 0}, {4, 1}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "2", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "1", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "0"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 1, "\[RightAngleBracket]"}]], "=", 
+          0}], "Tooltip"]& ], 
+      TagBox[
+       TooltipBox[{
+         GrayLevel[0, 0], 
+         RectangleBox[{4, 0}, {5, 1}]}, 
+        TemplateBox[{
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "2", "\[RightBracketingBar]"}], 
+           DisplayForm], 
+          TagBox[
+           RowBox[{"\[LeftBracketingBar]", "2", "\[RightAngleBracket]"}], 
+           DisplayForm], "\"=\"", "2"}, "RowDefault"]], Annotation[#, 
+        Row[{
+          DisplayForm[
+           RowBox[{"\[LeftAngleBracket]", 2, "\[RightBracketingBar]"}]], 
+          DisplayForm[
+           RowBox[{"\[LeftBracketingBar]", 2, "\[RightAngleBracket]"}]], "=", 
+          2}], "Tooltip"]& ]},
+    Frame->True,
+    FrameLabel->{None, None},
+    FrameTicks->{{{{4.5, 
+         FormBox[
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "2"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TraditionalForm]}, {3.5, 
+         FormBox[
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", 
+             RowBox[{"-", "1"}], "\[RightBracketingBar]"}], DisplayForm], 
+          TraditionalForm]}, {2.5, 
+         FormBox[
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "0", "\[RightBracketingBar]"}], 
+           DisplayForm], TraditionalForm]}, {1.5, 
+         FormBox[
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "1", "\[RightBracketingBar]"}], 
+           DisplayForm], TraditionalForm]}, {0.5, 
+         FormBox[
+          TagBox[
+           RowBox[{"\[LeftAngleBracket]", "2", "\[RightBracketingBar]"}], 
+           DisplayForm], TraditionalForm]}}, None}, {None, {{0.5, 
+         FormBox[
+          TagBox[
+           RotationBox[
+            RowBox[{"\[LeftBracketingBar]", 
+              RowBox[{"-", "2"}], "\[RightAngleBracket]"}], BoxRotation -> 
+            1.5707963267948966`], DisplayForm], TraditionalForm]}, {1.5, 
+         FormBox[
+          TagBox[
+           RotationBox[
+            RowBox[{"\[LeftBracketingBar]", 
+              RowBox[{"-", "1"}], "\[RightAngleBracket]"}], BoxRotation -> 
+            1.5707963267948966`], DisplayForm], TraditionalForm]}, {2.5, 
+         FormBox[
+          TagBox[
+           RotationBox[
+            RowBox[{"\[LeftBracketingBar]", "0", "\[RightAngleBracket]"}], 
+            BoxRotation -> 1.5707963267948966`], DisplayForm], 
+          TraditionalForm]}, {3.5, 
+         FormBox[
+          TagBox[
+           RotationBox[
+            RowBox[{"\[LeftBracketingBar]", "1", "\[RightAngleBracket]"}], 
+            BoxRotation -> 1.5707963267948966`], DisplayForm], 
+          TraditionalForm]}, {4.5, 
+         FormBox[
+          TagBox[
+           RotationBox[
+            RowBox[{"\[LeftBracketingBar]", "2", "\[RightAngleBracket]"}], 
+            BoxRotation -> 1.5707963267948966`], DisplayForm], 
+          TraditionalForm]}}}},
+    GridLinesStyle->Directive[
+      GrayLevel[0.5, 0.4]],
+    Method->{
+     "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+      "DefaultBoundaryStyle" -> Automatic, 
+      "DefaultGraphicsInteraction" -> {
+       "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+        "Effects" -> {
+         "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+          "Droplines" -> {
+           "freeformCursorMode" -> True, 
+            "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+      "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+      "RangePadding" -> Scaled[0.05]}]}], "}"}]], "Output",
+ CellChangeTimes->{{3.946119267260037*^9, 3.946119305770699*^9}, {
+  3.94611933780262*^9, 3.9461193763329678`*^9}, {3.9461195705388947`*^9, 
+  3.9461195904979563`*^9}},
+ CellLabel->"Out[13]=",
+ CellID->701026287,ExpressionUUID->"6754c061-3e9b-40bd-893d-91c01e90383c"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "More Examples",
+ Cell[BoxData[
+  TemplateBox[{"MoreExamples", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell["Extended examples in standardized sections.", "MoreInfoText"], 
+       BaseStyle -> "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "8ec78634-4477-4740-b439-3960a5b73383"]
+}], "ExtendedExamplesSection",
+ CellTags->"ExtendedExamples",
+ CellID->1750094200,ExpressionUUID->"601ce7ae-7103-4d67-ba53-5d9f5ee06ae7"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Scope", "ExampleSection",ExpressionUUID->
+   "caacb7c1-e358-48fe-ad38-8190ecf1b439"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->1897190088,ExpressionUUID->"b2117ac2-0f06-45f3-835b-25b9d435a6dc"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Generalizations & Extensions", "ExampleSection",ExpressionUUID->
+   "c177ac19-2795-4c88-8f6e-1914fb38e242"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->236618360,ExpressionUUID->"f0552618-7408-4775-8c2e-c606ff757e5a"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Options", "ExampleSection",ExpressionUUID->
+   "23f6105f-82f0-4ebf-9e9a-781188e8835a"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->1852545923,ExpressionUUID->"f4d1ffc1-7f67-4937-86f1-8f17a71b2bed"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "XXXX", "ExampleSubsection",ExpressionUUID->
+   "fd0c6839-68e7-45cc-88fc-c3c08f9cb427"],
+  $Line = 0; Null]], "ExampleSubsection",
+ CellID->1521413655,ExpressionUUID->"dd37cb25-7afc-4a94-aa21-08f0c9967ceb"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "XXXX", "ExampleSubsection",ExpressionUUID->
+   "23b24e8c-b9fc-4128-a202-2c4ecfd5aa5b"],
+  $Line = 0; Null]], "ExampleSubsection",
+ CellID->311514756,ExpressionUUID->"f024ac7e-bc70-4ff0-82a8-45c3b2fae31d"]
+}, Open  ]],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Applications", "ExampleSection",ExpressionUUID->
+   "65457966-44a2-4c34-b4ce-b0eae7f9ee11"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->63372706,ExpressionUUID->"4078e5bf-dd7c-4176-af24-79738185553f"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Properties & Relations", "ExampleSection",ExpressionUUID->
+   "c2ff0705-2a4f-4899-aca4-c12ef3396ac1"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->2100664477,ExpressionUUID->"49b73eda-d1ba-4612-b85a-2b03815640b1"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Possible Issues", "ExampleSection",ExpressionUUID->
+   "1be372b5-0afd-45b8-81ac-5071288711ad"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->1236708259,ExpressionUUID->"7f9748e6-c0df-4ec6-9f5f-296021e260bb"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Interactive Examples", "ExampleSection",ExpressionUUID->
+   "b726ab4b-ccde-45ea-98ec-0aef34f82157"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->2008973347,ExpressionUUID->"dd53dc21-d69f-4a86-b04b-73edbaff6a4e"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Neat Examples", "ExampleSection",ExpressionUUID->
+   "d483954b-30a1-4e12-8ea7-d5fddf8eb70c"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->2077144895,ExpressionUUID->"bc409be1-79a6-43b0-b072-fb03226f87fc"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Metadata", "MetadataSection",
+ CellID->1080084633,ExpressionUUID->"83d4b780-1a6f-4a90-bba0-3d5087c93f93"],
+
+Cell[TextData[{
+ "New in: ",
+ Cell["1.0.0", "HistoryData",
+  CellTags->"New",ExpressionUUID->"f73a05de-58ee-419f-af99-eded79288e2b"],
+ " | Modified in: ",
+ Cell[" ", "HistoryData",
+  CellTags->"Modified",ExpressionUUID->"fdb3a191-be0e-4b4d-a42f-bf82326f8a3e"],
+ " | Obsolete in: ",
+ Cell[" ", "HistoryData",
+  CellTags->"Obsolete",ExpressionUUID->
+  "c3dbc652-6fc7-4ead-a5e2-3d1a03aaa9e5"]
+}], "History",
+ CellChangeTimes->{{3.864923683926749*^9, 3.864923685610183*^9}, {
+  3.94611942981693*^9, 3.946119430419395*^9}},
+ CellID->303158740,ExpressionUUID->"e45d6691-d504-427c-a44c-a66ebce7bbaf"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Categorization",
+ Cell[BoxData[
+  TemplateBox[{"Metadata", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell[
+       "Metadata such as page URI, context, and type of documentation page.", 
+        "MoreInfoText"], BaseStyle -> "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "388cda6d-ede6-43db-8019-140a6b55a4f8"]
+}], "CategorizationSection",
+ CellID->1357732496,ExpressionUUID->"6b874308-dbcb-4b3b-ad7b-918d91537442"],
+
+Cell["Symbol", "Categorization",
+ CellLabel->"Entity Type",
+ CellID->248827250,ExpressionUUID->"53b9ce8a-65bf-4209-92f9-eca4d93e61ac"],
+
+Cell["DavidLizarazo/qlanth", "Categorization",
+ CellLabel->"Paclet Name",
+ CellID->888930041,ExpressionUUID->"c3ed1578-729f-4e43-98ac-991c142ab389"],
+
+Cell["DavidLizarazo`qlanth`", "Categorization",
+ CellLabel->"Context",
+ CellID->203466908,ExpressionUUID->"de227174-cab2-4253-a62d-ec2a046ec0d5"],
+
+Cell["DavidLizarazo/qlanth/ref/HamiltonianMatrixPlot", "Categorization",
+ CellLabel->"URI",
+ CellID->874356732,ExpressionUUID->"a6253c6a-ef76-43a0-b612-192247070700"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Keywords", "KeywordsSection",
+ CellID->82998303,ExpressionUUID->"9c8c406c-9c2b-4815-ab86-4710aba7e048"],
+
+Cell["XXXX", "Keywords",
+ CellID->1235591618,ExpressionUUID->"b6d64542-b456-4ce5-afab-6b43091df9d1"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Syntax Templates", "TemplatesSection",
+ CellID->421457236,ExpressionUUID->"6b9039ab-ea33-4eb5-a0a4-fad9717f8784"],
+
+Cell[BoxData[""], "Template",
+ CellLabel->"Additional Function Template",
+ CellID->1030697646,ExpressionUUID->"b7fde38b-319c-415d-a860-2940bcbe2996"],
+
+Cell[BoxData[""], "Template",
+ CellLabel->"Arguments Pattern",
+ CellID->1332239620,ExpressionUUID->"4c9cb630-3145-49c3-93a0-5753d32c1e2f"],
+
+Cell[BoxData[""], "Template",
+ CellLabel->"Local Variables",
+ CellID->1286789718,ExpressionUUID->"7d5a380f-bbf3-4a17-8395-73b122825835"],
+
+Cell[BoxData[""], "Template",
+ CellLabel->"Color Equal Signs",
+ CellID->1914465136,ExpressionUUID->"4223bd1b-6d37-486a-a4f4-e89e12a31e9c"]
+}, Closed]]
+}, Open  ]]
+},
+WindowSize->{700, 770},
+WindowMargins->{{453, Automatic}, {130, Automatic}},
+TaggingRules-><|"Paclet" -> "DavidLizarazo/qlanth"|>,
+FrontEndVersion->"14.1 for Mac OS X ARM (64-bit) (July 16, 2024)",
+StyleDefinitions->FrontEnd`FileName[{"Wolfram"}, "FunctionPageStylesExt.nb", 
+  CharacterEncoding -> "UTF-8"],
+ExpressionUUID->"36a4d69d-85aa-4c44-a5c5-9a5f42cdd43d"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "ExtendedExamples"->{
+  Cell[69364, 1817, 488, 13, 56, "ExtendedExamplesSection",ExpressionUUID->"601ce7ae-7103-4d67-ba53-5d9f5ee06ae7",
+   CellTags->"ExtendedExamples",
+   CellID->1750094200]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"ExtendedExamples", 75775, 2006}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[576, 22, 118, 1, 72, "ObjectName",ExpressionUUID->"ce47ecbd-bbe4-46eb-8721-da37eb6d3c94",
+ CellID->867870499],
+Cell[697, 25, 747, 14, 93, "Usage",ExpressionUUID->"85c2496e-1790-4433-80fa-99a868e9cec0",
+ CellID->590546269],
+Cell[1447, 41, 1504, 31, 129, "Notes",ExpressionUUID->"04abff9e-33b1-4f50-af9d-d21292c01b61",
+ CellID->1789210296]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2988, 77, 457, 13, 38, "SeeAlsoSection",ExpressionUUID->"434c0ae4-14c7-4136-9b06-780b1359aca8",
+ CellID->43935931],
+Cell[3448, 92, 1777, 44, 21, "SeeAlso",ExpressionUUID->"61155972-7a08-4553-8a0b-dcd7892c6013",
+ CellID->1844301396]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5262, 141, 435, 12, 39, "TechNotesSection",ExpressionUUID->"1ae92888-379a-424d-b051-811267368626",
+ CellID->394601774],
+Cell[5700, 155, 100, 1, 17, "Tutorials",ExpressionUUID->"2aead56f-61f0-4795-9655-67fa960a01b7",
+ CellID->642513682]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5837, 161, 118, 1, 37, "MoreAboutSection",ExpressionUUID->"306892e7-33da-46aa-b400-7d8b2741a865",
+ CellID->1179676258],
+Cell[5958, 164, 101, 1, 17, "MoreAbout",ExpressionUUID->"4261d140-b5b7-45aa-89f5-a7b6f40b67e8",
+ CellID->1249839102]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[6096, 170, 473, 13, 38, "RelatedLinksSection",ExpressionUUID->"b6f4efe0-92d8-4315-a963-3cd49987c02c",
+ CellID->1508236007],
+Cell[6572, 185, 102, 1, 17, "RelatedLinks",ExpressionUUID->"732c26bb-4706-47b8-9e76-0e729d6f331a",
+ CellID->25600461]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[6711, 191, 530, 14, 68, "ExamplesInitializationSection",ExpressionUUID->"eeef0309-6e99-4409-aa26-f399f15e4085",
+ CellID->770218627],
+Cell[7244, 207, 179, 3, 46, "ExampleInitialization",ExpressionUUID->"1a78987a-346e-4989-ae26-1d530251b409",
+ CellID->33039873]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7460, 215, 443, 12, 70, "PrimaryExamplesSection",ExpressionUUID->"77489b61-1c65-479c-967c-cb01552e3ce2",
+ CellID->1250364585],
+Cell[7906, 229, 272, 3, 23, "ExampleText",ExpressionUUID->"b61041fa-f0dd-490d-8b36-b19907de3139",
+ CellID->1195931029],
+Cell[CellGroupData[{
+Cell[8203, 236, 787, 20, 63, "Input",ExpressionUUID->"21889a64-bbad-4c76-b296-7c6acf9c7fd3",
+ CellID->1713352130],
+Cell[8993, 258, 60322, 1553, 129, "Output",ExpressionUUID->"6754c061-3e9b-40bd-893d-91c01e90383c",
+ CellID->701026287]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[69364, 1817, 488, 13, 56, "ExtendedExamplesSection",ExpressionUUID->"601ce7ae-7103-4d67-ba53-5d9f5ee06ae7",
+ CellTags->"ExtendedExamples",
+ CellID->1750094200],
+Cell[69855, 1832, 242, 5, 32, "ExampleSection",ExpressionUUID->"b2117ac2-0f06-45f3-835b-25b9d435a6dc",
+ CellID->1897190088],
+Cell[70100, 1839, 264, 5, 20, "ExampleSection",ExpressionUUID->"f0552618-7408-4775-8c2e-c606ff757e5a",
+ CellID->236618360],
+Cell[CellGroupData[{
+Cell[70389, 1848, 244, 5, 20, "ExampleSection",ExpressionUUID->"f4d1ffc1-7f67-4937-86f1-8f17a71b2bed",
+ CellID->1852545923],
+Cell[70636, 1855, 247, 5, 23, "ExampleSubsection",ExpressionUUID->"dd37cb25-7afc-4a94-aa21-08f0c9967ceb",
+ CellID->1521413655],
+Cell[70886, 1862, 246, 5, 19, "ExampleSubsection",ExpressionUUID->"f024ac7e-bc70-4ff0-82a8-45c3b2fae31d",
+ CellID->311514756]
+}, Open  ]],
+Cell[71147, 1870, 247, 5, 32, "ExampleSection",ExpressionUUID->"4078e5bf-dd7c-4176-af24-79738185553f",
+ CellID->63372706],
+Cell[71397, 1877, 259, 5, 20, "ExampleSection",ExpressionUUID->"49b73eda-d1ba-4612-b85a-2b03815640b1",
+ CellID->2100664477],
+Cell[71659, 1884, 252, 5, 20, "ExampleSection",ExpressionUUID->"7f9748e6-c0df-4ec6-9f5f-296021e260bb",
+ CellID->1236708259],
+Cell[71914, 1891, 257, 5, 20, "ExampleSection",ExpressionUUID->"dd53dc21-d69f-4a86-b04b-73edbaff6a4e",
+ CellID->2008973347],
+Cell[72174, 1898, 250, 5, 20, "ExampleSection",ExpressionUUID->"bc409be1-79a6-43b0-b072-fb03226f87fc",
+ CellID->2077144895]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[72461, 1908, 111, 1, 71, "MetadataSection",ExpressionUUID->"83d4b780-1a6f-4a90-bba0-3d5087c93f93",
+ CellID->1080084633],
+Cell[72575, 1911, 593, 14, 25, "History",ExpressionUUID->"e45d6691-d504-427c-a44c-a66ebce7bbaf",
+ CellID->303158740],
+Cell[CellGroupData[{
+Cell[73193, 1929, 485, 13, 20, "CategorizationSection",ExpressionUUID->"6b874308-dbcb-4b3b-ad7b-918d91537442",
+ CellID->1357732496],
+Cell[73681, 1944, 134, 2, 70, "Categorization",ExpressionUUID->"53b9ce8a-65bf-4209-92f9-eca4d93e61ac",
+ CellID->248827250],
+Cell[73818, 1948, 148, 2, 70, "Categorization",ExpressionUUID->"c3ed1578-729f-4e43-98ac-991c142ab389",
+ CellID->888930041],
+Cell[73969, 1952, 145, 2, 70, "Categorization",ExpressionUUID->"de227174-cab2-4253-a62d-ec2a046ec0d5",
+ CellID->203466908],
+Cell[74117, 1956, 166, 2, 70, "Categorization",ExpressionUUID->"a6253c6a-ef76-43a0-b612-192247070700",
+ CellID->874356732]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[74320, 1963, 109, 1, 20, "KeywordsSection",ExpressionUUID->"9c8c406c-9c2b-4815-ab86-4710aba7e048",
+ CellID->82998303],
+Cell[74432, 1966, 100, 1, 70, "Keywords",ExpressionUUID->"b6d64542-b456-4ce5-afab-6b43091df9d1",
+ CellID->1235591618]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[74569, 1972, 119, 1, 20, "TemplatesSection",ExpressionUUID->"6b9039ab-ea33-4eb5-a0a4-fad9717f8784",
+ CellID->421457236],
+Cell[74691, 1975, 149, 2, 70, "Template",ExpressionUUID->"b7fde38b-319c-415d-a860-2940bcbe2996",
+ CellID->1030697646],
+Cell[74843, 1979, 138, 2, 70, "Template",ExpressionUUID->"4c9cb630-3145-49c3-93a0-5753d32c1e2f",
+ CellID->1332239620],
+Cell[74984, 1983, 136, 2, 70, "Template",ExpressionUUID->"7d5a380f-bbf3-4a17-8395-73b122825835",
+ CellID->1286789718],
+Cell[75123, 1987, 138, 2, 70, "Template",ExpressionUUID->"4223bd1b-6d37-486a-a4f4-e89e12a31e9c",
+ CellID->1914465136]
+}, Closed]]
+}, Open  ]]
+}
+]
+*)
+

@@ -1,0 +1,428 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     16657,        420]
+NotebookOptionsPosition[     12547,        333]
+NotebookOutlinePosition[     13072,        351]
+CellTagsIndexPosition[     13029,        348]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Fractional Parentage", "GuideTitle",
+ CellID->1488995826,ExpressionUUID->"58753a6b-bc48-42b4-8d11-9c72c84f059a"],
+
+Cell[TextData[{
+ "A common theme in the valuation of matrix elements of the semi-empirical \
+Hamiltonian is that of computing matrix elements in configuration ",
+ Cell[BoxData[
+  SuperscriptBox["f", "n"]], "InlineFormula",
+  FormatType->StandardForm,ExpressionUUID->
+  "bf8cf6ba-54a2-4f14-b456-4c1acaa31cbf"],
+ " based on matrix elements in configuration ",
+ Cell[BoxData[
+  SuperscriptBox["f", 
+   RowBox[{"n", "-", "1"}]]], "InlineFormula",
+  FormatType->StandardForm,ExpressionUUID->
+  "49c9147e-a053-4e2c-8ad5-6bc833c53fbc"],
+ ". For this purpose the method of fractional parentage is used. This method \
+recognizes that adequate antisymmetrization and normalization of the basis \
+states for ",
+ Cell[BoxData[
+  SuperscriptBox["f", "n"]], "InlineFormula",
+  FormatType->StandardForm,ExpressionUUID->
+  "7c60ecd5-2671-4d96-a0dd-0b64514e1f74"],
+ " may be obtained by building on those for ",
+ Cell[BoxData[
+  SuperscriptBox["f", 
+   RowBox[{"n", "-", "1"}]]], "InlineFormula",
+  FormatType->StandardForm,ExpressionUUID->
+  "c3949a88-4bee-4dc8-ba74-4e2174182690"],
+ ". The coefficients that allow this may also be used to evaluate matrix \
+elements of operators in ",
+ Cell[BoxData[
+  SuperscriptBox["f", "n"]], "InlineFormula",
+  FormatType->StandardForm,ExpressionUUID->
+  "40a278e0-1ed5-4999-b392-0453e2204086"],
+ " using those in ",
+ Cell[BoxData[
+  SuperscriptBox["f", 
+   RowBox[{"n", "-", "1"}]]], "InlineFormula",
+  FormatType->StandardForm,ExpressionUUID->
+  "be560543-0965-4312-b0cb-f101aafaf0c0"],
+ ". As such these coefficients appear as a useful computational tool.\nThe \
+first compendium of such coefficients is due to Nielson and Koster (1963).\n\
+The source for the coefficients of fractional parentage used in ",
+ StyleBox["qlanth",
+  FontWeight->"Bold"],
+ " are from a digital file attached to the doctoral thesis of Velkov (2000)."
+}], "GuideAbstract",
+ CellChangeTimes->{{3.946661847236886*^9, 3.946662170541621*^9}, {
+  3.9466622009577303`*^9, 3.946662261820966*^9}, {3.9466623274300003`*^9, 
+  3.9466623880577173`*^9}},
+ CellID->1216401691,ExpressionUUID->"986047af-2113-49dd-87f0-17891f1ce8d7"],
+
+Cell[TextData[{
+ StyleBox["Velkov, Dobromir",
+  FontSlant->"Italic"],
+ ". ",
+ StyleBox["\[OpenCurlyDoubleQuote]Multi-Electron Coefficients of Fractional \
+Parentage for the p, d, and f Shells.\[CloseCurlyDoubleQuote]",
+  FontWeight->"Bold"],
+ " John Hopkins University, 2000."
+}], "GuideAbstract",
+ CellDingbat->"\[DiamondSuit]",
+ CellChangeTimes->{{3.946034377478005*^9, 3.946034377544031*^9}, 
+   3.9461179549800787`*^9, {3.946326752860509*^9, 3.946326760749433*^9}, {
+   3.946392596343419*^9, 3.9463926264512577`*^9}, {3.94640661256919*^9, 
+   3.946406626304309*^9}, 3.946407875481823*^9, 3.9464113550586967`*^9, 
+   3.946637340094511*^9},
+ CellID->111719272,ExpressionUUID->"9d1e5af0-009d-4340-9246-e1b0fbc092db"],
+
+Cell[TextData[{
+ StyleBox["Nielson, C. W., and George F Koster.",
+  FontSlant->"Italic"],
+ " ",
+ StyleBox["\"Spectroscopic Coefficients for the Pn, Dn, and Fn Configurations\
+\"",
+  FontWeight->"Bold"],
+ ", 1963."
+}], "GuideAbstract",
+ CellDingbat->"\[DiamondSuit]",
+ CellChangeTimes->{{3.946034377478005*^9, 3.946034377544031*^9}, 
+   3.9461179549800787`*^9, {3.946326752860509*^9, 3.946326760749433*^9}, {
+   3.946392596343419*^9, 3.9463926264512577`*^9}, {3.94640661256919*^9, 
+   3.946406626304309*^9}, 3.946407875481823*^9, 3.9464113550586967`*^9, 
+   3.946637340094511*^9, {3.9466623082363043`*^9, 3.946662322584783*^9}},
+ CellID->1989244542,ExpressionUUID->"f91570b1-19e7-4a49-b176-f987e1c7243b"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["", "GuideFunctionsSection",
+ CellID->1087586275,ExpressionUUID->"8b045a5f-cc10-4067-b0d1-a397b2715c56"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["LoadCFP",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/LoadCFP"]], 
+  "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c40ac8e4-27e1-4161-a8df-4d4f38357a23",ExpressionUUID->
+  "b897b64a-0831-4c2d-a0bc-c0be38d8067e"],
+ " \[LongDash] loads data for the coefficients of fractional parentage."
+}], "GuideText",
+ CellChangeTimes->{{3.945618810162839*^9, 3.945618841967877*^9}, {
+  3.945618898397457*^9, 3.945618906753109*^9}, {3.9466624278993177`*^9, 
+  3.946662444105773*^9}, {3.946662486310894*^9, 3.9466625143492317`*^9}},
+ CellID->1533573750,ExpressionUUID->"9df9f0a7-abc4-4115-8798-0240ddbcf364"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["CFP",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/CFP"]], "InlineGuideFunction",
+  
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c40ac8e4-27e1-4161-a8df-4d4f38357a23",ExpressionUUID->
+  "39962662-126c-4b20-964b-6a186aa1ccdc"],
+ " \[LongDash] an association containing coefficients of fractional parentage."
+}], "GuideText",
+ CellChangeTimes->{{3.945618810162839*^9, 3.945618841967877*^9}, {
+  3.945618898397457*^9, 3.945618906753109*^9}, {3.9466624278993177`*^9, 
+  3.946662444105773*^9}, {3.946662575850142*^9, 3.9466625777542877`*^9}},
+ CellID->1496274800,ExpressionUUID->"127bc709-eae6-47ce-9fb2-e4104205d116"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["CFPAssoc",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/CFPAssoc"]], 
+  "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c5c6736a-1ff4-4e4e-8fcf-2d9846cbae62",ExpressionUUID->
+  "fb65e91d-9fc2-41e2-90a2-b98dbb690eba"],
+ " \[LongDash] an alternative association containing coefficients of \
+fractional parentage."
+}], "GuideText",
+ CellChangeTimes->{{3.945618817684976*^9, 3.9456188456974297`*^9}, {
+   3.945619065384213*^9, 3.945619082940886*^9}, 3.946662416847389*^9, {
+   3.946662449661924*^9, 3.946662464951953*^9}, {3.946662582923703*^9, 
+   3.946662587374021*^9}},
+ CellID->857057230,ExpressionUUID->"ba6fa02c-7b22-4b7a-a7dc-234a0ab96856"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["CFPTable",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/CFPTable"]], 
+  "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c40ac8e4-27e1-4161-a8df-4d4f38357a23",ExpressionUUID->
+  "16ee871d-80bc-4cd9-9eee-b18c898f38db"],
+ " \[LongDash] a list containing coefficients of fractional parentage."
+}], "GuideText",
+ CellChangeTimes->{{3.945618810162839*^9, 3.945618841967877*^9}, {
+  3.945618898397457*^9, 3.945618906753109*^9}},
+ CellID->1829204308,ExpressionUUID->"85f40f5e-ac08-4e13-83cf-4964ff651f29"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["CFPTerms",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/CFPTerms"]], 
+  "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c5c6736a-1ff4-4e4e-8fcf-2d9846cbae62",ExpressionUUID->
+  "2740fefe-97bc-40b1-a500-4c6a44e4be75"],
+ " \[LongDash] function to query LS spectroscopic terms in the ",
+ Cell[BoxData[
+  SuperscriptBox["f", "n"]], "InlineFormula",ExpressionUUID->
+  "32b8c21c-d913-4b20-bf93-d92efb146b20"],
+ " configurations."
+}], "GuideText",
+ CellChangeTimes->{{3.945618817684976*^9, 3.9456188456974297`*^9}, {
+   3.945619065384213*^9, 3.945619082940886*^9}, 3.946662416847389*^9},
+ CellID->60914104,ExpressionUUID->"5b8c10df-ee1b-4e11-8297-7ca6b3237e7b"],
+
+Cell[CellGroupData[{
+
+Cell["\t", "GuideDelimiter",
+ CellID->1581129956,ExpressionUUID->"0f401f23-a6d2-4d06-a557-cdc301590298"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  TagBox[
+   FrameBox["\<\"XXXX\"\>"],
+   "FunctionPlaceholder"]], "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},ExpressionUUID->
+  "ed929591-379e-4ced-a4d8-1c40eafc35ba"],
+ Cell[BoxData[
+  RowBox[{
+  Cell[TextData[StyleBox[
+   " \[FilledVerySmallSquare] ", "InlineSeparator"]],ExpressionUUID->
+    "bdc3c43f-cd15-4418-b10a-e1e98ebebd08"], 
+   DynamicModuleBox[{$CellContext`nbobj$$ = NotebookObject[
+    "96471f43-e07f-4cee-bd35-a6f6ce02de64", 
+     "b7680ec5-514f-4abf-adad-e3aaa36c7dbb"], $CellContext`cellobj$$ = 
+    CellObject[
+    "dac6d6f1-4b4a-459c-afe2-c84e301449b3", 
+     "575cde7b-00b3-42ff-9e63-7059a74e8af3"]}, 
+    TemplateBox[{
+      GraphicsBox[{{
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         CircleBox[{0, 0}]}, {
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         LineBox[{{0, 0.62}, {0, -0.62}}]}, {
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         LineBox[{{-0.62, 0}, {0.62, 0}}]}}, 
+       ImagePadding -> {{1., 1.}, {2.4, 1.}}, ImageSize -> 16, 
+       PlotRange -> {{-1.06, 1.06}, {-1.06, 1.06}}, 
+       BaselinePosition -> (Center -> 
+        Center)], $CellContext`nbobj$$, $CellContext`cellobj$$},
+     "InlineListingAddButton"],
+    Initialization:>($CellContext`nbobj$$ = 
+      EvaluationNotebook[]; $CellContext`cellobj$$ = EvaluationCell[])]}]], 
+  "InlineListingAddButton",ExpressionUUID->
+  "dac6d6f1-4b4a-459c-afe2-c84e301449b3"]
+}], "InlineGuideFunctionListing",
+ CellID->1088522514,ExpressionUUID->"5659891a-40f7-4c3f-9978-6308907eb375"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Tech Notes", "GuideTutorialsSection",
+ CellID->384704005,ExpressionUUID->"2b957ada-0ac7-4909-92f8-2a8fafe559b2"],
+
+Cell["XXXX", "GuideTutorial",
+ CellID->1794434565,ExpressionUUID->"df03cdf9-9cc3-4887-850d-c1649c66ec4c"],
+
+Cell["XXXX", "GuideTutorial",
+ CellID->1948879134,ExpressionUUID->"c1a64874-3e06-4a7b-bb1b-95149c716b87"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Related Guides", "GuideMoreAboutSection",
+ CellChangeTimes->{{3.8430423939366693`*^9, 3.843042395176153*^9}},
+ CellID->1391021094,ExpressionUUID->"8601a478-129a-489e-a89d-a24573c86ece"],
+
+Cell[TextData[ButtonBox["qlanth",
+ BaseStyle->"Link",
+ ButtonData->"paclet:DavidLizarazo/qlanth/guide/qlanth"]], "GuideMoreAbout",
+ CellChangeTimes->{{3.9456188260804996`*^9, 3.945618832899672*^9}},
+ CellID->1384545616,ExpressionUUID->"a2755dab-26b9-4794-9c9d-1ae8cb00d350"],
+
+Cell["XXXX", "GuideMoreAbout",
+ CellID->2072852867,ExpressionUUID->"412be038-3c45-4b4a-a2ab-a769964ab4c2"]
+}, Open  ]],
+
+Cell["Related Links", "GuideRelatedLinksSection",
+ CellID->1958414035,ExpressionUUID->"62964bc1-60e9-4975-8711-e552a10f8b09"],
+
+Cell[CellGroupData[{
+
+Cell["Metadata", "MetadataSection",
+ CellID->582828676,ExpressionUUID->"05fb9d14-b2a5-4dd7-ab07-78a3d711747b"],
+
+Cell[TextData[{
+ "New in: ",
+ Cell["1,0,0", "HistoryData",
+  CellTags->"New",ExpressionUUID->"83cb31ca-19c9-4a8f-80be-de16585b9cd1"],
+ " | Modified in: ",
+ Cell[" ", "HistoryData",
+  CellTags->"Modified",ExpressionUUID->"208dabbe-fe0f-4c58-a193-c7082df4c230"],
+ " | Obsolete in: ",
+ Cell[" ", "HistoryData",
+  CellTags->"Obsolete",ExpressionUUID->
+  "f18fc77d-c7c3-4554-9261-46d6d8650085"]
+}], "History",
+ CellChangeTimes->{{3.946662592061199*^9, 3.946662592855237*^9}},
+ CellID->928643565,ExpressionUUID->"a8560a50-c1e1-463a-8c3d-82c8103b9c8f"],
+
+Cell[CellGroupData[{
+
+Cell["Categorization", "CategorizationSection",
+ CellID->1948734206,ExpressionUUID->"d531ebdd-3651-466f-9058-cce177f70439"],
+
+Cell["Guide", "Categorization",
+ CellLabel->"Entity Type",
+ CellID->1102699845,ExpressionUUID->"ebe05999-c104-4c57-97a2-d6b6abd8ba28"],
+
+Cell["DavidLizarazo/qlanth", "Categorization",
+ CellLabel->"Paclet Name",
+ CellID->292421305,ExpressionUUID->"f2bc86d4-03bc-4bde-8e9f-35808be39e98"],
+
+Cell["DavidLizarazo`qlanth`", "Categorization",
+ CellLabel->"Context",
+ CellID->1282288799,ExpressionUUID->"d563587f-a280-4284-8a7c-3d4c924e3b8d"],
+
+Cell["DavidLizarazo/qlanth/guide/FractionalParentage", "Categorization",
+ CellLabel->"URI",
+ CellID->1429447148,ExpressionUUID->"ed2b47e9-60aa-4d72-8261-5bbfd1c1a7e5"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Keywords", "KeywordsSection",
+ CellID->818657447,ExpressionUUID->"3288dda9-c5b2-4ba2-9ff5-f98002e56415"],
+
+Cell["XXXX", "Keywords",
+ CellID->247985400,ExpressionUUID->"382bddb2-7563-41f6-a118-6c8855c55f06"]
+}, Closed]]
+}, Open  ]]
+},
+WindowSize->{700, 770},
+WindowMargins->{{Automatic, 504}, {Automatic, 126}},
+TaggingRules-><|"Paclet" -> "DavidLizarazo/qlanth"|>,
+FrontEndVersion->"14.1 for Mac OS X ARM (64-bit) (July 16, 2024)",
+StyleDefinitions->FrontEnd`FileName[{"Wolfram"}, "GuidePageStylesExt.nb", 
+  CharacterEncoding -> "UTF-8"],
+ExpressionUUID->"96471f43-e07f-4cee-bd35-a6f6ce02de64"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[576, 22, 118, 1, 86, "GuideTitle",ExpressionUUID->"58753a6b-bc48-42b4-8d11-9c72c84f059a",
+ CellID->1488995826],
+Cell[697, 25, 2120, 48, 207, "GuideAbstract",ExpressionUUID->"986047af-2113-49dd-87f0-17891f1ce8d7",
+ CellID->1216401691],
+Cell[2820, 75, 717, 15, 45, "GuideAbstract",ExpressionUUID->"9d1e5af0-009d-4340-9246-e1b0fbc092db",
+ CellID->111719272],
+Cell[3540, 92, 703, 15, 45, "GuideAbstract",ExpressionUUID->"f91570b1-19e7-4a49-b176-f987e1c7243b",
+ CellID->1989244542]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4280, 112, 109, 1, 71, "GuideFunctionsSection",ExpressionUUID->"8b045a5f-cc10-4067-b0d1-a397b2715c56",
+ CellID->1087586275],
+Cell[4392, 115, 696, 14, 24, "GuideText",ExpressionUUID->"9df9f0a7-abc4-4115-8798-0240ddbcf364",
+ CellID->1533573750],
+Cell[5091, 131, 695, 14, 24, "GuideText",ExpressionUUID->"127bc709-eae6-47ce-9fb2-e4104205d116",
+ CellID->1496274800],
+Cell[5789, 147, 744, 16, 24, "GuideText",ExpressionUUID->"ba6fa02c-7b22-4b7a-a7dc-234a0ab96856",
+ CellID->857057230],
+Cell[6536, 165, 598, 13, 24, "GuideText",ExpressionUUID->"85f40f5e-ac08-4e13-83cf-4964ff651f29",
+ CellID->1829204308],
+Cell[7137, 180, 755, 17, 24, "GuideText",ExpressionUUID->"5b8c10df-ee1b-4e11-8297-7ca6b3237e7b",
+ CellID->60914104],
+Cell[CellGroupData[{
+Cell[7917, 201, 104, 1, 26, "GuideDelimiter",ExpressionUUID->"0f401f23-a6d2-4d06-a557-cdc301590298",
+ CellID->1581129956],
+Cell[8024, 204, 1671, 42, 25, "InlineGuideFunctionListing",ExpressionUUID->"5659891a-40f7-4c3f-9978-6308907eb375",
+ CellID->1088522514]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[9744, 252, 118, 1, 73, "GuideTutorialsSection",ExpressionUUID->"2b957ada-0ac7-4909-92f8-2a8fafe559b2",
+ CellID->384704005],
+Cell[9865, 255, 105, 1, 23, "GuideTutorial",ExpressionUUID->"df03cdf9-9cc3-4887-850d-c1649c66ec4c",
+ CellID->1794434565],
+Cell[9973, 258, 105, 1, 23, "GuideTutorial",ExpressionUUID->"c1a64874-3e06-4a7b-bb1b-95149c716b87",
+ CellID->1948879134]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[10115, 264, 191, 2, 73, "GuideMoreAboutSection",ExpressionUUID->"8601a478-129a-489e-a89d-a24573c86ece",
+ CellID->1391021094],
+Cell[10309, 268, 274, 4, 23, "GuideMoreAbout",ExpressionUUID->"a2755dab-26b9-4794-9c9d-1ae8cb00d350",
+ CellID->1384545616],
+Cell[10586, 274, 106, 1, 23, "GuideMoreAbout",ExpressionUUID->"412be038-3c45-4b4a-a2ab-a769964ab4c2",
+ CellID->2072852867]
+}, Open  ]],
+Cell[10707, 278, 125, 1, 73, "GuideRelatedLinksSection",ExpressionUUID->"62964bc1-60e9-4975-8711-e552a10f8b09",
+ CellID->1958414035],
+Cell[CellGroupData[{
+Cell[10857, 283, 110, 1, 71, "MetadataSection",ExpressionUUID->"05fb9d14-b2a5-4dd7-ab07-78a3d711747b",
+ CellID->582828676],
+Cell[10970, 286, 545, 13, 25, "History",ExpressionUUID->"a8560a50-c1e1-463a-8c3d-82c8103b9c8f",
+ CellID->928643565],
+Cell[CellGroupData[{
+Cell[11540, 303, 123, 1, 20, "CategorizationSection",ExpressionUUID->"d531ebdd-3651-466f-9058-cce177f70439",
+ CellID->1948734206],
+Cell[11666, 306, 134, 2, 70, "Categorization",ExpressionUUID->"ebe05999-c104-4c57-97a2-d6b6abd8ba28",
+ CellID->1102699845],
+Cell[11803, 310, 148, 2, 70, "Categorization",ExpressionUUID->"f2bc86d4-03bc-4bde-8e9f-35808be39e98",
+ CellID->292421305],
+Cell[11954, 314, 146, 2, 70, "Categorization",ExpressionUUID->"d563587f-a280-4284-8a7c-3d4c924e3b8d",
+ CellID->1282288799],
+Cell[12103, 318, 167, 2, 70, "Categorization",ExpressionUUID->"ed2b47e9-60aa-4d72-8261-5bbfd1c1a7e5",
+ CellID->1429447148]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[12307, 325, 110, 1, 20, "KeywordsSection",ExpressionUUID->"3288dda9-c5b2-4ba2-9ff5-f98002e56415",
+ CellID->818657447],
+Cell[12420, 328, 99, 1, 70, "Keywords",ExpressionUUID->"382bddb2-7563-41f6-a118-6c8855c55f06",
+ CellID->247985400]
+}, Closed]]
+}, Open  ]]
+}
+]
+*)
+

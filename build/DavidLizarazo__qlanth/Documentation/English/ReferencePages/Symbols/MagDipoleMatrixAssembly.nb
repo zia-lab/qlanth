@@ -1,0 +1,886 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     36673,        876]
+NotebookOptionsPosition[     31823,        780]
+NotebookOutlinePosition[     33945,        829]
+CellTagsIndexPosition[     33860,        824]
+WindowTitle->MagDipoleMatrixAssembly
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[GridBox[{
+   {GridBox[{
+      {
+       ItemBox[Cell[BoxData[
+         RowBox[{
+          TemplateBox[{12},
+           "Spacer1"], Cell["DAVID LIZARAZO/QLANTH SYMBOL", "PacletNameCell",
+           TextAlignment->Center,ExpressionUUID->
+           "0a7c6cf3-92ed-486f-9a61-531d6a886dbc"], 
+          TemplateBox[{8},
+           "Spacer1"]}]],
+         TextAlignment->Center,ExpressionUUID->
+         "39cca4f8-a94c-4ca4-bd73-8697fb59e7b7"],
+        Background->RGBColor[0.490196, 0.576471, 0.690196],
+        ItemSize->Full], ""}
+     },
+     GridBoxAlignment->{"Rows" -> {{Center}}},
+     GridBoxItemSize->{"Columns" -> {Full, 
+         Scaled[0.02]}, "Rows" -> {{2.5}}}], Cell[TextData[{
+     Cell[BoxData[
+      TagBox[
+       ActionMenuBox[
+        FrameBox[Cell[TextData[{
+          "See Also",
+          " ",
+          Cell[BoxData[
+           GraphicsBox[
+            {GrayLevel[0.66667], Thickness[0.13], 
+             LineBox[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]},
+            AspectRatio->1,
+            ImageSize->20,
+            PlotRange->{{-3, 4}, {-1, 1}}]],ExpressionUUID->
+           "90199b87-d668-4e29-aa80-d4379c3d6534"]
+         }],ExpressionUUID->"3758acfc-afcd-4d33-ac83-3ba330d2af56"],
+         StripOnInput->False],{
+        StyleBox[
+          "\"LevelMagDipoleMatrixAssembly\"", "SeeAlsoRelated", StripOnInput -> 
+           False] :> Documentation`HelpLookup[
+          "paclet:DavidLizarazo/qlanth/ref/LevelMagDipoleMatrixAssembly"], 
+         StyleBox[
+          "\"LevelJJBlockMagDipole\"", "SeeAlsoRelated", StripOnInput -> 
+           False] :> Documentation`HelpLookup[
+          "paclet:DavidLizarazo/qlanth/ref/LevelJJBlockMagDipole"]},
+        Appearance->None,
+        MenuAppearance->Automatic,
+        MenuStyle->"SeeAlso"],
+       MouseAppearanceTag["LinkHand"]]],
+      LineSpacing->{1.4, 0},ExpressionUUID->
+      "5726c393-289c-4bb7-b609-6e6c21515bde"],
+     "\[ThickSpace]\[ThickSpace]\[ThickSpace]\[ThickSpace]\[ThickSpace]\
+\[ThickSpace]",
+     Cell[BoxData[
+      TagBox[
+       ActionMenuBox[
+        FrameBox[Cell[TextData[{
+          "URL",
+          " ",
+          Cell[BoxData[
+           GraphicsBox[
+            {GrayLevel[0.66667], Thickness[0.13], 
+             LineBox[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]},
+            AspectRatio->1,
+            ImageSize->20,
+            PlotRange->{{-3, 4}, {-1, 1}}]],ExpressionUUID->
+           "e429910e-0cc5-410e-97bb-f0fc5e09be54"]
+         }],ExpressionUUID->"d663d617-3caf-49f5-9317-1e51bda61c17"],
+         StripOnInput->False],{
+        "\"DavidLizarazo/qlanth/ref/MagDipoleMatrixAssembly\"" :> None, 
+         "\"Copy Wolfram Documentation Center URL\"" :> 
+         Module[{DocumentationSearch`Private`nb$}, 
+           DocumentationSearch`Private`nb$ = 
+            NotebookPut[
+             Notebook[{
+               Cell["DavidLizarazo/qlanth/ref/MagDipoleMatrixAssembly"]}, 
+               Visible -> DocumentationBuild`Make`Private`visible$1388520]]; 
+           SelectionMove[DocumentationSearch`Private`nb$, All, Notebook]; 
+           FrontEndTokenExecute[DocumentationSearch`Private`nb$, "Copy"]; 
+           NotebookClose[DocumentationSearch`Private`nb$]; Null], Delimiter, 
+         "\"Copy web URL\"" :> 
+         Module[{DocumentationSearch`Private`nb$}, 
+           DocumentationSearch`Private`nb$ = 
+            NotebookPut[
+             Notebook[{
+               Cell[BoxData[
+                 MakeBoxes[
+                  Hyperlink[
+                   "http://reference.wolfram.com/language/DavidLizarazo/\
+qlanth/ref/MagDipoleMatrixAssembly.html"], StandardForm]], "Input", 
+                 TextClipboardType -> "PlainText"]}, Visible -> 
+               DocumentationBuild`Make`Private`visible$1388520]]; 
+           SelectionMove[DocumentationSearch`Private`nb$, All, Notebook]; 
+           FrontEndTokenExecute[DocumentationSearch`Private`nb$, "Copy"]; 
+           NotebookClose[DocumentationSearch`Private`nb$]; Null], 
+         "\"Go to web URL\"" :> 
+         FrontEndExecute[{
+           NotebookLocate[{
+             URL[If[TrueQ[False], 
+                 "http://reference.wolfram.com/system-modeler/", 
+                 "http://reference.wolfram.com/language/"] <> 
+               "DavidLizarazo/qlanth/ref/MagDipoleMatrixAssembly" <> ".html"],
+               None}]}]},
+        Appearance->None,
+        MenuAppearance->Automatic,
+        MenuStyle->"URLMenu"],
+       MouseAppearanceTag["LinkHand"]]],
+      LineSpacing->{1.4, 0},ExpressionUUID->
+      "9e0e7d01-4147-4cf6-835f-99eb0bc2cc69"]
+    }], "AnchorBar",
+     CacheGraphics->False,ExpressionUUID->
+     "17afaa96-af31-438b-b8a3-1cef810f48b2"]}
+  }]], "AnchorBarGrid",
+ GridBoxOptions->{GridBoxItemSize->{"Columns" -> {
+     Scaled[0.65], {
+      Scaled[0.34]}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}}, 
+   "RowsIndexed" -> {}}},
+ CellID->1,ExpressionUUID->"6b5bbc00-98d6-45c4-be27-4c0973c01dc2"],
+
+Cell["DavidLizarazo`qlanth`", "ContextNameCell",ExpressionUUID->"eb22cac1-8c64-432a-b2d2-76affc21e905"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[GridBox[{
+   {Cell[TextData[{
+     Cell[
+     "MagDipoleMatrixAssembly", "ObjectName",ExpressionUUID->
+      "cddae142-0dd3-40b4-8faa-fffeb484b637"],
+     Cell[BoxData[
+      TemplateBox[{8},
+       "Spacer1"]],ExpressionUUID->"44b8468a-a6ad-4dea-9e7a-e17db92a2625"],
+     Cell[BoxData[
+     ""], "ObjectNameTranslation",ExpressionUUID->
+      "c1dcc8db-d52e-4398-afc6-c22aff25adc8"]
+    }],ExpressionUUID->"6b2346cb-db9b-4bf8-adee-46283d68a8b7"], 
+    "\[SpanFromLeft]"}
+  }]], "ObjectNameGrid",ExpressionUUID->"4dbccaaa-a60e-4943-a9a8-\
+b5d48e4c0c91"],
+
+Cell[BoxData[GridBox[{
+   {"", Cell[TextData[{
+     Cell[BoxData[
+      RowBox[{
+       TemplateBox[{
+         Cell[
+          TextData["MagDipoleMatrixAssembly"]], 
+         "paclet:DavidLizarazo/qlanth/ref/MagDipoleMatrixAssembly", 
+         "DavidLizarazo Package Symbol"},
+        "PackageLink",
+        BaseStyle->"InlineFormula"], "[", "numE", "]"}]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "c857cada-a63a-4b73-9496-726e3305bcee"],
+     " \[LineSeparator]gives the matrix representation of the operator - 1/2 \
+(L + gs S) in the ",
+     Cell[BoxData[
+      SuperscriptBox["f", "numE"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "51712290-1e7b-44f8-ab68-04a37672012d"],
+     " configuration. The function returns a list with three elements \
+corresponding to the {x,y,z} components of this operator."
+    }],ExpressionUUID->"ce67f224-8eed-4c89-a3ce-ac5164469017"]}
+  }]], "Usage",
+ CellID->1471827477,ExpressionUUID->"ab4a0ec2-945c-4e27-863f-de459581b31c"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[Cell[BoxData[
+ ButtonBox[Cell[TextData[{
+   Cell[BoxData[
+    DynamicBox[ToBoxes[
+      If[
+       MatchQ[
+        CurrentValue[
+         EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, 
+         Closed], 
+        Alternatives[Open, True]], 
+       Style[
+        Graphics[{
+          Thickness[0.18], 
+          RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+          Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+         PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+        0.68 Inherited], 
+       Rotate[
+        Style[
+         Graphics[{
+           Thickness[0.18], 
+           RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+           Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+          PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+         0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+     ImageSizeCache->{
+      13.600000000000001`, {-0.1685058593749993, 13.768505859375}}]],
+    ExpressionUUID->"df331742-293f-4c97-8b80-c518e7d4c3fe"],
+   Cell[BoxData[
+    TemplateBox[{1},
+     "Spacer1"]],ExpressionUUID->"f386976b-6cc3-4b5a-a612-003588d1d6a1"],
+   "Details and Options"
+  }], "NotesFrameText",ExpressionUUID->"0bac78d2-81df-4d42-8704-ed3fab732b92"],
+  Appearance->{Automatic, None, "Normal", Automatic},
+  BaseStyle->None,
+  ButtonFunction:>(FrontEndExecute[{
+     FrontEnd`SelectionMove[
+      FrontEnd`SelectedNotebook[], All, ButtonCell], 
+     FrontEndToken["OpenCloseGroup"], 
+     FrontEnd`SelectionMove[
+      FrontEnd`SelectedNotebook[], After, CellContents]}]& ),
+  Evaluator->None,
+  Method->
+   "Preemptive"]],ExpressionUUID->"935c92ec-6fe5-42c8-8e49-e6880276c52b"]], \
+"NotesSection",
+ WholeCellGroupOpener->True,
+ CellGroupingRules->{"SectionGrouping", 50},
+ CacheGraphics->False,
+ CellID->229812944,ExpressionUUID->"8c7d5492-94e2-4c01-ad16-e32682ee55fa"],
+
+Cell["\<\
+For numE beyond 7 the function returns the same as for the complementary \
+configuration. \
+\>", "Notes",
+ CellID->140276146,ExpressionUUID->"b1763c4b-985c-4ebc-a4ca-87f813221106"],
+
+Cell[TextData[{
+ "The ordered basis in which this matrix representation is given is ",
+ Cell[BoxData[
+  TemplateBox[{
+    Cell[
+     TextData["BasisLSJMJ"]], "paclet:DavidLizarazo/qlanth/ref/BasisLSJMJ", 
+    "DavidLizarazo Package Symbol"},
+   "PackageLink",
+   BaseStyle->"InlineFormula"]], "InlineFormula",
+  FontFamily->"Source Sans Pro",ExpressionUUID->
+  "29053828-7c67-4201-93a3-e386b2e43b08"],
+ "[numE],"
+}], "Notes",
+ CellID->416682591,ExpressionUUID->"12a7ea19-6d14-4b2d-8c14-1e19d132c0c9"],
+
+Cell[TextData[{
+ "Options\[LineSeparator]\[LineSeparator]",
+ Cell[BoxData[GridBox[{
+    {Cell[
+     "      ", "TableRowIcon",ExpressionUUID->
+      "f31daf18-ed37-450f-8fe1-08fa5055965f"], "\"\<FilenameAppendix\>\"", 
+     "\"\<\>\"", Cell["\<\
+This can be used to control from which files the function obtains precomputed \
+values.\
+\>", "TableText",ExpressionUUID->"6c4815e8-fa09-4265-85ab-e7ffe0603023"]},
+    {Cell[
+     "      ", "TableRowIcon",ExpressionUUID->
+      "d4e3d347-8f68-4a9e-abed-99cd13655f6e"], "\"\<ReturnInBlocks\>\"", 
+     "True", Cell["\<\
+If True then each of the three returned arrays are given in blocks \
+corresponding to pairs of total angular momenta {J, J'}.\
+\>", "TableText",ExpressionUUID->"ec6357d4-d511-4d99-8eb0-7aeae383a714"]}
+   }]], "3ColumnTableMod",
+  GridBoxOptions->{
+  GridBoxBackground->{"Columns" -> {{None}}, "Rows" -> {None, {None}}},
+  GridBoxDividers->{"Rows" -> {{True, True, True}}}},ExpressionUUID->
+  "cf715385-e7c2-49f3-bc57-47844c91e4ff"]
+}], "Notes",
+ CellID->1698501614,ExpressionUUID->"a24f36c4-a097-4f73-abc8-129f4ffbc397"]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, Closed]]]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  DynamicBox[ToBoxes[
+    If[
+     MatchQ[
+      CurrentValue[
+       EvaluationNotebook[], {
+       TaggingRules, "Openers", "PrimaryExamplesSection"}, Open], 
+      Alternatives[True, Open]], 
+     Style[
+      Graphics[{
+        Thickness[0.18], 
+        RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+        Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+       PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+      0.68 Inherited], 
+     Rotate[
+      Style[
+       Graphics[{
+         Thickness[0.18], 
+         RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+         Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+        PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+       0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+   ImageSizeCache->{
+    13.600000000000001`, {4.251494140625001, 9.348505859375}}]],
+  ExpressionUUID->"6a644cc5-d93b-4a68-a3f7-bc3fb87653bf"],
+ Cell[BoxData[
+  TemplateBox[{1},
+   "Spacer1"]],ExpressionUUID->"a105c1e9-6a29-49b0-960c-f0b0afea32a2"],
+ "Examples",
+ "\[NonBreakingSpace]\[NonBreakingSpace]",
+ Cell["(1)", "ExampleCount",ExpressionUUID->
+  "2e1e47fa-c870-4c71-ae2c-8b6c0aa7cae9"]
+}], "PrimaryExamplesSection",
+ WholeCellGroupOpener->True,
+ CacheGraphics->False,
+ CellTags->"PrimaryExamplesSection",
+ CellID->1290552502,ExpressionUUID->"cb4f89d5-e5d8-4ff9-a7fb-f037041d9d95"],
+
+Cell[BoxData[
+ RowBox[{"Needs", "[", "\"\<DavidLizarazo`qlanth`\>\"", "]"}]], "Input", \
+"ExampleInitialization",
+ CellLabel->"In[1]:=",
+ CellID->292397815,ExpressionUUID->"1f8265e5-43ee-4298-b90f-f42e7cc98984"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  DynamicBox[ToBoxes[
+    If[
+     MatchQ[
+      CurrentValue[
+       EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"},
+        Closed], 
+      Alternatives[Open, True]], 
+     Style[
+      Graphics[{
+        Thickness[0.18], 
+        RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+        Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+       PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+      0.68 Inherited], 
+     Rotate[
+      Style[
+       Graphics[{
+         Thickness[0.18], 
+         RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+         Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+        PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+       0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+   ImageSizeCache->{
+    13.600000000000001`, {4.551318359375001, 9.048681640625}}]],
+  ExpressionUUID->"88b91e0e-d085-439c-a99d-ee5ed798d2a9"],
+ Cell[BoxData[
+  TemplateBox[{1},
+   "Spacer1"]],ExpressionUUID->"0078cd03-5ee1-433a-8e73-5b04205b14dc"],
+ "Basic Examples",
+ "\[NonBreakingSpace]\[NonBreakingSpace]",
+ Cell["(1)", "ExampleCount",ExpressionUUID->
+  "f9f79627-85d6-4978-9347-2b062ff897cd"]
+}], "ExampleSection", "ExampleSection",
+ WholeCellGroupOpener->True,
+ CacheGraphics->False,
+ CellID->731066414,ExpressionUUID->"b5e47423-80f1-408f-8177-782ddf1e433d"],
+
+Cell["\<\
+The matrix representation for the three components of the magnetic dipole \
+operator .\
+\>", "ExampleText",
+ CellID->828671598,ExpressionUUID->"cca5bf7b-8bf3-4a32-a45a-5db275210f05"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"MatrixPlot", "[", 
+    RowBox[{
+     RowBox[{"#", "[", 
+      RowBox[{"[", "2", "]"}], "]"}], ",", 
+     RowBox[{"\"\<PlotLabel\>\"", "->", 
+      RowBox[{"#", "[", 
+       RowBox[{"[", "1", "]"}], "]"}]}]}], "]"}], "&"}], "/@", 
+  RowBox[{"Transpose", "[", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\"\<x\>\"", ",", "\"\<y\>\"", ",", "\"\<z\>\""}], "}"}], ",", 
+     RowBox[{"MagDipoleMatrixAssembly", "[", "2", "]"}]}], "}"}], 
+   "]"}]}]], "Input",
+ CellProlog:>Needs["DavidLizarazo`qlanth`"],
+ CellLabel->"In[1]:=",
+ CellID->500471077,ExpressionUUID->"e465086f-be95-4542-9437-2be47dace7f7"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   GraphicsBox[RasterBox[CompressedData["
+1:eJzt3E2IVlUYB/CpNAkkCunDZjKssChrZzC4ODAUuYigKDIUSkGLKCz6lLLF
+ZLgwCPrYNKBRkGSLMNJFLQuRyI8Jp7QCP6nUSR2ihVoZMS4keYf3vHOvc885
+v4HhN4u7OM9z4Pyfue9778zFy+5fclFXV9eCM7///T36czyQJEmO12MzT746
+/dRQ+Gpg4Z9/rz4Q3vtm8LPjFx6e8HWRJMl8vP79u/Z0f7s1PDQya+6Tc/aE
+qetv+npL35GW15tPSJJkrM+/sXzekb+2hSWvP7t+6qKfwxWzZ6wZ/rT1vBE7
+n5AkSS59amjWtJHtYcUXJw4M9vwYVu/v3TB/ynDL62PnE5Ikya4HJ0/evWBH
+uGblwJqtd+4Kd6+Yve+Fe1vPG7HzCUmS5C3X9a8f/GRHWHzZ/N7Pt3wffpp2
+46YvV40xP0TOJyRJkrHzRvR8QpIkGXm/wrxBkiRjjf4+hs9TSJJkpLHPm/i+
+KEmSjDX2fRqehyVJkrHGvi/U+75IkmTdep85SZKt3HvG//9M9Lqaov6QJDl+
+5enYxvZHP0mSPFd5Wm29pfWHJMl2lKfV1ltaf0iSbEd5Wm29pfWHJMl2lKfV
+1ltaf0iSbEd5Wm29pfWHJMl2lKfV1ltaf0iSbEd5Wm29pfWHJMl2lKfV1lta
+f0iSbEd5Wm29pfWHJMk6LC1PzRskSZ5/5enY6g9J8nwqd/LQPo6t+z8kObE6
+V/NQnlZbb2n9Icm6dQ7noX2stt7S+kOSdesczkP7WG29pfWHJOvWOZyH9rHa
+ekvrD0nWrXM4D+1jtfWW1h+SrFvncB7ax2rrLa0/JFm3zuE8tI/V1ltaf0iy
+bp3DeWgfq623tP6QZNN0DjdTeVptvaX1hySbpnM4D0vbR/MGSZLj8dgrIzPu
+2bYrTH3xmdsuOHowXDzwzs4b3jo04esiSZL5+MTey5++fdLOcPW+l09ue3d/
+6P718aOL7jvc8nrzCUmSjLX/hx09Q68Nhke7Nw8/vHBfWLv57Q19G1vPG7Hz
+CUmS5JRr+w798cD2MHdlb/+Hz+0Nj00Pq6463Xp+iJ1PSJIkY+eN2OtJkiRj
+71eYN0iSZKyx38fweQpJkow19nkT3xclSZJ163lYkiTZmd6HmYfeg0qSbLJy
+Kg/tI0myycqpPLSPJMkmK6fy0D6SJJusnMpD+0iSbLJyKg/tI0myycqpPLSP
+JMkmK6fy0D6SJHNSTjVT8wZJ5m3q53bq6ydJsgRTz2v/F5Mk2XxTz+vU10+S
+ZAmmntepr58kyRJMPa9TXz9JkiWYel6nvn6SJEsw9bxOff0kSfJcm5bX5g2S
+JPMz9bxOff0kSZ5P5eaoqffB/RmSZJOVO6Omntepr58kmbdyqrO6mtaH1NdP
+ksxbOdVZXU3rQ+rrJ0nmrZzqrK6m9SH19ZMkeba55lTqeZ36+kmSPFs5NWrT
++mDeIEmyyfacWrt7UvfB8N0/L637bf6h8ObGj9edvnR4wtdFkiTz8eZlH9wx
+MrgnzPt9+SNbT/wSLrly061zPjrc8nrzCUmSjDV23oi9niRJMvZ+hXmDJEnW
+rc9TSJJkZ3peY1TPuZAkWZ9ytrO6cu0DSZJ1KGc7qyvXPpAkWYdytrO6cu0D
+SZJNMNecNW+QJEu27lyTmyRJsmnzhvmEJMn8rHseMG+QJMlYzRskSbJum/b5
+C0mSTNeqcr9p84l5hiTJ/Gza5y/mDZIk03Wi7oeYN0iSJEmSZCq6j0GSJMfv
+v1veJTU=
+     "], {{0, 0}, {91, 91}}, {0, 1}],
+    BaseStyle->{FontFamily -> "Arial"},
+    Frame->True,
+    FrameLabel->{None, None},
+    FrameTicks->{{{{90.5, 
+         FormBox["1", TraditionalForm]}, {71.5, 
+         FormBox["20", TraditionalForm]}, {51.5, 
+         FormBox["40", TraditionalForm]}, {31.5, 
+         FormBox["60", TraditionalForm]}, {11.5, 
+         FormBox["80", TraditionalForm]}, {0.5, 
+         FormBox["91", TraditionalForm]}}, {{90.5, 
+         FormBox["1", TraditionalForm]}, {71.5, 
+         FormBox["20", TraditionalForm]}, {51.5, 
+         FormBox["40", TraditionalForm]}, {31.5, 
+         FormBox["60", TraditionalForm]}, {11.5, 
+         FormBox["80", TraditionalForm]}, {0.5, 
+         FormBox["91", TraditionalForm]}}}, {{{0.5, 
+         FormBox["1", TraditionalForm]}, {19.5, 
+         FormBox["20", TraditionalForm]}, {39.5, 
+         FormBox["40", TraditionalForm]}, {59.5, 
+         FormBox["60", TraditionalForm]}, {79.5, 
+         FormBox["80", TraditionalForm]}, {90.5, 
+         FormBox["91", TraditionalForm]}}, {{0.5, 
+         FormBox["1", TraditionalForm]}, {19.5, 
+         FormBox["20", TraditionalForm]}, {39.5, 
+         FormBox["40", TraditionalForm]}, {59.5, 
+         FormBox["60", TraditionalForm]}, {79.5, 
+         FormBox["80", TraditionalForm]}, {90.5, 
+         FormBox["91", TraditionalForm]}}}},
+    GridLinesStyle->Directive[
+      GrayLevel[0.5, 0.4]],
+    Method->{
+     "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+      "DefaultBoundaryStyle" -> Automatic, 
+      "DefaultGraphicsInteraction" -> {
+       "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+        "Effects" -> {
+         "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+          "Droplines" -> {
+           "freeformCursorMode" -> True, 
+            "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+      "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+      "RangePadding" -> Scaled[0.05]},
+    PlotLabel->"x"], ",", 
+   GraphicsBox[RasterBox[CompressedData["
+1:eJzt3E1KA0EQBtCAJ/Ek3sGtO8G1V/YIHkFkXIhCmEyqk/p5AXlZdlVBf+WE
+5PH1/fnt4XQ6vfz8fb/fXp9PJEmSJEmSJEmSJEmSJEmSJEmSJEmSJEmSJEmS
+JEmSJEmSJEmSJEmSJEmSJKf78ePf173PlUX9IUnyeuXpeS/tj36SJPlfeRpb
+77T+kCS5R3kaW++0/pAkuUd5GlvvtP6QJLlHeRpb77T+kCS5R3kaW++0/pAk
+uUd5GlvvtP6QJLlHeRpb77T+kCS5R3kaW++0/pAkuUd5GlvvtP6QJLnCaXlq
+3yBJ8vbK0/PqD0nylsqdHprjeT3/Icn76l7toTyNrXdaf0hyte7hHppjbL3T
++kOSq3UP99AcY+ud1h+SXK17uIfmGFvvtP6Q5Grdwz00x9h6p/WHJFfrHu6h
+OcbWO60/JLla93APzTG23mn9IcnVuod7aI6x9U7rD0lm0z2cU3kaW++0/pBk
+Nt3DPZw2R/sGSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkM+v3MHvo
+d1BJkpmVUz00R5JkZuVUD82RJJlZOdVDcyRJZlZO9dAcSZKZlVM9NEeSZGbl
+VA/NkSSZWTnVQ3MkSXZSTuXUvkGSva1+b1c/P0mSE6ye1/4vJkkyv9Xzuvr5
+SZKcYPW8rn5+kiQnWD2vq5+fJMkJVs/r6ucnSXKC1fO6+vlJkuR/s+W1fYMk
+yX5Wz+vq5ydJ8pbKzc3qffB8hiSZWbmzWT2vq5+fJNlbOXWsrmx9qH5+kmRv
+5dSxurL1ofr5SZK9lVPH6srWh+rnJ0nyt11zqnpeVz8/SZK/lVOb2fpg3yBJ
+kiRJkiRJkiRJkiRJkiRJkryvvq+x6XsuJEmuU84eq6trH0iSXKGcPVZX1z6Q
+JLlCOXusrq59IEkyg11z1r5Bkpzs6lyTmyRJMtu+YT8hSbKfq/cB+wZJkrxU
++wZJklxtts9fSJJkXaNyP9t+Yp8hSbKf2T5/sW+QJFnXez0PsW+QJEmSJMkq
+eo5BkiSv9wswLoCz
+     "], {{0, 0}, {91, 91}}, {0, 1}],
+    BaseStyle->{FontFamily -> "Arial"},
+    Frame->True,
+    FrameLabel->{None, None},
+    FrameTicks->{{{{90.5, 
+         FormBox["1", TraditionalForm]}, {71.5, 
+         FormBox["20", TraditionalForm]}, {51.5, 
+         FormBox["40", TraditionalForm]}, {31.5, 
+         FormBox["60", TraditionalForm]}, {11.5, 
+         FormBox["80", TraditionalForm]}, {0.5, 
+         FormBox["91", TraditionalForm]}}, {{90.5, 
+         FormBox["1", TraditionalForm]}, {71.5, 
+         FormBox["20", TraditionalForm]}, {51.5, 
+         FormBox["40", TraditionalForm]}, {31.5, 
+         FormBox["60", TraditionalForm]}, {11.5, 
+         FormBox["80", TraditionalForm]}, {0.5, 
+         FormBox["91", TraditionalForm]}}}, {{{0.5, 
+         FormBox["1", TraditionalForm]}, {19.5, 
+         FormBox["20", TraditionalForm]}, {39.5, 
+         FormBox["40", TraditionalForm]}, {59.5, 
+         FormBox["60", TraditionalForm]}, {79.5, 
+         FormBox["80", TraditionalForm]}, {90.5, 
+         FormBox["91", TraditionalForm]}}, {{0.5, 
+         FormBox["1", TraditionalForm]}, {19.5, 
+         FormBox["20", TraditionalForm]}, {39.5, 
+         FormBox["40", TraditionalForm]}, {59.5, 
+         FormBox["60", TraditionalForm]}, {79.5, 
+         FormBox["80", TraditionalForm]}, {90.5, 
+         FormBox["91", TraditionalForm]}}}},
+    GridLinesStyle->Directive[
+      GrayLevel[0.5, 0.4]],
+    Method->{
+     "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+      "DefaultBoundaryStyle" -> Automatic, 
+      "DefaultGraphicsInteraction" -> {
+       "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+        "Effects" -> {
+         "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+          "Droplines" -> {
+           "freeformCursorMode" -> True, 
+            "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+      "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+      "RangePadding" -> Scaled[0.05]},
+    PlotLabel->"y"], ",", 
+   GraphicsBox[RasterBox[CompressedData["
+1:eJzt3F9olWUcB3BzeCEiJA4mziGOeWHYRTehUDzolNApMa0VKBWjsIswRohu
++A9lySYMhcS80isHDRIxnbC0i0CGkBmjYIrYhoc4287YxXQIolHHboJehNPh
+Pe+zzwvjs919+f3G83142c6K1s+3fVI1Z86cHc+//vq++EwFkiTJcvnK8iPf
+/NJ3O7S+/P7a7wZ/C3cXN1wZODaRei6SJBmP21qm327d9XOY/OPZ7fkf3w1v
+zhv7csFv46nnIkmS8di8+8HmFXt/Cu0/9H764bP74dyjC+/taHDfIEmS/5/9
+V6a+f2diKIy2Nb9a3z0afm3Y17j03bHUc5EkyXjsmzs4Wlc3HG5cXbXrVHUu
+XOvauvpOZz71XCRJMh7XHBx42tifC0tu1hyaXDcWhlsWXO444+9FSZIkSZJk
+dgzHTww8KRRCbe/KS0dnxkNte+/J/PVc6rlIkmQ8Ng21t+1cWwjrN1V1P96S
+D13Trf31Z++lnoskScZjT35+0xsfTYQPNtx9bc/pXOjc3nxk+aJbqeciSZLx
+OO981diyY+PhwOs9M1MjI2HhxocXaw7vTz0XSZKMx7lDL+3p+bEQJr/4+tZX
+2+6HxX/fNz5LPRdJkozPkY7qb98aufP853+e9HORJMlY/P25/37SzkWSZJbU
+p8maD0mSpatPkzUfkiRLV58maz4kSZauPk3WfEiSLF19mqz5kCRZuvqUJEmW
+W/eNZM2HJMnS1afJmg9JkqWrT5M1H5IkS1efJms+JEmWrj5N1nxIkmS5dd8g
+SZLl1n0jWfMhyXR1DsehPSZrPiSZrs7hOLTHZM2HJNPVORyH9pis+ZBkujqH
+49AekzUfkkxX5zBng37PSTJdncNxaI/Jmg9JpqtzOA7tMVnzIcl0dQ7HoT0m
+az4kma7O4Ti0x2TNhyTJ0tWnyZoPSZKl2Lz7weYVe38K7T/0fvrhs/vh3KML
+7+1oGE89F0mSjMf+K1PfvzMxFEbbml+t7x4Nvzbsa1z67ljquUiSZDz2zR0c
+rasbDjeurtp1qjoXrnVtXX2nM596LpIkGY9rDg48bezPhSU3aw5NrhsLwy0L
+LnecmUg9F0mSJEmS5Isajp8YeFIohNrelZeOzoyH2vbek/nrudRzkSTJeGwa
+am/bubYQ1m+q6n68JR+6plv768/eSz0XSZKMx578/KY3PpoIH2y4+9qe07nQ
+ub35yPJFt1LPRZIk43He+aqxZcfGw4HXe2amRkbCwo0PL9Yc3p96LpIkGZs+
+PzMO7ZEkWcnqqTi0R5JkJaun4tAeSZKVrJ6KQ3skSZLl1n2DJFnJ6qk4tEeS
+ZCWrp+LQHkmSlayeikN7JElWsnoqDu2RJFnJ6imSJCvfrPd11vOTJDkbzHpf
+Zz0/SZKzwaz3ddbzkyQ5G9TXJEmy3Gb9vpH1/CRJzgaz3tdZz0+S5Gww632d
+9fwkSbLydd8gSZLlNuv3jaznJ0nGrZ4qmvU5ZD0/STJu9VTRrM8h6/lJknGr
+p+LQHkmSlayeKpr1OWQ9P0kybvVU0azPIev5SZKcDWa9r7OenyTJuO2bOzha
+VzccblxdtetUdS5c69q6+k5nPvVcJEkyHtccHHja2J8LS27WHJpcNxaGWxZc
+7jgzkXoukiRJkiTJFzUcPzHwpFAItb0rLx2dGQ+17b0n89dzqeciSZLx2DTU
+3rZzbSGs31TV/XhLPnRNt/bXn72Xei6SJBmb/r+jqDmQJFk+9WxRcyBJkuXW
+fYMkyfKpZ4uaA0mS5VPPFjUHkiTLp54lSZLlvg+4b5AkSfcBkiRZbr3fIEmS
+Wdd9gyRJllvvT0iS5H+ZlR7PSk6SJFk+vd8gSZIkSZIs6j0GSZJ8cf8Ebgl8
+CA==
+     "], {{0, 0}, {91, 91}}, {0, 1}],
+    BaseStyle->{FontFamily -> "Arial"},
+    Frame->True,
+    FrameLabel->{None, None},
+    FrameTicks->{{{{90.5, 
+         FormBox["1", TraditionalForm]}, {71.5, 
+         FormBox["20", TraditionalForm]}, {51.5, 
+         FormBox["40", TraditionalForm]}, {31.5, 
+         FormBox["60", TraditionalForm]}, {11.5, 
+         FormBox["80", TraditionalForm]}, {0.5, 
+         FormBox["91", TraditionalForm]}}, {{90.5, 
+         FormBox["1", TraditionalForm]}, {71.5, 
+         FormBox["20", TraditionalForm]}, {51.5, 
+         FormBox["40", TraditionalForm]}, {31.5, 
+         FormBox["60", TraditionalForm]}, {11.5, 
+         FormBox["80", TraditionalForm]}, {0.5, 
+         FormBox["91", TraditionalForm]}}}, {{{0.5, 
+         FormBox["1", TraditionalForm]}, {19.5, 
+         FormBox["20", TraditionalForm]}, {39.5, 
+         FormBox["40", TraditionalForm]}, {59.5, 
+         FormBox["60", TraditionalForm]}, {79.5, 
+         FormBox["80", TraditionalForm]}, {90.5, 
+         FormBox["91", TraditionalForm]}}, {{0.5, 
+         FormBox["1", TraditionalForm]}, {19.5, 
+         FormBox["20", TraditionalForm]}, {39.5, 
+         FormBox["40", TraditionalForm]}, {59.5, 
+         FormBox["60", TraditionalForm]}, {79.5, 
+         FormBox["80", TraditionalForm]}, {90.5, 
+         FormBox["91", TraditionalForm]}}}},
+    GridLinesStyle->Directive[
+      GrayLevel[0.5, 0.4]],
+    Method->{
+     "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+      "DefaultBoundaryStyle" -> Automatic, 
+      "DefaultGraphicsInteraction" -> {
+       "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+        "Effects" -> {
+         "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+          "Droplines" -> {
+           "freeformCursorMode" -> True, 
+            "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+      "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+      "RangePadding" -> Scaled[0.05]},
+    PlotLabel->"z"]}], "}"}]], "Output",
+ CellLabel->"Out[1]=",
+ CellID->1871429487,ExpressionUUID->"41ac5dc8-3171-449c-9739-6e49b7ac0aef"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"The", " ", "J"}], "=", 
+   RowBox[{"1", "/", "2"}]}], ",", " ", 
+  RowBox[{
+   RowBox[{"J", "'"}], "=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"3", "/", "2"}], " ", "block", " ", "for", " ", "the", " ", 
+     "z"}], "-", 
+    RowBox[{
+    "component", " ", "of", " ", "the", " ", "magnetic", " ", "dipole", " ", 
+     "operator", " ", "in", " ", 
+     RowBox[{
+      SuperscriptBox["f", "3"], "."}]}]}]}]}]], "ExampleText",
+ CellID->31379267,ExpressionUUID->"62fd6504-b822-4cf5-98fb-8ff890cb5584"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"numE", "=", "3"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Js", "=", 
+   RowBox[{"AllowedJ", "[", "numE", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", "Js", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"MatrixPlot", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"MagDipoleMatrixAssembly", "[", 
+      RowBox[{"numE", ",", 
+       RowBox[{"\"\<ReturnInBlocks\>\"", "->", "True"}]}], "]"}], "[", 
+     RowBox[{"[", "3", "]"}], "]"}], "[", 
+    RowBox[{"[", 
+     RowBox[{"1", ",", "2"}], "]"}], "]"}], "/.", 
+   RowBox[{"{", 
+    RowBox[{"gs", "->", "2"}], "}"}]}], "]"}]}], "Input",
+ CellProlog:>Needs["DavidLizarazo`qlanth`"],
+ CellLabel->"In[2]:=",
+ CellID->180643349,ExpressionUUID->"5432b621-72c0-479b-badd-32dd044c04c0"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   FractionBox["1", "2"], ",", 
+   FractionBox["3", "2"], ",", 
+   FractionBox["5", "2"], ",", 
+   FractionBox["7", "2"], ",", 
+   FractionBox["9", "2"], ",", 
+   FractionBox["11", "2"], ",", 
+   FractionBox["13", "2"], ",", 
+   FractionBox["15", "2"], ",", 
+   FractionBox["17", "2"]}], "}"}]], "Print",
+ CellLabel->"During evaluation of In[72]:=",
+ CellID->1678373432,ExpressionUUID->"a68bb23a-379a-4d2a-8dd2-82544883fee1"],
+
+Cell[BoxData[
+ GraphicsBox[RasterBox[CompressedData["
+1:eJxTTMoPSmVmYGBgAWIJIAaxIeCD/ShNHfqN2+zwoLgr9nFvF999d/CR/cuK
+x+uCnF8NuLtG6cFFj6aTwUlryTeturj6gn2SQITllhPX7G8Lq2zb3f5mwN01
+Sg8uejSdDA8aAN9PfH0=
+   "], {{0, 0}, {24, 4}}, {0, 1}],
+  BaseStyle->{FontFamily -> "Arial"},
+  Frame->True,
+  FrameLabel->{None, None},
+  FrameTicks->{{{{3.5, 
+       FormBox["1", TraditionalForm]}, {2.5, 
+       FormBox["2", TraditionalForm]}, {1.5, 
+       FormBox["3", TraditionalForm]}, {0.5, 
+       FormBox["4", TraditionalForm]}}, {{3.5, 
+       FormBox["1", TraditionalForm]}, {2.5, 
+       FormBox["2", TraditionalForm]}, {1.5, 
+       FormBox["3", TraditionalForm]}, {0.5, 
+       FormBox["4", TraditionalForm]}}}, {{{0.5, 
+       FormBox["1", TraditionalForm]}, {4.5, 
+       FormBox["5", TraditionalForm]}, {9.5, 
+       FormBox["10", TraditionalForm]}, {14.5, 
+       FormBox["15", TraditionalForm]}, {19.5, 
+       FormBox["20", TraditionalForm]}, {23.5, 
+       FormBox["24", TraditionalForm]}}, {{0.5, 
+       FormBox["1", TraditionalForm]}, {4.5, 
+       FormBox["5", TraditionalForm]}, {9.5, 
+       FormBox["10", TraditionalForm]}, {14.5, 
+       FormBox["15", TraditionalForm]}, {19.5, 
+       FormBox["20", TraditionalForm]}, {23.5, 
+       FormBox["24", TraditionalForm]}}}},
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]],
+  Method->{
+   "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+    "DefaultBoundaryStyle" -> Automatic, 
+    "DefaultGraphicsInteraction" -> {
+     "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+      "Effects" -> {
+       "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+        "Droplines" -> {
+         "freeformCursorMode" -> True, 
+          "placement" -> {"x" -> "All", "y" -> "None"}}}}, "DefaultPlotStyle" -> 
+    Automatic, "DomainPadding" -> Scaled[0.02], "RangePadding" -> 
+    Scaled[0.05]}]], "Output",
+ CellLabel->"Out[2]=",
+ CellID->1224568279,ExpressionUUID->"a23ef552-8ca9-448f-b57f-507236aa5bfc"]
+}, Open  ]]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"}, 
+  Closed]]]]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "PrimaryExamplesSection"}, 
+  Closed]]]],
+
+Cell[BoxData[GridBox[{
+   {
+    DynamicBox[FEPrivate`ImportImage[
+      FrontEnd`FileName[{"Documentation", "FooterIcons"}, 
+       "RelatedFunction.png"]],
+     ImageSizeCache->{50., {26.47265625, 33.52734375}}], GridBox[{
+      {
+       StyleBox[
+        RowBox[{"See", " ", "Also"}], "SeeAlsoSection"]},
+      {Cell[TextData[{
+        Cell[BoxData[
+         TemplateBox[{
+           Cell[
+            TextData["LevelMagDipoleMatrixAssembly"]], 
+           "paclet:DavidLizarazo/qlanth/ref/LevelMagDipoleMatrixAssembly", 
+           "DavidLizarazo Package Symbol"},
+          "PackageLink",
+          BaseStyle->"InlineFormula"]], "InlineFormula",
+         FontFamily->"Source Sans Pro",ExpressionUUID->
+         "2b50d5e0-d1f3-400a-ad80-f5684ece6094"],
+        "\[NonBreakingSpace]",
+        StyleBox[
+        "\[MediumSpace]\[FilledVerySmallSquare]\[MediumSpace]", 
+         "InlineSeparator"],
+        " ",
+        Cell[BoxData[
+         TemplateBox[{
+           Cell[
+            TextData["LevelJJBlockMagDipole"]], 
+           "paclet:DavidLizarazo/qlanth/ref/LevelJJBlockMagDipole", 
+           "DavidLizarazo Package Symbol"},
+          "PackageLink",
+          BaseStyle->"InlineFormula"]], "InlineFormula",
+         FontFamily->"Source Sans Pro",
+         CellTags->"195d9cf0-328c-41c3-acec-924b95f0a817",ExpressionUUID->
+         "c5f73510-ef10-4aed-bf9e-1bcfbbc6e5ab"]
+       }], "SeeAlso",ExpressionUUID->"a542ea90-60f6-445d-857e-680bfea802d0"]}
+     }]}
+  }]], "SeeAlsoSection",ExpressionUUID->"059e3247-af61-4ad5-921f-\
+9d39b0da698d"],
+
+Cell[" ", "FooterCell",ExpressionUUID->"50d93858-d54d-4ec4-9087-be6c8fbe8ed2"]
+},
+Saveable->False,
+ScreenStyleEnvironment->"Working",
+WindowSize->{900, 830},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+WindowTitle->"MagDipoleMatrixAssembly",
+TaggingRules->{
+ "ModificationHighlight" -> False, "ColorType" -> "", "LinkTrails" -> "", 
+  "ExampleCounter" -> 1, 
+  "Openers" -> {
+   "PrimaryExamplesSection" -> Open, "ExampleSection" -> {"0" -> Open}, 
+    "AllOptsTable" -> Closed, "NotesSection" -> Closed}, "NewStyles" -> True, 
+  "CitationPopupData" -> $Failed, "ShowCitation" -> False, "HasOptions" -> 
+  True, "RootCaptions" -> "", "HeaderCoreAreaLink" -> {}, 
+  "Metadata" -> {
+   "built" -> "{2025, 1, 25, 15, 55, 42.370366}", 
+    "history" -> {"1,0.0", "", "", ""}, "context" -> "DavidLizarazo`qlanth`", 
+    "keywords" -> {}, "specialkeywords" -> {}, 
+    "tutorialcollectionlinks" -> {}, "index" -> True, "label" -> 
+    "David Lizarazo/qlanth Symbol", "language" -> "en", "paclet" -> 
+    "DavidLizarazo/qlanth", "status" -> "None", "summary" -> 
+    "MagDipoleMatrixAssembly[numE] gives the matrix representation of the \
+operator - 1/2 (L + gs S) in the f^numE configuration. The function returns a \
+list with three elements corresponding to the {x,y,z} components of this \
+operator.", "synonyms" -> {}, "tabletags" -> {}, "title" -> 
+    "MagDipoleMatrixAssembly", "titlemodifier" -> "", "metadescription" -> "",
+     "windowtitle" -> "MagDipoleMatrixAssembly", "type" -> "Symbol", "uri" -> 
+    "DavidLizarazo/qlanth/ref/MagDipoleMatrixAssembly"}},
+FrontEndVersion->"14.1 for Mac OS X ARM (64-bit) (July 16, 2024)",
+StyleDefinitions->FrontEnd`FileName[{"Wolfram"}, "Reference.nb", 
+  CharacterEncoding -> "UTF-8"],
+ExpressionUUID->"8f81063b-9cc0-4e46-a49e-8c96c3064ae5"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "PrimaryExamplesSection"->{
+  Cell[11087, 286, 1438, 38, 34, "PrimaryExamplesSection",ExpressionUUID->"cb4f89d5-e5d8-4ff9-a7fb-f037041d9d95",
+   CellTags->"PrimaryExamplesSection",
+   CellID->1290552502]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"PrimaryExamplesSection", 33659, 817}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[591, 21, 4900, 115, 50, "AnchorBarGrid",ExpressionUUID->"6b5bbc00-98d6-45c4-be27-4c0973c01dc2",
+ CellID->1],
+Cell[5494, 138, 103, 0, 22, "ContextNameCell",ExpressionUUID->"eb22cac1-8c64-432a-b2d2-76affc21e905"],
+Cell[CellGroupData[{
+Cell[5622, 142, 566, 14, 57, "ObjectNameGrid",ExpressionUUID->"4dbccaaa-a60e-4943-a9a8-b5d48e4c0c91"],
+Cell[6191, 158, 1033, 23, 127, "Usage",ExpressionUUID->"ab4a0ec2-945c-4e27-863f-de459581b31c",
+ CellID->1471827477]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7261, 186, 1916, 48, 34, "NotesSection",ExpressionUUID->"8c7d5492-94e2-4c01-ad16-e32682ee55fa",
+ CellGroupingRules->{"SectionGrouping", 50},
+ CellID->229812944],
+Cell[9180, 236, 190, 4, 70, "Notes",ExpressionUUID->"b1763c4b-985c-4ebc-a4ca-87f813221106",
+ CellID->140276146],
+Cell[9373, 242, 500, 13, 70, "Notes",ExpressionUUID->"12a7ea19-6d14-4b2d-8c14-1e19d132c0c9",
+ CellID->416682591],
+Cell[9876, 257, 1084, 23, 70, "Notes",ExpressionUUID->"a24f36c4-a097-4f73-abc8-129f4ffbc397",
+ CellID->1698501614]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, Closed]]]],
+Cell[CellGroupData[{
+Cell[11087, 286, 1438, 38, 34, "PrimaryExamplesSection",ExpressionUUID->"cb4f89d5-e5d8-4ff9-a7fb-f037041d9d95",
+ CellTags->"PrimaryExamplesSection",
+ CellID->1290552502],
+Cell[12528, 326, 211, 4, 29, "Input",ExpressionUUID->"1f8265e5-43ee-4298-b90f-f42e7cc98984",
+ CellID->292397815],
+Cell[CellGroupData[{
+Cell[12764, 334, 1415, 37, 29, "ExampleSection",ExpressionUUID->"b5e47423-80f1-408f-8177-782ddf1e433d",
+ CellID->731066414],
+Cell[14182, 373, 192, 4, 37, "ExampleText",ExpressionUUID->"cca5bf7b-8bf3-4a32-a45a-5db275210f05",
+ CellID->828671598],
+Cell[CellGroupData[{
+Cell[14399, 381, 664, 19, 45, "Input",ExpressionUUID->"e465086f-be95-4542-9437-2be47dace7f7",
+ CellID->500471077],
+Cell[15066, 402, 11024, 219, 141, "Output",ExpressionUUID->"41ac5dc8-3171-449c-9739-6e49b7ac0aef",
+ CellID->1871429487]
+}, Open  ]],
+Cell[26105, 624, 544, 16, 37, "ExampleText",ExpressionUUID->"62fd6504-b822-4cf5-98fb-8ff890cb5584",
+ CellID->31379267],
+Cell[CellGroupData[{
+Cell[26674, 644, 812, 22, 81, "Input",ExpressionUUID->"5432b621-72c0-479b-badd-32dd044c04c0",
+ CellID->180643349],
+Cell[27489, 668, 465, 13, 35, "Print",ExpressionUUID->"a68bb23a-379a-4d2a-8dd2-82544883fee1",
+ CellID->1678373432],
+Cell[27957, 683, 1989, 45, 94, "Output",ExpressionUUID->"a23ef552-8ca9-448f-b57f-507236aa5bfc",
+ CellID->1224568279]
+}, Open  ]]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"}, Closed]]]]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "PrimaryExamplesSection"}, Closed]]]],
+Cell[30188, 737, 1550, 39, 112, "SeeAlsoSection",ExpressionUUID->"059e3247-af61-4ad5-921f-9d39b0da698d"],
+Cell[31741, 778, 78, 0, 70, "FooterCell",ExpressionUUID->"50d93858-d54d-4ec4-9087-be6c8fbe8ed2"]
+}
+]
+*)
+
+(* End of internal cache information *)
+

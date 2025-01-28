@@ -1,0 +1,342 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     13796,        332]
+NotebookOptionsPosition[     10332,        265]
+NotebookOutlinePosition[     12743,        315]
+CellTagsIndexPosition[     12700,        312]
+WindowTitle->Electrostatic Interaction
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[GridBox[{
+   {GridBox[{
+      {
+       ItemBox[Cell[BoxData[
+         RowBox[{
+          TemplateBox[{12},
+           "Spacer1"], Cell["DAVID LIZARAZO/QLANTH GUIDE", "PacletNameCell",
+           TextAlignment->Center,ExpressionUUID->
+           "717a65bf-baa2-41e7-b3c7-237b9fcf6b75"], 
+          TemplateBox[{8},
+           "Spacer1"]}]],
+         TextAlignment->Center,ExpressionUUID->
+         "7edefc02-d13e-49a9-b665-57d171816763"],
+        Background->RGBColor[0.85098, 0.396078, 0],
+        ItemSize->Full], ""}
+     },
+     GridBoxAlignment->{"Rows" -> {{Center}}},
+     GridBoxItemSize->{"Columns" -> {Full, 
+         Scaled[0.02]}, "Rows" -> {{2.5}}}], Cell[TextData[{
+     Cell[BoxData[
+      TagBox[
+       ActionMenuBox[
+        FrameBox[Cell[TextData[{
+          "Functions",
+          " ",
+          Cell[BoxData[
+           GraphicsBox[
+            {GrayLevel[0.66667], Thickness[0.13], 
+             LineBox[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]},
+            AspectRatio->1,
+            ImageSize->20,
+            PlotRange->{{-3, 4}, {-1, 1}}]],ExpressionUUID->
+           "5fe18676-8154-460c-a0c1-9c4ad5031667"]
+         }],ExpressionUUID->"64f9e0d3-7133-47f6-bce2-92b5fd333511"],
+         StripOnInput->False],{
+        StyleBox[
+          "\"Electrostatic\"", "SeeAlsoRelated", StripOnInput -> False] :> 
+         Documentation`HelpLookup[
+          "paclet:DavidLizarazo/qlanth/ref/Electrostatic"], 
+         StyleBox[
+          "\"ElectrostaticConfigInteraction\"", "SeeAlsoRelated", 
+           StripOnInput -> False] :> 
+         Documentation`HelpLookup[
+          "paclet:DavidLizarazo/qlanth/ref/ElectrostaticConfigInteraction"], 
+         StyleBox[
+          "\"ElectrostaticTable\"", "SeeAlsoRelated", StripOnInput -> False] :> 
+         Documentation`HelpLookup[
+          "paclet:DavidLizarazo/qlanth/ref/ElectrostaticTable"], 
+         StyleBox[
+          "\"FreeIonTable\"", "SeeAlsoRelated", StripOnInput -> False] :> 
+         Documentation`HelpLookup[
+          "paclet:DavidLizarazo/qlanth/ref/FreeIonTable"], 
+         StyleBox[
+          "\"LoadElectrostatic\"", "SeeAlsoRelated", StripOnInput -> False] :> 
+         Documentation`HelpLookup[
+          "paclet:DavidLizarazo/qlanth/ref/LoadElectrostatic"]},
+        Appearance->None,
+        MenuAppearance->Automatic,
+        MenuStyle->"GuideFunction"],
+       MouseAppearanceTag["LinkHand"]]],
+      LineSpacing->{1.4, 0},ExpressionUUID->
+      "a9757dc2-9d6c-420d-aecd-fdeb1be52e90"],
+     "\[ThickSpace]\[ThickSpace]\[ThickSpace]\[ThickSpace]\[ThickSpace]\
+\[ThickSpace]",
+     Cell[BoxData[
+      TagBox[
+       ActionMenuBox[
+        FrameBox[Cell[TextData[{
+          "URL",
+          " ",
+          Cell[BoxData[
+           GraphicsBox[
+            {GrayLevel[0.66667], Thickness[0.13], 
+             LineBox[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]},
+            AspectRatio->1,
+            ImageSize->20,
+            PlotRange->{{-3, 4}, {-1, 1}}]],ExpressionUUID->
+           "18811ac5-15a8-4938-9d0a-c1bf0320d474"]
+         }],ExpressionUUID->"0940bb19-3398-4e65-abb5-5c21c2db2e2a"],
+         StripOnInput->False],{
+        "\"DavidLizarazo/qlanth/guide/ElectrostaticInteraction\"" :> None, 
+         "\"Copy Wolfram Documentation Center URL\"" :> 
+         Module[{DocumentationSearch`Private`nb$}, 
+           DocumentationSearch`Private`nb$ = 
+            NotebookPut[
+             Notebook[{
+               Cell["DavidLizarazo/qlanth/guide/ElectrostaticInteraction"]}, 
+               Visible -> DocumentationBuild`Make`Private`visible$12364]]; 
+           SelectionMove[DocumentationSearch`Private`nb$, All, Notebook]; 
+           FrontEndTokenExecute[DocumentationSearch`Private`nb$, "Copy"]; 
+           NotebookClose[DocumentationSearch`Private`nb$]; Null], Delimiter, 
+         "\"Copy web URL\"" :> 
+         Module[{DocumentationSearch`Private`nb$}, 
+           DocumentationSearch`Private`nb$ = 
+            NotebookPut[
+             Notebook[{
+               Cell[BoxData[
+                 MakeBoxes[
+                  Hyperlink[
+                   "http://reference.wolfram.com/language/DavidLizarazo/\
+qlanth/guide/ElectrostaticInteraction.html"], StandardForm]], "Input", 
+                 TextClipboardType -> "PlainText"]}, Visible -> 
+               DocumentationBuild`Make`Private`visible$12364]]; 
+           SelectionMove[DocumentationSearch`Private`nb$, All, Notebook]; 
+           FrontEndTokenExecute[DocumentationSearch`Private`nb$, "Copy"]; 
+           NotebookClose[DocumentationSearch`Private`nb$]; Null], 
+         "\"Go to web URL\"" :> 
+         FrontEndExecute[{
+           NotebookLocate[{
+             URL[If[TrueQ[False], 
+                 "http://reference.wolfram.com/system-modeler/", 
+                 "http://reference.wolfram.com/language/"] <> 
+               "DavidLizarazo/qlanth/guide/ElectrostaticInteraction" <> 
+               ".html"], None}]}]},
+        Appearance->None,
+        MenuAppearance->Automatic,
+        MenuStyle->"URLMenu"],
+       MouseAppearanceTag["LinkHand"]]],
+      LineSpacing->{1.4, 0},ExpressionUUID->
+      "2f997e5f-0fa7-4685-8233-df52b066899b"]
+    }], "AnchorBar",
+     CacheGraphics->False,ExpressionUUID->
+     "dbd2de3e-1163-4d20-9995-cb567ae79278"]}
+  }]], "AnchorBarGrid",
+ GridBoxOptions->{GridBoxItemSize->{"Columns" -> {
+     Scaled[0.65], {
+      Scaled[0.34]}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}}, 
+   "RowsIndexed" -> {}}},
+ CellID->1,ExpressionUUID->"344a00d8-b9c4-45f6-833b-6af845b09bed"],
+
+Cell[CellGroupData[{
+
+Cell["Electrostatic Interaction", "GuideTitle",
+ CellID->905347127,ExpressionUUID->"d60c6404-5bb2-4e15-92e6-2ec7a5b30082"],
+
+Cell["\<\
+Properly speaking the electrostatic interaction is a two-body interaction, \
+and if no other considerations are given to the simplest form of the single \
+configuration description, then it is described by the Slater parameters F2, \
+F4, and F6. With F0 being disregarded since it only adds a constant shift to \
+all the energies.
+However, when corrections are added to the single-configuration description \
+to (partially) account for the effects of having made this simplification, \
+then additional contributions arise.
+Configuration interaction, taken to second order, is responsible for the \
+parameters \[Alpha], \[Beta], and \[Gamma].
+And when configuration interaction is taken to third order, then it is \
+represented by the Tk parameters.\
+\>", "GuideAbstract",
+ CellID->1247524494,ExpressionUUID->"45d16c5d-97b5-412d-be50-2cb77a9e1a55"],
+
+Cell["\t", "GuideDelimiterSubsection",ExpressionUUID->"302272eb-bb77-444a-a2b3-22e2071b4c26"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  TemplateBox[{
+    Cell[
+     TextData["ElectrostaticConfigInteraction"]], 
+    "paclet:DavidLizarazo/qlanth/ref/ElectrostaticConfigInteraction", 
+    "DavidLizarazo Package Symbol"},
+   "PackageLink",
+   BaseStyle->"InlineFunctionSans"]], "InlineFunctionSans",
+  CellTags->"c5c6736a-1ff4-4e4e-8fcf-2d9846cbae62",ExpressionUUID->
+  "beec3b95-b5af-4514-b876-0002fbbf4f32"],
+ " ",
+ StyleBox["\[LongDash]", "GuideEmDash"],
+ " describing the contribution to the semi-empirical Hamiltonian by the \
+\[Alpha], \[Beta], and \[Gamma] parameters and corresponding Casimir \
+operators."
+}], "GuideText",
+ CellID->504799953,ExpressionUUID->"5112db12-d1d7-4ea6-9665-d22bfa18ed6c"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  TemplateBox[{
+    Cell[
+     TextData["Electrostatic"]], 
+    "paclet:DavidLizarazo/qlanth/ref/Electrostatic", 
+    "DavidLizarazo Package Symbol"},
+   "PackageLink",
+   BaseStyle->"InlineFunctionSans"]], "InlineFunctionSans",
+  CellTags->"c5c6736a-1ff4-4e4e-8fcf-2d9846cbae62",ExpressionUUID->
+  "69283d97-a580-42c0-96cf-cb329bdb08aa"],
+ " ",
+ StyleBox["\[LongDash]", "GuideEmDash"],
+ " gives the LS-reduced matrix element for the two-body contribution of the \
+electrostatic repulsion."
+}], "GuideText",
+ CellID->1044680111,ExpressionUUID->"c5e2f6b0-c341-4067-8e03-ecd0a66abf53"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  TemplateBox[{
+    Cell[
+     TextData["LoadElectrostatic"]], 
+    "paclet:DavidLizarazo/qlanth/ref/LoadElectrostatic", 
+    "DavidLizarazo Package Symbol"},
+   "PackageLink",
+   BaseStyle->"InlineFunctionSans"]], "InlineFunctionSans",
+  CellTags->"c5c6736a-1ff4-4e4e-8fcf-2d9846cbae62",ExpressionUUID->
+  "580e9c32-0a97-4f9a-ae3a-84dfc9c7d5db"],
+ " ",
+ StyleBox["\[LongDash]", "GuideEmDash"],
+ " loads into session spectroscopic tables for the electrostatic term."
+}], "GuideText",
+ CellID->112327705,ExpressionUUID->"cd08d670-58e8-4a12-95ff-5388c0800336"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  TemplateBox[{
+    Cell[
+     TextData["ElectrostaticTable"]], 
+    "paclet:DavidLizarazo/qlanth/ref/ElectrostaticTable", 
+    "DavidLizarazo Package Symbol"},
+   "PackageLink",
+   BaseStyle->"InlineFunctionSans"]], "InlineFunctionSans",
+  CellTags->"c5c6736a-1ff4-4e4e-8fcf-2d9846cbae62",ExpressionUUID->
+  "6c995d70-ee8c-47f7-a357-dfd864b1d6ba"],
+ " ",
+ StyleBox["\[LongDash]", "GuideEmDash"],
+ " association containing reduced matrix elements."
+}], "GuideText",
+ CellID->253612222,ExpressionUUID->"18efe106-da6c-421e-bec8-0d48fc7a6bb4"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  TemplateBox[{
+    Cell[
+     TextData["FreeIonTable"]], 
+    "paclet:DavidLizarazo/qlanth/ref/FreeIonTable", 
+    "DavidLizarazo Package Symbol"},
+   "PackageLink",
+   BaseStyle->"InlineFunctionSans"]], "InlineFunctionSans",ExpressionUUID->
+  "bba2c1db-f239-4fe0-aee7-4de07ccd064c"],
+ " ",
+ StyleBox["\[LongDash]", "GuideEmDash"],
+ " algebraic expressions for the energies of LSJ multiplets in terms of Fk \
+and \[Zeta] parameters."
+}], "GuideText",
+ CellID->1763911955,ExpressionUUID->"847a0e4d-e399-40d4-876c-ec748a59b997"]
+}, Open  ]],
+
+Cell[" ", "FooterCell",ExpressionUUID->"d8eab70a-9296-4ca4-88dc-da0c5a369db2"]
+},
+Saveable->False,
+ScreenStyleEnvironment->"Working",
+WindowSize->{900, 830},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+WindowTitle->"Electrostatic Interaction",
+TaggingRules->{
+ "ModificationHighlight" -> False, "ColorType" -> "", "LinkTrails" -> "", 
+  "ExampleCounter" -> 1, 
+  "Openers" -> {
+   "PrimaryExamplesSection" -> Open, "ExampleSection" -> {"0" -> Open}}, 
+  "NewStyles" -> True, "CitationPopupData" -> {$Failed, ""}, "ShowCitation" -> 
+  False, "RootCaptions" -> "", "HeaderCoreAreaLink" -> {}, 
+  "Metadata" -> {
+   "built" -> "{2025, 1, 24, 17, 34, 48.770888}", 
+    "history" -> {"1.0.0", "", "", ""}, "context" -> "DavidLizarazo`qlanth`", 
+    "keywords" -> {}, "specialkeywords" -> {}, 
+    "tutorialcollectionlinks" -> {}, "index" -> True, "label" -> 
+    "David Lizarazo/qlanth Guide", "language" -> "en", "paclet" -> 
+    "DavidLizarazo/qlanth", "status" -> "None", "summary" -> 
+    "Properly speaking the electrostatic interaction is a two-body \
+interaction, and if no other considerations are given to the simplest form of \
+the single configuration description, then it is described by the Slater \
+parameters F2, F4, and F6. With F0 being disregarded since it only adds a \
+constant shift to all the energies. However, when corrections are added to \
+the single-configuration description to (partially) account for the effects \
+of having made this simplification, then additional contributions arise. \
+Configuration interaction, taken to second order, is responsible for the \
+parameters \\[Alpha], \\[Beta], and \\[Gamma]. And when configuration \
+interaction is taken to third order, then it is represented by the Tk \
+parameters.", "synonyms" -> {}, "tabletags" -> {}, "title" -> 
+    "Electrostatic Interaction", "titlemodifier" -> "", "metadescription" -> 
+    "", "windowtitle" -> "Electrostatic Interaction", "type" -> "Guide", 
+    "uri" -> "DavidLizarazo/qlanth/guide/ElectrostaticInteraction", 
+    "WorkflowDockedCell" -> ""}, "SearchTextTranslated" -> ""},
+CacheGraphics->False,
+FrontEndVersion->"14.1 for Mac OS X ARM (64-bit) (July 16, 2024)",
+StyleDefinitions->FrontEnd`FileName[{"Wolfram"}, "Reference.nb", 
+  CharacterEncoding -> "UTF-8"],
+ExpressionUUID->"d4a8bb30-aad0-45b3-923b-53ff16729e8a"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[593, 21, 5492, 128, 50, "AnchorBarGrid",ExpressionUUID->"344a00d8-b9c4-45f6-833b-6af845b09bed",
+ CellID->1],
+Cell[CellGroupData[{
+Cell[6110, 153, 122, 1, 60, "GuideTitle",ExpressionUUID->"d60c6404-5bb2-4e15-92e6-2ec7a5b30082",
+ CellID->905347127],
+Cell[6235, 156, 857, 14, 204, "GuideAbstract",ExpressionUUID->"45d16c5d-97b5-412d-be50-2cb77a9e1a55",
+ CellID->1247524494],
+Cell[7095, 172, 93, 0, 21, "GuideDelimiterSubsection",ExpressionUUID->"302272eb-bb77-444a-a2b3-22e2071b4c26"],
+Cell[7191, 174, 700, 17, 45, "GuideText",ExpressionUUID->"5112db12-d1d7-4ea6-9665-d22bfa18ed6c",
+ CellID->504799953],
+Cell[7894, 193, 614, 16, 25, "GuideText",ExpressionUUID->"c5e2f6b0-c341-4067-8e03-ecd0a66abf53",
+ CellID->1044680111],
+Cell[8511, 211, 589, 15, 25, "GuideText",ExpressionUUID->"cd08d670-58e8-4a12-95ff-5388c0800336",
+ CellID->112327705],
+Cell[9103, 228, 571, 15, 25, "GuideText",ExpressionUUID->"18efe106-da6c-421e-bec8-0d48fc7a6bb4",
+ CellID->253612222],
+Cell[9677, 245, 558, 15, 25, "GuideText",ExpressionUUID->"847a0e4d-e399-40d4-876c-ec748a59b997",
+ CellID->1763911955]
+}, Open  ]],
+Cell[10250, 263, 78, 0, 40, "FooterCell",ExpressionUUID->"d8eab70a-9296-4ca4-88dc-da0c5a369db2"]
+}
+]
+*)
+
+(* End of internal cache information *)
+

@@ -1,0 +1,475 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     19363,        467]
+NotebookOptionsPosition[     14909,        374]
+NotebookOutlinePosition[     15434,        392]
+CellTagsIndexPosition[     15391,        389]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Spectroscopic Tables", "GuideTitle",
+ CellID->614232196,ExpressionUUID->"32ab53d2-1b52-4303-a7d2-aed0ac0dd76a"],
+
+Cell[TextData[{
+ "The matrix elements of the semi-empirical Hamiltonian can be assembled from \
+the different contributions that each term in the Hamiltonian has. These \
+several contributions are stored in associations that can be loaded in ",
+ StyleBox["qlanth.\n",
+  FontWeight->"Bold"],
+ "All operators in the Hamiltonian (except the crystal field) are scalar \
+operators, as such the tables need only store reduced matrix elements which \
+are then \"unfolded\" into LSJM matrix elements through the use of the \
+Wigner-Eckart theorem."
+}], "GuideAbstract",
+ CellChangeTimes->{{3.945542346748208*^9, 3.9455423511261044`*^9}, {
+   3.94691635613342*^9, 3.946916615849897*^9}, 3.9469867147669573`*^9, {
+   3.94698710788885*^9, 3.946987467666144*^9}, {3.946987507540448*^9, 
+   3.946987527467445*^9}, {3.946988294811431*^9, 3.946988295393759*^9}},
+ CellID->446627043,ExpressionUUID->"b8c82f54-2cde-4465-879d-5e404da41d2c"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Spectroscopic Tables", "GuideFunctionsSection",
+ CellChangeTimes->{{3.946916570501313*^9, 3.9469165736684017`*^9}},
+ CellID->1005365436,ExpressionUUID->"28286eea-a8ec-4375-95c2-8687d14fd631"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["CFPTable",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/CFPTable"]], 
+  "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c40ac8e4-27e1-4161-a8df-4d4f38357a23",ExpressionUUID->
+  "4f1fe2c7-be4a-4c55-bc33-f3c3df802cf2"],
+ " \[LongDash] an association containing coefficients of fractional parentage."
+}], "GuideText",
+ CellChangeTimes->{{3.945542247599247*^9, 3.945542282264387*^9}, {
+  3.9469140467814407`*^9, 3.946914058944189*^9}, {3.9469142547369947`*^9, 
+  3.946914254737015*^9}},
+ CellID->775548256,ExpressionUUID->"5950632f-ead3-45af-9a5d-1a72febf67b3"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["ElectrostaticTable",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/ElectrostaticTable"]], 
+  "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c5c6736a-1ff4-4e4e-8fcf-2d9846cbae62",ExpressionUUID->
+  "f6b977eb-2b3e-4dd7-92a1-b65385dca554"],
+ " \[LongDash] an association containing LS-reduced matrix elements of the \
+two-body electrostatic repulsion. Dependent on  Fk (or Ek) parameters."
+}], "GuideText",
+ CellChangeTimes->{{3.945542218375646*^9, 3.945542225899837*^9}, {
+  3.945542284483951*^9, 3.945542287587419*^9}, {3.9469140607470093`*^9, 
+  3.9469140821756573`*^9}, {3.94691411947164*^9, 3.946914130337039*^9}, {
+  3.946914250117606*^9, 3.94691425011763*^9}, {3.946914509244907*^9, 
+  3.946914526065258*^9}, {3.946914679770464*^9, 3.9469146812362747`*^9}},
+ CellID->1561284949,ExpressionUUID->"2b2b2290-b505-44d6-a67d-4ba476227960"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["SOOandECSOLSTable",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/SOOandECSOLSTable"]], 
+  "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c40ac8e4-27e1-4161-a8df-4d4f38357a23",ExpressionUUID->
+  "6f1cc0b2-cefd-4395-8227-21a7e1f98f8f"],
+ " \[LongDash] an association containing matrix elements for the \
+spin-other-orbit and electrostatically correlated spin orbit interactions. \
+Explicitly containing the Mk and Pk parameters."
+}], "GuideText",
+ CellChangeTimes->{{3.945542247599247*^9, 3.945542304723873*^9}, {
+  3.946914083665148*^9, 3.946914118097107*^9}, {3.946914247072723*^9, 
+  3.946914247072744*^9}, {3.946914504936471*^9, 3.94691453386016*^9}, {
+  3.946914597464532*^9, 3.9469146014062347`*^9}, {3.946914632445816*^9, 
+  3.946914666918994*^9}},
+ CellID->2144480840,ExpressionUUID->"dfa07f3d-0b71-455d-8480-3d14d0f7a280"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["T22Table",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/T22Table"]], 
+  "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c5c6736a-1ff4-4e4e-8fcf-2d9846cbae62",ExpressionUUID->
+  "c01f7834-6fd1-4fd5-92b1-400478d95db4"],
+ " \[LongDash] an association containing LS-reduced matrix elements of the \
+the double tensor operator ",
+ Cell[BoxData[
+  SuperscriptBox["T", "22"]], "InlineFormula",
+  FormatType->StandardForm,ExpressionUUID->
+  "6f01f154-73a7-415e-bd86-96ec5ebe8f95"],
+ ". Used to calculate the spin-spin magnetic contribution."
+}], "GuideText",
+ CellChangeTimes->{{3.945542218375646*^9, 3.945542225899837*^9}, {
+  3.945542307540687*^9, 3.945542312959382*^9}, {3.946914150910514*^9, 
+  3.946914204764484*^9}, {3.9469142441026287`*^9, 3.946914244102663*^9}, {
+  3.946914731158227*^9, 3.946914740528282*^9}, {3.946914991481179*^9, 
+  3.946914997099347*^9}},
+ CellID->1071430279,ExpressionUUID->"8dd7e5ee-f697-4632-92bb-3f21ff37d1ac"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["ReducedUkTable",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/ReducedUkTable"]], 
+  "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c40ac8e4-27e1-4161-a8df-4d4f38357a23",ExpressionUUID->
+  "5627796c-58b6-4157-a554-20201502e6d5"],
+ " \[LongDash] an association containing LS-reduced matrix elements of the \
+unit tensor operators ",
+ Cell[BoxData[
+  SuperscriptBox["U", "k"]], "InlineFormula",
+  FormatType->StandardForm,ExpressionUUID->
+  "d28242d1-3636-4353-adff-6f8e63afb488"]
+}], "GuideText",
+ CellChangeTimes->{{3.945542247599247*^9, 3.94554225129504*^9}, {
+  3.946914208844392*^9, 3.946914240425871*^9}},
+ CellID->878319058,ExpressionUUID->"88c1a9e7-cc51-4ba3-86de-a44f6ed24ec8"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["ReducedV1kTable",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/ReducedV1kTable"]], 
+  "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c5c6736a-1ff4-4e4e-8fcf-2d9846cbae62",ExpressionUUID->
+  "1d823edd-c40c-41ba-b09d-d2fcf38ad6c1"],
+ " \[LongDash] an association with LS-reduced matrix elements of the ",
+ Cell[BoxData[
+  SuperscriptBox["V", 
+   RowBox[{"(", "11", ")"}]]], "InlineFormula",ExpressionUUID->
+  "400576e9-8efe-406b-ba50-76a4d71023f9"],
+ "double tensor operator. "
+}], "GuideText",
+ CellChangeTimes->{{3.945542218375646*^9, 3.945542225899837*^9}, {
+   3.945542317060178*^9, 3.945542319927196*^9}, {3.946914257919842*^9, 
+   3.9469142579198647`*^9}, {3.946914311294949*^9, 3.9469143472838*^9}, 
+   3.946914433487273*^9},
+ CellID->105818328,ExpressionUUID->"7890a9d8-eeac-43d0-9ae8-04c929f344dc"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["SOOandECSOTable",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/SOOandECSOTable"]], 
+  "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c40ac8e4-27e1-4161-a8df-4d4f38357a23",ExpressionUUID->
+  "63e76229-e3a8-419e-b23a-ec15084a84dd"],
+ " \[LongDash] an association with LSJ-reduced matrix elements of the \
+spin-other-orbit + electrostatically-correlated-spin-orbit interactions. \
+Dependent on Mk and Pk."
+}], "GuideText",
+ CellChangeTimes->{{3.945542247599247*^9, 3.94554225129504*^9}, {
+  3.945542322330868*^9, 3.9455423292185717`*^9}, {3.946914261173068*^9, 
+  3.94691426117309*^9}, {3.946914354572143*^9, 3.946914381149416*^9}, {
+  3.946914425030985*^9, 3.94691443123879*^9}},
+ CellID->372178980,ExpressionUUID->"681a61fa-47d0-4dbe-b57a-5fb89d6adba5"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["SpinOrbitTable",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/SpinOrbitTable"]], 
+  "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c5c6736a-1ff4-4e4e-8fcf-2d9846cbae62",ExpressionUUID->
+  "53bd7033-013a-4d31-9b64-1d3e43ed399e"],
+ " \[LongDash] an association containing the LSJ-reduced  matrix elements for \
+the spin-orbit interaction. Dependent on \[Zeta]."
+}], "GuideText",
+ CellChangeTimes->{{3.945542218375646*^9, 3.945542225899837*^9}, {
+  3.945542330412148*^9, 3.945542332751288*^9}, {3.94691426413546*^9, 
+  3.946914264135483*^9}, {3.9469143913139*^9, 3.946914421709385*^9}},
+ CellID->1739736796,ExpressionUUID->"80248059-fca5-471b-9dce-d87d6442c209"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["SpinSpinTable",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/SpinSpinTable"]], 
+  "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c40ac8e4-27e1-4161-a8df-4d4f38357a23",ExpressionUUID->
+  "9a3a8784-2c55-46fc-96de-0cd71472a6c7"],
+ " \[LongDash] an association containing LSJ-reduced matrix elements of the \
+spin-spin interaction."
+}], "GuideText",
+ CellChangeTimes->{{3.945542247599247*^9, 3.94554225129504*^9}, {
+  3.9455423348137283`*^9, 3.9455423378834543`*^9}, {3.94691426718574*^9, 
+  3.946914267185762*^9}, {3.946915504006966*^9, 3.9469155160436974`*^9}},
+ CellID->1766476467,ExpressionUUID->"6967ba04-886b-4f77-94fc-2e1e3da027f3"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["ThreeBodyTable",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/ThreeBodyTable"]], 
+  "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c5c6736a-1ff4-4e4e-8fcf-2d9846cbae62",ExpressionUUID->
+  "09ee9507-9950-4c2d-9fcb-4baa929ccdbe"],
+ " \[LongDash] an association containing LS-reduced matrix elements for the \
+effective three body contribution to the Hamiltonian."
+}], "GuideText",
+ CellChangeTimes->{{3.945542218375646*^9, 3.945542225899837*^9}, {
+  3.9455423390750504`*^9, 3.945542341605838*^9}, {3.946914270594953*^9, 
+  3.946914270594975*^9}, {3.946915544646309*^9, 3.946915566579186*^9}},
+ CellID->208561094,ExpressionUUID->"d7e0e62d-f4e2-43e9-aaea-cb120ca21b8e"],
+
+Cell[CellGroupData[{
+
+Cell["\t", "GuideDelimiter",
+ CellID->413455150,ExpressionUUID->"0e2dcd87-4c71-4523-81d6-bc27f7e6dc94"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  TagBox[
+   FrameBox["\<\"XXXX\"\>"],
+   "FunctionPlaceholder"]], "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},ExpressionUUID->
+  "3c272d16-0c6f-4359-95ba-0bbc7ce21f74"],
+ Cell[BoxData[
+  RowBox[{
+  Cell[TextData[StyleBox[
+   " \[FilledVerySmallSquare] ", "InlineSeparator"]],ExpressionUUID->
+    "035878fe-5d72-44da-8c1c-faae7f765155"], 
+   DynamicModuleBox[{$CellContext`nbobj$$ = NotebookObject[
+    "f476fa55-9c4d-452e-968f-0008c60081c3", 
+     "66e765a3-1c30-4695-914d-9183e658fbcc"], $CellContext`cellobj$$ = 
+    CellObject[
+    "e3b159d4-29aa-4189-b8e2-7287a6f487fb", 
+     "a705fc8b-91a4-4b04-b4c6-c7624b545ff8"]}, 
+    TemplateBox[{
+      GraphicsBox[{{
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         CircleBox[{0, 0}]}, {
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         LineBox[{{0, 0.62}, {0, -0.62}}]}, {
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         LineBox[{{-0.62, 0}, {0.62, 0}}]}}, 
+       ImagePadding -> {{1., 1.}, {2.4, 1.}}, ImageSize -> 16, 
+       PlotRange -> {{-1.06, 1.06}, {-1.06, 1.06}}, 
+       BaselinePosition -> (Center -> 
+        Center)], $CellContext`nbobj$$, $CellContext`cellobj$$},
+     "InlineListingAddButton"],
+    Initialization:>($CellContext`nbobj$$ = 
+      EvaluationNotebook[]; $CellContext`cellobj$$ = EvaluationCell[])]}]], 
+  "InlineListingAddButton",ExpressionUUID->
+  "e3b159d4-29aa-4189-b8e2-7287a6f487fb"]
+}], "InlineGuideFunctionListing",
+ CellID->1831108005,ExpressionUUID->"9ecaea94-6783-4410-b164-8cd23a2e35d7"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Tech Notes", "GuideTutorialsSection",
+ CellID->1991578525,ExpressionUUID->"70bb8049-e938-48d6-8f05-5232a1187e4c"],
+
+Cell["XXXX", "GuideTutorial",
+ CellID->1780147533,ExpressionUUID->"3df8de45-244b-43f2-afd7-d88c9acafcea"],
+
+Cell["XXXX", "GuideTutorial",
+ CellID->197417127,ExpressionUUID->"a599fae0-db63-4d0e-affe-07de40de6ff7"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Related Guides", "GuideMoreAboutSection",
+ CellChangeTimes->{{3.8430423939366693`*^9, 3.843042395176153*^9}},
+ CellID->127418874,ExpressionUUID->"8aedfe94-9262-49df-97ef-c95dc95e3602"],
+
+Cell[TextData[ButtonBox["qlanth",
+ BaseStyle->"Link",
+ ButtonData->"paclet:DavidLizarazo/qlanth/guide/qlanth"]], "GuideMoreAbout",
+ CellChangeTimes->{{3.946986726838039*^9, 3.946986734027218*^9}},
+ CellID->487819259,ExpressionUUID->"d3eb1c1f-8c19-43de-9f87-10b69dccf7d3"],
+
+Cell["XXXX", "GuideMoreAbout",
+ CellID->1833205414,ExpressionUUID->"a4082bfe-38de-4b59-938b-d9d2e4c98fb5"]
+}, Open  ]],
+
+Cell["Related Links", "GuideRelatedLinksSection",
+ CellID->735509589,ExpressionUUID->"98ac493d-aab2-4376-a248-cbb3f49178e5"],
+
+Cell[CellGroupData[{
+
+Cell["Metadata", "MetadataSection",
+ CellID->793790191,ExpressionUUID->"15cb3c2f-37b0-4e71-a2fd-70c94df932f5"],
+
+Cell[TextData[{
+ "New in: ",
+ Cell["1.0.0", "HistoryData",
+  CellTags->"New",ExpressionUUID->"74ae1b00-1674-425b-a836-54f4d5031b75"],
+ " | Modified in: ",
+ Cell[" ", "HistoryData",
+  CellTags->"Modified",ExpressionUUID->"ea2ab90b-6627-429e-90ce-6e945584a7d5"],
+ " | Obsolete in: ",
+ Cell[" ", "HistoryData",
+  CellTags->"Obsolete",ExpressionUUID->
+  "f4c35197-72fa-448e-834d-1a58f2b07726"]
+}], "History",
+ CellChangeTimes->{{3.9457987544235287`*^9, 3.9457987550605507`*^9}},
+ CellID->1063324973,ExpressionUUID->"f2179496-44cc-47ff-928b-e187337727bd"],
+
+Cell[CellGroupData[{
+
+Cell["Categorization", "CategorizationSection",
+ CellID->2091394524,ExpressionUUID->"df5dc60f-1ddf-494d-bc37-6ba90979e2aa"],
+
+Cell["Guide", "Categorization",
+ CellLabel->"Entity Type",
+ CellID->55430772,ExpressionUUID->"d7f6b6ab-62b1-426e-b149-11ec055287f4"],
+
+Cell["DavidLizarazo/qlanth", "Categorization",
+ CellLabel->"Paclet Name",
+ CellID->1764565853,ExpressionUUID->"c4459d28-9fd5-41e6-81cb-1615b88132a0"],
+
+Cell["DavidLizarazo`qlanth`", "Categorization",
+ CellLabel->"Context",
+ CellID->309126301,ExpressionUUID->"1826415a-0baa-4372-b4b8-bcaea8704dd9"],
+
+Cell["DavidLizarazo/qlanth/guide/SpectroscopicTables", "Categorization",
+ CellLabel->"URI",
+ CellID->722798814,ExpressionUUID->"130ea766-334d-4eb0-88e8-a9bd8a6c9ac7"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Keywords", "KeywordsSection",
+ CellID->1912159466,ExpressionUUID->"fdb1b31b-e700-4d27-8e99-fd4d1003c876"],
+
+Cell["XXXX", "Keywords",
+ CellID->571367707,ExpressionUUID->"7ce598c0-c643-42c2-9bac-5a8856faa350"]
+}, Closed]]
+}, Open  ]]
+},
+WindowSize->{700, 770},
+WindowMargins->{{Automatic, 435}, {Automatic, 117}},
+TaggingRules-><|"Paclet" -> "DavidLizarazo/qlanth"|>,
+FrontEndVersion->"14.1 for Mac OS X ARM (64-bit) (July 16, 2024)",
+StyleDefinitions->FrontEnd`FileName[{"Wolfram"}, "GuidePageStylesExt.nb", 
+  CharacterEncoding -> "UTF-8"],
+ExpressionUUID->"f476fa55-9c4d-452e-968f-0008c60081c3"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[576, 22, 117, 1, 86, "GuideTitle",ExpressionUUID->"32ab53d2-1b52-4303-a7d2-aed0ac0dd76a",
+ CellID->614232196],
+Cell[696, 25, 922, 15, 126, "GuideAbstract",ExpressionUUID->"b8c82f54-2cde-4465-879d-5e404da41d2c",
+ CellID->446627043]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1655, 45, 197, 2, 71, "GuideFunctionsSection",ExpressionUUID->"28286eea-a8ec-4375-95c2-8687d14fd631",
+ CellID->1005365436],
+Cell[1855, 49, 658, 14, 24, "GuideText",ExpressionUUID->"5950632f-ead3-45af-9a5d-1a72febf67b3",
+ CellID->775548256],
+Cell[2516, 65, 938, 17, 40, "GuideText",ExpressionUUID->"2b2b2290-b505-44d6-a67d-4ba476227960",
+ CellID->1561284949],
+Cell[3457, 84, 931, 18, 40, "GuideText",ExpressionUUID->"dfa07f3d-0b71-455d-8480-3d14d0f7a280",
+ CellID->2144480840],
+Cell[4391, 104, 1037, 22, 40, "GuideText",ExpressionUUID->"8dd7e5ee-f697-4632-92bb-3f21ff37d1ac",
+ CellID->1071430279],
+Cell[5431, 128, 785, 18, 40, "GuideText",ExpressionUUID->"88c1a9e7-cc51-4ba3-86de-a44f6ed24ec8",
+ CellID->878319058],
+Cell[6219, 148, 907, 20, 40, "GuideText",ExpressionUUID->"7890a9d8-eeac-43d0-9ae8-04c929f344dc",
+ CellID->105818328],
+Cell[7129, 170, 854, 17, 40, "GuideText",ExpressionUUID->"681a61fa-47d0-4dbe-b57a-5fb89d6adba5",
+ CellID->372178980],
+Cell[7986, 189, 761, 15, 40, "GuideText",ExpressionUUID->"80248059-fca5-471b-9dce-d87d6442c209",
+ CellID->1739736796],
+Cell[8750, 206, 737, 15, 40, "GuideText",ExpressionUUID->"6967ba04-886b-4f77-94fc-2e1e3da027f3",
+ CellID->1766476467],
+Cell[9490, 223, 767, 15, 40, "GuideText",ExpressionUUID->"d7e0e62d-f4e2-43e9-aaea-cb120ca21b8e",
+ CellID->208561094],
+Cell[CellGroupData[{
+Cell[10282, 242, 103, 1, 26, "GuideDelimiter",ExpressionUUID->"0e2dcd87-4c71-4523-81d6-bc27f7e6dc94",
+ CellID->413455150],
+Cell[10388, 245, 1671, 42, 25, "InlineGuideFunctionListing",ExpressionUUID->"9ecaea94-6783-4410-b164-8cd23a2e35d7",
+ CellID->1831108005]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[12108, 293, 119, 1, 73, "GuideTutorialsSection",ExpressionUUID->"70bb8049-e938-48d6-8f05-5232a1187e4c",
+ CellID->1991578525],
+Cell[12230, 296, 105, 1, 23, "GuideTutorial",ExpressionUUID->"3df8de45-244b-43f2-afd7-d88c9acafcea",
+ CellID->1780147533],
+Cell[12338, 299, 104, 1, 23, "GuideTutorial",ExpressionUUID->"a599fae0-db63-4d0e-affe-07de40de6ff7",
+ CellID->197417127]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[12479, 305, 190, 2, 73, "GuideMoreAboutSection",ExpressionUUID->"8aedfe94-9262-49df-97ef-c95dc95e3602",
+ CellID->127418874],
+Cell[12672, 309, 271, 4, 23, "GuideMoreAbout",ExpressionUUID->"d3eb1c1f-8c19-43de-9f87-10b69dccf7d3",
+ CellID->487819259],
+Cell[12946, 315, 106, 1, 23, "GuideMoreAbout",ExpressionUUID->"a4082bfe-38de-4b59-938b-d9d2e4c98fb5",
+ CellID->1833205414]
+}, Open  ]],
+Cell[13067, 319, 124, 1, 73, "GuideRelatedLinksSection",ExpressionUUID->"98ac493d-aab2-4376-a248-cbb3f49178e5",
+ CellID->735509589],
+Cell[CellGroupData[{
+Cell[13216, 324, 110, 1, 71, "MetadataSection",ExpressionUUID->"15cb3c2f-37b0-4e71-a2fd-70c94df932f5",
+ CellID->793790191],
+Cell[13329, 327, 550, 13, 25, "History",ExpressionUUID->"f2179496-44cc-47ff-928b-e187337727bd",
+ CellID->1063324973],
+Cell[CellGroupData[{
+Cell[13904, 344, 123, 1, 20, "CategorizationSection",ExpressionUUID->"df5dc60f-1ddf-494d-bc37-6ba90979e2aa",
+ CellID->2091394524],
+Cell[14030, 347, 132, 2, 70, "Categorization",ExpressionUUID->"d7f6b6ab-62b1-426e-b149-11ec055287f4",
+ CellID->55430772],
+Cell[14165, 351, 149, 2, 70, "Categorization",ExpressionUUID->"c4459d28-9fd5-41e6-81cb-1615b88132a0",
+ CellID->1764565853],
+Cell[14317, 355, 145, 2, 70, "Categorization",ExpressionUUID->"1826415a-0baa-4372-b4b8-bcaea8704dd9",
+ CellID->309126301],
+Cell[14465, 359, 166, 2, 70, "Categorization",ExpressionUUID->"130ea766-334d-4eb0-88e8-a9bd8a6c9ac7",
+ CellID->722798814]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[14668, 366, 111, 1, 20, "KeywordsSection",ExpressionUUID->"fdb1b31b-e700-4d27-8e99-fd4d1003c876",
+ CellID->1912159466],
+Cell[14782, 369, 99, 1, 70, "Keywords",ExpressionUUID->"7ce598c0-c643-42c2-9bac-5a8856faa350",
+ CellID->571367707]
+}, Closed]]
+}, Open  ]]
+}
+]
+*)
+

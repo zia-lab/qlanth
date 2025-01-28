@@ -1,0 +1,432 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     16308,        422]
+NotebookOptionsPosition[     12376,        341]
+NotebookOutlinePosition[     14426,        390]
+CellTagsIndexPosition[     14341,        385]
+WindowTitle->LandeFactor
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[GridBox[{
+   {GridBox[{
+      {
+       ItemBox[Cell[BoxData[
+         RowBox[{
+          TemplateBox[{12},
+           "Spacer1"], Cell["DAVID LIZARAZO/QLANTH SYMBOL", "PacletNameCell",
+           TextAlignment->Center,ExpressionUUID->
+           "38edffc6-2cd3-40b4-87d5-421cec9fde61"], 
+          TemplateBox[{8},
+           "Spacer1"]}]],
+         TextAlignment->Center,ExpressionUUID->
+         "3d9cb008-0047-4f9b-9bc7-2522ce5d0599"],
+        Background->RGBColor[0.490196, 0.576471, 0.690196],
+        ItemSize->Full], ""}
+     },
+     GridBoxAlignment->{"Rows" -> {{Center}}},
+     GridBoxItemSize->{"Columns" -> {Full, 
+         Scaled[0.02]}, "Rows" -> {{2.5}}}], Cell[TextData[Cell[BoxData[
+     TagBox[
+      ActionMenuBox[
+       FrameBox[Cell[TextData[{
+         "URL",
+         " ",
+         Cell[BoxData[
+          GraphicsBox[
+           {GrayLevel[0.66667], Thickness[0.13], 
+            LineBox[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]},
+           AspectRatio->1,
+           ImageSize->20,
+           PlotRange->{{-3, 4}, {-1, 1}}]],ExpressionUUID->
+          "1ad8d99b-eb99-4545-8fa9-84e02edece0b"]
+        }],ExpressionUUID->"bd655b36-0a58-4e6b-8e50-a0ef86aab119"],
+        StripOnInput->False],{
+       "\"DavidLizarazo/qlanth/ref/LandeFactor\"" :> None, 
+        "\"Copy Wolfram Documentation Center URL\"" :> 
+        Module[{DocumentationSearch`Private`nb$}, 
+          DocumentationSearch`Private`nb$ = 
+           NotebookPut[
+            Notebook[{Cell["DavidLizarazo/qlanth/ref/LandeFactor"]}, Visible -> 
+              DocumentationBuild`Make`Private`visible$58273]]; 
+          SelectionMove[DocumentationSearch`Private`nb$, All, Notebook]; 
+          FrontEndTokenExecute[DocumentationSearch`Private`nb$, "Copy"]; 
+          NotebookClose[DocumentationSearch`Private`nb$]; Null], Delimiter, 
+        "\"Copy web URL\"" :> 
+        Module[{DocumentationSearch`Private`nb$}, 
+          DocumentationSearch`Private`nb$ = 
+           NotebookPut[
+            Notebook[{
+              Cell[BoxData[
+                MakeBoxes[
+                 Hyperlink[
+                  "http://reference.wolfram.com/language/DavidLizarazo/qlanth/\
+ref/LandeFactor.html"], StandardForm]], "Input", TextClipboardType -> 
+                "PlainText"]}, Visible -> 
+              DocumentationBuild`Make`Private`visible$58273]]; 
+          SelectionMove[DocumentationSearch`Private`nb$, All, Notebook]; 
+          FrontEndTokenExecute[DocumentationSearch`Private`nb$, "Copy"]; 
+          NotebookClose[DocumentationSearch`Private`nb$]; Null], 
+        "\"Go to web URL\"" :> 
+        FrontEndExecute[{
+          NotebookLocate[{
+            URL[If[TrueQ[False], 
+                "http://reference.wolfram.com/system-modeler/", 
+                "http://reference.wolfram.com/language/"] <> 
+              "DavidLizarazo/qlanth/ref/LandeFactor" <> ".html"], None}]}]},
+       Appearance->None,
+       MenuAppearance->Automatic,
+       MenuStyle->"URLMenu"],
+      MouseAppearanceTag["LinkHand"]]],
+     LineSpacing->{1.4, 0},ExpressionUUID->
+     "d5180feb-73f4-40eb-ba8b-1e2d668f07b5"]], "AnchorBar",
+     CacheGraphics->False,ExpressionUUID->
+     "dd459baa-0654-46d2-9577-a77819cc2799"]}
+  }]], "AnchorBarGrid",
+ GridBoxOptions->{GridBoxItemSize->{"Columns" -> {
+     Scaled[0.65], {
+      Scaled[0.34]}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}}, 
+   "RowsIndexed" -> {}}},
+ CellID->1,ExpressionUUID->"e8cae2ff-dc3b-4333-ba5b-99d4cf58d0d1"],
+
+Cell["DavidLizarazo`qlanth`", "ContextNameCell",ExpressionUUID->"803b8873-1549-43e5-a871-f6ab99715fb4"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[GridBox[{
+   {Cell[TextData[{
+     Cell[
+     "LandeFactor", "ObjectName",ExpressionUUID->
+      "000fd631-765d-4b35-ad74-23d2bd65b7b3"],
+     Cell[BoxData[
+      TemplateBox[{8},
+       "Spacer1"]],ExpressionUUID->"6e83bf8e-d6d3-44f1-ba9b-7c292d2990d0"],
+     Cell[BoxData[
+     ""], "ObjectNameTranslation",ExpressionUUID->
+      "63e07a50-6e4a-493d-9ce3-61511f1e2606"]
+    }],ExpressionUUID->"808f40fb-e1d6-46ef-ab38-d71b2c5ff478"], 
+    "\[SpanFromLeft]"}
+  }]], "ObjectNameGrid",ExpressionUUID->"28f8e8a5-b2e5-4b48-af6e-\
+dde6c4aef69d"],
+
+Cell[BoxData[GridBox[{
+   {"", Cell[TextData[{
+     Cell[BoxData[
+      RowBox[{"LandeFactor", "[", 
+       RowBox[{"J", ",", "L", ",", " ", "S"}], "]"}]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "c35c776b-bd6a-41d8-9681-80fd7925a046"],
+     " \[LineSeparator]gives the Land\[EAcute] factor for a given total \
+angular momentum J, orbital angular momentum L, and spin S. Assuming gs=2."
+    }],ExpressionUUID->"dfa2cbcb-9c6b-4c3f-a5be-6f46dd5763c9"]}
+  }]], "Usage",
+ CellID->715272494,ExpressionUUID->"a26c2d5e-7836-45b0-a2d1-2835c6ce86b4"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[Cell[BoxData[
+ ButtonBox[Cell[TextData[{
+   Cell[BoxData[
+    DynamicBox[ToBoxes[
+      If[
+       MatchQ[
+        CurrentValue[
+         EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, 
+         Closed], 
+        Alternatives[Open, True]], 
+       Style[
+        Graphics[{
+          Thickness[0.18], 
+          RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+          Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+         PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+        0.68 Inherited], 
+       Rotate[
+        Style[
+         Graphics[{
+           Thickness[0.18], 
+           RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+           Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+          PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+         0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+     ImageSizeCache->{
+      13.600000000000001`, {-0.1685058593749993, 13.768505859375}}]],
+    ExpressionUUID->"5dd9d326-3490-4b18-9cab-307460ef4a16"],
+   Cell[BoxData[
+    TemplateBox[{1},
+     "Spacer1"]],ExpressionUUID->"b4ffd102-eee0-4bc0-9f50-d44d357b0a60"],
+   "Details and Options"
+  }], "NotesFrameText",ExpressionUUID->"3b842afa-8b50-4161-8a30-56f2aad156bc"],
+  Appearance->{Automatic, None, "Normal", Automatic},
+  BaseStyle->None,
+  ButtonFunction:>(FrontEndExecute[{
+     FrontEnd`SelectionMove[
+      FrontEnd`SelectedNotebook[], All, ButtonCell], 
+     FrontEndToken["OpenCloseGroup"], 
+     FrontEnd`SelectionMove[
+      FrontEnd`SelectedNotebook[], After, CellContents]}]& ),
+  Evaluator->None,
+  Method->
+   "Preemptive"]],ExpressionUUID->"7fcd30e0-96a9-43ed-9003-273d384e6962"]], \
+"NotesSection",
+ WholeCellGroupOpener->True,
+ CellGroupingRules->{"SectionGrouping", 50},
+ CacheGraphics->False,
+ CellID->26914559,ExpressionUUID->"2506e216-ab0f-4311-a655-779c0d5efc3b"],
+
+Cell[TextData[Cell[BoxData[
+ RowBox[{
+  FractionBox["3", "2"], "+", 
+  FractionBox[
+   RowBox[{
+    RowBox[{"S", 
+     RowBox[{"(", 
+      RowBox[{"S", "+", "1"}], ")"}]}], "-", 
+    RowBox[{"L", 
+     RowBox[{"(", 
+      RowBox[{"L", "+", "1"}], ")"}]}]}], 
+   RowBox[{"2", "J", " ", 
+    RowBox[{"(", 
+     RowBox[{"J", "+", "1"}], ")"}]}]]}]], "InlineFormula",
+ FontFamily->
+  "Source Sans Pro",ExpressionUUID->"807a68a0-6056-4029-8dfc-c0c5072a7c61"]], \
+"Notes",
+ CellID->1315113023,ExpressionUUID->"4da5c5d8-c3ef-4810-9162-3553ae3a8a85"]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, Closed]]]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  DynamicBox[ToBoxes[
+    If[
+     MatchQ[
+      CurrentValue[
+       EvaluationNotebook[], {
+       TaggingRules, "Openers", "PrimaryExamplesSection"}, Open], 
+      Alternatives[True, Open]], 
+     Style[
+      Graphics[{
+        Thickness[0.18], 
+        RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+        Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+       PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+      0.68 Inherited], 
+     Rotate[
+      Style[
+       Graphics[{
+         Thickness[0.18], 
+         RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+         Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+        PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+       0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+   ImageSizeCache->{
+    13.600000000000001`, {4.251494140625001, 9.348505859375}}]],
+  ExpressionUUID->"b557d1dd-95b1-4ac5-aafa-35b44d7d8bcf"],
+ Cell[BoxData[
+  TemplateBox[{1},
+   "Spacer1"]],ExpressionUUID->"1b849de0-4e32-4d46-97b4-d6c12a61f2a6"],
+ "Examples",
+ "\[NonBreakingSpace]\[NonBreakingSpace]",
+ Cell["(1)", "ExampleCount",ExpressionUUID->
+  "b2252b20-1c84-4f30-823e-3ce006f5d9b1"]
+}], "PrimaryExamplesSection",
+ WholeCellGroupOpener->True,
+ CacheGraphics->False,
+ CellTags->"PrimaryExamplesSection",
+ CellID->1381427243,ExpressionUUID->"783e38a3-1ac5-46cb-aeee-ef50feb8a97f"],
+
+Cell[BoxData[
+ RowBox[{"Needs", "[", "\"\<DavidLizarazo`qlanth`\>\"", "]"}]], "Input", \
+"ExampleInitialization",
+ CellLabel->"In[1]:=",
+ CellID->902701271,ExpressionUUID->"61bbcd9a-848d-4c09-8eaf-02b4e84942fd"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  DynamicBox[ToBoxes[
+    If[
+     MatchQ[
+      CurrentValue[
+       EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"},
+        Closed], 
+      Alternatives[Open, True]], 
+     Style[
+      Graphics[{
+        Thickness[0.18], 
+        RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+        Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+       PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+      0.68 Inherited], 
+     Rotate[
+      Style[
+       Graphics[{
+         Thickness[0.18], 
+         RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+         Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+        PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+       0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+   ImageSizeCache->{
+    13.600000000000001`, {4.551318359375001, 9.048681640625}}]],
+  ExpressionUUID->"94cd6484-9068-48ff-a946-6695c8edcae4"],
+ Cell[BoxData[
+  TemplateBox[{1},
+   "Spacer1"]],ExpressionUUID->"1c66ac46-a0cd-495d-8a79-e5dab5773648"],
+ "Basic Examples",
+ "\[NonBreakingSpace]\[NonBreakingSpace]",
+ Cell["(1)", "ExampleCount",ExpressionUUID->
+  "2a37fa5a-9620-4c5d-b9e8-15dfc3024647"]
+}], "ExampleSection", "ExampleSection",
+ WholeCellGroupOpener->True,
+ CacheGraphics->False,
+ CellID->1201965384,ExpressionUUID->"985f6228-6dac-49e4-84c1-1086e1a8973d"],
+
+Cell["An alternative expression .", "ExampleText",
+ CellID->1645668833,ExpressionUUID->"23f39fd3-48ed-4940-bd5a-0ab1cb325913"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Simplify", "[", 
+  RowBox[{
+   RowBox[{"LandeFactor", "[", 
+    RowBox[{"J", ",", "L", ",", "S"}], "]"}], "==", 
+   RowBox[{"(", 
+    RowBox[{"1", "+", 
+     FractionBox[
+      RowBox[{
+       RowBox[{"J", 
+        RowBox[{"(", 
+         RowBox[{"J", "+", "1"}], ")"}]}], "+", 
+       RowBox[{"S", 
+        RowBox[{"(", 
+         RowBox[{"S", "+", "1"}], ")"}]}], "-", 
+       RowBox[{"L", 
+        RowBox[{"(", 
+         RowBox[{"L", "+", "1"}], ")"}]}]}], 
+      RowBox[{"2", "J", " ", 
+       RowBox[{"(", 
+        RowBox[{"J", "+", "1"}], ")"}]}]]}], ")"}]}], "]"}]], "Input",
+ CellProlog:>Needs["DavidLizarazo`qlanth`"],
+ CellLabel->"In[1]:=",
+ CellID->1314186518,ExpressionUUID->"c1b46829-77d1-4f6b-8b59-9f043b5cffe4"],
+
+Cell[BoxData["True"], "Output",
+ CellLabel->"Out[1]=",
+ CellID->663498631,ExpressionUUID->"c03698e2-1065-4dc7-846d-9a994d38ff5f"]
+}, Open  ]]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"}, 
+  Closed]]]]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "PrimaryExamplesSection"}, 
+  Closed]]]],
+
+Cell[" ", "FooterCell",ExpressionUUID->"6db67001-9f53-4c56-b78a-01b010c99e1f"]
+},
+Saveable->False,
+ScreenStyleEnvironment->"Working",
+WindowSize->{900, 830},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+WindowTitle->"LandeFactor",
+TaggingRules->{
+ "ModificationHighlight" -> False, "ColorType" -> "", "LinkTrails" -> "", 
+  "ExampleCounter" -> 1, 
+  "Openers" -> {
+   "PrimaryExamplesSection" -> Open, "ExampleSection" -> {"0" -> Open}, 
+    "AllOptsTable" -> Closed, "NotesSection" -> Closed}, "NewStyles" -> True, 
+  "CitationPopupData" -> $Failed, "ShowCitation" -> False, "HasOptions" -> 
+  True, "RootCaptions" -> "", "HeaderCoreAreaLink" -> {}, 
+  "Metadata" -> {
+   "built" -> "{2025, 1, 24, 17, 35, 26.407120}", 
+    "history" -> {"1.0.0", "", "", ""}, "context" -> "DavidLizarazo`qlanth`", 
+    "keywords" -> {}, "specialkeywords" -> {}, 
+    "tutorialcollectionlinks" -> {}, "index" -> True, "label" -> 
+    "David Lizarazo/qlanth Symbol", "language" -> "en", "paclet" -> 
+    "DavidLizarazo/qlanth", "status" -> "None", "summary" -> 
+    "LandeFactor[J, L, S] gives the Land\[EAcute] factor for a given total \
+angular momentum J, orbital angular momentum L, and spin S. Assuming gs=2.", 
+    "synonyms" -> {}, "tabletags" -> {}, "title" -> "LandeFactor", 
+    "titlemodifier" -> "", "metadescription" -> "", "windowtitle" -> 
+    "LandeFactor", "type" -> "Symbol", "uri" -> 
+    "DavidLizarazo/qlanth/ref/LandeFactor", "WorkflowDockedCell" -> ""}, 
+  "SearchTextTranslated" -> ""},
+FrontEndVersion->"14.1 for Mac OS X ARM (64-bit) (July 16, 2024)",
+StyleDefinitions->FrontEnd`FileName[{"Wolfram"}, "Reference.nb", 
+  CharacterEncoding -> "UTF-8"],
+ExpressionUUID->"ba28c235-fcf4-4acf-ab52-38ca5ba811d5"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "PrimaryExamplesSection"->{
+  Cell[7925, 211, 1438, 38, 34, "PrimaryExamplesSection",ExpressionUUID->"783e38a3-1ac5-46cb-aeee-ef50feb8a97f",
+   CellTags->"PrimaryExamplesSection",
+   CellID->1381427243]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"PrimaryExamplesSection", 14141, 378}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[579, 21, 3457, 79, 50, "AnchorBarGrid",ExpressionUUID->"e8cae2ff-dc3b-4333-ba5b-99d4cf58d0d1",
+ CellID->1],
+Cell[4039, 102, 103, 0, 22, "ContextNameCell",ExpressionUUID->"803b8873-1549-43e5-a871-f6ab99715fb4"],
+Cell[CellGroupData[{
+Cell[4167, 106, 554, 14, 57, "ObjectNameGrid",ExpressionUUID->"28f8e8a5-b2e5-4b48-af6e-dde6c4aef69d"],
+Cell[4724, 122, 577, 11, 106, "Usage",ExpressionUUID->"a26c2d5e-7836-45b0-a2d1-2835c6ce86b4",
+ CellID->715272494]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5338, 138, 1915, 48, 34, "NotesSection",ExpressionUUID->"2506e216-ab0f-4311-a655-779c0d5efc3b",
+ CellGroupingRules->{"SectionGrouping", 50},
+ CellID->26914559],
+Cell[7256, 188, 542, 17, 70, "Notes",ExpressionUUID->"4da5c5d8-c3ef-4810-9162-3553ae3a8a85",
+ CellID->1315113023]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, Closed]]]],
+Cell[CellGroupData[{
+Cell[7925, 211, 1438, 38, 34, "PrimaryExamplesSection",ExpressionUUID->"783e38a3-1ac5-46cb-aeee-ef50feb8a97f",
+ CellTags->"PrimaryExamplesSection",
+ CellID->1381427243],
+Cell[9366, 251, 211, 4, 29, "Input",ExpressionUUID->"61bbcd9a-848d-4c09-8eaf-02b4e84942fd",
+ CellID->902701271],
+Cell[CellGroupData[{
+Cell[9602, 259, 1416, 37, 29, "ExampleSection",ExpressionUUID->"985f6228-6dac-49e4-84c1-1086e1a8973d",
+ CellID->1201965384],
+Cell[11021, 298, 126, 1, 37, "ExampleText",ExpressionUUID->"23f39fd3-48ed-4940-bd5a-0ab1cb325913",
+ CellID->1645668833],
+Cell[CellGroupData[{
+Cell[11172, 303, 748, 23, 44, "Input",ExpressionUUID->"c1b46829-77d1-4f6b-8b59-9f043b5cffe4",
+ CellID->1314186518],
+Cell[11923, 328, 129, 2, 36, "Output",ExpressionUUID->"c03698e2-1065-4dc7-846d-9a994d38ff5f",
+ CellID->663498631]
+}, Open  ]]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"}, Closed]]]]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "PrimaryExamplesSection"}, Closed]]]],
+Cell[12294, 339, 78, 0, 40, "FooterCell",ExpressionUUID->"6db67001-9f53-4c56-b78a-01b010c99e1f"]
+}
+]
+*)
+
+(* End of internal cache information *)
+

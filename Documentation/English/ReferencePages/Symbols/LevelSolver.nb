@@ -1,0 +1,1197 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     49287,       1189]
+NotebookOptionsPosition[     43001,       1054]
+NotebookOutlinePosition[     43762,       1079]
+CellTagsIndexPosition[     43682,       1074]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["LevelSolver", "ObjectName",
+ CellID->1070006006,ExpressionUUID->"f1dcf25c-089f-44b7-8897-1503bef7262e"],
+
+Cell[TextData[{
+ Cell["   ", "ModInfo",ExpressionUUID->"347ad9af-3e2d-4d39-9e95-ae065cadcee3"],
+ Cell[BoxData[
+  RowBox[{
+   ButtonBox["LevelSolver",
+    BaseStyle->"Link",
+    ButtonData->"paclet:DavidLizarazo/qlanth/ref/LevelSolver"], "[", 
+   RowBox[{
+    StyleBox["numE",
+     FontSlant->"Italic"], ",", 
+    StyleBox["params",
+     FontSlant->"Italic"]}], "]"}]], "InlineFormula",ExpressionUUID->
+  "7e6793b4-6f21-4699-8bc1-89e2e6d59bf7"],
+ " \[LineSeparator]puts together (or retrieves from disk) the symbolic level \
+Hamiltonian for the ",
+ Cell[BoxData[
+  SuperscriptBox["f", "numE"]], "InlineFormula",ExpressionUUID->
+  "37150314-5f27-4972-a9f7-0c2a2a6b3c68"],
+ " configuration and solves it for the given params (given as an association) \
+returning the resultant energies and eigenstates. "
+}], "Usage",
+ CellChangeTimes->{{3.946319770596004*^9, 3.946319820087037*^9}, {
+  3.9463202408146563`*^9, 3.94632024171739*^9}, {3.9463204006743813`*^9, 
+  3.946320415629539*^9}},
+ CellID->562882864,ExpressionUUID->"e02dd107-4d0d-45a2-be43-a1c87ef283a3"],
+
+Cell[TextData[{
+ "Options\[LineSeparator]",
+ Cell[BoxData[GridBox[{
+    {Cell[
+     "      ", "ModInfo",ExpressionUUID->
+      "c1a3a674-de51-42d0-89cd-094dc6e6311e"], "\"\<Return as states\>\"", 
+     "False", Cell["\<\
+If False then the function returns an association whose keys are values of J, \
+and whose values are lists with two elements. The first elements being equal \
+to the ordered basis corresponding to the subspace, as given as a list of \
+lists of the form {LS, J}. The second element is another list of two \
+elements, the first element being equal to the energies and the second being \
+equal to the corresponding normalized eigenvectors. The energies given have \
+been subtracted the energy of the ground state.\[LineSeparator]If True then \
+the function returns a list with three elements. The first element is the \
+global level basis for the f^numE configuration, given as a list of lists of \
+the form {LS string, J}. The second element are the mayor LSJ components in \
+the returned eigenstates. The third element is a list of lists with three \
+elements, in each list the first element being equal to the energy, the \
+second being equal to the value of J, and the third being equal to the \
+corresponding normalized eigenvector (given as a row). The energies given \
+have been subtracted the energy of the ground state, and the states have been \
+sorted in order of increasing energy.\
+\>", "TableText",ExpressionUUID->"7b6b7514-989d-4ee2-9cb8-73c7e02debe8"]},
+    {Cell[
+     "      ", "ModInfo",ExpressionUUID->
+      "a8372e9a-8332-4bfd-8ec6-feaee0539949"], 
+     "\"\<Overwrite Hamiltonian\>\"", "False", Cell["\<\
+To calculate the eigensystem the symbolic Hamiltonian is calculated, if a \
+pre-calculated version is found in disk, this version is used. This option \
+may be used to override this and compute the symbolic Hamiltonian even if a \
+pre-calculated version is found on disk.\
+\>", "TableText",ExpressionUUID->"23411bea-cee9-4ebb-93fe-b6764c909e67"]},
+    {Cell[
+     "      ", "ModInfo",ExpressionUUID->
+      "96050846-50c0-4f54-bb18-b5b7f4628438"], "\"\<Simplifier\>\"", 
+     RowBox[{"{", 
+      RowBox[{
+      "B02", ",", "B04", ",", "B06", ",", "B12", ",", "B14", ",", "B16", ",", 
+       "B22", ",", "B24", ",", "B26", ",", "B34", ",", "B36", ",", "B44", ",",
+        "B46", ",", "B56", ",", "B66", ",", "S12", ",", "S14", ",", "S16", 
+       ",", "S22", ",", "S24", ",", "S26", ",", "S34", ",", "S36", ",", "S44",
+        ",", "S46", ",", "S56", ",", "S66", ",", "T2", ",", "T2p", ",", "T3", 
+       ",", "T4", ",", "T6", ",", "T7", ",", "T8", ",", "T11p", ",", "T12", 
+       ",", "T14", ",", "T15", ",", "T16", ",", "T17", ",", "T18", ",", "T19",
+        ",", "\[Alpha]", ",", "\[Beta]", ",", "\[Gamma]", ",", "P0", ",", 
+       "P2", ",", "P4", ",", "P6", ",", "M0", ",", "M2", ",", "M4", ",", "Bx",
+        ",", "By", ",", "Bz", ",", "gs"}], "}"}], Cell[
+     "The symbols that are set to zero before diagonalization.", "TableText",
+      ExpressionUUID->"54c6b603-53c0-4c47-a1bb-13f9611b7989"]},
+    {Cell[
+     "      ", "ModInfo",ExpressionUUID->
+      "25748cf2-f2f2-4706-bbcc-0001e0cdef78"], "\"\<PrintFun\>\"", 
+     "PrintTemporary", Cell["\<\
+What function is used to print the verbose output of the calculation.\
+\>", "TableText",ExpressionUUID->"daf54c1c-9f32-4b66-98d9-8b33efe7ce8b"]}
+   }]], "3ColumnTableMod",
+  CellChangeTimes->{{3.946319839627907*^9, 3.94632020552738*^9}},
+  ExpressionUUID->"1c970c30-570e-4b97-bb5c-15a2ebc061ea"]
+}], "Notes",
+ CellChangeTimes->{{3.9466403076380367`*^9, 3.9466403108989573`*^9}},
+ CellID->706830213,ExpressionUUID->"e4ca5ceb-9cf1-4839-9868-0d8ea9fadf2a"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "See Also",
+ Cell[BoxData[
+  TemplateBox[{"SeeAlso", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell[
+       "Insert links to any related reference (function) pages.", 
+        "MoreInfoText"], BaseStyle -> "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "958316b9-7447-400a-93e9-61bec20956f1"]
+}], "SeeAlsoSection",
+ CellID->1963338334,ExpressionUUID->"32edfa81-df4b-44b2-a880-fa6fcc008042"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["LevelSimplerSymbolicHamMatrix",
+   BaseStyle->"Link",
+   ButtonData->
+    "paclet:DavidLizarazo/qlanth/ref/LevelSimplerSymbolicHamMatrix"]], 
+  "InlineSeeAlsoFunction",
+  TaggingRules->{"PageType" -> "Function"},ExpressionUUID->
+  "2405be70-e7b9-4998-b376-f5352630a53f"],
+ Cell[BoxData[
+  RowBox[{
+  Cell[TextData[StyleBox[
+   " \[FilledVerySmallSquare] ", "InlineSeparator"]],ExpressionUUID->
+    "84c20207-4cec-4676-a880-015f109f2126"], 
+   DynamicModuleBox[{$CellContext`nbobj$$ = NotebookObject[
+    "90d43a52-4f42-464a-b3ec-dc6e3eb11bf1", 
+     "8fc268e1-4b7a-4ff9-b962-33d65d8dc18f"], $CellContext`cellobj$$ = 
+    CellObject[
+    "f02b0024-4014-4f78-a7f5-61ca4ac7f162", 
+     "e72341db-7769-4222-96a1-d602c7ccf2f6"]}, 
+    TemplateBox[{
+      GraphicsBox[{{
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         CircleBox[{0, 0}]}, {
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         LineBox[{{0, 0.62}, {0, -0.62}}]}, {
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         LineBox[{{-0.62, 0}, {0.62, 0}}]}}, 
+       ImagePadding -> {{1., 1.}, {2.4, 1.}}, ImageSize -> 16, 
+       PlotRange -> {{-1.06, 1.06}, {-1.06, 1.06}}, 
+       BaselinePosition -> (Center -> 
+        Center)], $CellContext`nbobj$$, $CellContext`cellobj$$},
+     "InlineListingAddButton"],
+    Initialization:>($CellContext`nbobj$$ = 
+      EvaluationNotebook[]; $CellContext`cellobj$$ = EvaluationCell[])]}]], 
+  "InlineListingAddButton",ExpressionUUID->
+  "f02b0024-4014-4f78-a7f5-61ca4ac7f162"]
+}], "SeeAlso",
+ CellChangeTimes->{{3.946320231380762*^9, 3.946320234630596*^9}},
+ CellID->1741143383,ExpressionUUID->"ee51f508-9dd5-4adc-bcde-d6ababcc88ce"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Tech Notes",
+ Cell[BoxData[
+  TemplateBox[{"TechNotes", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell["Insert links to related tech notes.", "MoreInfoText"], BaseStyle -> 
+       "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "899f7c08-16d1-4fe1-af2b-1d0e56033898"]
+}], "TechNotesSection",
+ CellID->1784664059,ExpressionUUID->"96940dbc-f6cd-494e-9f79-8844909a9fc8"],
+
+Cell["XXXX", "Tutorials",
+ CellID->944741964,ExpressionUUID->"07b862ef-d1a9-4d85-b53b-c4596e296125"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Related Guides", "MoreAboutSection",
+ CellID->1931586677,ExpressionUUID->"581328ae-6672-439b-8899-31aa2ad14400"],
+
+Cell["XXXX", "MoreAbout",
+ CellID->666988640,ExpressionUUID->"ecc038b6-9acc-4a78-be28-6eba41a0e738"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Related Links",
+ Cell[BoxData[
+  TemplateBox[{"RelatedLinks", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell[
+       "Insert links to any related page, including web pages.", 
+        "MoreInfoText"], BaseStyle -> "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "583b6222-4840-4dc2-95b9-043274e60489"]
+}], "RelatedLinksSection",
+ CellID->213435140,ExpressionUUID->"964cf8d6-454a-4083-b0ea-3c85d04d16cb"],
+
+Cell["XXXX", "RelatedLinks",
+ CellID->906707490,ExpressionUUID->"eb812bfd-13df-4739-bab8-631166469be3"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Examples Initialization",
+ Cell[BoxData[
+  TemplateBox[{"ExamplesInitialization", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell[
+       "Input that is to be evaluated before any examples are run, e.g. \
+Needs[\[Ellipsis]].", "MoreInfoText"], BaseStyle -> "IFrameBox"]], 
+     "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "863a674a-ecb9-4f01-a303-98e551c07832"]
+}], "ExamplesInitializationSection",
+ CellID->488825318,ExpressionUUID->"e8571273-b342-4d20-ada5-5cdf7828d316"],
+
+Cell[BoxData[
+ RowBox[{"Needs", "[", "\"\<DavidLizarazo`qlanth`\>\"", 
+  "]"}]], "ExampleInitialization",
+ CellID->1562169851,ExpressionUUID->"ba29d5f4-468c-43e8-bfb9-411e15eb3870"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[GridBox[{
+    {
+     StyleBox[
+      RowBox[{"Basic", " ", "Examples"}], "PrimaryExamplesSection"], 
+     ButtonBox[
+      RowBox[{
+       RowBox[{"More", " ", "Examples"}], " ", "\[RightTriangle]"}],
+      BaseStyle->"ExtendedExamplesLink",
+      ButtonData:>"ExtendedExamples"]}
+   }],
+  $Line = 0; Null]], "PrimaryExamplesSection",
+ CellID->253617535,ExpressionUUID->"22d8185f-cdc6-4e73-ab65-1479ceae1fdb"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"The", " ", "free"}], "-", 
+  RowBox[{"ion", " ", "levels", " ", "of", " ", 
+   RowBox[{
+    SuperscriptBox["Er", 
+     RowBox[{"3", "+"}]], "."}]}]}]], "ExampleText",
+ CellChangeTimes->{{3.9463202504935102`*^9, 3.946320280325061*^9}},
+ CellID->1900281355,ExpressionUUID->"37f3b9f3-211b-4436-8b2f-ca10f527a7dd"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"numE", "=", "11"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ln", "=", 
+   RowBox[{"theLanthanides", "[", 
+    RowBox[{"[", "numE", "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"params", "=", 
+   RowBox[{"LoadLaF3Parameters", "[", "ln", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"intermediateBasis", "=", 
+   RowBox[{"BasisLSJ", "[", "numE", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"intermediateBasis", ",", "simpleStateLabels", ",", "eigensys"}], 
+    "}"}], "=", 
+   RowBox[{"LevelSolver", "[", 
+    RowBox[{
+    "numE", ",", "\[IndentingNewLine]", "params", ",", "\[IndentingNewLine]", 
+     
+     RowBox[{"\"\<Overwrite Hamiltonian\>\"", "->", "False"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"\"\<Return as states\>\"", "->", "True"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"eigenEnergies", "=", 
+   RowBox[{"First", "/@", "eigensys"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"EnergyLevelDiagram", "[", 
+  RowBox[{
+   RowBox[{"Select", "[", 
+    RowBox[{"eigensys", ",", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"#", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], "<=", "30000"}], "&"}]}], "]"}], ",", 
+   
+   RowBox[{"\"\<ImageSize\>\"", "->", "600"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.916511861475267*^9, 3.916511903471019*^9}, {
+   3.918228361401075*^9, 3.918228365987666*^9}, {3.922355999325748*^9, 
+   3.922356032420403*^9}, {3.922356073853716*^9, 3.922356079318578*^9}, {
+   3.9223562648964787`*^9, 3.922356287248433*^9}, {3.922356335712696*^9, 
+   3.92235634156546*^9}, {3.922356999583438*^9, 3.922356999680449*^9}, {
+   3.9223573176811743`*^9, 3.9223573185073557`*^9}, {3.922820470704796*^9, 
+   3.922820472315054*^9}, {3.9253109083762836`*^9, 3.925310920822859*^9}, {
+   3.9253109662807817`*^9, 3.9253109737564287`*^9}, {3.929786963186171*^9, 
+   3.929786966509289*^9}, 3.9463196430355*^9, {3.946319739482771*^9, 
+   3.9463197399243603`*^9}, {3.946320272702368*^9, 3.94632027284006*^9}, {
+   3.946320350470582*^9, 3.9463203789230957`*^9}, {3.946403557307241*^9, 
+   3.9464035583398952`*^9}},
+ CellLabel->"In[324]:=",
+ CellID->1614837179,ExpressionUUID->"86e085b8-edd3-41d2-b06d-6dafff026a68"],
+
+Cell[BoxData[
+ DynamicModuleBox[{qlanth`Private`dragging$$ = False, qlanth`Private`first$$, 
+  qlanth`Private`second$$, qlanth`Private`rx1$$ = 0., qlanth`Private`rx2$$ = 
+  27386.89277086949, qlanth`Private`ry1$$ = 0., qlanth`Private`ry2$$ = 1., 
+  qlanth`Private`range$$ = {{0., 27386.89277086949}, {0., 1.}}}, 
+  PanelBox[
+   TagBox[
+    DynamicBox[ToBoxes[
+      Graphics[
+       If[qlanth`Private`dragging$$, {{{}, {{{}, {}, 
+            Annotation[
+             Tooltip[{
+               Hue[0.67, 0.6, 0.6], 
+               Directive[
+                PointSize[0.012833333333333334`], 
+                AbsoluteThickness[2], FontFamily -> "Arial", 
+                GrayLevel[0]], 
+               Line[{{0., 0.}, {0., 1.}, {0., 1.}}]}, {
+               Quantity[0., "Electronvolts"], 
+               Quantity[0, "Centimeters"^(-1)]}], "Charting`Private`Tag#1"], 
+            Annotation[
+             Tooltip[{
+               Hue[0.9060679774997897, 0.6, 0.6], 
+               Directive[
+                PointSize[0.012833333333333334`], 
+                AbsoluteThickness[2], FontFamily -> "Arial", 
+                GrayLevel[0]], 
+               
+               Line[{{6517.452345007194, 0.}, {6517.452345007194, 1.}, {
+                6517.452345007194, 1.}}]}, {
+               Quantity[0.8080610694913428, "Electronvolts"], 
+               Quantity[6517.452345007194, "Centimeters"^(-1)]}], 
+             "Charting`Private`Tag#2"], 
+            Annotation[
+             Tooltip[{
+               Hue[0.1421359549995791, 0.6, 0.6], 
+               Directive[
+                PointSize[0.012833333333333334`], 
+                AbsoluteThickness[2], FontFamily -> "Arial", 
+                GrayLevel[0]], 
+               
+               Line[{{10038.617628067, 0.}, {10038.617628067, 1.}, {
+                10038.617628067, 1.}}]}, {
+               Quantity[1.2446299055741719`, "Electronvolts"], 
+               Quantity[10038.617628067, "Centimeters"^(-1)]}], 
+             "Charting`Private`Tag#3"], 
+            Annotation[
+             Tooltip[{
+               Hue[0.37820393249936934`, 0.6, 0.6], 
+               Directive[
+                PointSize[0.012833333333333334`], 
+                AbsoluteThickness[2], FontFamily -> "Arial", 
+                GrayLevel[0]], 
+               
+               Line[{{12017.972939949697`, 0.}, {12017.972939949697`, 1.}, {
+                12017.972939949697`, 1.}}]}, {
+               Quantity[1.4900386766024065`, "Electronvolts"], 
+               Quantity[12017.972939949697`, "Centimeters"^(-1)]}], 
+             "Charting`Private`Tag#4"], 
+            Annotation[
+             Tooltip[{
+               Hue[0.6142719099991583, 0.6, 0.6], 
+               Directive[
+                PointSize[0.012833333333333334`], 
+                AbsoluteThickness[2], FontFamily -> "Arial", 
+                GrayLevel[0]], 
+               
+               Line[{{14994.780067597458`, 0.}, {14994.780067597458`, 1.}, {
+                14994.780067597458`, 1.}}]}, {
+               Quantity[1.8591157060768502`, "Electronvolts"], 
+               Quantity[14994.780067597458`, "Centimeters"^(-1)]}], 
+             "Charting`Private`Tag#5"], 
+            Annotation[
+             Tooltip[{
+               Hue[0.8503398874989481, 0.6, 0.6], 
+               Directive[
+                PointSize[0.012833333333333334`], 
+                AbsoluteThickness[2], FontFamily -> "Arial", 
+                GrayLevel[0]], 
+               
+               Line[{{18123.08023900974, 0.}, {18123.08023900974, 1.}, {
+                18123.08023900974, 1.}}]}, {
+               Quantity[2.2469754783294036`, "Electronvolts"], 
+               Quantity[18123.08023900974, "Centimeters"^(-1)]}], 
+             "Charting`Private`Tag#6"], 
+            Annotation[
+             Tooltip[{
+               Hue[0.08640786499873876, 0.6, 0.6], 
+               Directive[
+                PointSize[0.012833333333333334`], 
+                AbsoluteThickness[2], FontFamily -> "Arial", 
+                GrayLevel[0]], 
+               
+               Line[{{18884.826182096174`, 0.}, {18884.826182096174`, 1.}, {
+                18884.826182096174`, 1.}}]}, {
+               Quantity[2.3414199343633104`, "Electronvolts"], 
+               Quantity[18884.826182096174`, "Centimeters"^(-1)]}], 
+             "Charting`Private`Tag#7"], 
+            Annotation[
+             Tooltip[{
+               Hue[0.3224758424985268, 0.6, 0.6], 
+               Directive[
+                PointSize[0.012833333333333334`], 
+                AbsoluteThickness[2], FontFamily -> "Arial", 
+                GrayLevel[0]], 
+               
+               Line[{{20167.155391470213`, 0.}, {20167.155391470213`, 1.}, {
+                20167.155391470213`, 1.}}]}, {
+               Quantity[2.5004084865635536`, "Electronvolts"], 
+               Quantity[20167.155391470213`, "Centimeters"^(-1)]}], 
+             "Charting`Private`Tag#8"], 
+            Annotation[
+             Tooltip[{
+               Hue[0.5585438199983166, 0.6, 0.6], 
+               Directive[
+                PointSize[0.012833333333333334`], 
+                AbsoluteThickness[2], FontFamily -> "Arial", 
+                GrayLevel[0]], 
+               
+               Line[{{21849.284342216757`, 0.}, {21849.284342216757`, 1.}, {
+                21849.284342216757`, 1.}}]}, {
+               Quantity[2.708965887064363, "Electronvolts"], 
+               Quantity[21849.284342216757`, "Centimeters"^(-1)]}], 
+             "Charting`Private`Tag#9"], 
+            Annotation[
+             Tooltip[{
+               Hue[0.7946117974981064, 0.6, 0.6], 
+               Directive[
+                PointSize[0.012833333333333334`], 
+                AbsoluteThickness[2], FontFamily -> "Arial", 
+                GrayLevel[0]], 
+               
+               Line[{{22100.72754053272, 0.}, {22100.72754053272, 1.}, {
+                22100.72754053272, 1.}}]}, {
+               Quantity[2.74014086909598, "Electronvolts"], 
+               Quantity[22100.72754053272, "Centimeters"^(-1)]}], 
+             "Charting`Private`Tag#10"], 
+            Annotation[
+             Tooltip[{
+               Hue[0.030679774997896203`, 0.6, 0.6], 
+               Directive[
+                PointSize[0.012833333333333334`], 
+                AbsoluteThickness[2], FontFamily -> "Arial", 
+                GrayLevel[0]], 
+               
+               Line[{{23930.09746790646, 0.}, {23930.09746790646, 1.}, {
+                23930.09746790646, 1.}}]}, {
+               Quantity[2.966953823262244, "Electronvolts"], 
+               Quantity[23930.09746790646, "Centimeters"^(-1)]}], 
+             "Charting`Private`Tag#11"], 
+            Annotation[
+             Tooltip[{
+               Hue[0.266747752497686, 0.6, 0.6], 
+               Directive[
+                PointSize[0.012833333333333334`], 
+                AbsoluteThickness[2], FontFamily -> "Arial", 
+                GrayLevel[0]], 
+               
+               Line[{{26058.222489433563`, 0.}, {26058.222489433563`, 1.}, {
+                26058.222489433563`, 1.}}]}, {
+               Quantity[3.230807686685403, "Electronvolts"], 
+               Quantity[26058.222489433563`, "Centimeters"^(-1)]}], 
+             "Charting`Private`Tag#12"], 
+            Annotation[
+             Tooltip[{
+               Hue[0.5028157299974758, 0.6, 0.6], 
+               Directive[
+                PointSize[0.012833333333333334`], 
+                AbsoluteThickness[2], FontFamily -> "Arial", 
+                GrayLevel[0]], 
+               
+               Line[{{26561.905399280164`, 0.}, {26561.905399280164`, 1.}, {
+                26561.905399280164`, 1.}}]}, {
+               Quantity[3.293256405796783, "Electronvolts"], 
+               Quantity[26561.905399280164`, "Centimeters"^(-1)]}], 
+             "Charting`Private`Tag#13"], 
+            Annotation[
+             Tooltip[{
+               Hue[0.7388837074972656, 0.6, 0.6], 
+               Directive[
+                PointSize[0.012833333333333334`], 
+                AbsoluteThickness[2], FontFamily -> "Arial", 
+                GrayLevel[0]], 
+               
+               Line[{{27215.86845983685, 0.}, {27215.86845983685, 1.}, {
+                27215.86845983685, 1.}}]}, {
+               Quantity[3.3743374881197075`, "Electronvolts"], 
+               Quantity[27215.86845983685, "Centimeters"^(-1)]}], 
+             "Charting`Private`Tag#14"], 
+            Annotation[
+             Tooltip[{
+               Hue[0.9749516849970554, 0.6, 0.6], 
+               Directive[
+                PointSize[0.012833333333333334`], 
+                AbsoluteThickness[2], FontFamily -> "Arial", 
+                GrayLevel[0]], 
+               
+               Line[{{27386.89277086949, 0.}, {27386.89277086949, 1.}, {
+                27386.89277086949, 1.}}]}, {
+               Quantity[3.395541799308561, "Electronvolts"], 
+               Quantity[27386.89277086949, "Centimeters"^(-1)]}], 
+             "Charting`Private`Tag#15"]}}, {{}, {}}}, 
+         ({
+          Dashing[Small], 
+          Line[{#, {
+             First[#2], 
+             Last[#]}, #2, {
+             First[#], 
+             Last[#2]}, #}]}& )[
+         qlanth`Private`first$$, qlanth`Private`second$$]}, {{}, {{{}, {}, 
+           Annotation[
+            Tooltip[{
+              Hue[0.67, 0.6, 0.6], 
+              Directive[
+               PointSize[0.012833333333333334`], 
+               AbsoluteThickness[2], FontFamily -> "Arial", 
+               GrayLevel[0]], 
+              Line[{{0., 0.}, {0., 1.}, {0., 1.}}]}, {
+              Quantity[0., "Electronvolts"], 
+              Quantity[0, "Centimeters"^(-1)]}], "Charting`Private`Tag#1"], 
+           Annotation[
+            Tooltip[{
+              Hue[0.9060679774997897, 0.6, 0.6], 
+              Directive[
+               PointSize[0.012833333333333334`], 
+               AbsoluteThickness[2], FontFamily -> "Arial", 
+               GrayLevel[0]], 
+              
+              Line[{{6517.452345007194, 0.}, {6517.452345007194, 1.}, {
+               6517.452345007194, 1.}}]}, {
+              Quantity[0.8080610694913428, "Electronvolts"], 
+              Quantity[6517.452345007194, "Centimeters"^(-1)]}], 
+            "Charting`Private`Tag#2"], 
+           Annotation[
+            Tooltip[{
+              Hue[0.1421359549995791, 0.6, 0.6], 
+              Directive[
+               PointSize[0.012833333333333334`], 
+               AbsoluteThickness[2], FontFamily -> "Arial", 
+               GrayLevel[0]], 
+              
+              Line[{{10038.617628067, 0.}, {10038.617628067, 1.}, {
+               10038.617628067, 1.}}]}, {
+              Quantity[1.2446299055741719`, "Electronvolts"], 
+              Quantity[10038.617628067, "Centimeters"^(-1)]}], 
+            "Charting`Private`Tag#3"], 
+           Annotation[
+            Tooltip[{
+              Hue[0.37820393249936934`, 0.6, 0.6], 
+              Directive[
+               PointSize[0.012833333333333334`], 
+               AbsoluteThickness[2], FontFamily -> "Arial", 
+               GrayLevel[0]], 
+              
+              Line[{{12017.972939949697`, 0.}, {12017.972939949697`, 1.}, {
+               12017.972939949697`, 1.}}]}, {
+              Quantity[1.4900386766024065`, "Electronvolts"], 
+              Quantity[12017.972939949697`, "Centimeters"^(-1)]}], 
+            "Charting`Private`Tag#4"], 
+           Annotation[
+            Tooltip[{
+              Hue[0.6142719099991583, 0.6, 0.6], 
+              Directive[
+               PointSize[0.012833333333333334`], 
+               AbsoluteThickness[2], FontFamily -> "Arial", 
+               GrayLevel[0]], 
+              
+              Line[{{14994.780067597458`, 0.}, {14994.780067597458`, 1.}, {
+               14994.780067597458`, 1.}}]}, {
+              Quantity[1.8591157060768502`, "Electronvolts"], 
+              Quantity[14994.780067597458`, "Centimeters"^(-1)]}], 
+            "Charting`Private`Tag#5"], 
+           Annotation[
+            Tooltip[{
+              Hue[0.8503398874989481, 0.6, 0.6], 
+              Directive[
+               PointSize[0.012833333333333334`], 
+               AbsoluteThickness[2], FontFamily -> "Arial", 
+               GrayLevel[0]], 
+              
+              Line[{{18123.08023900974, 0.}, {18123.08023900974, 1.}, {
+               18123.08023900974, 1.}}]}, {
+              Quantity[2.2469754783294036`, "Electronvolts"], 
+              Quantity[18123.08023900974, "Centimeters"^(-1)]}], 
+            "Charting`Private`Tag#6"], 
+           Annotation[
+            Tooltip[{
+              Hue[0.08640786499873876, 0.6, 0.6], 
+              Directive[
+               PointSize[0.012833333333333334`], 
+               AbsoluteThickness[2], FontFamily -> "Arial", 
+               GrayLevel[0]], 
+              
+              Line[{{18884.826182096174`, 0.}, {18884.826182096174`, 1.}, {
+               18884.826182096174`, 1.}}]}, {
+              Quantity[2.3414199343633104`, "Electronvolts"], 
+              Quantity[18884.826182096174`, "Centimeters"^(-1)]}], 
+            "Charting`Private`Tag#7"], 
+           Annotation[
+            Tooltip[{
+              Hue[0.3224758424985268, 0.6, 0.6], 
+              Directive[
+               PointSize[0.012833333333333334`], 
+               AbsoluteThickness[2], FontFamily -> "Arial", 
+               GrayLevel[0]], 
+              
+              Line[{{20167.155391470213`, 0.}, {20167.155391470213`, 1.}, {
+               20167.155391470213`, 1.}}]}, {
+              Quantity[2.5004084865635536`, "Electronvolts"], 
+              Quantity[20167.155391470213`, "Centimeters"^(-1)]}], 
+            "Charting`Private`Tag#8"], 
+           Annotation[
+            Tooltip[{
+              Hue[0.5585438199983166, 0.6, 0.6], 
+              Directive[
+               PointSize[0.012833333333333334`], 
+               AbsoluteThickness[2], FontFamily -> "Arial", 
+               GrayLevel[0]], 
+              
+              Line[{{21849.284342216757`, 0.}, {21849.284342216757`, 1.}, {
+               21849.284342216757`, 1.}}]}, {
+              Quantity[2.708965887064363, "Electronvolts"], 
+              Quantity[21849.284342216757`, "Centimeters"^(-1)]}], 
+            "Charting`Private`Tag#9"], 
+           Annotation[
+            Tooltip[{
+              Hue[0.7946117974981064, 0.6, 0.6], 
+              Directive[
+               PointSize[0.012833333333333334`], 
+               AbsoluteThickness[2], FontFamily -> "Arial", 
+               GrayLevel[0]], 
+              
+              Line[{{22100.72754053272, 0.}, {22100.72754053272, 1.}, {
+               22100.72754053272, 1.}}]}, {
+              Quantity[2.74014086909598, "Electronvolts"], 
+              Quantity[22100.72754053272, "Centimeters"^(-1)]}], 
+            "Charting`Private`Tag#10"], 
+           Annotation[
+            Tooltip[{
+              Hue[0.030679774997896203`, 0.6, 0.6], 
+              Directive[
+               PointSize[0.012833333333333334`], 
+               AbsoluteThickness[2], FontFamily -> "Arial", 
+               GrayLevel[0]], 
+              
+              Line[{{23930.09746790646, 0.}, {23930.09746790646, 1.}, {
+               23930.09746790646, 1.}}]}, {
+              Quantity[2.966953823262244, "Electronvolts"], 
+              Quantity[23930.09746790646, "Centimeters"^(-1)]}], 
+            "Charting`Private`Tag#11"], 
+           Annotation[
+            Tooltip[{
+              Hue[0.266747752497686, 0.6, 0.6], 
+              Directive[
+               PointSize[0.012833333333333334`], 
+               AbsoluteThickness[2], FontFamily -> "Arial", 
+               GrayLevel[0]], 
+              
+              Line[{{26058.222489433563`, 0.}, {26058.222489433563`, 1.}, {
+               26058.222489433563`, 1.}}]}, {
+              Quantity[3.230807686685403, "Electronvolts"], 
+              Quantity[26058.222489433563`, "Centimeters"^(-1)]}], 
+            "Charting`Private`Tag#12"], 
+           Annotation[
+            Tooltip[{
+              Hue[0.5028157299974758, 0.6, 0.6], 
+              Directive[
+               PointSize[0.012833333333333334`], 
+               AbsoluteThickness[2], FontFamily -> "Arial", 
+               GrayLevel[0]], 
+              
+              Line[{{26561.905399280164`, 0.}, {26561.905399280164`, 1.}, {
+               26561.905399280164`, 1.}}]}, {
+              Quantity[3.293256405796783, "Electronvolts"], 
+              Quantity[26561.905399280164`, "Centimeters"^(-1)]}], 
+            "Charting`Private`Tag#13"], 
+           Annotation[
+            Tooltip[{
+              Hue[0.7388837074972656, 0.6, 0.6], 
+              Directive[
+               PointSize[0.012833333333333334`], 
+               AbsoluteThickness[2], FontFamily -> "Arial", 
+               GrayLevel[0]], 
+              
+              Line[{{27215.86845983685, 0.}, {27215.86845983685, 1.}, {
+               27215.86845983685, 1.}}]}, {
+              Quantity[3.3743374881197075`, "Electronvolts"], 
+              Quantity[27215.86845983685, "Centimeters"^(-1)]}], 
+            "Charting`Private`Tag#14"], 
+           Annotation[
+            Tooltip[{
+              Hue[0.9749516849970554, 0.6, 0.6], 
+              Directive[
+               PointSize[0.012833333333333334`], 
+               AbsoluteThickness[2], FontFamily -> "Arial", 
+               GrayLevel[0]], 
+              
+              Line[{{27386.89277086949, 0.}, {27386.89277086949, 1.}, {
+               27386.89277086949, 1.}}]}, {
+              Quantity[3.395541799308561, "Electronvolts"], 
+              Quantity[27386.89277086949, "Centimeters"^(-1)]}], 
+            "Charting`Private`Tag#15"]}}, {{}, {}}}], PlotRange -> 
+       Dynamic[qlanth`Private`range$$], AspectRatio -> 0.125, AxesOrigin -> 
+       If[False, 
+         Dynamic[
+          Mean[
+           Transpose[qlanth`Private`range$$]]], 
+         AbsoluteOptions[AxesOrigin]], 
+       Apply[
+       Sequence, {
+        DisplayFunction -> Identity, DisplayFunction -> Identity, 
+         DisplayFunction -> Identity, AspectRatio -> Rational[1, 8], 
+         Axes -> {True, True}, AxesLabel -> {None, None}, 
+         AxesOrigin -> {0, 0}, Background -> "Automatic", 
+         BaseStyle -> {FontFamily -> "Arial"}, DisplayFunction :> Identity, 
+         Frame -> {{True, True}, {True, True}}, 
+         FrameLabel -> {{None, None}, {
+            HoldForm["E (cm^-1)"], None}}, FrameStyle -> Directive[15, 
+           Dashing[{Small, Small}], 
+           Thickness[Tiny]], 
+         FrameTicks -> {{None, None}, {Automatic, Automatic}}, 
+         GridLines -> {None, None}, GridLinesStyle -> Directive[
+           GrayLevel[0.5, 0.4]], ImageSize -> 600, 
+         Method -> {
+          "AxisPadding" -> Scaled[0.02], "DefaultBoundaryStyle" -> Automatic, 
+           "DefaultGraphicsInteraction" -> {
+            "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+             "Effects" -> {
+              "Highlight" -> {"ratio" -> 2}, 
+               "HighlightPoint" -> {"ratio" -> 2}, 
+               "Droplines" -> {
+                "freeformCursorMode" -> True, 
+                 "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+           "DefaultMeshStyle" -> AbsolutePointSize[6], 
+           "DefaultPlotStyle" -> {
+             Directive[
+              RGBColor[0.368417, 0.506779, 0.709798], 
+              AbsoluteThickness[2]], 
+             Directive[
+              RGBColor[0.880722, 0.611041, 0.142051], 
+              AbsoluteThickness[2]], 
+             Directive[
+              RGBColor[0.560181, 0.691569, 0.194885], 
+              AbsoluteThickness[2]], 
+             Directive[
+              RGBColor[0.922526, 0.385626, 0.209179], 
+              AbsoluteThickness[2]], 
+             Directive[
+              RGBColor[0.528488, 0.470624, 0.701351], 
+              AbsoluteThickness[2]], 
+             Directive[
+              RGBColor[0.772079, 0.431554, 0.102387], 
+              AbsoluteThickness[2]], 
+             Directive[
+              RGBColor[0.363898, 0.618501, 0.782349], 
+              AbsoluteThickness[2]], 
+             Directive[
+              RGBColor[1, 0.75, 0], 
+              AbsoluteThickness[2]], 
+             Directive[
+              RGBColor[0.647624, 0.37816, 0.614037], 
+              AbsoluteThickness[2]], 
+             Directive[
+              RGBColor[0.571589, 0.586483, 0.], 
+              AbsoluteThickness[2]], 
+             Directive[
+              RGBColor[0.915, 0.3325, 0.2125], 
+              AbsoluteThickness[2]], 
+             Directive[
+              RGBColor[0.40082222609352647`, 0.5220066643438841, 0.85], 
+              AbsoluteThickness[2]], 
+             Directive[
+              RGBColor[
+              0.9728288904374106, 0.621644452187053, 0.07336199581899142], 
+              AbsoluteThickness[2]], 
+             Directive[
+              RGBColor[0.736782672705901, 0.358, 0.5030266573755369], 
+              AbsoluteThickness[2]], 
+             Directive[
+              RGBColor[0.28026441037696703`, 0.715, 0.4292089322474965], 
+              AbsoluteThickness[2]]}, "DomainPadding" -> Scaled[0.02], 
+           "PointSizeFunction" -> "SmallPointSize", "RangePadding" -> 
+           Scaled[0.05], "OptimizePlotMarkers" -> True, "IncludeHighlighting" -> 
+           "CurrentSet", "HighlightStyle" -> Automatic, "OptimizePlotMarkers" -> 
+           True, "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+               Identity[
+                Part[#, 1]], 
+               Identity[
+                Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+               Identity[
+                Part[#, 1]], 
+               Identity[
+                Part[#, 2]]}& )}}, PlotLabel -> Style["", 15, Bold], 
+         PlotRange -> {{0, 27386.89277086949}, {0., 1.}}, PlotRangeClipping -> 
+         True, PlotRangePadding -> {{
+            Scaled[0.02], 
+            Scaled[0.02]}, {0, 0}}, Ticks -> {Automatic, Automatic}}]], 
+      StandardForm],
+     ImageSizeCache->{600., {64.783837890625, 70.439599609375}}],
+    EventHandlerTag[{{"MouseDown", 1} :> (qlanth`Private`first$$ = 
+       MousePosition["Graphics"]), {"MouseDragged", 1} :> (
+       qlanth`Private`dragging$$ = True; 
+       qlanth`Private`second$$ = MousePosition["Graphics"]), 
+      "MouseClicked" :> (
+       If[CurrentValue["MouseClickCount"] == 2, 
+         qlanth`Private`range$$ = {{0., 27386.89277086949}, {0., 1.}}]; 
+       Null), {"MouseUp", 1} :> 
+      If[qlanth`Private`dragging$$, qlanth`Private`dragging$$ = False; 
+        qlanth`Private`range$$ = ({{
+            qlanth`Private`rx1$$, qlanth`Private`rx2$$}, {
+            qlanth`Private`ry1$$, qlanth`Private`ry2$$}} = 
+          Transpose[{qlanth`Private`first$$, qlanth`Private`second$$}]); 
+        Part[qlanth`Private`range$$, 2] = {0, 1}], {"MouseDown", 2} :> (
+       qlanth`Private`first$$ = ({qlanth`Private`sx1, qlanth`Private`sy1} = 
+        MousePosition["Graphics"])), {"MouseDragged", 2} :> (
+       qlanth`Private`second$$ = ({qlanth`Private`sx2, qlanth`Private`sy2} = 
+         MousePosition["Graphics"]); 
+       qlanth`Private`rx1$$ = 
+        qlanth`Private`rx1$$ - (qlanth`Private`sx2 - qlanth`Private`sx1); 
+       qlanth`Private`rx2$$ = 
+        qlanth`Private`rx2$$ - (qlanth`Private`sx2 - qlanth`Private`sx1); 
+       qlanth`Private`ry1$$ = 
+        qlanth`Private`ry1$$ - (qlanth`Private`sy2 - qlanth`Private`sy1); 
+       qlanth`Private`ry2$$ = 
+        qlanth`Private`ry2$$ - (qlanth`Private`sy2 - qlanth`Private`sy1); 
+       qlanth`Private`range$$ = {{
+          qlanth`Private`rx1$$, qlanth`Private`rx2$$}, {
+          qlanth`Private`ry1$$, qlanth`Private`ry2$$}}; 
+       Part[qlanth`Private`range$$, 2] = {0, 1}; Null), Method -> 
+      "Preemptive", PassEventsDown -> Automatic, PassEventsUp -> True}]]],
+  DynamicModuleValues:>{}]], "Output",
+ CellChangeTimes->{
+  3.946320287122671*^9, {3.946320357330944*^9, 3.9463203807622433`*^9}},
+ CellLabel->"Out[330]=",
+ CellID->1582717401,ExpressionUUID->"e5489258-a56f-4e43-b07f-dd8a6442cabb"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "More Examples",
+ Cell[BoxData[
+  TemplateBox[{"MoreExamples", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell["Extended examples in standardized sections.", "MoreInfoText"], 
+       BaseStyle -> "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "882249c2-ac17-4319-b6d1-285d54e5b3a5"]
+}], "ExtendedExamplesSection",
+ CellTags->"ExtendedExamples",
+ CellID->1942355097,ExpressionUUID->"4c6fb7c4-25c0-4054-a507-113ea84e1f47"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Scope", "ExampleSection",ExpressionUUID->
+   "079c4563-11f7-409d-b1fa-d660b8b1ca82"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->1263197232,ExpressionUUID->"355a12e1-065d-47ae-9346-bbddf3aeb3e6"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Generalizations & Extensions", "ExampleSection",ExpressionUUID->
+   "109b8206-99f6-405e-8744-96bdd24beb9f"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->532543982,ExpressionUUID->"1e47d949-311c-4182-a80a-711ef6da5c68"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Options", "ExampleSection",ExpressionUUID->
+   "978762ec-814d-4993-8bf8-5a4bcce1f87c"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->1902348425,ExpressionUUID->"fedd8aba-d5a8-4aa3-8310-da84a740d060"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "XXXX", "ExampleSubsection",ExpressionUUID->
+   "007b0faa-6e04-4bd9-abb7-b412a599cfb6"],
+  $Line = 0; Null]], "ExampleSubsection",
+ CellChangeTimes->{{3.946320112710745*^9, 3.946320113622793*^9}},
+ CellID->1033442439,ExpressionUUID->"4d89bf16-c054-4b88-a2ab-506ec3bea093"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "XXXX", "ExampleSubsection",ExpressionUUID->
+   "2c09bae6-ad7f-4ce9-a21b-46c57a3f315f"],
+  $Line = 0; Null]], "ExampleSubsection",
+ CellID->219335337,ExpressionUUID->"210b5934-ffa5-4ce2-99bc-6814fcb1bf7f"]
+}, Open  ]],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Applications", "ExampleSection",ExpressionUUID->
+   "0c819c31-ad43-4b3a-aa75-6c4d5233d848"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->1287070707,ExpressionUUID->"83864e88-8111-477b-8611-e0f898660480"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Properties & Relations", "ExampleSection",ExpressionUUID->
+   "57612c78-8a83-43ed-ad10-463262db2025"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->194596318,ExpressionUUID->"d687385b-edbe-48c8-8f8b-eff77189b6ea"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Possible Issues", "ExampleSection",ExpressionUUID->
+   "778d2a17-c708-47f4-b313-69dad6bd5257"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->2110205892,ExpressionUUID->"19e8fe41-e351-43dd-a448-9932eb5b5dac"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Interactive Examples", "ExampleSection",ExpressionUUID->
+   "7867f4a2-254e-4504-9352-9f810db20878"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->537996639,ExpressionUUID->"b99bc754-bc82-4fd2-82e8-32ae4021b9f7"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Neat Examples", "ExampleSection",ExpressionUUID->
+   "ce11e6be-2c58-41ed-8441-239b92c64f40"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->1203357803,ExpressionUUID->"df7694c5-92b5-4e8c-ba07-6f07ef1dfa8c"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Metadata", "MetadataSection",
+ CellID->1981091222,ExpressionUUID->"6bd73415-f46a-4e82-9299-ae2ec3e3c446"],
+
+Cell[TextData[{
+ "New in: ",
+ Cell["1.0.0", "HistoryData",
+  CellTags->"New",ExpressionUUID->"8de50073-8d65-4538-b783-3b59f687d2b6"],
+ " | Modified in: ",
+ Cell[" ", "HistoryData",
+  CellTags->"Modified",ExpressionUUID->"e162d9b9-22a3-45dc-9a5f-65885a4f7125"],
+ " | Obsolete in: ",
+ Cell[" ", "HistoryData",
+  CellTags->"Obsolete",ExpressionUUID->
+  "1727167f-4931-450f-bce0-d0c54899205a"]
+}], "History",
+ CellChangeTimes->{{3.864923683926749*^9, 3.864923685610183*^9}, {
+  3.946403989032839*^9, 3.9464039896527987`*^9}},
+ CellID->1613705066,ExpressionUUID->"2cdb774d-2eee-4842-ba47-774c2ace8851"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Categorization",
+ Cell[BoxData[
+  TemplateBox[{"Metadata", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell[
+       "Metadata such as page URI, context, and type of documentation page.", 
+        "MoreInfoText"], BaseStyle -> "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "1b01d7fb-172b-4116-bde4-f85fa83d5a44"]
+}], "CategorizationSection",
+ CellID->970066299,ExpressionUUID->"f36c2ce1-08bf-49f7-8761-041dd7f615dc"],
+
+Cell["Symbol", "Categorization",
+ CellLabel->"Entity Type",
+ CellID->208439269,ExpressionUUID->"3bb2590c-dbaf-49ea-80be-2048fe7d90ca"],
+
+Cell["DavidLizarazo/qlanth", "Categorization",
+ CellLabel->"Paclet Name",
+ CellID->692965826,ExpressionUUID->"c5eb0e86-af07-482f-8670-88d40da2c489"],
+
+Cell["DavidLizarazo`qlanth`", "Categorization",
+ CellLabel->"Context",
+ CellID->872819901,ExpressionUUID->"7e785796-5d3a-40e2-b318-72fd4bc147d6"],
+
+Cell["DavidLizarazo/qlanth/ref/LevelSolver", "Categorization",
+ CellLabel->"URI",
+ CellID->23283450,ExpressionUUID->"65f0ef57-6538-4bbf-b5ba-37783523e494"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Keywords", "KeywordsSection",
+ CellID->482920396,ExpressionUUID->"b0bc395f-0770-4a39-9110-8e76e2381c62"],
+
+Cell["XXXX", "Keywords",
+ CellID->1102393559,ExpressionUUID->"b438f4ec-6d1f-448b-884b-8fd746649169"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Syntax Templates", "TemplatesSection",
+ CellID->1587123444,ExpressionUUID->"66965e09-8255-467a-a68a-a5947dca1862"],
+
+Cell[BoxData[""], "Template",
+ CellLabel->"Additional Function Template",
+ CellID->889343921,ExpressionUUID->"88b6e72c-3a9b-4192-83cf-addf6a4c2a94"],
+
+Cell[BoxData[""], "Template",
+ CellLabel->"Arguments Pattern",
+ CellID->717097127,ExpressionUUID->"9ec0a663-1831-4799-a192-d0b65e5c03c3"],
+
+Cell[BoxData[""], "Template",
+ CellLabel->"Local Variables",
+ CellID->573186525,ExpressionUUID->"51b25765-bcd8-4810-bf85-0a3e85186097"],
+
+Cell[BoxData[""], "Template",
+ CellLabel->"Color Equal Signs",
+ CellID->2081768880,ExpressionUUID->"e99ea74b-6b73-4f19-9478-27ba7bcb6bef"]
+}, Closed]]
+}, Open  ]]
+},
+WindowSize->{700, 770},
+WindowMargins->{{Automatic, 477}, {129, Automatic}},
+TaggingRules-><|"Paclet" -> "DavidLizarazo/qlanth"|>,
+FrontEndVersion->"14.1 for Mac OS X ARM (64-bit) (July 16, 2024)",
+StyleDefinitions->FrontEnd`FileName[{"Wolfram"}, "FunctionPageStylesExt.nb", 
+  CharacterEncoding -> "UTF-8"],
+ExpressionUUID->"90d43a52-4f42-464a-b3ec-dc6e3eb11bf1"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "ExtendedExamples"->{
+  Cell[37019, 877, 488, 13, 56, "ExtendedExamplesSection",ExpressionUUID->"4c6fb7c4-25c0-4054-a507-113ea84e1f47",
+   CellTags->"ExtendedExamples",
+   CellID->1942355097]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"ExtendedExamples", 43487, 1067}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[576, 22, 109, 1, 72, "ObjectName",ExpressionUUID->"f1dcf25c-089f-44b7-8897-1503bef7262e",
+ CellID->1070006006],
+Cell[688, 25, 1056, 24, 110, "Usage",ExpressionUUID->"e02dd107-4d0d-45a2-be43-a1c87ef283a3",
+ CellID->562882864],
+Cell[1747, 51, 3658, 61, 791, "Notes",ExpressionUUID->"e4ca5ceb-9cf1-4839-9868-0d8ea9fadf2a",
+ CellID->706830213]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5442, 117, 459, 13, 38, "SeeAlsoSection",ExpressionUUID->"32edfa81-df4b-44b2-a880-fa6fcc008042",
+ CellID->1963338334],
+Cell[5904, 132, 1810, 45, 21, "SeeAlso",ExpressionUUID->"ee51f508-9dd5-4adc-bcde-d6ababcc88ce",
+ CellID->1741143383]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7751, 182, 436, 12, 39, "TechNotesSection",ExpressionUUID->"96940dbc-f6cd-494e-9f79-8844909a9fc8",
+ CellID->1784664059],
+Cell[8190, 196, 100, 1, 17, "Tutorials",ExpressionUUID->"07b862ef-d1a9-4d85-b53b-c4596e296125",
+ CellID->944741964]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[8327, 202, 118, 1, 37, "MoreAboutSection",ExpressionUUID->"581328ae-6672-439b-8899-31aa2ad14400",
+ CellID->1931586677],
+Cell[8448, 205, 100, 1, 17, "MoreAbout",ExpressionUUID->"ecc038b6-9acc-4a78-be28-6eba41a0e738",
+ CellID->666988640]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[8585, 211, 472, 13, 38, "RelatedLinksSection",ExpressionUUID->"964cf8d6-454a-4083-b0ea-3c85d04d16cb",
+ CellID->213435140],
+Cell[9060, 226, 103, 1, 17, "RelatedLinks",ExpressionUUID->"eb812bfd-13df-4739-bab8-631166469be3",
+ CellID->906707490]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[9200, 232, 530, 14, 68, "ExamplesInitializationSection",ExpressionUUID->"e8571273-b342-4d20-ada5-5cdf7828d316",
+ CellID->488825318],
+Cell[9733, 248, 181, 3, 46, "ExampleInitialization",ExpressionUUID->"ba29d5f4-468c-43e8-bfb9-411e15eb3870",
+ CellID->1562169851]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[9951, 256, 442, 12, 70, "PrimaryExamplesSection",ExpressionUUID->"22d8185f-cdc6-4e73-ab65-1479ceae1fdb",
+ CellID->253617535],
+Cell[10396, 270, 345, 8, 23, "ExampleText",ExpressionUUID->"37f3b9f3-211b-4436-8b2f-ca10f527a7dd",
+ CellID->1900281355],
+Cell[CellGroupData[{
+Cell[10766, 282, 2298, 53, 214, "Input",ExpressionUUID->"86e085b8-edd3-41d2-b06d-6dafff026a68",
+ CellID->1614837179],
+Cell[13067, 337, 23903, 534, 163, "Output",ExpressionUUID->"e5489258-a56f-4e43-b07f-dd8a6442cabb",
+ CellID->1582717401]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[37019, 877, 488, 13, 56, "ExtendedExamplesSection",ExpressionUUID->"4c6fb7c4-25c0-4054-a507-113ea84e1f47",
+ CellTags->"ExtendedExamples",
+ CellID->1942355097],
+Cell[37510, 892, 242, 5, 32, "ExampleSection",ExpressionUUID->"355a12e1-065d-47ae-9346-bbddf3aeb3e6",
+ CellID->1263197232],
+Cell[37755, 899, 264, 5, 20, "ExampleSection",ExpressionUUID->"1e47d949-311c-4182-a80a-711ef6da5c68",
+ CellID->532543982],
+Cell[CellGroupData[{
+Cell[38044, 908, 244, 5, 20, "ExampleSection",ExpressionUUID->"fedd8aba-d5a8-4aa3-8310-da84a740d060",
+ CellID->1902348425],
+Cell[38291, 915, 313, 6, 23, "ExampleSubsection",ExpressionUUID->"4d89bf16-c054-4b88-a2ab-506ec3bea093",
+ CellID->1033442439],
+Cell[38607, 923, 246, 5, 19, "ExampleSubsection",ExpressionUUID->"210b5934-ffa5-4ce2-99bc-6814fcb1bf7f",
+ CellID->219335337]
+}, Open  ]],
+Cell[38868, 931, 249, 5, 32, "ExampleSection",ExpressionUUID->"83864e88-8111-477b-8611-e0f898660480",
+ CellID->1287070707],
+Cell[39120, 938, 258, 5, 20, "ExampleSection",ExpressionUUID->"d687385b-edbe-48c8-8f8b-eff77189b6ea",
+ CellID->194596318],
+Cell[39381, 945, 252, 5, 20, "ExampleSection",ExpressionUUID->"19e8fe41-e351-43dd-a448-9932eb5b5dac",
+ CellID->2110205892],
+Cell[39636, 952, 256, 5, 20, "ExampleSection",ExpressionUUID->"b99bc754-bc82-4fd2-82e8-32ae4021b9f7",
+ CellID->537996639],
+Cell[39895, 959, 250, 5, 20, "ExampleSection",ExpressionUUID->"df7694c5-92b5-4e8c-ba07-6f07ef1dfa8c",
+ CellID->1203357803]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[40182, 969, 111, 1, 71, "MetadataSection",ExpressionUUID->"6bd73415-f46a-4e82-9299-ae2ec3e3c446",
+ CellID->1981091222],
+Cell[40296, 972, 597, 14, 25, "History",ExpressionUUID->"2cdb774d-2eee-4842-ba47-774c2ace8851",
+ CellID->1613705066],
+Cell[CellGroupData[{
+Cell[40918, 990, 484, 13, 20, "CategorizationSection",ExpressionUUID->"f36c2ce1-08bf-49f7-8761-041dd7f615dc",
+ CellID->970066299],
+Cell[41405, 1005, 134, 2, 70, "Categorization",ExpressionUUID->"3bb2590c-dbaf-49ea-80be-2048fe7d90ca",
+ CellID->208439269],
+Cell[41542, 1009, 148, 2, 70, "Categorization",ExpressionUUID->"c5eb0e86-af07-482f-8670-88d40da2c489",
+ CellID->692965826],
+Cell[41693, 1013, 145, 2, 70, "Categorization",ExpressionUUID->"7e785796-5d3a-40e2-b318-72fd4bc147d6",
+ CellID->872819901],
+Cell[41841, 1017, 155, 2, 70, "Categorization",ExpressionUUID->"65f0ef57-6538-4bbf-b5ba-37783523e494",
+ CellID->23283450]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[42033, 1024, 110, 1, 20, "KeywordsSection",ExpressionUUID->"b0bc395f-0770-4a39-9110-8e76e2381c62",
+ CellID->482920396],
+Cell[42146, 1027, 100, 1, 70, "Keywords",ExpressionUUID->"b438f4ec-6d1f-448b-884b-8fd746649169",
+ CellID->1102393559]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[42283, 1033, 120, 1, 20, "TemplatesSection",ExpressionUUID->"66965e09-8255-467a-a68a-a5947dca1862",
+ CellID->1587123444],
+Cell[42406, 1036, 148, 2, 70, "Template",ExpressionUUID->"88b6e72c-3a9b-4192-83cf-addf6a4c2a94",
+ CellID->889343921],
+Cell[42557, 1040, 137, 2, 70, "Template",ExpressionUUID->"9ec0a663-1831-4799-a192-d0b65e5c03c3",
+ CellID->717097127],
+Cell[42697, 1044, 135, 2, 70, "Template",ExpressionUUID->"51b25765-bcd8-4810-bf85-0a3e85186097",
+ CellID->573186525],
+Cell[42835, 1048, 138, 2, 70, "Template",ExpressionUUID->"e99ea74b-6b73-4f19-9478-27ba7bcb6bef",
+ CellID->2081768880]
+}, Closed]]
+}, Open  ]]
+}
+]
+*)
+

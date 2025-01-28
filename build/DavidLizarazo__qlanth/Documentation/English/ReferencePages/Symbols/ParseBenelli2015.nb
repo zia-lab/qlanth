@@ -1,0 +1,469 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     18099,        459]
+NotebookOptionsPosition[     13859,        374]
+NotebookOutlinePosition[     16103,        425]
+CellTagsIndexPosition[     16018,        420]
+WindowTitle->ParseBenelli2015
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[GridBox[{
+   {GridBox[{
+      {
+       ItemBox[Cell[BoxData[
+         RowBox[{
+          TemplateBox[{12},
+           "Spacer1"], Cell["DAVID LIZARAZO/QLANTH SYMBOL", "PacletNameCell",
+           TextAlignment->Center,ExpressionUUID->
+           "bc9d6e5c-4a34-46ac-8306-a3a655c92d9a"], 
+          TemplateBox[{8},
+           "Spacer1"]}]],
+         TextAlignment->Center,ExpressionUUID->
+         "0cbef980-a017-4c08-b5af-57fd8ff52a4c"],
+        Background->RGBColor[0.490196, 0.576471, 0.690196],
+        ItemSize->Full], ""}
+     },
+     GridBoxAlignment->{"Rows" -> {{Center}}},
+     GridBoxItemSize->{"Columns" -> {Full, 
+         Scaled[0.02]}, "Rows" -> {{2.5}}}], Cell[TextData[Cell[BoxData[
+     TagBox[
+      ActionMenuBox[
+       FrameBox[Cell[TextData[{
+         "URL",
+         " ",
+         Cell[BoxData[
+          GraphicsBox[
+           {GrayLevel[0.66667], Thickness[0.13], 
+            LineBox[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]},
+           AspectRatio->1,
+           ImageSize->20,
+           PlotRange->{{-3, 4}, {-1, 1}}]],ExpressionUUID->
+          "bc4a5505-8a01-499c-a75d-a39accdc1e58"]
+        }],ExpressionUUID->"5cae33a9-f6cc-4fbf-9260-e6021a993ee0"],
+        StripOnInput->False],{
+       "\"DavidLizarazo/qlanth/ref/ParseBenelli2015\"" :> None, 
+        "\"Copy Wolfram Documentation Center URL\"" :> 
+        Module[{DocumentationSearch`Private`nb$}, 
+          DocumentationSearch`Private`nb$ = 
+           NotebookPut[
+            Notebook[{Cell["DavidLizarazo/qlanth/ref/ParseBenelli2015"]}, 
+              Visible -> DocumentationBuild`Make`Private`visible$77188]]; 
+          SelectionMove[DocumentationSearch`Private`nb$, All, Notebook]; 
+          FrontEndTokenExecute[DocumentationSearch`Private`nb$, "Copy"]; 
+          NotebookClose[DocumentationSearch`Private`nb$]; Null], Delimiter, 
+        "\"Copy web URL\"" :> 
+        Module[{DocumentationSearch`Private`nb$}, 
+          DocumentationSearch`Private`nb$ = 
+           NotebookPut[
+            Notebook[{
+              Cell[BoxData[
+                MakeBoxes[
+                 Hyperlink[
+                  "http://reference.wolfram.com/language/DavidLizarazo/qlanth/\
+ref/ParseBenelli2015.html"], StandardForm]], "Input", TextClipboardType -> 
+                "PlainText"]}, Visible -> 
+              DocumentationBuild`Make`Private`visible$77188]]; 
+          SelectionMove[DocumentationSearch`Private`nb$, All, Notebook]; 
+          FrontEndTokenExecute[DocumentationSearch`Private`nb$, "Copy"]; 
+          NotebookClose[DocumentationSearch`Private`nb$]; Null], 
+        "\"Go to web URL\"" :> 
+        FrontEndExecute[{
+          NotebookLocate[{
+            URL[If[TrueQ[False], 
+                "http://reference.wolfram.com/system-modeler/", 
+                "http://reference.wolfram.com/language/"] <> 
+              "DavidLizarazo/qlanth/ref/ParseBenelli2015" <> ".html"], 
+             None}]}]},
+       Appearance->None,
+       MenuAppearance->Automatic,
+       MenuStyle->"URLMenu"],
+      MouseAppearanceTag["LinkHand"]]],
+     LineSpacing->{1.4, 0},ExpressionUUID->
+     "9cbe250f-40b3-44c1-90c1-173e048675a4"]], "AnchorBar",
+     CacheGraphics->False,ExpressionUUID->
+     "f2117ad1-ebf9-4eab-90e5-2983eef753f9"]}
+  }]], "AnchorBarGrid",
+ GridBoxOptions->{GridBoxItemSize->{"Columns" -> {
+     Scaled[0.65], {
+      Scaled[0.34]}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}}, 
+   "RowsIndexed" -> {}}},
+ CellID->1,ExpressionUUID->"6e8916b6-fd94-4bea-84b2-2031726c9503"],
+
+Cell["DavidLizarazo`qlanth`", "ContextNameCell",ExpressionUUID->"fc1f9b1e-d3f3-4b12-8237-60640ad824c2"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[GridBox[{
+   {Cell[TextData[{
+     Cell[
+     "ParseBenelli2015", "ObjectName",ExpressionUUID->
+      "2ef00737-69cd-48b2-aa88-7bf9295b6239"],
+     Cell[BoxData[
+      TemplateBox[{8},
+       "Spacer1"]],ExpressionUUID->"9f42f6a0-650c-4537-88c5-a5bba04cc4c5"],
+     Cell[BoxData[
+     ""], "ObjectNameTranslation",ExpressionUUID->
+      "3707a200-5937-433e-b7c0-1c88d00b186a"]
+    }],ExpressionUUID->"44c2ea64-8781-4c16-8fae-870dd87f4823"], 
+    "\[SpanFromLeft]"}
+  }]], "ObjectNameGrid",ExpressionUUID->"c501d119-5e91-4dfd-9d40-\
+5f4c265bc959"],
+
+Cell[BoxData[GridBox[{
+   {"", Cell[TextData[{
+     Cell[BoxData[
+      RowBox[{"ParseBenelli2015", "[", "]"}]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "2f7b6278-c994-46d6-af96-a021bff7e707"],
+     " \[LineSeparator]parses the data from file \
+/data/benelli_and_gatteschi_table3p3.csv. This data provides the form that \
+the crystal field has under different point group symmetries. This function \
+parses that data into an association with keys equal to strings representing \
+any of the 32 crystallographic point groups."
+    }],ExpressionUUID->"ea9107b5-f8f6-44aa-bef3-0947da43979b"]}
+  }]], "Usage",
+ CellID->954998051,ExpressionUUID->"503a92c5-aa73-498a-9cf6-cbbaab35225d"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[Cell[BoxData[
+ ButtonBox[Cell[TextData[{
+   Cell[BoxData[
+    DynamicBox[ToBoxes[
+      If[
+       MatchQ[
+        CurrentValue[
+         EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, 
+         Closed], 
+        Alternatives[Open, True]], 
+       Style[
+        Graphics[{
+          Thickness[0.18], 
+          RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+          Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+         PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+        0.68 Inherited], 
+       Rotate[
+        Style[
+         Graphics[{
+           Thickness[0.18], 
+           RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+           Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+          PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+         0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+     ImageSizeCache->{
+      13.600000000000001`, {-0.1685058593749993, 13.768505859375}}]],
+    ExpressionUUID->"fec66830-fa64-4d17-b0e0-1ecb607893ee"],
+   Cell[BoxData[
+    TemplateBox[{1},
+     "Spacer1"]],ExpressionUUID->"070cc776-9a8f-4ac8-b741-2995caa22d93"],
+   "Details and Options"
+  }], "NotesFrameText",ExpressionUUID->"9f218fae-a13b-4e7c-88d4-fc71e7a20b31"],
+  Appearance->{Automatic, None, "Normal", Automatic},
+  BaseStyle->None,
+  ButtonFunction:>(FrontEndExecute[{
+     FrontEnd`SelectionMove[
+      FrontEnd`SelectedNotebook[], All, ButtonCell], 
+     FrontEndToken["OpenCloseGroup"], 
+     FrontEnd`SelectionMove[
+      FrontEnd`SelectedNotebook[], After, CellContents]}]& ),
+  Evaluator->None,
+  Method->
+   "Preemptive"]],ExpressionUUID->"76cc4315-de57-4357-b5db-4dc4ffefedf2"]], \
+"NotesSection",
+ WholeCellGroupOpener->True,
+ CellGroupingRules->{"SectionGrouping", 50},
+ CacheGraphics->False,
+ CellID->911423502,ExpressionUUID->"aab258ce-b9a8-4e1b-8a0c-c0c3681dbfad"],
+
+Cell[TextData[{
+ "Data  is from Table 3.3 of",
+ StyleBox[" Benelli, Cristiano, and Dante Gatteschi",
+  FontSlant->"Italic"],
+ ". ",
+ StyleBox["\"Introduction to Molecular Magnetism: From Transition Metals to \
+Lanthanides\"",
+  FontWeight->"Bold"],
+ ". John Wiley & Sons, 2015."
+}], "Notes",
+ CellID->359465479,ExpressionUUID->"19076b88-ba50-4bd8-9bfb-1cb991565148"],
+
+Cell[TextData[{
+ "Options\[LineSeparator]",
+ Cell[BoxData[GridBox[{
+    {Cell[
+     "      ", "TableRowIcon",ExpressionUUID->
+      "ef0cbe66-9698-4119-b97b-a2c80730ac48"], "\"\<Export\>\"", "False", 
+     Cell["\<\
+If True then the result is saved to /data/crystalFieldFunctionalForms.m.\
+\>", "TableText",ExpressionUUID->"2ea0a34e-3c3b-4014-b09e-221c074c53c3"]}
+   }]], "3ColumnTableMod",
+  GridBoxOptions->{
+  GridBoxBackground->{"Columns" -> {{None}}, "Rows" -> {{None}}},
+  GridBoxDividers->{"Rows" -> {{True, True}}}},ExpressionUUID->
+  "871dad11-81e3-4014-b470-6b593950fdea"]
+}], "Notes",
+ CellID->635016478,ExpressionUUID->"d0b5ef05-0600-47f4-a63d-806abf3874b9"]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, Closed]]]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  DynamicBox[ToBoxes[
+    If[
+     MatchQ[
+      CurrentValue[
+       EvaluationNotebook[], {
+       TaggingRules, "Openers", "PrimaryExamplesSection"}, Open], 
+      Alternatives[True, Open]], 
+     Style[
+      Graphics[{
+        Thickness[0.18], 
+        RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+        Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+       PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+      0.68 Inherited], 
+     Rotate[
+      Style[
+       Graphics[{
+         Thickness[0.18], 
+         RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+         Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+        PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+       0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+   ImageSizeCache->{
+    13.600000000000001`, {4.251494140625001, 9.348505859375}}]],
+  ExpressionUUID->"fa8b0bcb-5e0b-402a-9991-bc41d69312ba"],
+ Cell[BoxData[
+  TemplateBox[{1},
+   "Spacer1"]],ExpressionUUID->"0c8f82ae-7edb-41a5-ad1b-75a598715740"],
+ "Examples",
+ "\[NonBreakingSpace]\[NonBreakingSpace]",
+ Cell["(1)", "ExampleCount",ExpressionUUID->
+  "66633458-a04d-4bd7-ade1-0b6657025d96"]
+}], "PrimaryExamplesSection",
+ WholeCellGroupOpener->True,
+ CacheGraphics->False,
+ CellTags->"PrimaryExamplesSection",
+ CellID->293944063,ExpressionUUID->"3c513942-f05f-41e6-8bff-2f29f833be3f"],
+
+Cell[BoxData[
+ RowBox[{"Needs", "[", "\"\<DavidLizarazo`qlanth`\>\"", "]"}]], "Input", \
+"ExampleInitialization",
+ CellLabel->"In[1]:=",
+ CellID->1196721248,ExpressionUUID->"f5f76650-d4de-4610-accc-af841cb33fcb"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  DynamicBox[ToBoxes[
+    If[
+     MatchQ[
+      CurrentValue[
+       EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"},
+        Closed], 
+      Alternatives[Open, True]], 
+     Style[
+      Graphics[{
+        Thickness[0.18], 
+        RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+        Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+       PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+      0.68 Inherited], 
+     Rotate[
+      Style[
+       Graphics[{
+         Thickness[0.18], 
+         RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+         Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+        PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+       0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+   ImageSizeCache->{
+    13.600000000000001`, {4.551318359375001, 9.048681640625}}]],
+  ExpressionUUID->"a66212ec-17a0-4cd9-8147-ac93b02b66df"],
+ Cell[BoxData[
+  TemplateBox[{1},
+   "Spacer1"]],ExpressionUUID->"fdcf3772-ead8-474b-84ff-47d6dfe9981a"],
+ "Basic Examples",
+ "\[NonBreakingSpace]\[NonBreakingSpace]",
+ Cell["(1)", "ExampleCount",ExpressionUUID->
+  "9492c26c-745a-4183-8d3a-fd49e7ff84c4"]
+}], "ExampleSection", "ExampleSection",
+ WholeCellGroupOpener->True,
+ CacheGraphics->False,
+ CellID->1105478741,ExpressionUUID->"abb54cd8-35a5-4e53-90c9-39e10dbd0fed"],
+
+Cell["\<\
+For each crystallographic point group an association is provided containing \
+the non - zero parameters that the crystal field has under that symmetry, \
+aliases under which this group might also be known, and a list of constraints \
+(if any) that the non - zero parameters might have among themselves .\
+\>", "ExampleText",
+ CellID->95608504,ExpressionUUID->"d0257a67-bb4d-4b8e-a660-410d73c606a1"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ParseBenelli2015", "[", "]"}], "[", "\"\<Oh\>\"", "]"}]], "Input",
+ CellProlog:>Needs["DavidLizarazo`qlanth`"],
+ CellLabel->"In[1]:=",
+ CellID->574358772,ExpressionUUID->"ada53309-94a1-4501-b234-99b7cebd5692"],
+
+Cell[BoxData[
+ RowBox[{"\[LeftAssociation]", 
+  RowBox[{
+   RowBox[{"\<\"BqkSqk\"\>", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"B04", ",", "B06", ",", "B44", ",", "B46"}], "}"}]}], ",", 
+   RowBox[{"\<\"aliases\"\>", "\[Rule]", 
+    RowBox[{"{", "32", "}"}]}], ",", 
+   RowBox[{"\<\"constraints\"\>", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"B44", "\[Rule]", 
+         RowBox[{
+          SqrtBox[
+           FractionBox["5", "14"]], " ", "B04"}]}], ",", 
+        RowBox[{"B46", "\[Rule]", 
+         RowBox[{
+          RowBox[{"-", 
+           SqrtBox[
+            FractionBox["7", "2"]]}], " ", "B06"}]}]}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"B44", "\[Rule]", 
+         RowBox[{
+          RowBox[{"-", 
+           SqrtBox[
+            FractionBox["5", "14"]]}], " ", "B04"}]}], ",", 
+        RowBox[{"B46", "\[Rule]", 
+         RowBox[{
+          SqrtBox[
+           FractionBox["7", "2"]], " ", "B06"}]}]}], "}"}]}], "}"}]}]}], 
+  "\[RightAssociation]"}]], "Output",
+ CellLabel->"Out[1]=",
+ CellID->308887739,ExpressionUUID->"f16070d1-ddf1-4608-98e0-82e7d19ad685"]
+}, Open  ]]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"}, 
+  Closed]]]]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "PrimaryExamplesSection"}, 
+  Closed]]]],
+
+Cell[" ", "FooterCell",ExpressionUUID->"5b2d8326-02d5-44bc-a54b-9322c4cb87fc"]
+},
+Saveable->False,
+ScreenStyleEnvironment->"Working",
+WindowSize->{900, 830},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+WindowTitle->"ParseBenelli2015",
+TaggingRules->{
+ "ModificationHighlight" -> False, "ColorType" -> "", "LinkTrails" -> "", 
+  "ExampleCounter" -> 1, 
+  "Openers" -> {
+   "PrimaryExamplesSection" -> Open, "ExampleSection" -> {"0" -> Open}, 
+    "AllOptsTable" -> Closed, "NotesSection" -> Closed}, "NewStyles" -> True, 
+  "CitationPopupData" -> $Failed, "ShowCitation" -> False, "HasOptions" -> 
+  True, "RootCaptions" -> "", "HeaderCoreAreaLink" -> {}, 
+  "Metadata" -> {
+   "built" -> "{2025, 1, 24, 17, 35, 43.180525}", 
+    "history" -> {"1.0.0", "", "", ""}, "context" -> "DavidLizarazo`qlanth`", 
+    "keywords" -> {}, "specialkeywords" -> {}, 
+    "tutorialcollectionlinks" -> {}, "index" -> True, "label" -> 
+    "David Lizarazo/qlanth Symbol", "language" -> "en", "paclet" -> 
+    "DavidLizarazo/qlanth", "status" -> "None", "summary" -> 
+    "ParseBenelli2015[] parses the data from file /data/benelli_and_gatteschi \
+_table3p3.csv. This data provides the form that the crystal field has under \
+different point group symmetries. This function parses that data into an \
+association with keys equal to strings representing any of the 32 \
+crystallographic point groups.", "synonyms" -> {}, "tabletags" -> {}, "title" -> 
+    "ParseBenelli2015", "titlemodifier" -> "", "metadescription" -> "", 
+    "windowtitle" -> "ParseBenelli2015", "type" -> "Symbol", "uri" -> 
+    "DavidLizarazo/qlanth/ref/ParseBenelli2015", "WorkflowDockedCell" -> ""}, 
+  "SearchTextTranslated" -> ""},
+FrontEndVersion->"14.1 for Mac OS X ARM (64-bit) (July 16, 2024)",
+StyleDefinitions->FrontEnd`FileName[{"Wolfram"}, "Reference.nb", 
+  CharacterEncoding -> "UTF-8"],
+ExpressionUUID->"be59d3cd-9aec-4ae7-8c72-a27d4f413c76"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "PrimaryExamplesSection"->{
+  Cell[8605, 224, 1437, 38, 34, "PrimaryExamplesSection",ExpressionUUID->"3c513942-f05f-41e6-8bff-2f29f833be3f",
+   CellTags->"PrimaryExamplesSection",
+   CellID->293944063]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"PrimaryExamplesSection", 15819, 413}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[584, 21, 3491, 80, 50, "AnchorBarGrid",ExpressionUUID->"6e8916b6-fd94-4bea-84b2-2031726c9503",
+ CellID->1],
+Cell[4078, 103, 103, 0, 22, "ContextNameCell",ExpressionUUID->"fc1f9b1e-d3f3-4b12-8237-60640ad824c2"],
+Cell[CellGroupData[{
+Cell[4206, 107, 559, 14, 57, "ObjectNameGrid",ExpressionUUID->"c501d119-5e91-4dfd-9d40-5f4c265bc959"],
+Cell[4768, 123, 715, 13, 147, "Usage",ExpressionUUID->"503a92c5-aa73-498a-9cf6-cbbaab35225d",
+ CellID->954998051]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5520, 141, 1916, 48, 34, "NotesSection",ExpressionUUID->"aab258ce-b9a8-4e1b-8a0c-c0c3681dbfad",
+ CellGroupingRules->{"SectionGrouping", 50},
+ CellID->911423502],
+Cell[7439, 191, 366, 10, 70, "Notes",ExpressionUUID->"19076b88-ba50-4bd8-9bfb-1cb991565148",
+ CellID->359465479],
+Cell[7808, 203, 670, 15, 70, "Notes",ExpressionUUID->"d0b5ef05-0600-47f4-a63d-806abf3874b9",
+ CellID->635016478]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, Closed]]]],
+Cell[CellGroupData[{
+Cell[8605, 224, 1437, 38, 34, "PrimaryExamplesSection",ExpressionUUID->"3c513942-f05f-41e6-8bff-2f29f833be3f",
+ CellTags->"PrimaryExamplesSection",
+ CellID->293944063],
+Cell[10045, 264, 212, 4, 29, "Input",ExpressionUUID->"f5f76650-d4de-4610-accc-af841cb33fcb",
+ CellID->1196721248],
+Cell[CellGroupData[{
+Cell[10282, 272, 1416, 37, 29, "ExampleSection",ExpressionUUID->"abb54cd8-35a5-4e53-90c9-39e10dbd0fed",
+ CellID->1105478741],
+Cell[11701, 311, 408, 6, 74, "ExampleText",ExpressionUUID->"d0257a67-bb4d-4b8e-a660-410d73c606a1",
+ CellID->95608504],
+Cell[CellGroupData[{
+Cell[12134, 321, 244, 5, 28, "Input",ExpressionUUID->"ada53309-94a1-4501-b234-99b7cebd5692",
+ CellID->574358772],
+Cell[12381, 328, 1154, 35, 80, "Output",ExpressionUUID->"f16070d1-ddf1-4608-98e0-82e7d19ad685",
+ CellID->308887739]
+}, Open  ]]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"}, Closed]]]]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "PrimaryExamplesSection"}, Closed]]]],
+Cell[13777, 372, 78, 0, 40, "FooterCell",ExpressionUUID->"5b2d8326-02d5-44bc-a54b-9322c4cb87fc"]
+}
+]
+*)
+
+(* End of internal cache information *)
+

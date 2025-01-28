@@ -1,0 +1,790 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     28800,        780]
+NotebookOptionsPosition[     24687,        698]
+NotebookOutlinePosition[     26810,        747]
+CellTagsIndexPosition[     26725,        742]
+WindowTitle->GenerateElectrostaticTable
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[GridBox[{
+   {GridBox[{
+      {
+       ItemBox[Cell[BoxData[
+         RowBox[{
+          TemplateBox[{12},
+           "Spacer1"], Cell["DAVID LIZARAZO/QLANTH SYMBOL", "PacletNameCell",
+           TextAlignment->Center,ExpressionUUID->
+           "298bbcf4-b09f-4763-8518-2827adfe1a4b"], 
+          TemplateBox[{8},
+           "Spacer1"]}]],
+         TextAlignment->Center,ExpressionUUID->
+         "2beed8cb-d10b-44db-9f9d-060390e9dce0"],
+        Background->RGBColor[0.490196, 0.576471, 0.690196],
+        ItemSize->Full], ""}
+     },
+     GridBoxAlignment->{"Rows" -> {{Center}}},
+     GridBoxItemSize->{"Columns" -> {Full, 
+         Scaled[0.02]}, "Rows" -> {{2.5}}}], Cell[TextData[{
+     Cell[BoxData[
+      TagBox[
+       ActionMenuBox[
+        FrameBox[Cell[TextData[{
+          "See Also",
+          " ",
+          Cell[BoxData[
+           GraphicsBox[
+            {GrayLevel[0.66667], Thickness[0.13], 
+             LineBox[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]},
+            AspectRatio->1,
+            ImageSize->20,
+            PlotRange->{{-3, 4}, {-1, 1}}]],ExpressionUUID->
+           "7504e90c-c7da-4925-bf82-9c366c62ff8d"]
+         }],ExpressionUUID->"c112375e-24ce-4b02-9777-ca0a4d9d7f7e"],
+         StripOnInput->False],{
+        StyleBox["\"LoadUk\"", "SeeAlsoRelated", StripOnInput -> False] :> 
+         Documentation`HelpLookup["paclet:DavidLizarazo/qlanth/ref/LoadUk"], 
+         StyleBox[
+          "\"ReducedUkTable\"", "SeeAlsoRelated", StripOnInput -> False] :> 
+         Documentation`HelpLookup[
+          "paclet:DavidLizarazo/qlanth/ref/ReducedUkTable"]},
+        Appearance->None,
+        MenuAppearance->Automatic,
+        MenuStyle->"SeeAlso"],
+       MouseAppearanceTag["LinkHand"]]],
+      LineSpacing->{1.4, 0},ExpressionUUID->
+      "ada78730-cc76-4aa1-b2be-43e035e4a679"],
+     "\[ThickSpace]\[ThickSpace]\[ThickSpace]\[ThickSpace]\[ThickSpace]\
+\[ThickSpace]",
+     Cell[BoxData[
+      TagBox[
+       ActionMenuBox[
+        FrameBox[Cell[TextData[{
+          "URL",
+          " ",
+          Cell[BoxData[
+           GraphicsBox[
+            {GrayLevel[0.66667], Thickness[0.13], 
+             LineBox[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]},
+            AspectRatio->1,
+            ImageSize->20,
+            PlotRange->{{-3, 4}, {-1, 1}}]],ExpressionUUID->
+           "ce5e031a-4c4a-4f28-a016-b0aa751af0e2"]
+         }],ExpressionUUID->"1e9b86d3-d1c6-42bd-8862-58ce2b403a84"],
+         StripOnInput->False],{
+        "\"DavidLizarazo/qlanth/ref/GenerateElectrostaticTable\"" :> None, 
+         "\"Copy Wolfram Documentation Center URL\"" :> 
+         Module[{DocumentationSearch`Private`nb$}, 
+           DocumentationSearch`Private`nb$ = 
+            NotebookPut[
+             Notebook[{
+               Cell["DavidLizarazo/qlanth/ref/GenerateElectrostaticTable"]}, 
+               Visible -> DocumentationBuild`Make`Private`visible$46015]]; 
+           SelectionMove[DocumentationSearch`Private`nb$, All, Notebook]; 
+           FrontEndTokenExecute[DocumentationSearch`Private`nb$, "Copy"]; 
+           NotebookClose[DocumentationSearch`Private`nb$]; Null], Delimiter, 
+         "\"Copy web URL\"" :> 
+         Module[{DocumentationSearch`Private`nb$}, 
+           DocumentationSearch`Private`nb$ = 
+            NotebookPut[
+             Notebook[{
+               Cell[BoxData[
+                 MakeBoxes[
+                  Hyperlink[
+                   "http://reference.wolfram.com/language/DavidLizarazo/\
+qlanth/ref/GenerateElectrostaticTable.html"], StandardForm]], "Input", 
+                 TextClipboardType -> "PlainText"]}, Visible -> 
+               DocumentationBuild`Make`Private`visible$46015]]; 
+           SelectionMove[DocumentationSearch`Private`nb$, All, Notebook]; 
+           FrontEndTokenExecute[DocumentationSearch`Private`nb$, "Copy"]; 
+           NotebookClose[DocumentationSearch`Private`nb$]; Null], 
+         "\"Go to web URL\"" :> 
+         FrontEndExecute[{
+           NotebookLocate[{
+             URL[If[TrueQ[False], 
+                 "http://reference.wolfram.com/system-modeler/", 
+                 "http://reference.wolfram.com/language/"] <> 
+               "DavidLizarazo/qlanth/ref/GenerateElectrostaticTable" <> 
+               ".html"], None}]}]},
+        Appearance->None,
+        MenuAppearance->Automatic,
+        MenuStyle->"URLMenu"],
+       MouseAppearanceTag["LinkHand"]]],
+      LineSpacing->{1.4, 0},ExpressionUUID->
+      "6c779e63-4240-420a-9ac1-b7e7f729d83c"]
+    }], "AnchorBar",
+     CacheGraphics->False,ExpressionUUID->
+     "da2e9e34-575b-4831-b279-62344b6a02a9"]}
+  }]], "AnchorBarGrid",
+ GridBoxOptions->{GridBoxItemSize->{"Columns" -> {
+     Scaled[0.65], {
+      Scaled[0.34]}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}}, 
+   "RowsIndexed" -> {}}},
+ CellID->1,ExpressionUUID->"3ef173d3-08cc-4ee5-87b6-f27e02b3453a"],
+
+Cell["DavidLizarazo`qlanth`", "ContextNameCell",ExpressionUUID->"a7b259ca-152f-4462-b92c-61da07fac9d6"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[GridBox[{
+   {Cell[TextData[{
+     Cell[
+     "GenerateElectrostaticTable", "ObjectName",ExpressionUUID->
+      "17dc2112-7fae-490d-8065-93aa0ae1978a"],
+     Cell[BoxData[
+      TemplateBox[{8},
+       "Spacer1"]],ExpressionUUID->"19a3e7c9-8b07-420e-b2da-8b6b856e8ae0"],
+     Cell[BoxData[
+     ""], "ObjectNameTranslation",ExpressionUUID->
+      "6d276c29-30f5-4f74-8614-ae009916263f"]
+    }],ExpressionUUID->"976bf6ce-7142-48d3-a2bd-6ad1b9b0140a"], 
+    "\[SpanFromLeft]"}
+  }]], "ObjectNameGrid",ExpressionUUID->"f088b9d6-fc4e-4926-b715-\
+d0e957cb53c8"],
+
+Cell[BoxData[GridBox[{
+   {"", Cell[TextData[{
+     Cell[BoxData[
+      RowBox[{
+       TemplateBox[{
+         Cell[
+          TextData["GenerateElectrostaticTable"]], 
+         "paclet:DavidLizarazo/qlanth/ref/GenerateElectrostaticTable", 
+         "DavidLizarazo Package Symbol"},
+        "PackageLink",
+        BaseStyle->"InlineFormula"], "[", "numE", "]"}]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "6c99746c-dd89-4b14-abb5-0067ffbfa5dd"],
+     " \[LineSeparator]calculates the table for the electrostatic interaction \
+from ",
+     Cell[BoxData[
+      SuperscriptBox["f", "1"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "352e30f7-c283-4320-971f-b54934b6e328"],
+     " to ",
+     Cell[BoxData[
+      SuperscriptBox["f", "numE"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "0920a630-d87a-4cff-9630-942d8fc19ff5"],
+     ".  The function returns the result of its calculation."
+    }],ExpressionUUID->"f3978b79-f6d1-46d7-bfb0-ab9626540693"]}
+  }]], "Usage",
+ CellID->679649511,ExpressionUUID->"01d9eeef-6b89-49e2-9bcc-cf3641700c3c"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[Cell[BoxData[
+ ButtonBox[Cell[TextData[{
+   Cell[BoxData[
+    DynamicBox[ToBoxes[
+      If[
+       MatchQ[
+        CurrentValue[
+         EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, 
+         Closed], 
+        Alternatives[Open, True]], 
+       Style[
+        Graphics[{
+          Thickness[0.18], 
+          RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+          Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+         PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+        0.68 Inherited], 
+       Rotate[
+        Style[
+         Graphics[{
+           Thickness[0.18], 
+           RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+           Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+          PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+         0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+     ImageSizeCache->{
+      13.600000000000001`, {-0.1685058593749993, 13.768505859375}}]],
+    ExpressionUUID->"6e62b54a-9746-4272-a1bf-892dbbe87ee6"],
+   Cell[BoxData[
+    TemplateBox[{1},
+     "Spacer1"]],ExpressionUUID->"38157df1-58a9-4e2a-9556-c15c7bc5ec2a"],
+   "Details and Options"
+  }], "NotesFrameText",ExpressionUUID->"8c953f5d-c8be-4755-acc7-beb05a6d338b"],
+  Appearance->{Automatic, None, "Normal", Automatic},
+  BaseStyle->None,
+  ButtonFunction:>(FrontEndExecute[{
+     FrontEnd`SelectionMove[
+      FrontEnd`SelectedNotebook[], All, ButtonCell], 
+     FrontEndToken["OpenCloseGroup"], 
+     FrontEnd`SelectionMove[
+      FrontEnd`SelectedNotebook[], After, CellContents]}]& ),
+  Evaluator->None,
+  Method->
+   "Preemptive"]],ExpressionUUID->"61d44e44-52a4-48ac-ae7b-f38b96df53a1"]], \
+"NotesSection",
+ WholeCellGroupOpener->True,
+ CellGroupingRules->{"SectionGrouping", 50},
+ CacheGraphics->False,
+ CellID->319564565,ExpressionUUID->"f0858274-336f-4bc6-98d4-8e8bdb658507"],
+
+Cell[TextData[{
+ "This function requires ",
+ Cell[BoxData[
+  RowBox[{
+   RowBox[{
+    TemplateBox[{
+      Cell[
+       TextData["LoadUk"]], "paclet:DavidLizarazo/qlanth/ref/LoadUk", 
+      "DavidLizarazo Package Symbol"},
+     "PackageLink",
+     BaseStyle->"InlineFormula"], "[", "]"}], " "}]], "InlineFormula",
+  FontFamily->"Source Sans Pro",ExpressionUUID->
+  "c94148e8-44d6-40e5-b131-ac6b41925e2a"],
+ "to have been run beforehand so that ",
+ Cell[BoxData[
+  TemplateBox[{
+    Cell[
+     TextData["ReducedUkTable"]], 
+    "paclet:DavidLizarazo/qlanth/ref/ReducedUkTable", 
+    "DavidLizarazo Package Symbol"},
+   "PackageLink",
+   BaseStyle->"InlineFormula"]], "InlineFormula",
+  FontFamily->"Source Sans Pro",ExpressionUUID->
+  "9c82df1f-bea7-4abb-97f6-5137e41db572"],
+ " is available."
+}], "Notes",
+ CellID->403812984,ExpressionUUID->"5bcdac22-6882-4c2f-a1ea-140cbea5be94"],
+
+Cell[TextData[{
+ "Options\[LineSeparator]",
+ Cell[BoxData[GridBox[{
+    {Cell[
+     "      ", "TableRowIcon",ExpressionUUID->
+      "fa1a5b05-04b0-4cec-994f-fe6fda5e9cd8"], "\"\<Export\>\"", "True", 
+     Cell["\<\
+If set to True then the resulting data is saved to /data/ElectrostaticTable.m.\
+\>", "TableText",ExpressionUUID->"c904e1cb-795c-4bf4-80b2-9c43293f63f6"]},
+    {Cell[
+     "      ", "TableRowIcon",ExpressionUUID->
+      "50800539-995c-4535-a05c-b462d7d1c4f4"], "\"\<Coefficients\>\"", 
+     "\"\<Slater\>\"", Cell[TextData[{
+      "If set to \"Slater\" then the matrix elements are given in terms of \
+Slater integrals ",
+      Cell[BoxData[
+       SuperscriptBox["F", 
+        RowBox[{"(", "k", ")"}]]], "InlineFormula",
+       FontFamily->"Source Sans Pro",ExpressionUUID->
+       "44655e82-bab0-4a0e-8b4d-cad4f6a828ca"],
+      ". If set to \"Racah\" the result is given in terms of ",
+      Cell[BoxData[
+       SuperscriptBox["E", 
+        RowBox[{"(", "k", ")"}]]], "InlineFormula",
+       FontFamily->"Source Sans Pro",ExpressionUUID->
+       "50aaa291-689e-4af0-ac75-d1682298c0f6"],
+      " parameters."
+     }], "TableText",ExpressionUUID->"bbe577c8-f2d8-4f9c-84d7-cd507603239c"]}
+   }]], "3ColumnTableMod",
+  GridBoxOptions->{
+  GridBoxBackground->{"Columns" -> {{None}}, "Rows" -> {None, {None}}},
+  GridBoxDividers->{"Rows" -> {{True, True, True}}}},ExpressionUUID->
+  "c8eb970a-90e2-4b40-87a9-f55ce4fb4bd3"]
+}], "Notes",
+ CellID->1694522799,ExpressionUUID->"520661e5-9382-4340-994a-8cf0e02fc26c"]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, Closed]]]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  DynamicBox[ToBoxes[
+    If[
+     MatchQ[
+      CurrentValue[
+       EvaluationNotebook[], {
+       TaggingRules, "Openers", "PrimaryExamplesSection"}, Open], 
+      Alternatives[True, Open]], 
+     Style[
+      Graphics[{
+        Thickness[0.18], 
+        RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+        Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+       PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+      0.68 Inherited], 
+     Rotate[
+      Style[
+       Graphics[{
+         Thickness[0.18], 
+         RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+         Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+        PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+       0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+   ImageSizeCache->{
+    13.600000000000001`, {4.251494140625001, 9.348505859375}}]],
+  ExpressionUUID->"37a7c617-7434-4f49-8512-0b2aaad5f187"],
+ Cell[BoxData[
+  TemplateBox[{1},
+   "Spacer1"]],ExpressionUUID->"887883bc-4ec2-49c0-b98c-755fab2ebe5c"],
+ "Examples",
+ "\[NonBreakingSpace]\[NonBreakingSpace]",
+ Cell["(1)", "ExampleCount",ExpressionUUID->
+  "01f5c5e7-9e3f-4d57-8502-30c7cb027d76"]
+}], "PrimaryExamplesSection",
+ WholeCellGroupOpener->True,
+ CacheGraphics->False,
+ CellTags->"PrimaryExamplesSection",
+ CellID->65042808,ExpressionUUID->"d0c87eb0-e434-4095-add0-d0730d7f0582"],
+
+Cell[BoxData[
+ RowBox[{"Needs", "[", "\"\<DavidLizarazo`qlanth`\>\"", "]"}]], "Input", \
+"ExampleInitialization",
+ CellLabel->"In[1]:=",
+ CellID->930863487,ExpressionUUID->"129817bd-b57c-4ca9-b4c9-b089742a6a23"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  DynamicBox[ToBoxes[
+    If[
+     MatchQ[
+      CurrentValue[
+       EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"},
+        Closed], 
+      Alternatives[Open, True]], 
+     Style[
+      Graphics[{
+        Thickness[0.18], 
+        RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+        Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+       PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+      0.68 Inherited], 
+     Rotate[
+      Style[
+       Graphics[{
+         Thickness[0.18], 
+         RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+         Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+        PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+       0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+   ImageSizeCache->{
+    13.600000000000001`, {4.551318359375001, 9.048681640625}}]],
+  ExpressionUUID->"40c7286a-e8e0-4b78-9b39-3d97cd499e9c"],
+ Cell[BoxData[
+  TemplateBox[{1},
+   "Spacer1"]],ExpressionUUID->"4ddf4c4d-7c55-4df2-bdea-86bcf7497ac3"],
+ "Basic Examples",
+ "\[NonBreakingSpace]\[NonBreakingSpace]",
+ Cell["(1)", "ExampleCount",ExpressionUUID->
+  "25a0e43c-6494-4675-9bc4-f71441f7d0b8"]
+}], "ExampleSection", "ExampleSection",
+ WholeCellGroupOpener->True,
+ CacheGraphics->False,
+ CellID->105297733,ExpressionUUID->"ad433920-d4ff-46e9-a363-4a204135dc81"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"LoadUk", "[", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"GenerateElectrostaticTable", "[", 
+  RowBox[{"2", ",", 
+   RowBox[{"\"\<Export\>\"", "->", "False"}], ",", 
+   RowBox[{"\"\<Coefficients\>\"", "->", "\"\<Racah\>\""}]}], "]"}]}], "Input",\
+
+ CellProlog:>Needs["DavidLizarazo`qlanth`"],
+ CellLabel->"In[1]:=",
+ CellID->657439854,ExpressionUUID->"31c25cd8-9d76-452e-98ed-b15694466dac"],
+
+Cell[BoxData[
+ RowBox[{"\[LeftAssociation]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"1", ",", "\<\"2F\"\>", ",", "\<\"2F\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"3P\"\>", ",", "\<\"3P\"\>"}], "}"}], "\[Rule]", 
+    RowBox[{
+     FractionBox[
+      RowBox[{"14", " ", "E0"}], "13"], "+", 
+     FractionBox[
+      RowBox[{"9", " ", "E1"}], "13"], "+", 
+     RowBox[{"33", " ", "E3"}]}]}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"3P\"\>", ",", "\<\"3F\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"3P\"\>", ",", "\<\"3H\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"3P\"\>", ",", "\<\"1S\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"3P\"\>", ",", "\<\"1D\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"3P\"\>", ",", "\<\"1G\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"3P\"\>", ",", "\<\"1I\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"3F\"\>", ",", "\<\"3P\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"3F\"\>", ",", "\<\"3F\"\>"}], "}"}], "\[Rule]", 
+    RowBox[{
+     FractionBox[
+      RowBox[{"14", " ", "E0"}], "13"], "+", 
+     FractionBox[
+      RowBox[{"9", " ", "E1"}], "13"]}]}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"3F\"\>", ",", "\<\"3H\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"3F\"\>", ",", "\<\"1S\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"3F\"\>", ",", "\<\"1D\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"3F\"\>", ",", "\<\"1G\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"3F\"\>", ",", "\<\"1I\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"3H\"\>", ",", "\<\"3P\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"3H\"\>", ",", "\<\"3F\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"3H\"\>", ",", "\<\"3H\"\>"}], "}"}], "\[Rule]", 
+    RowBox[{
+     FractionBox[
+      RowBox[{"14", " ", "E0"}], "13"], "+", 
+     FractionBox[
+      RowBox[{"9", " ", "E1"}], "13"], "-", 
+     RowBox[{"9", " ", "E3"}]}]}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"3H\"\>", ",", "\<\"1S\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"3H\"\>", ",", "\<\"1D\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"3H\"\>", ",", "\<\"1G\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"3H\"\>", ",", "\<\"1I\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1S\"\>", ",", "\<\"3P\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1S\"\>", ",", "\<\"3F\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1S\"\>", ",", "\<\"3H\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1S\"\>", ",", "\<\"1S\"\>"}], "}"}], "\[Rule]", 
+    RowBox[{
+     FractionBox[
+      RowBox[{"14", " ", "E0"}], "13"], "+", 
+     FractionBox[
+      RowBox[{"126", " ", "E1"}], "13"]}]}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1S\"\>", ",", "\<\"1D\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1S\"\>", ",", "\<\"1G\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1S\"\>", ",", "\<\"1I\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1D\"\>", ",", "\<\"3P\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1D\"\>", ",", "\<\"3F\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1D\"\>", ",", "\<\"3H\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1D\"\>", ",", "\<\"1S\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1D\"\>", ",", "\<\"1D\"\>"}], "}"}], "\[Rule]", 
+    RowBox[{
+     FractionBox[
+      RowBox[{"14", " ", "E0"}], "13"], "+", 
+     FractionBox[
+      RowBox[{"35", " ", "E1"}], "13"], "+", 
+     RowBox[{"286", " ", "E2"}], "-", 
+     RowBox[{"11", " ", "E3"}]}]}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1D\"\>", ",", "\<\"1G\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1D\"\>", ",", "\<\"1I\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1G\"\>", ",", "\<\"3P\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1G\"\>", ",", "\<\"3F\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1G\"\>", ",", "\<\"3H\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1G\"\>", ",", "\<\"1S\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1G\"\>", ",", "\<\"1D\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1G\"\>", ",", "\<\"1G\"\>"}], "}"}], "\[Rule]", 
+    RowBox[{
+     FractionBox[
+      RowBox[{"14", " ", "E0"}], "13"], "+", 
+     FractionBox[
+      RowBox[{"35", " ", "E1"}], "13"], "-", 
+     RowBox[{"260", " ", "E2"}], "-", 
+     RowBox[{"4", " ", "E3"}]}]}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1G\"\>", ",", "\<\"1I\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1I\"\>", ",", "\<\"3P\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1I\"\>", ",", "\<\"3F\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1I\"\>", ",", "\<\"3H\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1I\"\>", ",", "\<\"1S\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1I\"\>", ",", "\<\"1D\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1I\"\>", ",", "\<\"1G\"\>"}], "}"}], "\[Rule]", 
+    "0"}], ",", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "\<\"1I\"\>", ",", "\<\"1I\"\>"}], "}"}], "\[Rule]", 
+    RowBox[{
+     FractionBox[
+      RowBox[{"14", " ", "E0"}], "13"], "+", 
+     FractionBox[
+      RowBox[{"35", " ", "E1"}], "13"], "+", 
+     RowBox[{"70", " ", "E2"}], "+", 
+     RowBox[{"7", " ", "E3"}]}]}]}], "\[RightAssociation]"}]], "Output",
+ CellLabel->"Out[1]=",
+ CellID->1513435715,ExpressionUUID->"8b8b34ab-d7cb-472f-a3e0-b1937b7f4879"]
+}, Open  ]]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"}, 
+  Closed]]]]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "PrimaryExamplesSection"}, 
+  Closed]]]],
+
+Cell[BoxData[GridBox[{
+   {
+    DynamicBox[FEPrivate`ImportImage[
+      FrontEnd`FileName[{"Documentation", "FooterIcons"}, 
+       "RelatedFunction.png"]],
+     ImageSizeCache->{50., {26.47265625, 33.52734375}}], GridBox[{
+      {
+       StyleBox[
+        RowBox[{"See", " ", "Also"}], "SeeAlsoSection"]},
+      {Cell[TextData[{
+        Cell[BoxData[
+         TemplateBox[{
+           Cell[
+            TextData["LoadUk"]], "paclet:DavidLizarazo/qlanth/ref/LoadUk", 
+           "DavidLizarazo Package Symbol"},
+          "PackageLink",
+          BaseStyle->"InlineFormula"]], "InlineFormula",
+         FontFamily->"Source Sans Pro",ExpressionUUID->
+         "b13ff675-6285-4d4f-89e9-49eef655c428"],
+        "\[NonBreakingSpace]",
+        StyleBox[
+        "\[MediumSpace]\[FilledVerySmallSquare]\[MediumSpace]", 
+         "InlineSeparator"],
+        " ",
+        Cell[BoxData[
+         TemplateBox[{
+           Cell[
+            TextData["ReducedUkTable"]], 
+           "paclet:DavidLizarazo/qlanth/ref/ReducedUkTable", 
+           "DavidLizarazo Package Symbol"},
+          "PackageLink",
+          BaseStyle->"InlineFormula"]], "InlineFormula",
+         FontFamily->"Source Sans Pro",
+         CellTags->"b9955e0d-58eb-49ee-852e-98fa50c9021c",ExpressionUUID->
+         "c2d003ab-bed5-4069-8a7e-68a219c0cf8b"]
+       }], "SeeAlso",ExpressionUUID->"6014ad60-ea39-4f50-ae65-66b26c82d876"]}
+     }]}
+  }]], "SeeAlsoSection",ExpressionUUID->"f2fa27d8-8ac5-45c6-bd84-\
+7dd5a6ef263e"],
+
+Cell[" ", "FooterCell",ExpressionUUID->"63212c7a-f273-422d-beee-2cb812265030"]
+},
+Saveable->False,
+ScreenStyleEnvironment->"Working",
+WindowSize->{900, 830},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+WindowTitle->"GenerateElectrostaticTable",
+TaggingRules->{
+ "ModificationHighlight" -> False, "ColorType" -> "", "LinkTrails" -> "", 
+  "ExampleCounter" -> 1, 
+  "Openers" -> {
+   "PrimaryExamplesSection" -> Open, "ExampleSection" -> {"0" -> Open}, 
+    "AllOptsTable" -> Closed, "NotesSection" -> Closed}, "NewStyles" -> True, 
+  "CitationPopupData" -> $Failed, "ShowCitation" -> False, "HasOptions" -> 
+  True, "RootCaptions" -> "", "HeaderCoreAreaLink" -> {}, 
+  "Metadata" -> {
+   "built" -> "{2025, 1, 24, 17, 35, 15.013690}", 
+    "history" -> {"1.0.0", "", "", ""}, "context" -> "DavidLizarazo`qlanth`", 
+    "keywords" -> {}, "specialkeywords" -> {}, 
+    "tutorialcollectionlinks" -> {}, "index" -> True, "label" -> 
+    "David Lizarazo/qlanth Symbol", "language" -> "en", "paclet" -> 
+    "DavidLizarazo/qlanth", "status" -> "None", "summary" -> 
+    "GenerateElectrostaticTable[numE] calculates the table for the \
+electrostatic interaction from f^1 to f^numE. The function returns the result \
+of its calculation.", "synonyms" -> {}, "tabletags" -> {}, "title" -> 
+    "GenerateElectrostaticTable", "titlemodifier" -> "", "metadescription" -> 
+    "", "windowtitle" -> "GenerateElectrostaticTable", "type" -> "Symbol", 
+    "uri" -> "DavidLizarazo/qlanth/ref/GenerateElectrostaticTable", 
+    "WorkflowDockedCell" -> ""}, "SearchTextTranslated" -> ""},
+FrontEndVersion->"14.1 for Mac OS X ARM (64-bit) (July 16, 2024)",
+StyleDefinitions->FrontEnd`FileName[{"Wolfram"}, "Reference.nb", 
+  CharacterEncoding -> "UTF-8"],
+ExpressionUUID->"e34dacaf-a284-450c-8d5e-1029c537dc92"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "PrimaryExamplesSection"->{
+  Cell[11748, 306, 1436, 38, 34, "PrimaryExamplesSection",ExpressionUUID->"d0c87eb0-e434-4095-add0-d0730d7f0582",
+   CellTags->"PrimaryExamplesSection",
+   CellID->65042808]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"PrimaryExamplesSection", 26526, 735}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[594, 21, 4825, 113, 50, "AnchorBarGrid",ExpressionUUID->"3ef173d3-08cc-4ee5-87b6-f27e02b3453a",
+ CellID->1],
+Cell[5422, 136, 103, 0, 22, "ContextNameCell",ExpressionUUID->"a7b259ca-152f-4462-b92c-61da07fac9d6"],
+Cell[CellGroupData[{
+Cell[5550, 140, 569, 14, 57, "ObjectNameGrid",ExpressionUUID->"f088b9d6-fc4e-4926-b715-d0e957cb53c8"],
+Cell[6122, 156, 1139, 27, 106, "Usage",ExpressionUUID->"01d9eeef-6b89-49e2-9bcc-cf3641700c3c",
+ CellID->679649511]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7298, 188, 1916, 48, 34, "NotesSection",ExpressionUUID->"f0858274-336f-4bc6-98d4-8e8bdb658507",
+ CellGroupingRules->{"SectionGrouping", 50},
+ CellID->319564565],
+Cell[9217, 238, 879, 26, 70, "Notes",ExpressionUUID->"5bcdac22-6882-4c2f-a1ea-140cbea5be94",
+ CellID->403812984],
+Cell[10099, 266, 1522, 34, 70, "Notes",ExpressionUUID->"520661e5-9382-4340-994a-8cf0e02fc26c",
+ CellID->1694522799]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, Closed]]]],
+Cell[CellGroupData[{
+Cell[11748, 306, 1436, 38, 34, "PrimaryExamplesSection",ExpressionUUID->"d0c87eb0-e434-4095-add0-d0730d7f0582",
+ CellTags->"PrimaryExamplesSection",
+ CellID->65042808],
+Cell[13187, 346, 211, 4, 29, "Input",ExpressionUUID->"129817bd-b57c-4ca9-b4c9-b089742a6a23",
+ CellID->930863487],
+Cell[CellGroupData[{
+Cell[13423, 354, 1415, 37, 29, "ExampleSection",ExpressionUUID->"ad433920-d4ff-46e9-a363-4a204135dc81",
+ CellID->105297733],
+Cell[CellGroupData[{
+Cell[14863, 395, 430, 10, 45, "Input",ExpressionUUID->"31c25cd8-9d76-452e-98ed-b15694466dac",
+ CellID->657439854],
+Cell[15296, 407, 7584, 240, 280, "Output",ExpressionUUID->"8b8b34ab-d7cb-472f-a3e0-b1937b7f4879",
+ CellID->1513435715]
+}, Open  ]]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"}, Closed]]]]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "PrimaryExamplesSection"}, Closed]]]],
+Cell[23122, 656, 1480, 38, 112, "SeeAlsoSection",ExpressionUUID->"f2fa27d8-8ac5-45c6-bd84-7dd5a6ef263e"],
+Cell[24605, 696, 78, 0, 24, "FooterCell",ExpressionUUID->"63212c7a-f273-422d-beee-2cb812265030"]
+}
+]
+*)
+
+(* End of internal cache information *)
+

@@ -1,0 +1,469 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     18075,        459]
+NotebookOptionsPosition[     13793,        373]
+NotebookOutlinePosition[     15960,        423]
+CellTagsIndexPosition[     15875,        418]
+WindowTitle->AngularMomentumMatrices
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[GridBox[{
+   {GridBox[{
+      {
+       ItemBox[Cell[BoxData[
+         RowBox[{
+          TemplateBox[{12},
+           "Spacer1"], Cell["DAVID LIZARAZO/QLANTH SYMBOL", "PacletNameCell",
+           TextAlignment->Center,ExpressionUUID->
+           "0ac91dd3-4dfb-41f5-aebb-caf55f02354f"], 
+          TemplateBox[{8},
+           "Spacer1"]}]],
+         TextAlignment->Center,ExpressionUUID->
+         "c6545f38-83b5-4137-a863-35773f5ff2b4"],
+        Background->RGBColor[0.490196, 0.576471, 0.690196],
+        ItemSize->Full], ""}
+     },
+     GridBoxAlignment->{"Rows" -> {{Center}}},
+     GridBoxItemSize->{"Columns" -> {Full, 
+         Scaled[0.02]}, "Rows" -> {{2.5}}}], Cell[TextData[Cell[BoxData[
+     TagBox[
+      ActionMenuBox[
+       FrameBox[Cell[TextData[{
+         "URL",
+         " ",
+         Cell[BoxData[
+          GraphicsBox[
+           {GrayLevel[0.66667], Thickness[0.13], 
+            LineBox[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]},
+           AspectRatio->1,
+           ImageSize->20,
+           PlotRange->{{-3, 4}, {-1, 1}}]],ExpressionUUID->
+          "53273112-f9b1-458d-a92f-e921f3543fe3"]
+        }],ExpressionUUID->"2a009fb1-ee20-4e99-ada2-65f71a799af5"],
+        StripOnInput->False],{
+       "\"DavidLizarazo/qlanth/ref/AngularMomentumMatrices\"" :> None, 
+        "\"Copy Wolfram Documentation Center URL\"" :> 
+        Module[{DocumentationSearch`Private`nb$}, 
+          DocumentationSearch`Private`nb$ = 
+           NotebookPut[
+            Notebook[{
+              Cell["DavidLizarazo/qlanth/ref/AngularMomentumMatrices"]}, 
+              Visible -> DocumentationBuild`Make`Private`visible$20827]]; 
+          SelectionMove[DocumentationSearch`Private`nb$, All, Notebook]; 
+          FrontEndTokenExecute[DocumentationSearch`Private`nb$, "Copy"]; 
+          NotebookClose[DocumentationSearch`Private`nb$]; Null], Delimiter, 
+        "\"Copy web URL\"" :> 
+        Module[{DocumentationSearch`Private`nb$}, 
+          DocumentationSearch`Private`nb$ = 
+           NotebookPut[
+            Notebook[{
+              Cell[BoxData[
+                MakeBoxes[
+                 Hyperlink[
+                  "http://reference.wolfram.com/language/DavidLizarazo/qlanth/\
+ref/AngularMomentumMatrices.html"], StandardForm]], "Input", 
+                TextClipboardType -> "PlainText"]}, Visible -> 
+              DocumentationBuild`Make`Private`visible$20827]]; 
+          SelectionMove[DocumentationSearch`Private`nb$, All, Notebook]; 
+          FrontEndTokenExecute[DocumentationSearch`Private`nb$, "Copy"]; 
+          NotebookClose[DocumentationSearch`Private`nb$]; Null], 
+        "\"Go to web URL\"" :> 
+        FrontEndExecute[{
+          NotebookLocate[{
+            URL[If[TrueQ[False], 
+                "http://reference.wolfram.com/system-modeler/", 
+                "http://reference.wolfram.com/language/"] <> 
+              "DavidLizarazo/qlanth/ref/AngularMomentumMatrices" <> ".html"], 
+             None}]}]},
+       Appearance->None,
+       MenuAppearance->Automatic,
+       MenuStyle->"URLMenu"],
+      MouseAppearanceTag["LinkHand"]]],
+     LineSpacing->{1.4, 0},ExpressionUUID->
+     "dcc60527-2948-4f6d-97bb-ff74461f89e7"]], "AnchorBar",
+     CacheGraphics->False,ExpressionUUID->
+     "19dd76b6-2504-4715-ae08-a97fe25a5d45"]}
+  }]], "AnchorBarGrid",
+ GridBoxOptions->{GridBoxItemSize->{"Columns" -> {
+     Scaled[0.65], {
+      Scaled[0.34]}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}}, 
+   "RowsIndexed" -> {}}},
+ CellID->1,ExpressionUUID->"df49652a-00f0-479a-a1d1-0d39063ba4d6"],
+
+Cell["DavidLizarazo`qlanth`", "ContextNameCell",ExpressionUUID->"62326a9b-3f66-4677-a47b-a57e44de8937"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[GridBox[{
+   {Cell[TextData[{
+     Cell[
+     "AngularMomentumMatrices", "ObjectName",ExpressionUUID->
+      "eaad2816-9ea5-4887-a7cc-f7b4b147c092"],
+     Cell[BoxData[
+      TemplateBox[{8},
+       "Spacer1"]],ExpressionUUID->"3109a726-d196-4f3d-aa20-5f23f5c5d573"],
+     Cell[BoxData[
+     ""], "ObjectNameTranslation",ExpressionUUID->
+      "7d8d1076-363b-4560-9de2-5cdec9179d5c"]
+    }],ExpressionUUID->"142c6a4f-d725-4f5c-b450-e115cb4edde4"], 
+    "\[SpanFromLeft]"}
+  }]], "ObjectNameGrid",ExpressionUUID->"d89c872c-7083-44d0-baa6-\
+3bfe4851728e"],
+
+Cell[BoxData[GridBox[{
+   {"", Cell[TextData[{
+     Cell[BoxData[
+      RowBox[{"AngularMomentumMatrices", "[", 
+       StyleBox["j",
+        FontSlant->"Italic"], "]"}]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "13d0cb88-b7ee-4b46-a8c2-cf7575fe29d5"],
+     " \[LineSeparator]gives the matrix representation for the angular \
+momentum operators ",
+     StyleBox["Jx",
+      FontSlant->"Italic"],
+     ", ",
+     StyleBox["Jy",
+      FontSlant->"Italic"],
+     ", and ",
+     StyleBox["Jz",
+      FontSlant->"Italic"],
+     " for a given angular momentum j in the basis of eigenvectors of Jz. ",
+     StyleBox["j",
+      FontSlant->"Italic"],
+     " may be integer or half-integer."
+    }],ExpressionUUID->"14941290-2d9e-4e20-b4ed-564d67c5bbcb"]}
+  }]], "Usage",
+ CellID->453197979,ExpressionUUID->"8015c717-b66f-4bd4-b611-7abb9dc42431"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[Cell[BoxData[
+ ButtonBox[Cell[TextData[{
+   Cell[BoxData[
+    DynamicBox[ToBoxes[
+      If[
+       MatchQ[
+        CurrentValue[
+         EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, 
+         Closed], 
+        Alternatives[Open, True]], 
+       Style[
+        Graphics[{
+          Thickness[0.18], 
+          RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+          Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+         PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+        0.68 Inherited], 
+       Rotate[
+        Style[
+         Graphics[{
+           Thickness[0.18], 
+           RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+           Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+          PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+         0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+     ImageSizeCache->{
+      13.600000000000001`, {-0.1685058593749993, 13.768505859375}}]],
+    ExpressionUUID->"e8fc5dc9-4f4a-48cc-9fa1-e4c8aac95a51"],
+   Cell[BoxData[
+    TemplateBox[{1},
+     "Spacer1"]],ExpressionUUID->"12069d46-b8c8-496c-8994-181d6c369856"],
+   "Details and Options"
+  }], "NotesFrameText",ExpressionUUID->"033174a4-169f-4df8-bb2d-2b8d83703ec5"],
+  Appearance->{Automatic, None, "Normal", Automatic},
+  BaseStyle->None,
+  ButtonFunction:>(FrontEndExecute[{
+     FrontEnd`SelectionMove[
+      FrontEnd`SelectedNotebook[], All, ButtonCell], 
+     FrontEndToken["OpenCloseGroup"], 
+     FrontEnd`SelectionMove[
+      FrontEnd`SelectedNotebook[], After, CellContents]}]& ),
+  Evaluator->None,
+  Method->
+   "Preemptive"]],ExpressionUUID->"a84aaeb0-b5f8-4d5e-8fa5-a894ac97ff73"]], \
+"NotesSection",
+ WholeCellGroupOpener->True,
+ CellGroupingRules->{"SectionGrouping", 50},
+ CacheGraphics->False,
+ CellID->1645437086,ExpressionUUID->"24263331-61b1-4d00-805e-b33d6b61c1d6"],
+
+Cell[TextData[{
+ "The function returns a list of the form ",
+ StyleBox["{JxMatrix, JyMatrix, JzMatrix}",
+  FontSlant->"Italic"],
+ " with the matrix representations for the Cartesian components of the \
+angular momentum operator."
+}], "Notes",
+ CellID->1921420791,ExpressionUUID->"b972bd78-d99b-4ec8-bc17-988cb04b823f"],
+
+Cell[TextData[{
+ "Options\[LineSeparator]",
+ Cell[BoxData[GridBox[{
+    {Cell[
+     "      ", "TableRowIcon",ExpressionUUID->
+      "0d725253-f2ed-4497-91ba-8ce2bf0768fb"], "\"\<Sparse\>\"", "False", 
+     Cell["Whether the returned array are SparseArray or not.", "TableText",
+      ExpressionUUID->"b0b36a27-32db-48bb-a7cc-fa8666553aee"]},
+    {Cell[
+     "      ", "TableRowIcon",ExpressionUUID->
+      "815a02be-6a28-464c-a316-6a7e7bb9a886"], "\"\<Order\>\"", 
+     "\"\<HighToLow\>\"", Cell["\<\
+Whether the basis of eigenvectors of Jz is order in increasing \
+(\"LowToHigh\") or decreasing (\"HighToLow\")  order of mz.\
+\>", "TableText",ExpressionUUID->"74175916-93b6-46bd-8af2-1ea4890bf72d"]}
+   }]], "3ColumnTableMod",
+  GridBoxOptions->{
+  GridBoxBackground->{"Columns" -> {{None}}, "Rows" -> {None, {None}}},
+  GridBoxDividers->{"Rows" -> {{True, True, True}}}},ExpressionUUID->
+  "c8bc503c-2cf5-4c87-a9b0-03e6b179234e"]
+}], "Notes",
+ CellID->30769500,ExpressionUUID->"b298d6f1-eb64-4348-9b2c-94b0e480868b"]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, Closed]]]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  DynamicBox[ToBoxes[
+    If[
+     MatchQ[
+      CurrentValue[
+       EvaluationNotebook[], {
+       TaggingRules, "Openers", "PrimaryExamplesSection"}, Open], 
+      Alternatives[True, Open]], 
+     Style[
+      Graphics[{
+        Thickness[0.18], 
+        RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+        Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+       PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+      0.68 Inherited], 
+     Rotate[
+      Style[
+       Graphics[{
+         Thickness[0.18], 
+         RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+         Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+        PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+       0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+   ImageSizeCache->{
+    13.600000000000001`, {4.251494140625001, 9.348505859375}}]],
+  ExpressionUUID->"fab04b4a-6945-4a6a-9888-6081ba4c13f9"],
+ Cell[BoxData[
+  TemplateBox[{1},
+   "Spacer1"]],ExpressionUUID->"4bfd5260-d3ec-4b78-972b-509e4fdea17a"],
+ "Examples",
+ "\[NonBreakingSpace]\[NonBreakingSpace]",
+ Cell["(1)", "ExampleCount",ExpressionUUID->
+  "1c296ddb-e8f0-4e26-bdef-1bd5cd16e2f7"]
+}], "PrimaryExamplesSection",
+ WholeCellGroupOpener->True,
+ CacheGraphics->False,
+ CellTags->"PrimaryExamplesSection",
+ CellID->1714181983,ExpressionUUID->"f864685a-5f15-429e-aae8-82ff9851e261"],
+
+Cell[BoxData[
+ RowBox[{"Needs", "[", "\"\<DavidLizarazo`qlanth`\>\"", "]"}]], "Input", \
+"ExampleInitialization",
+ CellLabel->"In[1]:=",
+ CellID->989357958,ExpressionUUID->"28d8f02a-1143-4705-8e19-1d67e032a052"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  DynamicBox[ToBoxes[
+    If[
+     MatchQ[
+      CurrentValue[
+       EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"},
+        Closed], 
+      Alternatives[Open, True]], 
+     Style[
+      Graphics[{
+        Thickness[0.18], 
+        RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+        Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+       PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+      0.68 Inherited], 
+     Rotate[
+      Style[
+       Graphics[{
+         Thickness[0.18], 
+         RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+         Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+        PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+       0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+   ImageSizeCache->{
+    13.600000000000001`, {4.551318359375001, 9.048681640625}}]],
+  ExpressionUUID->"469d69a6-f7a3-4c04-be0a-a3047df8929d"],
+ Cell[BoxData[
+  TemplateBox[{1},
+   "Spacer1"]],ExpressionUUID->"d5e0687d-75d2-41b7-b078-fc209f8f737b"],
+ "Basic Examples",
+ "\[NonBreakingSpace]\[NonBreakingSpace]",
+ Cell["(1)", "ExampleCount",ExpressionUUID->
+  "b2e88d6e-7395-45ee-9a7f-307adb3d19f4"]
+}], "ExampleSection", "ExampleSection",
+ WholeCellGroupOpener->True,
+ CacheGraphics->False,
+ CellID->1763463776,ExpressionUUID->"67b60b2e-e911-4396-8268-09f398f8538b"],
+
+Cell["\<\
+The Pauli matrices are frequently ordered from + 1/2 to - 1/2.\
+\>", "ExampleText",
+ CellID->1270011006,ExpressionUUID->"e13f1d8a-a4c1-4c98-8f92-866ade08cfdd"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"2", "*", 
+   RowBox[{"AngularMomentumMatrices", "[", 
+    RowBox[{
+     RowBox[{"1", "/", "2"}], ",", 
+     RowBox[{"\"\<Order\>\"", "->", "\"\<HighToLow\>\""}]}], "]"}]}], "==", 
+  RowBox[{"PauliMatrix", "/@", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2", ",", "3"}], "}"}]}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"2", "*", 
+   RowBox[{"AngularMomentumMatrices", "[", 
+    RowBox[{
+     RowBox[{"1", "/", "2"}], ",", 
+     RowBox[{"\"\<Order\>\"", "->", "\"\<LowToHigh\>\""}]}], "]"}]}], "==", 
+  RowBox[{"PauliMatrix", "/@", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2", ",", "3"}], "}"}]}]}]}], "Input",
+ CellProlog:>Needs["DavidLizarazo`qlanth`"],
+ CellLabel->"In[1]:=",
+ CellID->1235010309,ExpressionUUID->"f097567f-c38f-43be-bd45-d13e939a8f0a"],
+
+Cell[BoxData["True"], "Output",
+ CellLabel->"Out[1]=",
+ CellID->1388815108,ExpressionUUID->"abe27548-3a4c-493a-923d-05c75a22c0bd"],
+
+Cell[BoxData["False"], "Output",
+ CellLabel->"Out[1]=",
+ CellID->815760913,ExpressionUUID->"55644db9-cbb7-4385-ac05-3631e92e7322"]
+}, Open  ]]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"}, 
+  Closed]]]]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "PrimaryExamplesSection"}, 
+  Closed]]]],
+
+Cell[" ", "FooterCell",ExpressionUUID->"eba31a8f-dbf9-483a-a819-9c306cf72fed"]
+},
+Saveable->False,
+ScreenStyleEnvironment->"Working",
+WindowSize->{900, 830},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+WindowTitle->"AngularMomentumMatrices",
+TaggingRules->{
+ "ModificationHighlight" -> False, "ColorType" -> "", "LinkTrails" -> "", 
+  "ExampleCounter" -> 1, 
+  "Openers" -> {
+   "PrimaryExamplesSection" -> Open, "ExampleSection" -> {"0" -> Open}, 
+    "AllOptsTable" -> Closed, "NotesSection" -> Closed}, "NewStyles" -> True, 
+  "CitationPopupData" -> $Failed, "ShowCitation" -> False, "HasOptions" -> 
+  True, "RootCaptions" -> "", "HeaderCoreAreaLink" -> {}, 
+  "Metadata" -> {
+   "built" -> "{2025, 1, 24, 17, 34, 54.886983}", 
+    "history" -> {"1.0.0", "", "", ""}, "context" -> "DavidLizarazo`qlanth`", 
+    "keywords" -> {}, "specialkeywords" -> {}, 
+    "tutorialcollectionlinks" -> {}, "index" -> True, "label" -> 
+    "David Lizarazo/qlanth Symbol", "language" -> "en", "paclet" -> 
+    "DavidLizarazo/qlanth", "status" -> "None", "summary" -> 
+    "AngularMomentumMatrices[j] gives the matrix representation for the \
+angular momentum operators Jx, Jy, and Jz for a given angular momentum j in \
+the basis of eigenvectors of Jz. j may be integer or half-integer.", 
+    "synonyms" -> {}, "tabletags" -> {}, "title" -> "AngularMomentumMatrices",
+     "titlemodifier" -> "", "metadescription" -> "", "windowtitle" -> 
+    "AngularMomentumMatrices", "type" -> "Symbol", "uri" -> 
+    "DavidLizarazo/qlanth/ref/AngularMomentumMatrices", "WorkflowDockedCell" -> 
+    ""}, "SearchTextTranslated" -> ""},
+FrontEndVersion->"14.1 for Mac OS X ARM (64-bit) (July 16, 2024)",
+StyleDefinitions->FrontEnd`FileName[{"Wolfram"}, "Reference.nb", 
+  CharacterEncoding -> "UTF-8"],
+ExpressionUUID->"7f29b0e5-50ff-47de-b9f5-5aab2f9d3bd7"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "PrimaryExamplesSection"->{
+  Cell[9120, 239, 1438, 38, 34, "PrimaryExamplesSection",ExpressionUUID->"f864685a-5f15-429e-aae8-82ff9851e261",
+   CellTags->"PrimaryExamplesSection",
+   CellID->1714181983]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"PrimaryExamplesSection", 15675, 411}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[591, 21, 3534, 81, 50, "AnchorBarGrid",ExpressionUUID->"df49652a-00f0-479a-a1d1-0d39063ba4d6",
+ CellID->1],
+Cell[4128, 104, 103, 0, 22, "ContextNameCell",ExpressionUUID->"62326a9b-3f66-4677-a47b-a57e44de8937"],
+Cell[CellGroupData[{
+Cell[4256, 108, 566, 14, 57, "ObjectNameGrid",ExpressionUUID->"d89c872c-7083-44d0-baa6-3bfe4851728e"],
+Cell[4825, 124, 872, 24, 127, "Usage",ExpressionUUID->"8015c717-b66f-4bd4-b611-7abb9dc42431",
+ CellID->453197979]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5734, 153, 1917, 48, 34, "NotesSection",ExpressionUUID->"24263331-61b1-4d00-805e-b33d6b61c1d6",
+ CellGroupingRules->{"SectionGrouping", 50},
+ CellID->1645437086],
+Cell[7654, 203, 318, 7, 70, "Notes",ExpressionUUID->"b972bd78-d99b-4ec8-bc17-988cb04b823f",
+ CellID->1921420791],
+Cell[7975, 212, 1018, 21, 70, "Notes",ExpressionUUID->"b298d6f1-eb64-4348-9b2c-94b0e480868b",
+ CellID->30769500]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, Closed]]]],
+Cell[CellGroupData[{
+Cell[9120, 239, 1438, 38, 34, "PrimaryExamplesSection",ExpressionUUID->"f864685a-5f15-429e-aae8-82ff9851e261",
+ CellTags->"PrimaryExamplesSection",
+ CellID->1714181983],
+Cell[10561, 279, 211, 4, 29, "Input",ExpressionUUID->"28d8f02a-1143-4705-8e19-1d67e032a052",
+ CellID->989357958],
+Cell[CellGroupData[{
+Cell[10797, 287, 1416, 37, 29, "ExampleSection",ExpressionUUID->"67b60b2e-e911-4396-8268-09f398f8538b",
+ CellID->1763463776],
+Cell[12216, 326, 169, 3, 37, "ExampleText",ExpressionUUID->"e13f1d8a-a4c1-4c98-8f92-866ade08cfdd",
+ CellID->1270011006],
+Cell[CellGroupData[{
+Cell[12410, 333, 793, 21, 45, "Input",ExpressionUUID->"f097567f-c38f-43be-bd45-d13e939a8f0a",
+ CellID->1235010309],
+Cell[13206, 356, 130, 2, 36, "Output",ExpressionUUID->"abe27548-3a4c-493a-923d-05c75a22c0bd",
+ CellID->1388815108],
+Cell[13339, 360, 130, 2, 36, "Output",ExpressionUUID->"55644db9-cbb7-4385-ac05-3631e92e7322",
+ CellID->815760913]
+}, Open  ]]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"}, Closed]]]]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "PrimaryExamplesSection"}, Closed]]]],
+Cell[13711, 371, 78, 0, 40, "FooterCell",ExpressionUUID->"eba31a8f-dbf9-483a-a819-9c306cf72fed"]
+}
+]
+*)
+
+(* End of internal cache information *)
+

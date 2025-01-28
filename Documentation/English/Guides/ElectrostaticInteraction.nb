@@ -1,0 +1,356 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     13773,        348]
+NotebookOptionsPosition[      9929,        265]
+NotebookOutlinePosition[     10453,        283]
+CellTagsIndexPosition[     10410,        280]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Electrostatic Interaction", "GuideTitle",
+ CellID->905347127,ExpressionUUID->"d60c6404-5bb2-4e15-92e6-2ec7a5b30082"],
+
+Cell["\<\
+Properly speaking the electrostatic interaction is a two-body interaction, \
+and if no other considerations are given to the simplest form of the single \
+configuration description, then it is described by the Slater parameters F2, \
+F4, and F6. With F0 being disregarded since it only adds a constant shift to \
+all the energies.
+However, when corrections are added to the single-configuration description \
+to (partially) account for the effects of having made this simplification, \
+then additional contributions arise.
+Configuration interaction, taken to second order, is responsible for the \
+parameters \[Alpha], \[Beta], and \[Gamma].
+And when configuration interaction is taken to third order, then it is \
+represented by the Tk parameters.\
+\>", "GuideAbstract",
+ CellChangeTimes->{{3.946664419521522*^9, 3.94666459853738*^9}, {
+  3.946664638583269*^9, 3.946664671054891*^9}, {3.946664741175159*^9, 
+  3.946664830627254*^9}, {3.946665041067749*^9, 3.9466652863950653`*^9}},
+ CellID->1247524494,ExpressionUUID->"45d16c5d-97b5-412d-be50-2cb77a9e1a55"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["", "GuideFunctionsSection",
+ CellID->1261324997,ExpressionUUID->"c14ce988-f96d-41e8-9d55-476f06814cd6"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["ElectrostaticConfigInteraction",
+   BaseStyle->"Link",
+   ButtonData->
+    "paclet:DavidLizarazo/qlanth/ref/ElectrostaticConfigInteraction"]], 
+  "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c5c6736a-1ff4-4e4e-8fcf-2d9846cbae62",ExpressionUUID->
+  "beec3b95-b5af-4514-b876-0002fbbf4f32"],
+ " \[LongDash] describing the contribution to the semi-empirical Hamiltonian \
+by the \[Alpha], \[Beta], and \[Gamma] parameters and corresponding Casimir \
+operators."
+}], "GuideText",
+ CellChangeTimes->{{3.9466653345232353`*^9, 3.9466653972807293`*^9}},
+ CellID->504799953,ExpressionUUID->"5112db12-d1d7-4ea6-9665-d22bfa18ed6c"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["Electrostatic",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/Electrostatic"]], 
+  "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c5c6736a-1ff4-4e4e-8fcf-2d9846cbae62",ExpressionUUID->
+  "69283d97-a580-42c0-96cf-cb329bdb08aa"],
+ " \[LongDash] gives the LS-reduced matrix element for the two-body \
+contribution of the electrostatic repulsion."
+}], "GuideText",
+ CellChangeTimes->{{3.9466653345232353`*^9, 3.946665349971231*^9}, {
+  3.946665412492882*^9, 3.946665419144409*^9}, {3.946665496406618*^9, 
+  3.946665505952565*^9}},
+ CellID->1044680111,ExpressionUUID->"c5e2f6b0-c341-4067-8e03-ecd0a66abf53"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["LoadElectrostatic",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/LoadElectrostatic"]], 
+  "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c5c6736a-1ff4-4e4e-8fcf-2d9846cbae62",ExpressionUUID->
+  "580e9c32-0a97-4f9a-ae3a-84dfc9c7d5db"],
+ " \[LongDash] loads into session spectroscopic tables for the electrostatic \
+term."
+}], "GuideText",
+ CellChangeTimes->{{3.9466653345232353`*^9, 3.946665349971231*^9}, {
+  3.9466654296531553`*^9, 3.946665440377091*^9}, {3.946665507484603*^9, 
+  3.946665522305312*^9}},
+ CellID->112327705,ExpressionUUID->"cd08d670-58e8-4a12-95ff-5388c0800336"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["ElectrostaticTable",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/ElectrostaticTable"]], 
+  "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c5c6736a-1ff4-4e4e-8fcf-2d9846cbae62",ExpressionUUID->
+  "6c995d70-ee8c-47f7-a357-dfd864b1d6ba"],
+ " \[LongDash] association containing reduced matrix elements."
+}], "GuideText",
+ CellChangeTimes->{{3.9466653345232353`*^9, 3.946665349971231*^9}, {
+  3.946665445765936*^9, 3.946665469484668*^9}, {3.9466655248746433`*^9, 
+  3.9466655315354033`*^9}},
+ CellID->253612222,ExpressionUUID->"18efe106-da6c-421e-bec8-0d48fc7a6bb4"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["FreeIonTable",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/FreeIonTable"]], 
+  "InlineFormula",ExpressionUUID->"bba2c1db-f239-4fe0-aee7-4de07ccd064c"],
+ " \[LongDash] algebraic expressions for the energies of LSJ multiplets in \
+terms of Fk and \[Zeta] parameters."
+}], "GuideText",
+ CellChangeTimes->{{3.9466653345232353`*^9, 3.946665349971231*^9}, {
+  3.946665445765936*^9, 3.9466654640473423`*^9}, {3.946665534527528*^9, 
+  3.9466655503809547`*^9}},
+ CellID->1763911955,ExpressionUUID->"847a0e4d-e399-40d4-876c-ec748a59b997"],
+
+Cell[CellGroupData[{
+
+Cell["\t", "GuideDelimiter",
+ CellID->1612404421,ExpressionUUID->"22d070c4-3533-4233-bea5-7898aaff2994"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  TagBox[
+   FrameBox["\<\"XXXX\"\>"],
+   "FunctionPlaceholder"]], "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},ExpressionUUID->
+  "122f8d83-7bec-45b0-98ed-8623ec0584e3"],
+ Cell[BoxData[
+  RowBox[{
+  Cell[TextData[StyleBox[
+   " \[FilledVerySmallSquare] ", "InlineSeparator"]],ExpressionUUID->
+    "bab05ff7-6bab-494c-865d-c0b48a263bc9"], 
+   DynamicModuleBox[{$CellContext`nbobj$$ = NotebookObject[
+    "a43ff4d6-b863-43d4-a837-a1f871f595c0", 
+     "0ba41271-5f3c-41d1-9e26-58fe26ce4c0b"], $CellContext`cellobj$$ = 
+    CellObject[
+    "4d7f9ff4-442d-48b4-a1a0-ac73b3d06527", 
+     "aa9edbcd-6a97-49cb-9041-6101fa594b70"]}, 
+    TemplateBox[{
+      GraphicsBox[{{
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         CircleBox[{0, 0}]}, {
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         LineBox[{{0, 0.62}, {0, -0.62}}]}, {
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         LineBox[{{-0.62, 0}, {0.62, 0}}]}}, 
+       ImagePadding -> {{1., 1.}, {2.4, 1.}}, ImageSize -> 16, 
+       PlotRange -> {{-1.06, 1.06}, {-1.06, 1.06}}, 
+       BaselinePosition -> (Center -> 
+        Center)], $CellContext`nbobj$$, $CellContext`cellobj$$},
+     "InlineListingAddButton"],
+    Initialization:>($CellContext`nbobj$$ = 
+      EvaluationNotebook[]; $CellContext`cellobj$$ = EvaluationCell[])]}]], 
+  "InlineListingAddButton",ExpressionUUID->
+  "4d7f9ff4-442d-48b4-a1a0-ac73b3d06527"]
+}], "InlineGuideFunctionListing",
+ CellID->584962254,ExpressionUUID->"88fe3b7f-5ec4-440a-a29b-2fe6baabf8de"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Tech Notes", "GuideTutorialsSection",
+ CellID->280467012,ExpressionUUID->"de541b20-1c6e-400c-97d0-1ed7fba0e935"],
+
+Cell["XXXX", "GuideTutorial",
+ CellID->82465519,ExpressionUUID->"7949c53f-8207-494b-a8f8-a8624f892d22"],
+
+Cell["XXXX", "GuideTutorial",
+ CellID->871025518,ExpressionUUID->"c327414c-c32f-4dfe-8ce1-0b0749754166"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Related Guides", "GuideMoreAboutSection",
+ CellChangeTimes->{{3.8430423939366693`*^9, 3.843042395176153*^9}},
+ CellID->2077343074,ExpressionUUID->"9e3a989b-2a57-4ca4-a245-203cffa74356"],
+
+Cell[TextData[ButtonBox["qlanth",
+ BaseStyle->"Link",
+ ButtonData->"paclet:DavidLizarazo/qlanth/guide/qlanth"]], "GuideMoreAbout",
+ CellChangeTimes->{{3.946989609411786*^9, 3.946989616022684*^9}},
+ CellID->115911792,ExpressionUUID->"85c29b26-9c13-4c44-9d35-e519dfef396c"],
+
+Cell["XXXX", "GuideMoreAbout",
+ CellID->361820315,ExpressionUUID->"385ae21b-9a76-4f75-8d50-ded02e1fedf9"]
+}, Open  ]],
+
+Cell["Related Links", "GuideRelatedLinksSection",
+ CellID->1587829548,ExpressionUUID->"250e8d62-0a9d-4738-87d5-6021e70beeaf"],
+
+Cell[CellGroupData[{
+
+Cell["Metadata", "MetadataSection",
+ CellID->2019415614,ExpressionUUID->"104ec4be-c2a5-4fba-a52d-66cb10e8d54f"],
+
+Cell[TextData[{
+ "New in: ",
+ Cell["1.0.0", "HistoryData",
+  CellTags->"New",ExpressionUUID->"37a50ec5-9f47-427f-b637-179d2b021079"],
+ " | Modified in: ",
+ Cell[" ", "HistoryData",
+  CellTags->"Modified",ExpressionUUID->"d3f70124-8363-4966-b4a3-680419f0011b"],
+ " | Obsolete in: ",
+ Cell[" ", "HistoryData",
+  CellTags->"Obsolete",ExpressionUUID->
+  "7bfd471e-8350-4c02-b4f6-24a387687506"]
+}], "History",
+ CellChangeTimes->{{3.946665567268588*^9, 3.946665567786564*^9}},
+ CellID->1486667310,ExpressionUUID->"6b450307-6ca9-4708-8f82-23358f99c3ae"],
+
+Cell[CellGroupData[{
+
+Cell["Categorization", "CategorizationSection",
+ CellID->445246325,ExpressionUUID->"0e58cd7c-103a-4771-814c-1c81cf33fa62"],
+
+Cell["Guide", "Categorization",
+ CellLabel->"Entity Type",
+ CellID->1421958127,ExpressionUUID->"df499e70-0b5b-4fd7-a6df-454b346b9efa"],
+
+Cell["DavidLizarazo/qlanth", "Categorization",
+ CellLabel->"Paclet Name",
+ CellID->1652216673,ExpressionUUID->"b412d4cc-63d9-457c-afab-c86efcb7815a"],
+
+Cell["DavidLizarazo`qlanth`", "Categorization",
+ CellLabel->"Context",
+ CellID->1842067401,ExpressionUUID->"ad7ec9e5-1789-4e63-a329-b4172d22e929"],
+
+Cell["DavidLizarazo/qlanth/guide/ElectrostaticInteraction", "Categorization",
+ CellLabel->"URI",
+ CellID->1502553455,ExpressionUUID->"c8cfc1d6-e579-4346-a47a-423e3c8329a2"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Keywords", "KeywordsSection",
+ CellID->1155713112,ExpressionUUID->"680c6089-88bb-48a7-9d4c-a9c86dc895a9"],
+
+Cell["XXXX", "Keywords",
+ CellID->80686269,ExpressionUUID->"1424fd56-29cf-4255-b7e1-69b2076373d6"]
+}, Closed]]
+}, Open  ]]
+},
+WindowSize->{700, 770},
+WindowMargins->{{74, Automatic}, {Automatic, 134}},
+TaggingRules-><|"Paclet" -> "DavidLizarazo/qlanth"|>,
+FrontEndVersion->"14.1 for Mac OS X ARM (64-bit) (July 16, 2024)",
+StyleDefinitions->FrontEnd`FileName[{"Wolfram"}, "GuidePageStylesExt.nb", 
+  CharacterEncoding -> "UTF-8"],
+ExpressionUUID->"a43ff4d6-b863-43d4-a837-a1f871f595c0"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[576, 22, 122, 1, 86, "GuideTitle",ExpressionUUID->"d60c6404-5bb2-4e15-92e6-2ec7a5b30082",
+ CellID->905347127],
+Cell[701, 25, 1068, 17, 201, "GuideAbstract",ExpressionUUID->"45d16c5d-97b5-412d-be50-2cb77a9e1a55",
+ CellID->1247524494]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1806, 47, 109, 1, 71, "GuideFunctionsSection",ExpressionUUID->"c14ce988-f96d-41e8-9d55-476f06814cd6",
+ CellID->1261324997],
+Cell[1918, 50, 698, 15, 40, "GuideText",ExpressionUUID->"5112db12-d1d7-4ea6-9665-d22bfa18ed6c",
+ CellID->504799953],
+Cell[2619, 67, 703, 15, 40, "GuideText",ExpressionUUID->"c5e2f6b0-c341-4067-8e03-ecd0a66abf53",
+ CellID->1044680111],
+Cell[3325, 84, 682, 15, 24, "GuideText",ExpressionUUID->"cd08d670-58e8-4a12-95ff-5388c0800336",
+ CellID->112327705],
+Cell[4010, 101, 664, 14, 24, "GuideText",ExpressionUUID->"18efe106-da6c-421e-bec8-0d48fc7a6bb4",
+ CellID->253612222],
+Cell[4677, 117, 598, 12, 38, "GuideText",ExpressionUUID->"847a0e4d-e399-40d4-876c-ec748a59b997",
+ CellID->1763911955],
+Cell[CellGroupData[{
+Cell[5300, 133, 104, 1, 26, "GuideDelimiter",ExpressionUUID->"22d070c4-3533-4233-bea5-7898aaff2994",
+ CellID->1612404421],
+Cell[5407, 136, 1670, 42, 25, "InlineGuideFunctionListing",ExpressionUUID->"88fe3b7f-5ec4-440a-a29b-2fe6baabf8de",
+ CellID->584962254]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7126, 184, 118, 1, 73, "GuideTutorialsSection",ExpressionUUID->"de541b20-1c6e-400c-97d0-1ed7fba0e935",
+ CellID->280467012],
+Cell[7247, 187, 103, 1, 23, "GuideTutorial",ExpressionUUID->"7949c53f-8207-494b-a8f8-a8624f892d22",
+ CellID->82465519],
+Cell[7353, 190, 104, 1, 23, "GuideTutorial",ExpressionUUID->"c327414c-c32f-4dfe-8ce1-0b0749754166",
+ CellID->871025518]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7494, 196, 191, 2, 73, "GuideMoreAboutSection",ExpressionUUID->"9e3a989b-2a57-4ca4-a245-203cffa74356",
+ CellID->2077343074],
+Cell[7688, 200, 271, 4, 23, "GuideMoreAbout",ExpressionUUID->"85c29b26-9c13-4c44-9d35-e519dfef396c",
+ CellID->115911792],
+Cell[7962, 206, 105, 1, 23, "GuideMoreAbout",ExpressionUUID->"385ae21b-9a76-4f75-8d50-ded02e1fedf9",
+ CellID->361820315]
+}, Open  ]],
+Cell[8082, 210, 125, 1, 73, "GuideRelatedLinksSection",ExpressionUUID->"250e8d62-0a9d-4738-87d5-6021e70beeaf",
+ CellID->1587829548],
+Cell[CellGroupData[{
+Cell[8232, 215, 111, 1, 71, "MetadataSection",ExpressionUUID->"104ec4be-c2a5-4fba-a52d-66cb10e8d54f",
+ CellID->2019415614],
+Cell[8346, 218, 546, 13, 25, "History",ExpressionUUID->"6b450307-6ca9-4708-8f82-23358f99c3ae",
+ CellID->1486667310],
+Cell[CellGroupData[{
+Cell[8917, 235, 122, 1, 20, "CategorizationSection",ExpressionUUID->"0e58cd7c-103a-4771-814c-1c81cf33fa62",
+ CellID->445246325],
+Cell[9042, 238, 134, 2, 70, "Categorization",ExpressionUUID->"df499e70-0b5b-4fd7-a6df-454b346b9efa",
+ CellID->1421958127],
+Cell[9179, 242, 149, 2, 70, "Categorization",ExpressionUUID->"b412d4cc-63d9-457c-afab-c86efcb7815a",
+ CellID->1652216673],
+Cell[9331, 246, 146, 2, 70, "Categorization",ExpressionUUID->"ad7ec9e5-1789-4e63-a329-b4172d22e929",
+ CellID->1842067401],
+Cell[9480, 250, 172, 2, 70, "Categorization",ExpressionUUID->"c8cfc1d6-e579-4346-a47a-423e3c8329a2",
+ CellID->1502553455]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[9689, 257, 111, 1, 20, "KeywordsSection",ExpressionUUID->"680c6089-88bb-48a7-9d4c-a9c86dc895a9",
+ CellID->1155713112],
+Cell[9803, 260, 98, 1, 70, "Keywords",ExpressionUUID->"1424fd56-29cf-4255-b7e1-69b2076373d6",
+ CellID->80686269]
+}, Closed]]
+}, Open  ]]
+}
+]
+*)
+

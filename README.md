@@ -4,7 +4,7 @@
   <img alt="Single configuration effective Hamiltonian." src="./figs/banner-dark.png">
 </picture>
 
-`qlanth` is a Mathematica package that can be used to calculate the level structure of lanthanide ions embedded in crystals. For this purpose it uses a single configuration description (with  configuration-interaction corrections) with the effective Hamiltonian shown below. This Hamiltonian aims to describe the observed properties of ions embedded in solids in a picture that imagines them as free-ions but modified by the influence of the lattice in which they find themselves in.
+`qlanth` is a Mathematica package that can be used to calculate the level structure of lanthanide ions embedded in crystals. For this purpose it uses a single configuration description (with configuration-interaction corrections) with the effective Hamiltonian shown below. This Hamiltonian aims to describe the observed properties of ions embedded in solids in a picture that imagines them as free-ions but modified by the influence of the lattice in which they find themselves in.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./figs/hamiltonian-dark.png">
@@ -33,6 +33,26 @@ The folder `/pyql` includes Python versions of the symbolic arrays that represen
   <source media="(prefers-color-scheme: light)" srcset="./figs/pr3plus-states-light.png">
   <img alt="Single configuration effective Hamiltonian." src="./figs/pr3plus-states-dark.png">
 </picture>
+
+## Installation
+
+To install *qlanth* in Mathematica follow the following steps:
+
+- Clone the repo with the terminal command: 
+```
+git clone --depth 1 https://github.com/zia-lab/qlanth.git
+```
+- Create and install a `.paclet` for Mathematica by issuing the following commands within a notebook (replacing `pathToRepo` with the adequate directory):
+```
+Needs["PacletTools`"];
+pathToRepo = "~/Downloads/qlanth/'; (* mutatis mutandis *)
+pathToBuild = FileNameJoin[{pathToRepo,"build","DavidLizarazo__qlanth"}];
+CreatePacletArchive[pathToBuild];
+pathToPaclet = FileNames[FileNameJoin[{pathToRepo, "build", "/*.paclet"}]][[1]]
+PacletInstall[pathToPaclet];
+Needs["DavidLizarazo`qlanth`"];
+```
+- See documentation therein. Probably going straight to `HamMatrixAssembly` and `BasisLSJMJ` are the first things to try. The first function provides the matrix representation of the Hamiltonian for f^n, and the second function provides the labels for the ordered basis in which the representation is given.
 
 ## References
 

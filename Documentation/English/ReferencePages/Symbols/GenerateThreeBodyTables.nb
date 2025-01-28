@@ -1,0 +1,5814 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[    190446,       5806]
+NotebookOptionsPosition[    183897,       5667]
+NotebookOutlinePosition[    184659,       5692]
+CellTagsIndexPosition[    184578,       5687]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["GenerateThreeBodyTables", "ObjectName",
+ CellID->1723437141,ExpressionUUID->"1f649389-99e1-4127-b142-c103ba6821a9"],
+
+Cell[TextData[{
+ Cell["   ", "ModInfo",ExpressionUUID->"18713ca1-7e7d-46a0-aca0-e504d0108f09"],
+ Cell[BoxData[
+  RowBox[{
+   ButtonBox["GenerateThreeBodyTables",
+    BaseStyle->"Link",
+    ButtonData->"paclet:DavidLizarazo/qlanth/ref/GenerateThreeBodyTables"], 
+   "[", "]"}]], "InlineFormula",ExpressionUUID->
+  "ead46469-1c1e-4dc3-870a-cfdb46072b75"],
+ " \[LineSeparator]generates the LS-reduced matrix elements for the three \
+body operators using the coefficients of fractional parentage. Calculated for \
+",
+ Cell[BoxData[
+  SuperscriptBox["f", "n"]], "InlineFormula",
+  FormatType->StandardForm,ExpressionUUID->
+  "0876a6e4-2cae-4f5f-ab33-5ac13b527050"],
+ " with n from 1 to 14."
+}], "Usage",
+ CellChangeTimes->{{3.945797435174406*^9, 3.9457974446000357`*^9}, {
+  3.945797478429098*^9, 3.9457974871008863`*^9}, {3.9457975931614323`*^9, 
+  3.9457976106512737`*^9}, {3.94579846792752*^9, 3.945798483621955*^9}},
+ CellID->548598051,ExpressionUUID->"5b7699b7-ac67-4394-8280-8ad504aa6c01"],
+
+Cell[TextData[{
+ "Options\[LineSeparator]",
+ Cell[BoxData[GridBox[{
+    {Cell[
+     "      ", "ModInfo",ExpressionUUID->
+      "3ce03ebb-eb01-433f-ac91-63c09941576d"], "\"\<Export\>\"", "False", 
+     Cell["\<\
+If True then the result of the calculation is saved to /data/ThreeBodyTable.m\
+\
+\>", "TableText",ExpressionUUID->"6e295b19-b75f-4042-b39f-89be7ad9b643"]},
+    {Cell[
+     "      ", "ModInfo",ExpressionUUID->
+      "59591c26-966b-4311-b31a-aa7c68a94224"], "XXXX", "XXXX", Cell[
+     "XXXX", "TableText",ExpressionUUID->
+      "136af240-a1ef-4cb0-8cb1-c809cdde8cd4"]}
+   }]], "3ColumnTableMod",
+  CellChangeTimes->{{3.945798509990869*^9, 3.945798538643112*^9}},
+  ExpressionUUID->"58838d23-8f8a-44c2-896c-65c19b43e7a2"]
+}], "Notes",
+ CellChangeTimes->{{3.946638792712544*^9, 3.946638796691498*^9}, {
+  3.9466394502718*^9, 3.946639452463368*^9}},
+ CellID->1140146586,ExpressionUUID->"3194e3c2-d588-4cf3-86b0-cd53c134e98b"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "See Also",
+ Cell[BoxData[
+  TemplateBox[{"SeeAlso", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell[
+       "Insert links to any related reference (function) pages.", 
+        "MoreInfoText"], BaseStyle -> "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "ce79a572-378e-4801-bdfe-7ad717ffcf59"]
+}], "SeeAlsoSection",
+ CellID->447088721,ExpressionUUID->"4e6b512b-ac8b-45b9-aad0-f1b7424142b1"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["ParseJudd1984",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/ParseJudd1984"]], 
+  "InlineSeeAlsoFunction",
+  TaggingRules->{"PageType" -> "Function"},ExpressionUUID->
+  "cc7c17eb-ab73-43e1-a9b3-ecdc2d30c869"],
+ StyleBox[" \[FilledVerySmallSquare] ", "InlineSeparator"],
+ Cell[BoxData[
+  ButtonBox["ThreeBodyTable",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/ThreeBodyTable"]], 
+  "InlineSeeAlsoFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"f342302f-8f19-419f-a3c5-6bd53b878adf",ExpressionUUID->
+  "96fff093-a918-4ebc-91b6-44216bae5e5f"],
+ StyleBox[" \[FilledVerySmallSquare] ", "InlineSeparator"],
+ Cell[BoxData[
+  ButtonBox["ThreeBodyTables",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/ThreeBodyTables"]], 
+  "InlineSeeAlsoFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"812b8533-27d7-4586-b2e1-f958410e6f93",ExpressionUUID->
+  "d935452c-697a-4dd4-a0f9-ae19db662888"],
+ Cell[BoxData[
+  RowBox[{
+  Cell[TextData[StyleBox[
+   " \[FilledVerySmallSquare] ", "InlineSeparator"]],ExpressionUUID->
+    "b2f512c6-49ab-43cb-a290-56ca0bb6f885"], 
+   DynamicModuleBox[{$CellContext`nbobj$$ = NotebookObject[
+    "6fff679c-1dda-415b-9417-9498a407886a", 
+     "7730a226-18e0-4f2e-b22a-b247e513d167"], $CellContext`cellobj$$ = 
+    CellObject[
+    "1b2bbfc1-8eb2-4cd2-b1d5-c9030522dc41", 
+     "9675d2dc-7795-4726-96f2-c0c0579dde1f"]}, 
+    TemplateBox[{
+      GraphicsBox[{{
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         CircleBox[{0, 0}]}, {
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         LineBox[{{0, 0.62}, {0, -0.62}}]}, {
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         LineBox[{{-0.62, 0}, {0.62, 0}}]}}, 
+       ImagePadding -> {{1., 1.}, {2.4, 1.}}, ImageSize -> 16, 
+       PlotRange -> {{-1.06, 1.06}, {-1.06, 1.06}}, 
+       BaselinePosition -> (Center -> 
+        Center)], $CellContext`nbobj$$, $CellContext`cellobj$$},
+     "InlineListingAddButton"],
+    Initialization:>($CellContext`nbobj$$ = 
+      EvaluationNotebook[]; $CellContext`cellobj$$ = EvaluationCell[])]}]], 
+  "InlineListingAddButton",ExpressionUUID->
+  "1b2bbfc1-8eb2-4cd2-b1d5-c9030522dc41"]
+}], "SeeAlso",
+ CellChangeTimes->{{3.945798472852035*^9, 3.945798480724543*^9}, {
+  3.945798638272167*^9, 3.945798654775359*^9}},
+ CellID->174852994,ExpressionUUID->"38540086-c56a-40b6-b3e7-0d6e8cc18351"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Tech Notes",
+ Cell[BoxData[
+  TemplateBox[{"TechNotes", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell["Insert links to related tech notes.", "MoreInfoText"], BaseStyle -> 
+       "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "0fa81847-83f6-43ab-8933-05b612705897"]
+}], "TechNotesSection",
+ CellID->996641062,ExpressionUUID->"9246bc7e-38cc-4c25-9aaa-1a70f9c13d3f"],
+
+Cell["XXXX", "Tutorials",
+ CellID->173882434,ExpressionUUID->"cf2416af-7c8d-4fca-9d15-e17aa31c5339"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Related Guides", "MoreAboutSection",
+ CellID->1864308318,ExpressionUUID->"afa91a21-b331-4a48-8043-2d67516367ae"],
+
+Cell["XXXX", "MoreAbout",
+ CellID->1643490896,ExpressionUUID->"78e535f7-eb3c-4502-85a8-77bc678bd374"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Related Links",
+ Cell[BoxData[
+  TemplateBox[{"RelatedLinks", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell[
+       "Insert links to any related page, including web pages.", 
+        "MoreInfoText"], BaseStyle -> "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "153f960b-005b-4942-b8b2-a173e12075fe"]
+}], "RelatedLinksSection",
+ CellID->1216821358,ExpressionUUID->"3c1d76a4-1f87-45e1-8fae-f0bdb5a6e432"],
+
+Cell["XXXX", "RelatedLinks",
+ CellID->629793525,ExpressionUUID->"1db6a847-afd3-4ea2-9846-962afc7d41e2"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Examples Initialization",
+ Cell[BoxData[
+  TemplateBox[{"ExamplesInitialization", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell[
+       "Input that is to be evaluated before any examples are run, e.g. \
+Needs[\[Ellipsis]].", "MoreInfoText"], BaseStyle -> "IFrameBox"]], 
+     "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "bebacfac-8756-466b-a385-08ed0c9d5a7c"]
+}], "ExamplesInitializationSection",
+ CellID->2140362259,ExpressionUUID->"11cd1b83-77f0-4ce7-87a6-d2ccecaf2e7a"],
+
+Cell[BoxData[
+ RowBox[{"Needs", "[", "\"\<DavidLizarazo`qlanth`\>\"", 
+  "]"}]], "ExampleInitialization",
+ CellID->569916116,ExpressionUUID->"7813272c-1a1e-4308-b5ac-090f4a788bd7"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[GridBox[{
+    {
+     StyleBox[
+      RowBox[{"Basic", " ", "Examples"}], "PrimaryExamplesSection"], 
+     ButtonBox[
+      RowBox[{
+       RowBox[{"More", " ", "Examples"}], " ", "\[RightTriangle]"}],
+      BaseStyle->"ExtendedExamplesLink",
+      ButtonData:>"ExtendedExamples"]}
+   }],
+  $Line = 0; Null]], "PrimaryExamplesSection",
+ CellID->803095992,ExpressionUUID->"bc577233-6087-416b-b60e-7971a8bfd340"],
+
+Cell["This may take a few minutes .", "ExampleText",
+ CellChangeTimes->{{3.945798430032834*^9, 3.945798437572299*^9}},
+ CellID->1439556031,ExpressionUUID->"7b607b09-32e2-45fc-a147-1de5cc114612"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"ThreeBodyTable", ",", "ThreeBodyTables"}], "}"}], "=", 
+   RowBox[{"GenerateThreeBodyTables", "[", 
+    RowBox[{"\"\<Export\>\"", "->", "False"}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.945797643539751*^9, 3.9457976522294073`*^9}, {
+  3.945797876979732*^9, 3.945797913846279*^9}, {3.945798077868223*^9, 
+  3.945798078250614*^9}},
+ CellID->989705411,ExpressionUUID->"07b94bc9-dbb7-420b-8081-714e9f9eae5a"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"Short", "[", "ThreeBodyTable", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"HamiltonianMatrixPlot", "[", 
+  RowBox[{
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{
+       RowBox[{"ThreeBodyTables", "[", "3", "]"}], "[", "T3", "]"}], "[", 
+      RowBox[{"{", 
+       RowBox[{"braLS", ",", "ketLS"}], "}"}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"braLS", ",", "LSTerms"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"ketLS", ",", "LSTerms"}], "}"}]}], "]"}], ",", "LSTerms", ",", 
+   
+   RowBox[{"ImageSize", "->", "500"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.945798088371668*^9, 3.945798102310698*^9}, {
+  3.945798395153034*^9, 3.945798397813117*^9}},
+ CellLabel->"In[292]:=",
+ CellID->1717996662,ExpressionUUID->"5b1341a0-0d90-486f-96c2-31c9b061d449"],
+
+Cell[BoxData[
+ TagBox[
+  RowBox[{"\[LeftAssociation]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"1", ",", "\<\"2F\"\>", ",", "\<\"2F\"\>"}], "}"}], "\[Rule]", 
+     "0"}], ",", 
+    RowBox[{"\[LeftSkeleton]", "36197", "\[RightSkeleton]"}], ",", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"7", ",", "\<\"2Q\"\>", ",", "\<\"2Q\"\>"}], "}"}], "\[Rule]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"-", "3"}], " ", 
+       SqrtBox[
+        FractionBox["15", "77"]], " ", "T11p"}], "+", 
+      FractionBox[
+       RowBox[{"3", " ", 
+        RowBox[{"\[LeftSkeleton]", "2", "\[RightSkeleton]"}], 
+        RowBox[{"\[LeftSkeleton]", "1", "\[RightSkeleton]"}], 
+        RowBox[{"(", 
+         RowBox[{"1", "-", 
+          RowBox[{"\[LeftSkeleton]", "8", "\[RightSkeleton]"}]}], ")"}]}], 
+       SqrtBox["2"]], "-", 
+      FractionBox[
+       RowBox[{"3", " ", "T2", " ", "t2Switch"}], 
+       SqrtBox["2"]]}]}]}], "\[RightAssociation]"}],
+  Short]], "Output",
+ CellChangeTimes->{{3.945798089708187*^9, 3.945798103166774*^9}, 
+   3.945798398447627*^9},
+ CellLabel->"Out[292]//Short=",
+ CellID->1452264319,ExpressionUUID->"63ec4d90-45c8-459d-9b4f-9654e2e84747"],
+
+Cell[BoxData[
+ GraphicsBox[RasterBox[CompressedData["
+1:eJxTTMoPSmVmYGAQhGIQGwI+2I/SA0P3MCXs0a56bt/AoZF2zuG1/cGEs4af
+DN4OuLtGCj0a/gNL9/yt2jvf6a391KZ0/l/5L+3n2fg9sQi9N+DuGin0aPof
+WHpdsZfT2oAb9tKzQ8SbNzyx9+wLP7l76csBd9dIoUfT/8DSo+X/wNKj6X+U
+Hsn0aPofWHq0/B9YerT9ObD0w5LJP1VY39nnmC1gYPV/Y28x+axn66JnA+6u
+kUKPhv/A0rs2rvy6Yecl+1e1n/exf3loP8/M2uxdy6sBd9dIoUfT/+CgH1aJ
+rHN/eAvKh4GBd9dIpQFWw4Fu
+   "], {{0, 0}, {17, 17}}, {0, 1}],
+  BaseStyle->{FontFamily -> "Arial"},
+  Epilog->{
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{0, 16}, {1, 17}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{1, 16}, {2, 17}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{2, 16}, {3, 17}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{3, 16}, {4, 17}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{4, 16}, {5, 17}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{5, 16}, {6, 17}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{6, 16}, {7, 17}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{7, 16}, {8, 17}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{8, 16}, {9, 17}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{9, 16}, {10, 17}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{10, 16}, {11, 17}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{11, 16}, {12, 17}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{12, 16}, {13, 17}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{13, 16}, {14, 17}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{14, 16}, {15, 17}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{15, 16}, {16, 17}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{16, 16}, {17, 17}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4S", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{0, 15}, {1, 16}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{1, 15}, {2, 16}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{2, 15}, {3, 16}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{3, 15}, {4, 16}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{4, 15}, {5, 16}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{5, 15}, {6, 16}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{6, 15}, {7, 16}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{7, 15}, {8, 16}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{8, 15}, {9, 16}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{9, 15}, {10, 16}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{10, 15}, {11, 16}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{11, 15}, {12, 16}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{12, 15}, {13, 16}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{13, 15}, {14, 16}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{14, 15}, {15, 16}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{15, 15}, {16, 16}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{16, 15}, {17, 16}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4D", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{0, 14}, {1, 15}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{1, 14}, {2, 15}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{2, 14}, {3, 15}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{3, 14}, {4, 15}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{4, 14}, {5, 15}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{5, 14}, {6, 15}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{6, 14}, {7, 15}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{7, 14}, {8, 15}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{8, 14}, {9, 15}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{9, 14}, {10, 15}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{10, 14}, {11, 15}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{11, 14}, {12, 15}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{12, 14}, {13, 15}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{13, 14}, {14, 15}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{14, 14}, {15, 15}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{15, 14}, {16, 15}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{16, 14}, {17, 15}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4F", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{0, 13}, {1, 14}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{1, 13}, {2, 14}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{2, 13}, {3, 14}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{3, 13}, {4, 14}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{4, 13}, {5, 14}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{5, 13}, {6, 14}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{6, 13}, {7, 14}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{7, 13}, {8, 14}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{8, 13}, {9, 14}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{9, 13}, {10, 14}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{10, 13}, {11, 14}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{11, 13}, {12, 14}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{12, 13}, {13, 14}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{13, 13}, {14, 14}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{14, 13}, {15, 14}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{15, 13}, {16, 14}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{16, 13}, {17, 14}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4G", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{0, 12}, {1, 13}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{1, 12}, {2, 13}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{2, 12}, {3, 13}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{3, 12}, {4, 13}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{4, 12}, {5, 13}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{5, 12}, {6, 13}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{6, 12}, {7, 13}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{7, 12}, {8, 13}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{8, 12}, {9, 13}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{9, 12}, {10, 13}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{10, 12}, {11, 13}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{11, 12}, {12, 13}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{12, 12}, {13, 13}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{13, 12}, {14, 13}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{14, 12}, {15, 13}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{15, 12}, {16, 13}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{16, 12}, {17, 13}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "4I", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{0, 11}, {1, 12}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{1, 11}, {2, 12}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{2, 11}, {3, 12}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{3, 11}, {4, 12}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{4, 11}, {5, 12}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{5, 11}, {6, 12}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{6, 11}, {7, 12}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{7, 11}, {8, 12}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{8, 11}, {9, 12}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{9, 11}, {10, 12}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{10, 11}, {11, 12}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{11, 11}, {12, 12}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{12, 11}, {13, 12}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{13, 11}, {14, 12}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{14, 11}, {15, 12}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{15, 11}, {16, 12}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{16, 11}, {17, 12}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2P", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{0, 10}, {1, 11}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{1, 10}, {2, 11}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{2, 10}, {3, 11}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{3, 10}, {4, 11}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{4, 10}, {5, 11}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{5, 10}, {6, 11}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{6, 10}, {7, 11}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{7, 10}, {8, 11}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{8, 10}, {9, 11}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{9, 10}, {10, 11}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{10, 10}, {11, 11}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{11, 10}, {12, 11}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{12, 10}, {13, 11}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{13, 10}, {14, 11}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{14, 10}, {15, 11}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{15, 10}, {16, 11}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{16, 10}, {17, 11}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D1", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{0, 9}, {1, 10}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{1, 9}, {2, 10}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{2, 9}, {3, 10}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{3, 9}, {4, 10}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{4, 9}, {5, 10}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{5, 9}, {6, 10}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{6, 9}, {7, 10}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{7, 9}, {8, 10}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{8, 9}, {9, 10}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{9, 9}, {10, 10}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{10, 9}, {11, 10}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{11, 9}, {12, 10}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{12, 9}, {13, 10}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{13, 9}, {14, 10}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{14, 9}, {15, 10}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{15, 9}, {16, 10}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{16, 9}, {17, 10}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2D2", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{0, 8}, {1, 9}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{1, 8}, {2, 9}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{2, 8}, {3, 9}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{3, 8}, {4, 9}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{4, 8}, {5, 9}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{5, 8}, {6, 9}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{6, 8}, {7, 9}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{7, 8}, {8, 9}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{8, 8}, {9, 9}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{9, 8}, {10, 9}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{10, 8}, {11, 9}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{11, 8}, {12, 9}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{12, 8}, {13, 9}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{13, 8}, {14, 9}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{14, 8}, {15, 9}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{15, 8}, {16, 9}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{16, 8}, {17, 9}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F1", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{0, 7}, {1, 8}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{1, 7}, {2, 8}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{2, 7}, {3, 8}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{3, 7}, {4, 8}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{4, 7}, {5, 8}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{5, 7}, {6, 8}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{6, 7}, {7, 8}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{7, 7}, {8, 8}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{8, 7}, {9, 8}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{9, 7}, {10, 8}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{10, 7}, {11, 8}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{11, 7}, {12, 8}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{12, 7}, {13, 8}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{13, 7}, {14, 8}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{14, 7}, {15, 8}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{15, 7}, {16, 8}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{16, 7}, {17, 8}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2F2", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{0, 6}, {1, 7}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{1, 6}, {2, 7}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{2, 6}, {3, 7}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{3, 6}, {4, 7}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{4, 6}, {5, 7}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{5, 6}, {6, 7}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{6, 6}, {7, 7}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{7, 6}, {8, 7}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{8, 6}, {9, 7}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{9, 6}, {10, 7}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{10, 6}, {11, 7}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{11, 6}, {12, 7}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{12, 6}, {13, 7}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{13, 6}, {14, 7}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{14, 6}, {15, 7}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{15, 6}, {16, 7}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{16, 6}, {17, 7}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G1", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{0, 5}, {1, 6}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{1, 5}, {2, 6}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{2, 5}, {3, 6}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{3, 5}, {4, 6}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{4, 5}, {5, 6}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{5, 5}, {6, 6}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{6, 5}, {7, 6}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{7, 5}, {8, 6}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{8, 5}, {9, 6}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{9, 5}, {10, 6}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{10, 5}, {11, 6}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{11, 5}, {12, 6}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{12, 5}, {13, 6}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{13, 5}, {14, 6}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{14, 5}, {15, 6}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{15, 5}, {16, 6}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{16, 5}, {17, 6}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2G2", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{0, 4}, {1, 5}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{1, 4}, {2, 5}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{2, 4}, {3, 5}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{3, 4}, {4, 5}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{4, 4}, {5, 5}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{5, 4}, {6, 5}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{6, 4}, {7, 5}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{7, 4}, {8, 5}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{8, 4}, {9, 5}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{9, 4}, {10, 5}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{10, 4}, {11, 5}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{11, 4}, {12, 5}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{12, 4}, {13, 5}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{13, 4}, {14, 5}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{14, 4}, {15, 5}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{15, 4}, {16, 5}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{16, 4}, {17, 5}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H1", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{0, 3}, {1, 4}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{1, 3}, {2, 4}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{2, 3}, {3, 4}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{3, 3}, {4, 4}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{4, 3}, {5, 4}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{5, 3}, {6, 4}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{6, 3}, {7, 4}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{7, 3}, {8, 4}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{8, 3}, {9, 4}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{9, 3}, {10, 4}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{10, 3}, {11, 4}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{11, 3}, {12, 4}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{12, 3}, {13, 4}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{13, 3}, {14, 4}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{14, 3}, {15, 4}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{15, 3}, {16, 4}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{16, 3}, {17, 4}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2H2", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{0, 2}, {1, 3}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{1, 2}, {2, 3}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{2, 2}, {3, 3}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{3, 2}, {4, 3}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{4, 2}, {5, 3}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{5, 2}, {6, 3}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{6, 2}, {7, 3}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{7, 2}, {8, 3}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{8, 2}, {9, 3}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{9, 2}, {10, 3}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{10, 2}, {11, 3}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{11, 2}, {12, 3}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{12, 2}, {13, 3}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{13, 2}, {14, 3}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{14, 2}, {15, 3}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{15, 2}, {16, 3}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{16, 2}, {17, 3}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2I", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{0, 1}, {1, 2}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{1, 1}, {2, 2}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{2, 1}, {3, 2}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{3, 1}, {4, 2}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{4, 1}, {5, 2}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{5, 1}, {6, 2}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{6, 1}, {7, 2}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{7, 1}, {8, 2}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{8, 1}, {9, 2}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{9, 1}, {10, 2}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{10, 1}, {11, 2}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{11, 1}, {12, 2}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{12, 1}, {13, 2}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{13, 1}, {14, 2}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{14, 1}, {15, 2}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{15, 1}, {16, 2}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{16, 1}, {17, 2}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2K", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{0, 0}, {1, 1}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "4S", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{1, 0}, {2, 1}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "4D", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{2, 0}, {3, 1}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "4F", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{3, 0}, {4, 1}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "4G", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{4, 0}, {5, 1}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "4I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{5, 0}, {6, 1}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "2P", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{6, 0}, {7, 1}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "2D1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{7, 0}, {8, 1}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "2D2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{8, 0}, {9, 1}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "2F1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{9, 0}, {10, 1}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "2F2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{10, 0}, {11, 1}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "2G1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{11, 0}, {12, 1}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "2G2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{12, 0}, {13, 1}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "2H1", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{13, 0}, {14, 1}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "2H2", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{14, 0}, {15, 1}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "2I", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{15, 0}, {16, 1}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "2K", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    TagBox[
+     TooltipBox[{
+       GrayLevel[0, 0], 
+       RectangleBox[{16, 0}, {17, 1}]}, 
+      TagBox[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}], DisplayForm]], Annotation[#, 
+      DisplayForm[
+       RowBox[{
+        "\[LeftAngleBracket]", "2L", "\[LeftBracketingBar]", "2L", 
+         "\[RightAngleBracket]"}]], "Tooltip"]& ], 
+    InsetBox[
+     FormBox[
+      RowBox[{"12", " ", 
+        SqrtBox[
+         FractionBox["3", "35"]]}], TraditionalForm], 
+     NCache[{
+       Rational[1, 2], 
+       Rational[33, 2]}, {0.5, 16.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[3, 2], 
+       Rational[33, 2]}, {1.5, 16.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[5, 2], 
+       Rational[33, 2]}, {2.5, 16.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[7, 2], 
+       Rational[33, 2]}, {3.5, 16.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[9, 2], 
+       Rational[33, 2]}, {4.5, 16.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[11, 2], 
+       Rational[33, 2]}, {5.5, 16.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[13, 2], 
+       Rational[33, 2]}, {6.5, 16.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[15, 2], 
+       Rational[33, 2]}, {7.5, 16.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[17, 2], 
+       Rational[33, 2]}, {8.5, 16.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[19, 2], 
+       Rational[33, 2]}, {9.5, 16.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[21, 2], 
+       Rational[33, 2]}, {10.5, 16.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[23, 2], 
+       Rational[33, 2]}, {11.5, 16.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[25, 2], 
+       Rational[33, 2]}, {12.5, 16.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[27, 2], 
+       Rational[33, 2]}, {13.5, 16.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[29, 2], 
+       Rational[33, 2]}, {14.5, 16.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[31, 2], 
+       Rational[33, 2]}, {15.5, 16.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[33, 2], 
+       Rational[33, 2]}, {16.5, 16.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[1, 2], 
+       Rational[31, 2]}, {0.5, 15.5}]], 
+    InsetBox[
+     FormBox[
+      FractionBox["1", 
+       SqrtBox["105"]], TraditionalForm], 
+     NCache[{
+       Rational[3, 2], 
+       Rational[31, 2]}, {1.5, 15.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[5, 2], 
+       Rational[31, 2]}, {2.5, 15.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[7, 2], 
+       Rational[31, 2]}, {3.5, 15.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[9, 2], 
+       Rational[31, 2]}, {4.5, 15.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[11, 2], 
+       Rational[31, 2]}, {5.5, 15.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[13, 2], 
+       Rational[31, 2]}, {6.5, 15.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[15, 2], 
+       Rational[31, 2]}, {7.5, 15.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[17, 2], 
+       Rational[31, 2]}, {8.5, 15.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[19, 2], 
+       Rational[31, 2]}, {9.5, 15.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[21, 2], 
+       Rational[31, 2]}, {10.5, 15.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[23, 2], 
+       Rational[31, 2]}, {11.5, 15.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[25, 2], 
+       Rational[31, 2]}, {12.5, 15.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[27, 2], 
+       Rational[31, 2]}, {13.5, 15.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[29, 2], 
+       Rational[31, 2]}, {14.5, 15.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[31, 2], 
+       Rational[31, 2]}, {15.5, 15.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[33, 2], 
+       Rational[31, 2]}, {16.5, 15.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[1, 2], 
+       Rational[29, 2]}, {0.5, 14.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[3, 2], 
+       Rational[29, 2]}, {1.5, 14.5}]], 
+    InsetBox[
+     FormBox[
+      RowBox[{
+        RowBox[{"-", "3"}], " ", 
+        SqrtBox[
+         FractionBox["3", "35"]]}], TraditionalForm], 
+     NCache[{
+       Rational[5, 2], 
+       Rational[29, 2]}, {2.5, 14.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[7, 2], 
+       Rational[29, 2]}, {3.5, 14.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[9, 2], 
+       Rational[29, 2]}, {4.5, 14.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[11, 2], 
+       Rational[29, 2]}, {5.5, 14.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[13, 2], 
+       Rational[29, 2]}, {6.5, 14.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[15, 2], 
+       Rational[29, 2]}, {7.5, 14.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[17, 2], 
+       Rational[29, 2]}, {8.5, 14.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[19, 2], 
+       Rational[29, 2]}, {9.5, 14.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[21, 2], 
+       Rational[29, 2]}, {10.5, 14.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[23, 2], 
+       Rational[29, 2]}, {11.5, 14.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[25, 2], 
+       Rational[29, 2]}, {12.5, 14.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[27, 2], 
+       Rational[29, 2]}, {13.5, 14.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[29, 2], 
+       Rational[29, 2]}, {14.5, 14.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[31, 2], 
+       Rational[29, 2]}, {15.5, 14.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[33, 2], 
+       Rational[29, 2]}, {16.5, 14.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[1, 2], 
+       Rational[27, 2]}, {0.5, 13.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[3, 2], 
+       Rational[27, 2]}, {1.5, 13.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[5, 2], 
+       Rational[27, 2]}, {2.5, 13.5}]], 
+    InsetBox[
+     FormBox[
+      FractionBox["1", 
+       SqrtBox["105"]], TraditionalForm], 
+     NCache[{
+       Rational[7, 2], 
+       Rational[27, 2]}, {3.5, 13.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[9, 2], 
+       Rational[27, 2]}, {4.5, 13.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[11, 2], 
+       Rational[27, 2]}, {5.5, 13.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[13, 2], 
+       Rational[27, 2]}, {6.5, 13.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[15, 2], 
+       Rational[27, 2]}, {7.5, 13.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[17, 2], 
+       Rational[27, 2]}, {8.5, 13.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[19, 2], 
+       Rational[27, 2]}, {9.5, 13.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[21, 2], 
+       Rational[27, 2]}, {10.5, 13.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[23, 2], 
+       Rational[27, 2]}, {11.5, 13.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[25, 2], 
+       Rational[27, 2]}, {12.5, 13.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[27, 2], 
+       Rational[27, 2]}, {13.5, 13.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[29, 2], 
+       Rational[27, 2]}, {14.5, 13.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[31, 2], 
+       Rational[27, 2]}, {15.5, 13.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[33, 2], 
+       Rational[27, 2]}, {16.5, 13.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[1, 2], 
+       Rational[25, 2]}, {0.5, 12.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[3, 2], 
+       Rational[25, 2]}, {1.5, 12.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[5, 2], 
+       Rational[25, 2]}, {2.5, 12.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[7, 2], 
+       Rational[25, 2]}, {3.5, 12.5}]], 
+    InsetBox[
+     FormBox[
+      FractionBox["1", 
+       SqrtBox["105"]], TraditionalForm], 
+     NCache[{
+       Rational[9, 2], 
+       Rational[25, 2]}, {4.5, 12.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[11, 2], 
+       Rational[25, 2]}, {5.5, 12.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[13, 2], 
+       Rational[25, 2]}, {6.5, 12.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[15, 2], 
+       Rational[25, 2]}, {7.5, 12.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[17, 2], 
+       Rational[25, 2]}, {8.5, 12.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[19, 2], 
+       Rational[25, 2]}, {9.5, 12.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[21, 2], 
+       Rational[25, 2]}, {10.5, 12.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[23, 2], 
+       Rational[25, 2]}, {11.5, 12.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[25, 2], 
+       Rational[25, 2]}, {12.5, 12.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[27, 2], 
+       Rational[25, 2]}, {13.5, 12.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[29, 2], 
+       Rational[25, 2]}, {14.5, 12.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[31, 2], 
+       Rational[25, 2]}, {15.5, 12.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[33, 2], 
+       Rational[25, 2]}, {16.5, 12.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[1, 2], 
+       Rational[23, 2]}, {0.5, 11.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[3, 2], 
+       Rational[23, 2]}, {1.5, 11.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[5, 2], 
+       Rational[23, 2]}, {2.5, 11.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[7, 2], 
+       Rational[23, 2]}, {3.5, 11.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[9, 2], 
+       Rational[23, 2]}, {4.5, 11.5}]], 
+    InsetBox[
+     FormBox[
+      RowBox[{
+        RowBox[{"-", "2"}], " ", 
+        SqrtBox[
+         FractionBox["3", "35"]]}], TraditionalForm], 
+     NCache[{
+       Rational[11, 2], 
+       Rational[23, 2]}, {5.5, 11.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[13, 2], 
+       Rational[23, 2]}, {6.5, 11.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[15, 2], 
+       Rational[23, 2]}, {7.5, 11.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[17, 2], 
+       Rational[23, 2]}, {8.5, 11.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[19, 2], 
+       Rational[23, 2]}, {9.5, 11.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[21, 2], 
+       Rational[23, 2]}, {10.5, 11.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[23, 2], 
+       Rational[23, 2]}, {11.5, 11.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[25, 2], 
+       Rational[23, 2]}, {12.5, 11.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[27, 2], 
+       Rational[23, 2]}, {13.5, 11.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[29, 2], 
+       Rational[23, 2]}, {14.5, 11.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[31, 2], 
+       Rational[23, 2]}, {15.5, 11.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[33, 2], 
+       Rational[23, 2]}, {16.5, 11.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[1, 2], 
+       Rational[21, 2]}, {0.5, 10.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[3, 2], 
+       Rational[21, 2]}, {1.5, 10.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[5, 2], 
+       Rational[21, 2]}, {2.5, 10.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[7, 2], 
+       Rational[21, 2]}, {3.5, 10.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[9, 2], 
+       Rational[21, 2]}, {4.5, 10.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[11, 2], 
+       Rational[21, 2]}, {5.5, 10.5}]], 
+    InsetBox[
+     FormBox[
+      FractionBox["4", 
+       SqrtBox["105"]], TraditionalForm], 
+     NCache[{
+       Rational[13, 2], 
+       Rational[21, 2]}, {6.5, 10.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[15, 2], 
+       Rational[21, 2]}, {7.5, 10.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[17, 2], 
+       Rational[21, 2]}, {8.5, 10.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[19, 2], 
+       Rational[21, 2]}, {9.5, 10.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[21, 2], 
+       Rational[21, 2]}, {10.5, 10.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[23, 2], 
+       Rational[21, 2]}, {11.5, 10.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[25, 2], 
+       Rational[21, 2]}, {12.5, 10.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[27, 2], 
+       Rational[21, 2]}, {13.5, 10.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[29, 2], 
+       Rational[21, 2]}, {14.5, 10.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[31, 2], 
+       Rational[21, 2]}, {15.5, 10.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[33, 2], 
+       Rational[21, 2]}, {16.5, 10.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[1, 2], 
+       Rational[19, 2]}, {0.5, 9.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[3, 2], 
+       Rational[19, 2]}, {1.5, 9.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[5, 2], 
+       Rational[19, 2]}, {2.5, 9.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[7, 2], 
+       Rational[19, 2]}, {3.5, 9.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[9, 2], 
+       Rational[19, 2]}, {4.5, 9.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[11, 2], 
+       Rational[19, 2]}, {5.5, 9.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[13, 2], 
+       Rational[19, 2]}, {6.5, 9.5}]], 
+    InsetBox[
+     FormBox[
+      RowBox[{"-", 
+        FractionBox[
+         SqrtBox[
+          FractionBox["3", "35"]], "8"]}], TraditionalForm], 
+     NCache[{
+       Rational[15, 2], 
+       Rational[19, 2]}, {7.5, 9.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[17, 2], 
+       Rational[19, 2]}, {8.5, 9.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[19, 2], 
+       Rational[19, 2]}, {9.5, 9.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[21, 2], 
+       Rational[19, 2]}, {10.5, 9.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[23, 2], 
+       Rational[19, 2]}, {11.5, 9.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[25, 2], 
+       Rational[19, 2]}, {12.5, 9.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[27, 2], 
+       Rational[19, 2]}, {13.5, 9.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[29, 2], 
+       Rational[19, 2]}, {14.5, 9.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[31, 2], 
+       Rational[19, 2]}, {15.5, 9.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[33, 2], 
+       Rational[19, 2]}, {16.5, 9.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[1, 2], 
+       Rational[17, 2]}, {0.5, 8.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[3, 2], 
+       Rational[17, 2]}, {1.5, 8.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[5, 2], 
+       Rational[17, 2]}, {2.5, 8.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[7, 2], 
+       Rational[17, 2]}, {3.5, 8.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[9, 2], 
+       Rational[17, 2]}, {4.5, 8.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[11, 2], 
+       Rational[17, 2]}, {5.5, 8.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[13, 2], 
+       Rational[17, 2]}, {6.5, 8.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[15, 2], 
+       Rational[17, 2]}, {7.5, 8.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[17, 2], 
+       Rational[17, 2]}, {8.5, 8.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[19, 2], 
+       Rational[17, 2]}, {9.5, 8.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[21, 2], 
+       Rational[17, 2]}, {10.5, 8.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[23, 2], 
+       Rational[17, 2]}, {11.5, 8.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[25, 2], 
+       Rational[17, 2]}, {12.5, 8.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[27, 2], 
+       Rational[17, 2]}, {13.5, 8.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[29, 2], 
+       Rational[17, 2]}, {14.5, 8.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[31, 2], 
+       Rational[17, 2]}, {15.5, 8.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[33, 2], 
+       Rational[17, 2]}, {16.5, 8.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[1, 2], 
+       Rational[15, 2]}, {0.5, 7.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[3, 2], 
+       Rational[15, 2]}, {1.5, 7.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[5, 2], 
+       Rational[15, 2]}, {2.5, 7.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[7, 2], 
+       Rational[15, 2]}, {3.5, 7.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[9, 2], 
+       Rational[15, 2]}, {4.5, 7.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[11, 2], 
+       Rational[15, 2]}, {5.5, 7.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[13, 2], 
+       Rational[15, 2]}, {6.5, 7.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[15, 2], 
+       Rational[15, 2]}, {7.5, 7.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[17, 2], 
+       Rational[15, 2]}, {8.5, 7.5}]], 
+    InsetBox[
+     FormBox[
+      RowBox[{"-", 
+        FractionBox[
+         SqrtBox[
+          FractionBox["3", "35"]], "8"]}], TraditionalForm], 
+     NCache[{
+       Rational[19, 2], 
+       Rational[15, 2]}, {9.5, 7.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[21, 2], 
+       Rational[15, 2]}, {10.5, 7.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[23, 2], 
+       Rational[15, 2]}, {11.5, 7.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[25, 2], 
+       Rational[15, 2]}, {12.5, 7.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[27, 2], 
+       Rational[15, 2]}, {13.5, 7.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[29, 2], 
+       Rational[15, 2]}, {14.5, 7.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[31, 2], 
+       Rational[15, 2]}, {15.5, 7.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[33, 2], 
+       Rational[15, 2]}, {16.5, 7.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[1, 2], 
+       Rational[13, 2]}, {0.5, 6.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[3, 2], 
+       Rational[13, 2]}, {1.5, 6.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[5, 2], 
+       Rational[13, 2]}, {2.5, 6.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[7, 2], 
+       Rational[13, 2]}, {3.5, 6.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[9, 2], 
+       Rational[13, 2]}, {4.5, 6.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[11, 2], 
+       Rational[13, 2]}, {5.5, 6.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[13, 2], 
+       Rational[13, 2]}, {6.5, 6.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[15, 2], 
+       Rational[13, 2]}, {7.5, 6.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[17, 2], 
+       Rational[13, 2]}, {8.5, 6.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[19, 2], 
+       Rational[13, 2]}, {9.5, 6.5}]], 
+    InsetBox[
+     FormBox[
+      FractionBox["4", 
+       SqrtBox["105"]], TraditionalForm], 
+     NCache[{
+       Rational[21, 2], 
+       Rational[13, 2]}, {10.5, 6.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[23, 2], 
+       Rational[13, 2]}, {11.5, 6.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[25, 2], 
+       Rational[13, 2]}, {12.5, 6.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[27, 2], 
+       Rational[13, 2]}, {13.5, 6.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[29, 2], 
+       Rational[13, 2]}, {14.5, 6.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[31, 2], 
+       Rational[13, 2]}, {15.5, 6.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[33, 2], 
+       Rational[13, 2]}, {16.5, 6.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[1, 2], 
+       Rational[11, 2]}, {0.5, 5.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[3, 2], 
+       Rational[11, 2]}, {1.5, 5.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[5, 2], 
+       Rational[11, 2]}, {2.5, 5.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[7, 2], 
+       Rational[11, 2]}, {3.5, 5.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[9, 2], 
+       Rational[11, 2]}, {4.5, 5.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[11, 2], 
+       Rational[11, 2]}, {5.5, 5.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[13, 2], 
+       Rational[11, 2]}, {6.5, 5.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[15, 2], 
+       Rational[11, 2]}, {7.5, 5.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[17, 2], 
+       Rational[11, 2]}, {8.5, 5.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[19, 2], 
+       Rational[11, 2]}, {9.5, 5.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[21, 2], 
+       Rational[11, 2]}, {10.5, 5.5}]], 
+    InsetBox[
+     FormBox[
+      RowBox[{"-", 
+        FractionBox[
+         SqrtBox[
+          FractionBox["3", "35"]], "8"]}], TraditionalForm], 
+     NCache[{
+       Rational[23, 2], 
+       Rational[11, 2]}, {11.5, 5.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[25, 2], 
+       Rational[11, 2]}, {12.5, 5.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[27, 2], 
+       Rational[11, 2]}, {13.5, 5.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[29, 2], 
+       Rational[11, 2]}, {14.5, 5.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[31, 2], 
+       Rational[11, 2]}, {15.5, 5.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[33, 2], 
+       Rational[11, 2]}, {16.5, 5.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[1, 2], 
+       Rational[9, 2]}, {0.5, 4.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[3, 2], 
+       Rational[9, 2]}, {1.5, 4.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[5, 2], 
+       Rational[9, 2]}, {2.5, 4.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[7, 2], 
+       Rational[9, 2]}, {3.5, 4.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[9, 2], 
+       Rational[9, 2]}, {4.5, 4.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[11, 2], 
+       Rational[9, 2]}, {5.5, 4.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[13, 2], 
+       Rational[9, 2]}, {6.5, 4.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[15, 2], 
+       Rational[9, 2]}, {7.5, 4.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[17, 2], 
+       Rational[9, 2]}, {8.5, 4.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[19, 2], 
+       Rational[9, 2]}, {9.5, 4.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[21, 2], 
+       Rational[9, 2]}, {10.5, 4.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[23, 2], 
+       Rational[9, 2]}, {11.5, 4.5}]], 
+    InsetBox[
+     FormBox[
+      RowBox[{
+        RowBox[{"-", "2"}], " ", 
+        SqrtBox[
+         FractionBox["3", "35"]]}], TraditionalForm], 
+     NCache[{
+       Rational[25, 2], 
+       Rational[9, 2]}, {12.5, 4.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[27, 2], 
+       Rational[9, 2]}, {13.5, 4.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[29, 2], 
+       Rational[9, 2]}, {14.5, 4.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[31, 2], 
+       Rational[9, 2]}, {15.5, 4.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[33, 2], 
+       Rational[9, 2]}, {16.5, 4.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[1, 2], 
+       Rational[7, 2]}, {0.5, 3.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[3, 2], 
+       Rational[7, 2]}, {1.5, 3.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[5, 2], 
+       Rational[7, 2]}, {2.5, 3.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[7, 2], 
+       Rational[7, 2]}, {3.5, 3.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[9, 2], 
+       Rational[7, 2]}, {4.5, 3.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[11, 2], 
+       Rational[7, 2]}, {5.5, 3.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[13, 2], 
+       Rational[7, 2]}, {6.5, 3.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[15, 2], 
+       Rational[7, 2]}, {7.5, 3.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[17, 2], 
+       Rational[7, 2]}, {8.5, 3.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[19, 2], 
+       Rational[7, 2]}, {9.5, 3.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[21, 2], 
+       Rational[7, 2]}, {10.5, 3.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[23, 2], 
+       Rational[7, 2]}, {11.5, 3.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[25, 2], 
+       Rational[7, 2]}, {12.5, 3.5}]], 
+    InsetBox[
+     FormBox[
+      RowBox[{"-", 
+        FractionBox[
+         SqrtBox[
+          FractionBox["3", "35"]], "8"]}], TraditionalForm], 
+     NCache[{
+       Rational[27, 2], 
+       Rational[7, 2]}, {13.5, 3.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[29, 2], 
+       Rational[7, 2]}, {14.5, 3.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[31, 2], 
+       Rational[7, 2]}, {15.5, 3.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[33, 2], 
+       Rational[7, 2]}, {16.5, 3.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[1, 2], 
+       Rational[5, 2]}, {0.5, 2.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[3, 2], 
+       Rational[5, 2]}, {1.5, 2.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[5, 2], 
+       Rational[5, 2]}, {2.5, 2.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[7, 2], 
+       Rational[5, 2]}, {3.5, 2.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[9, 2], 
+       Rational[5, 2]}, {4.5, 2.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[11, 2], 
+       Rational[5, 2]}, {5.5, 2.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[13, 2], 
+       Rational[5, 2]}, {6.5, 2.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[15, 2], 
+       Rational[5, 2]}, {7.5, 2.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[17, 2], 
+       Rational[5, 2]}, {8.5, 2.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[19, 2], 
+       Rational[5, 2]}, {9.5, 2.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[21, 2], 
+       Rational[5, 2]}, {10.5, 2.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[23, 2], 
+       Rational[5, 2]}, {11.5, 2.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[25, 2], 
+       Rational[5, 2]}, {12.5, 2.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[27, 2], 
+       Rational[5, 2]}, {13.5, 2.5}]], 
+    InsetBox[
+     FormBox[
+      FractionBox["4", 
+       SqrtBox["105"]], TraditionalForm], 
+     NCache[{
+       Rational[29, 2], 
+       Rational[5, 2]}, {14.5, 2.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[31, 2], 
+       Rational[5, 2]}, {15.5, 2.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[33, 2], 
+       Rational[5, 2]}, {16.5, 2.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[1, 2], 
+       Rational[3, 2]}, {0.5, 1.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[3, 2], 
+       Rational[3, 2]}, {1.5, 1.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[5, 2], 
+       Rational[3, 2]}, {2.5, 1.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[7, 2], 
+       Rational[3, 2]}, {3.5, 1.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[9, 2], 
+       Rational[3, 2]}, {4.5, 1.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[11, 2], 
+       Rational[3, 2]}, {5.5, 1.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[13, 2], 
+       Rational[3, 2]}, {6.5, 1.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[15, 2], 
+       Rational[3, 2]}, {7.5, 1.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[17, 2], 
+       Rational[3, 2]}, {8.5, 1.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[19, 2], 
+       Rational[3, 2]}, {9.5, 1.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[21, 2], 
+       Rational[3, 2]}, {10.5, 1.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[23, 2], 
+       Rational[3, 2]}, {11.5, 1.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[25, 2], 
+       Rational[3, 2]}, {12.5, 1.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[27, 2], 
+       Rational[3, 2]}, {13.5, 1.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[29, 2], 
+       Rational[3, 2]}, {14.5, 1.5}]], 
+    InsetBox[
+     FormBox[
+      RowBox[{"-", 
+        FractionBox[
+         SqrtBox[
+          FractionBox["3", "35"]], "8"]}], TraditionalForm], 
+     NCache[{
+       Rational[31, 2], 
+       Rational[3, 2]}, {15.5, 1.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[33, 2], 
+       Rational[3, 2]}, {16.5, 1.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[1, 2], 
+       Rational[1, 2]}, {0.5, 0.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[3, 2], 
+       Rational[1, 2]}, {1.5, 0.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[5, 2], 
+       Rational[1, 2]}, {2.5, 0.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[7, 2], 
+       Rational[1, 2]}, {3.5, 0.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[9, 2], 
+       Rational[1, 2]}, {4.5, 0.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[11, 2], 
+       Rational[1, 2]}, {5.5, 0.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[13, 2], 
+       Rational[1, 2]}, {6.5, 0.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[15, 2], 
+       Rational[1, 2]}, {7.5, 0.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[17, 2], 
+       Rational[1, 2]}, {8.5, 0.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[19, 2], 
+       Rational[1, 2]}, {9.5, 0.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[21, 2], 
+       Rational[1, 2]}, {10.5, 0.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[23, 2], 
+       Rational[1, 2]}, {11.5, 0.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[25, 2], 
+       Rational[1, 2]}, {12.5, 0.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[27, 2], 
+       Rational[1, 2]}, {13.5, 0.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[29, 2], 
+       Rational[1, 2]}, {14.5, 0.5}]], 
+    InsetBox[
+     FormBox["0", TraditionalForm], 
+     NCache[{
+       Rational[31, 2], 
+       Rational[1, 2]}, {15.5, 0.5}]], 
+    InsetBox[
+     FormBox[
+      RowBox[{"-", 
+        FractionBox[
+         SqrtBox[
+          FractionBox["3", "35"]], "8"]}], TraditionalForm], 
+     NCache[{
+       Rational[33, 2], 
+       Rational[1, 2]}, {16.5, 0.5}]]},
+  Frame->True,
+  FrameLabel->{None, None},
+  FrameTicks->{{{{16.5, 
+       FormBox[
+        TagBox[
+         RowBox[{"\[LeftAngleBracket]", "4S", "\[RightBracketingBar]"}], 
+         DisplayForm], TraditionalForm]}, {15.5, 
+       FormBox[
+        TagBox[
+         RowBox[{"\[LeftAngleBracket]", "4D", "\[RightBracketingBar]"}], 
+         DisplayForm], TraditionalForm]}, {14.5, 
+       FormBox[
+        TagBox[
+         RowBox[{"\[LeftAngleBracket]", "4F", "\[RightBracketingBar]"}], 
+         DisplayForm], TraditionalForm]}, {13.5, 
+       FormBox[
+        TagBox[
+         RowBox[{"\[LeftAngleBracket]", "4G", "\[RightBracketingBar]"}], 
+         DisplayForm], TraditionalForm]}, {12.5, 
+       FormBox[
+        TagBox[
+         RowBox[{"\[LeftAngleBracket]", "4I", "\[RightBracketingBar]"}], 
+         DisplayForm], TraditionalForm]}, {11.5, 
+       FormBox[
+        TagBox[
+         RowBox[{"\[LeftAngleBracket]", "2P", "\[RightBracketingBar]"}], 
+         DisplayForm], TraditionalForm]}, {10.5, 
+       FormBox[
+        TagBox[
+         RowBox[{"\[LeftAngleBracket]", "2D1", "\[RightBracketingBar]"}], 
+         DisplayForm], TraditionalForm]}, {9.5, 
+       FormBox[
+        TagBox[
+         RowBox[{"\[LeftAngleBracket]", "2D2", "\[RightBracketingBar]"}], 
+         DisplayForm], TraditionalForm]}, {8.5, 
+       FormBox[
+        TagBox[
+         RowBox[{"\[LeftAngleBracket]", "2F1", "\[RightBracketingBar]"}], 
+         DisplayForm], TraditionalForm]}, {7.5, 
+       FormBox[
+        TagBox[
+         RowBox[{"\[LeftAngleBracket]", "2F2", "\[RightBracketingBar]"}], 
+         DisplayForm], TraditionalForm]}, {6.5, 
+       FormBox[
+        TagBox[
+         RowBox[{"\[LeftAngleBracket]", "2G1", "\[RightBracketingBar]"}], 
+         DisplayForm], TraditionalForm]}, {5.5, 
+       FormBox[
+        TagBox[
+         RowBox[{"\[LeftAngleBracket]", "2G2", "\[RightBracketingBar]"}], 
+         DisplayForm], TraditionalForm]}, {4.5, 
+       FormBox[
+        TagBox[
+         RowBox[{"\[LeftAngleBracket]", "2H1", "\[RightBracketingBar]"}], 
+         DisplayForm], TraditionalForm]}, {3.5, 
+       FormBox[
+        TagBox[
+         RowBox[{"\[LeftAngleBracket]", "2H2", "\[RightBracketingBar]"}], 
+         DisplayForm], TraditionalForm]}, {2.5, 
+       FormBox[
+        TagBox[
+         RowBox[{"\[LeftAngleBracket]", "2I", "\[RightBracketingBar]"}], 
+         DisplayForm], TraditionalForm]}, {1.5, 
+       FormBox[
+        TagBox[
+         RowBox[{"\[LeftAngleBracket]", "2K", "\[RightBracketingBar]"}], 
+         DisplayForm], TraditionalForm]}, {0.5, 
+       FormBox[
+        TagBox[
+         RowBox[{"\[LeftAngleBracket]", "2L", "\[RightBracketingBar]"}], 
+         DisplayForm], TraditionalForm]}}, None}, {None, {{0.5, 
+       FormBox[
+        TagBox[
+         RotationBox[
+          RowBox[{"\[LeftBracketingBar]", "4S", "\[RightAngleBracket]"}], 
+          BoxRotation -> 1.5707963267948966`], DisplayForm], 
+        TraditionalForm]}, {1.5, 
+       FormBox[
+        TagBox[
+         RotationBox[
+          RowBox[{"\[LeftBracketingBar]", "4D", "\[RightAngleBracket]"}], 
+          BoxRotation -> 1.5707963267948966`], DisplayForm], 
+        TraditionalForm]}, {2.5, 
+       FormBox[
+        TagBox[
+         RotationBox[
+          RowBox[{"\[LeftBracketingBar]", "4F", "\[RightAngleBracket]"}], 
+          BoxRotation -> 1.5707963267948966`], DisplayForm], 
+        TraditionalForm]}, {3.5, 
+       FormBox[
+        TagBox[
+         RotationBox[
+          RowBox[{"\[LeftBracketingBar]", "4G", "\[RightAngleBracket]"}], 
+          BoxRotation -> 1.5707963267948966`], DisplayForm], 
+        TraditionalForm]}, {4.5, 
+       FormBox[
+        TagBox[
+         RotationBox[
+          RowBox[{"\[LeftBracketingBar]", "4I", "\[RightAngleBracket]"}], 
+          BoxRotation -> 1.5707963267948966`], DisplayForm], 
+        TraditionalForm]}, {5.5, 
+       FormBox[
+        TagBox[
+         RotationBox[
+          RowBox[{"\[LeftBracketingBar]", "2P", "\[RightAngleBracket]"}], 
+          BoxRotation -> 1.5707963267948966`], DisplayForm], 
+        TraditionalForm]}, {6.5, 
+       FormBox[
+        TagBox[
+         RotationBox[
+          RowBox[{"\[LeftBracketingBar]", "2D1", "\[RightAngleBracket]"}], 
+          BoxRotation -> 1.5707963267948966`], DisplayForm], 
+        TraditionalForm]}, {7.5, 
+       FormBox[
+        TagBox[
+         RotationBox[
+          RowBox[{"\[LeftBracketingBar]", "2D2", "\[RightAngleBracket]"}], 
+          BoxRotation -> 1.5707963267948966`], DisplayForm], 
+        TraditionalForm]}, {8.5, 
+       FormBox[
+        TagBox[
+         RotationBox[
+          RowBox[{"\[LeftBracketingBar]", "2F1", "\[RightAngleBracket]"}], 
+          BoxRotation -> 1.5707963267948966`], DisplayForm], 
+        TraditionalForm]}, {9.5, 
+       FormBox[
+        TagBox[
+         RotationBox[
+          RowBox[{"\[LeftBracketingBar]", "2F2", "\[RightAngleBracket]"}], 
+          BoxRotation -> 1.5707963267948966`], DisplayForm], 
+        TraditionalForm]}, {10.5, 
+       FormBox[
+        TagBox[
+         RotationBox[
+          RowBox[{"\[LeftBracketingBar]", "2G1", "\[RightAngleBracket]"}], 
+          BoxRotation -> 1.5707963267948966`], DisplayForm], 
+        TraditionalForm]}, {11.5, 
+       FormBox[
+        TagBox[
+         RotationBox[
+          RowBox[{"\[LeftBracketingBar]", "2G2", "\[RightAngleBracket]"}], 
+          BoxRotation -> 1.5707963267948966`], DisplayForm], 
+        TraditionalForm]}, {12.5, 
+       FormBox[
+        TagBox[
+         RotationBox[
+          RowBox[{"\[LeftBracketingBar]", "2H1", "\[RightAngleBracket]"}], 
+          BoxRotation -> 1.5707963267948966`], DisplayForm], 
+        TraditionalForm]}, {13.5, 
+       FormBox[
+        TagBox[
+         RotationBox[
+          RowBox[{"\[LeftBracketingBar]", "2H2", "\[RightAngleBracket]"}], 
+          BoxRotation -> 1.5707963267948966`], DisplayForm], 
+        TraditionalForm]}, {14.5, 
+       FormBox[
+        TagBox[
+         RotationBox[
+          RowBox[{"\[LeftBracketingBar]", "2I", "\[RightAngleBracket]"}], 
+          BoxRotation -> 1.5707963267948966`], DisplayForm], 
+        TraditionalForm]}, {15.5, 
+       FormBox[
+        TagBox[
+         RotationBox[
+          RowBox[{"\[LeftBracketingBar]", "2K", "\[RightAngleBracket]"}], 
+          BoxRotation -> 1.5707963267948966`], DisplayForm], 
+        TraditionalForm]}, {16.5, 
+       FormBox[
+        TagBox[
+         RotationBox[
+          RowBox[{"\[LeftBracketingBar]", "2L", "\[RightAngleBracket]"}], 
+          BoxRotation -> 1.5707963267948966`], DisplayForm], 
+        TraditionalForm]}}}},
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]],
+  ImageSize->500,
+  Method->{
+   "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+    "DefaultBoundaryStyle" -> Automatic, 
+    "DefaultGraphicsInteraction" -> {
+     "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+      "Effects" -> {
+       "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+        "Droplines" -> {
+         "freeformCursorMode" -> True, 
+          "placement" -> {"x" -> "All", "y" -> "None"}}}}, "DefaultPlotStyle" -> 
+    Automatic, "DomainPadding" -> Scaled[0.02], "RangePadding" -> 
+    Scaled[0.05]}]], "Output",
+ CellChangeTimes->{{3.945798089708187*^9, 3.945798103166774*^9}, 
+   3.945798398541506*^9},
+ CellLabel->"Out[293]=",
+ CellID->2054761278,ExpressionUUID->"78a33ba2-4913-4a45-b07b-c8cad6fef814"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "More Examples",
+ Cell[BoxData[
+  TemplateBox[{"MoreExamples", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell["Extended examples in standardized sections.", "MoreInfoText"], 
+       BaseStyle -> "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "a9c6e7b1-b3f1-484b-8eab-7c3d53fde2c1"]
+}], "ExtendedExamplesSection",
+ CellTags->"ExtendedExamples",
+ CellID->699616149,ExpressionUUID->"d24afd80-dc32-4659-95e6-8b8337b2dd9b"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Scope", "ExampleSection",ExpressionUUID->
+   "3a200d1d-6c7c-40c0-8891-8f3e98bb3b43"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->975648918,ExpressionUUID->"2aa4e1c2-7a2e-4c63-9c64-4610e21977b1"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Generalizations & Extensions", "ExampleSection",ExpressionUUID->
+   "7efdcbb9-2243-45e3-a390-e87eb3e07449"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->1693719981,ExpressionUUID->"07f98278-cd8f-4217-9ae2-cbd8f9f4ee1c"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Options", "ExampleSection",ExpressionUUID->
+   "171de63f-5ddd-4860-9a63-7fa2c91caad7"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->1455979682,ExpressionUUID->"34fd1844-dba0-402f-a5bf-2f29def75652"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "XXXX", "ExampleSubsection",ExpressionUUID->
+   "f953755c-3697-4eb4-80d9-e4a3b24dce71"],
+  $Line = 0; Null]], "ExampleSubsection",
+ CellID->74357809,ExpressionUUID->"4e4bd6b7-edda-4ba2-aa50-c08f3ec6f21d"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "XXXX", "ExampleSubsection",ExpressionUUID->
+   "438890c5-c14e-430a-be1c-0da895a1f3cf"],
+  $Line = 0; Null]], "ExampleSubsection",
+ CellID->2043696956,ExpressionUUID->"dbbda0ac-72d3-4db0-8e29-7791759a962f"]
+}, Open  ]],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Applications", "ExampleSection",ExpressionUUID->
+   "fe22ba87-8266-42c2-8932-617a9d5eeeed"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->1561289374,ExpressionUUID->"82e9faf0-95e0-49ce-bdf8-b505e5fd393c"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Properties & Relations", "ExampleSection",ExpressionUUID->
+   "0720e8f0-e35f-4036-95a6-871a94f6cc66"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->487826125,ExpressionUUID->"b0f3a5a6-4451-4dab-a9c6-659272de8d6c"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Possible Issues", "ExampleSection",ExpressionUUID->
+   "491b874e-8168-4bf6-b2e9-b841e3efc76d"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->1948602276,ExpressionUUID->"b468f57d-4a78-4522-af6b-38606d5ef7db"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Interactive Examples", "ExampleSection",ExpressionUUID->
+   "35f91126-8f8a-41de-a329-8cf6e5a0b3b6"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->1032835982,ExpressionUUID->"f7e2a3ff-c987-48b4-acfb-234608297fa8"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Neat Examples", "ExampleSection",ExpressionUUID->
+   "a455987e-7812-4ac6-a7ec-740858640263"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->764030773,ExpressionUUID->"5a89bb2c-56ec-4ff1-bed3-909b82607f7c"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Metadata", "MetadataSection",
+ CellID->1260476398,ExpressionUUID->"792937c9-f1ec-4ba6-b18e-051f086c7878"],
+
+Cell[TextData[{
+ "New in: ",
+ Cell["1.0.0", "HistoryData",
+  CellTags->"New",ExpressionUUID->"e675f558-9c3d-4ff7-8fa4-aa94d558cdbe"],
+ " | Modified in: ",
+ Cell[" ", "HistoryData",
+  CellTags->"Modified",ExpressionUUID->"73c82574-a7e7-410c-a668-3b1ebaeb6df7"],
+ " | Obsolete in: ",
+ Cell[" ", "HistoryData",
+  CellTags->"Obsolete",ExpressionUUID->
+  "fff860e1-3a7f-4b67-be7a-5102f762e95d"]
+}], "History",
+ CellChangeTimes->{{3.864923683926749*^9, 3.864923685610183*^9}, {
+  3.9457973672021933`*^9, 3.945797367859234*^9}},
+ CellID->2048127178,ExpressionUUID->"071ff403-c575-4887-bb62-5c960c5c4410"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Categorization",
+ Cell[BoxData[
+  TemplateBox[{"Metadata", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell[
+       "Metadata such as page URI, context, and type of documentation page.", 
+        "MoreInfoText"], BaseStyle -> "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "77a74dfd-5c34-4703-bc35-c37c81decdea"]
+}], "CategorizationSection",
+ CellID->858102883,ExpressionUUID->"c862ab1f-17bf-41eb-9051-6e970c8bcda4"],
+
+Cell["Symbol", "Categorization",
+ CellLabel->"Entity Type",
+ CellID->1782464976,ExpressionUUID->"126ad0ea-f372-4fbb-82e7-9ca48fffa98a"],
+
+Cell["DavidLizarazo/qlanth", "Categorization",
+ CellLabel->"Paclet Name",
+ CellID->491975982,ExpressionUUID->"7b54869d-ace8-4f52-a268-910339fd7b95"],
+
+Cell["DavidLizarazo`qlanth`", "Categorization",
+ CellLabel->"Context",
+ CellID->828288524,ExpressionUUID->"14c80408-66ef-4dd6-ad2c-394e00b3a12c"],
+
+Cell["DavidLizarazo/qlanth/ref/GenerateThreeBodyTables", "Categorization",
+ CellLabel->"URI",
+ CellID->1056223014,ExpressionUUID->"3fb73b43-3094-4e28-afb6-3ba7bd9803e2"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Keywords", "KeywordsSection",
+ CellID->840370196,ExpressionUUID->"4b42b401-0321-47f6-b9ba-cac2eeaca96b"],
+
+Cell["XXXX", "Keywords",
+ CellID->101937853,ExpressionUUID->"b00d3c39-ee42-4be6-8d17-95a5845334ea"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Syntax Templates", "TemplatesSection",
+ CellID->1725028712,ExpressionUUID->"83cdd318-4bf4-4463-afb7-dd8114ff20bc"],
+
+Cell[BoxData[""], "Template",
+ CellLabel->"Additional Function Template",
+ CellID->1528328084,ExpressionUUID->"cbfd272e-4d33-405c-9515-51163972d9a9"],
+
+Cell[BoxData[""], "Template",
+ CellLabel->"Arguments Pattern",
+ CellID->558206021,ExpressionUUID->"2ec1ab9e-ad2e-46ba-b986-1d016b3a7ac7"],
+
+Cell[BoxData[""], "Template",
+ CellLabel->"Local Variables",
+ CellID->1560024851,ExpressionUUID->"522de18d-19bf-4121-8012-b0dd24f6cb69"],
+
+Cell[BoxData[""], "Template",
+ CellLabel->"Color Equal Signs",
+ CellID->709824534,ExpressionUUID->"f5549c82-8dd9-4ccd-a167-68e037e57cd1"]
+}, Closed]]
+}, Open  ]]
+},
+WindowSize->{700, 770},
+WindowMargins->{{107, Automatic}, {Automatic, 97}},
+TaggingRules-><|"Paclet" -> "DavidLizarazo/qlanth"|>,
+FrontEndVersion->"14.1 for Mac OS X ARM (64-bit) (July 16, 2024)",
+StyleDefinitions->FrontEnd`FileName[{"Wolfram"}, "FunctionPageStylesExt.nb", 
+  CharacterEncoding -> "UTF-8"],
+ExpressionUUID->"6fff679c-1dda-415b-9417-9498a407886a"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "ExtendedExamples"->{
+  Cell[177968, 5491, 487, 13, 56, "ExtendedExamplesSection",ExpressionUUID->"d24afd80-dc32-4659-95e6-8b8337b2dd9b",
+   CellTags->"ExtendedExamples",
+   CellID->699616149]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"ExtendedExamples", 184382, 5680}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[576, 22, 121, 1, 72, "ObjectName",ExpressionUUID->"1f649389-99e1-4127-b142-c103ba6821a9",
+ CellID->1723437141],
+Cell[700, 25, 990, 21, 93, "Usage",ExpressionUUID->"5b7699b7-ac67-4394-8280-8ad504aa6c01",
+ CellID->548598051],
+Cell[1693, 48, 931, 21, 76, "Notes",ExpressionUUID->"3194e3c2-d588-4cf3-86b0-cd53c134e98b",
+ CellID->1140146586]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2661, 74, 458, 13, 38, "SeeAlsoSection",ExpressionUUID->"4e6b512b-ac8b-45b9-aad0-f1b7424142b1",
+ CellID->447088721],
+Cell[3122, 89, 2577, 63, 21, "SeeAlso",ExpressionUUID->"38540086-c56a-40b6-b3e7-0d6e8cc18351",
+ CellID->174852994]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5736, 157, 435, 12, 39, "TechNotesSection",ExpressionUUID->"9246bc7e-38cc-4c25-9aaa-1a70f9c13d3f",
+ CellID->996641062],
+Cell[6174, 171, 100, 1, 17, "Tutorials",ExpressionUUID->"cf2416af-7c8d-4fca-9d15-e17aa31c5339",
+ CellID->173882434]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[6311, 177, 118, 1, 37, "MoreAboutSection",ExpressionUUID->"afa91a21-b331-4a48-8043-2d67516367ae",
+ CellID->1864308318],
+Cell[6432, 180, 101, 1, 17, "MoreAbout",ExpressionUUID->"78e535f7-eb3c-4502-85a8-77bc678bd374",
+ CellID->1643490896]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[6570, 186, 473, 13, 38, "RelatedLinksSection",ExpressionUUID->"3c1d76a4-1f87-45e1-8fae-f0bdb5a6e432",
+ CellID->1216821358],
+Cell[7046, 201, 103, 1, 17, "RelatedLinks",ExpressionUUID->"1db6a847-afd3-4ea2-9846-962afc7d41e2",
+ CellID->629793525]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7186, 207, 531, 14, 68, "ExamplesInitializationSection",ExpressionUUID->"11cd1b83-77f0-4ce7-87a6-d2ccecaf2e7a",
+ CellID->2140362259],
+Cell[7720, 223, 180, 3, 46, "ExampleInitialization",ExpressionUUID->"7813272c-1a1e-4308-b5ac-090f4a788bd7",
+ CellID->569916116]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7937, 231, 442, 12, 70, "PrimaryExamplesSection",ExpressionUUID->"bc577233-6087-416b-b60e-7971a8bfd340",
+ CellID->803095992],
+Cell[8382, 245, 194, 2, 23, "ExampleText",ExpressionUUID->"7b607b09-32e2-45fc-a147-1de5cc114612",
+ CellID->1439556031],
+Cell[8579, 249, 478, 10, 44, "Input",ExpressionUUID->"07b94bc9-dbb7-420b-8081-714e9f9eae5a",
+ CellID->989705411],
+Cell[CellGroupData[{
+Cell[9082, 263, 810, 20, 82, "Input",ExpressionUUID->"5b1341a0-0d90-486f-96c2-31c9b061d449",
+ CellID->1717996662],
+Cell[9895, 285, 1175, 32, 76, "Output",ExpressionUUID->"63ec4d90-45c8-459d-9b4f-9654e2e84747",
+ CellID->1452264319],
+Cell[11073, 319, 166846, 5166, 509, "Output",ExpressionUUID->"78a33ba2-4913-4a45-b07b-c8cad6fef814",
+ CellID->2054761278]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[177968, 5491, 487, 13, 56, "ExtendedExamplesSection",ExpressionUUID->"d24afd80-dc32-4659-95e6-8b8337b2dd9b",
+ CellTags->"ExtendedExamples",
+ CellID->699616149],
+Cell[178458, 5506, 241, 5, 32, "ExampleSection",ExpressionUUID->"2aa4e1c2-7a2e-4c63-9c64-4610e21977b1",
+ CellID->975648918],
+Cell[178702, 5513, 265, 5, 20, "ExampleSection",ExpressionUUID->"07f98278-cd8f-4217-9ae2-cbd8f9f4ee1c",
+ CellID->1693719981],
+Cell[CellGroupData[{
+Cell[178992, 5522, 244, 5, 20, "ExampleSection",ExpressionUUID->"34fd1844-dba0-402f-a5bf-2f29def75652",
+ CellID->1455979682],
+Cell[179239, 5529, 245, 5, 23, "ExampleSubsection",ExpressionUUID->"4e4bd6b7-edda-4ba2-aa50-c08f3ec6f21d",
+ CellID->74357809],
+Cell[179487, 5536, 247, 5, 19, "ExampleSubsection",ExpressionUUID->"dbbda0ac-72d3-4db0-8e29-7791759a962f",
+ CellID->2043696956]
+}, Open  ]],
+Cell[179749, 5544, 249, 5, 32, "ExampleSection",ExpressionUUID->"82e9faf0-95e0-49ce-bdf8-b505e5fd393c",
+ CellID->1561289374],
+Cell[180001, 5551, 258, 5, 20, "ExampleSection",ExpressionUUID->"b0f3a5a6-4451-4dab-a9c6-659272de8d6c",
+ CellID->487826125],
+Cell[180262, 5558, 252, 5, 20, "ExampleSection",ExpressionUUID->"b468f57d-4a78-4522-af6b-38606d5ef7db",
+ CellID->1948602276],
+Cell[180517, 5565, 257, 5, 20, "ExampleSection",ExpressionUUID->"f7e2a3ff-c987-48b4-acfb-234608297fa8",
+ CellID->1032835982],
+Cell[180777, 5572, 249, 5, 20, "ExampleSection",ExpressionUUID->"5a89bb2c-56ec-4ff1-bed3-909b82607f7c",
+ CellID->764030773]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[181063, 5582, 111, 1, 71, "MetadataSection",ExpressionUUID->"792937c9-f1ec-4ba6-b18e-051f086c7878",
+ CellID->1260476398],
+Cell[181177, 5585, 597, 14, 25, "History",ExpressionUUID->"071ff403-c575-4887-bb62-5c960c5c4410",
+ CellID->2048127178],
+Cell[CellGroupData[{
+Cell[181799, 5603, 484, 13, 20, "CategorizationSection",ExpressionUUID->"c862ab1f-17bf-41eb-9051-6e970c8bcda4",
+ CellID->858102883],
+Cell[182286, 5618, 135, 2, 70, "Categorization",ExpressionUUID->"126ad0ea-f372-4fbb-82e7-9ca48fffa98a",
+ CellID->1782464976],
+Cell[182424, 5622, 148, 2, 70, "Categorization",ExpressionUUID->"7b54869d-ace8-4f52-a268-910339fd7b95",
+ CellID->491975982],
+Cell[182575, 5626, 145, 2, 70, "Categorization",ExpressionUUID->"14c80408-66ef-4dd6-ad2c-394e00b3a12c",
+ CellID->828288524],
+Cell[182723, 5630, 169, 2, 70, "Categorization",ExpressionUUID->"3fb73b43-3094-4e28-afb6-3ba7bd9803e2",
+ CellID->1056223014]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[182929, 5637, 110, 1, 20, "KeywordsSection",ExpressionUUID->"4b42b401-0321-47f6-b9ba-cac2eeaca96b",
+ CellID->840370196],
+Cell[183042, 5640, 99, 1, 70, "Keywords",ExpressionUUID->"b00d3c39-ee42-4be6-8d17-95a5845334ea",
+ CellID->101937853]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[183178, 5646, 120, 1, 20, "TemplatesSection",ExpressionUUID->"83cdd318-4bf4-4463-afb7-dd8114ff20bc",
+ CellID->1725028712],
+Cell[183301, 5649, 149, 2, 70, "Template",ExpressionUUID->"cbfd272e-4d33-405c-9515-51163972d9a9",
+ CellID->1528328084],
+Cell[183453, 5653, 137, 2, 70, "Template",ExpressionUUID->"2ec1ab9e-ad2e-46ba-b986-1d016b3a7ac7",
+ CellID->558206021],
+Cell[183593, 5657, 136, 2, 70, "Template",ExpressionUUID->"522de18d-19bf-4121-8012-b0dd24f6cb69",
+ CellID->1560024851],
+Cell[183732, 5661, 137, 2, 70, "Template",ExpressionUUID->"f5549c82-8dd9-4ccd-a167-68e037e57cd1",
+ CellID->709824534]
+}, Closed]]
+}, Open  ]]
+}
+]
+*)
+

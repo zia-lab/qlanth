@@ -1,7 +1,8 @@
-Needs["qlanth`"];
-Needs["misc`"];
-Needs["qplotter`"];
-Needs["qonstants`"];
+Needs["DavidLizarazo`qlanth`"];
+Needs["DavidLizarazo`fittings`"];
+Needs["DavidLizarazo`qonstants`"];
+Needs["DavidLizarazo`misc`"];
+
 LoadCarnall[];
 
 workDir = DirectoryName[$InputFileName];
@@ -77,7 +78,7 @@ FastIonSolverLaF3Carnall[numE_, OptionsPattern[]] := Module[
     
     (*Load the parameters from Carnall*)
     PrintFun["> Loading the fit parameters from Carnall ..."];
-    params = LoadLaF3Parameters[ln, "Free Ion" -> False];
+    params = LoadLaF3Parameters[ln, "Vintage" -> "Carnall", "With Uncertainties" -> False];
     If[numE>7,
       (
         PrintFun["> Conjugating the parameters accounting for the hole-particle equivalence ..."];
@@ -358,6 +359,178 @@ FastIonSolverLaF3Carnall[numE_, OptionsPattern[]] := Module[
             truncatedStates}];
   )
 ];
+
+FlowMatching::usage="FlowMatching[aList, bList] returns a list of pairs of elements from aList and bList that are closest to each other, this is returned in a list together with a mapping of indices from the aList to those in bList to which they were matched. The option \"alistLabels\" can be used to specify labels for the elements in aList. The option \"blistLabels\" can be used to specify labels for the elements in bList. If these options are used, the function returns a list with three elements the pairs of matched elements, the pairs of corresponding matched labels, and the mapping of indices. This is basically a wrapper around Mathematica's FindMinimumCostFlow function. By default the option \"notMatched\" is zero, and this means that all elements of aList must be matched to elements of bList. If this is not the case, the option \"notMatched\" can be used to specify how many elements of aList can be left unmatched. By default the cost function is Abs[#1-#2]&, but this can be changed with the option \"CostFun\", this function needs to take two arguments.";
+Options[FlowMatching] = {"alistLabels" -> {}, "blistLabels" -> {}, "notMatched" -> 0, "CostFun"-> (Abs[#1-#2] &)};
+FlowMatching[aValues0_, bValues0_, OptionsPattern[]] := Module[{
+aValues = aValues0, bValues = bValues0, edgesSourceToA, capacitySourceToA, nA, nB,
+costSourceToA, midLayer, midLayerEdges, midCapacities,
+midCosts, edgesBtoSink, capacityBtoSink, costBtoSink,
+allCapacities, allCosts, allEdges, graph,
+flow, bestValues, bestLabels, cFun,
+aLabels, bLabels, pairedIndices, matchingLabels},
+(
+matchingLabels = (Length[OptionValue["alistLabels"]] > 0);
+aLabels = OptionValue["alistLabels"];
+bLabels = OptionValue["blistLabels"];
+cFun    = OptionValue["CostFun"];
+nA      = Length[aValues];
+nB      = Length[bValues];
+(*Build up the edges costs and capacities*)
+(*From source to the nodes representing the values of the first \
+list*)
+edgesSourceToA    = ("source" \[DirectedEdge] {"A", #}) & /@ Range[1, nA];
+capacitySourceToA = ConstantArray[1, nA];
+costSourceToA     = ConstantArray[0, nA];
+
+(*From all the elements of A to all the elements of B*)
+midLayer = Table[{{"A", i} \[DirectedEdge] ({"B", j}), 1, cFun[aValues[[i]], bValues[[j]]]}, {i, 1, nA}, {j, 1, nB}];
+midLayer = Flatten[midLayer, 1];
+{midLayerEdges, midCapacities, midCosts} = Transpose[midLayer];
+
+(*From the elements of B to the sink*)
+edgesBtoSink    = ({"B", #} \[DirectedEdge] "sink") & /@ Range[1, nB];
+capacityBtoSink = ConstantArray[1, nB];
+costBtoSink     = ConstantArray[0, nB];
+
+(*Put it all together*)
+allCapacities = Join[capacitySourceToA, midCapacities, capacityBtoSink];
+allCosts      = Join[costSourceToA, midCosts, costBtoSink];
+allEdges      = Join[edgesSourceToA, midLayerEdges, edgesBtoSink];
+graph         = Graph[allEdges, EdgeCapacity -> allCapacities, 
+  EdgeCost -> allCosts];
+
+(*Solve it*)
+flow          = FindMinimumCostFlow[graph, "source", "sink", nA - OptionValue["notMatched"], "OptimumFlowData"];
+(*Collect the pairs of matched indices*)
+pairedIndices = Select[flow["EdgeList"], And[Not[#[[1]] === "source"], Not[#[[2]] === "sink"]] &];
+pairedIndices = {#[[1, 2]], #[[2, 2]]} & /@ pairedIndices;
+(*Collect the pairs of matched values*)
+bestValues    = {aValues[[#[[1]]]], bValues[[#[[2]]]]} & /@ pairedIndices;
+(*Account for having been given labels*)
+If[matchingLabels,
+  (
+  bestLabels = {aLabels[[#[[1]]]], bLabels[[#[[2]]]]} & /@ pairedIndices;
+  Return[{bestValues, bestLabels, pairedIndices}]
+  ),
+  (
+  Return[{bestValues, pairedIndices}]
+  )
+  ];
+)
+];
+
+GreedyMatching::usage="GreedyMatching[aList, bList] returns a list of pairs of elements from aList and bList that are closest to each other, this is returned in a list together with a mapping of indices from the aList to those in bList to which they were matched. The option \"alistLabels\" can be used to specify labels for the elements in aList. The option \"blistLabels\" can be used to specify labels for the elements in bList. If these options are used, the function returns a list with three elements the pairs of matched elements, the pairs of corresponding matched labels, and the mapping of indices.";
+Options[GreedyMatching] = {
+    "alistLabels" -> {},
+    "blistLabels" -> {}};
+GreedyMatching[aValues0_, bValues0_, OptionsPattern[]] := Module[{
+  aValues = aValues0,
+  bValues = bValues0,
+  bValuesOriginal = bValues0,
+  bestLabels, bestMatches,
+  bestLabel, aElement, givenLabels,
+  aLabels, aLabel,
+  diffs, minDiff,
+  bLabels,
+  minDiffPosition, bestMatch},
+  (
+  aLabels     = OptionValue["alistLabels"];
+  bLabels     = OptionValue["blistLabels"];
+  bestMatches = {};
+  bestLabels  = {};
+  givenLabels = (Length[aLabels] > 0);
+  Do[
+    (
+    aElement        = aValues[[idx]];
+    diffs           = Abs[bValues - aElement];
+    minDiff         = Min[diffs];
+    minDiffPosition = Position[diffs, minDiff][[1, 1]];
+    bestMatch       = bValues[[minDiffPosition]];
+    bestMatches     = Append[bestMatches, {aElement, bestMatch}];
+    If[givenLabels,
+      (
+      aLabel     = aLabels[[idx]];
+      bestLabel  = bLabels[[minDiffPosition]];
+      bestLabels = Append[bestLabels, {aLabel, bestLabel}];
+      bLabels    = Drop[bLabels, {minDiffPosition}];
+      )
+      ];
+    bValues = Drop[bValues, {minDiffPosition}];
+    If[Length[bValues] == 0, Break[]];
+    ),
+    {idx, 1, Length[aValues]}
+    ];
+  pairedIndices = MapIndexed[{#2[[1]], Position[bValuesOriginal, #1[[2]]][[1, 1]]} &, bestMatches];
+  If[givenLabels,
+    Return[{bestMatches, bestLabels, pairedIndices}],
+    Return[{bestMatches, pairedIndices}]
+    ]
+  )
+  ];
+
+StochasticMatching::usage="StochasticMatching[aValues, bValues] finds a better assignment by randomly shuffling the elements of aValues and then applying the greedy assignment algorithm. The function prints what is the range of total absolute differences found during shuffling, the standard deviation of all of them, and the number of shuffles that were attempted. The option \"alistLabels\" can be used to specify labels for the elements in aValues. The option \"blistLabels\" can be used to specify labels for the elements in bValues. If these options are used, the function returns a list with three elements the pairs of matched elements, the pairs of corresponding matched labels, and the mapping of indices.";
+Options[StochasticMatching] = {"alistLabels" -> {}, 
+  "blistLabels" -> {}};
+StochasticMatching[aValues0_, bValues0_, numShuffles_ : 200, OptionsPattern[]] := Module[{
+  aValues = aValues0,
+  bValues = bValues0,
+  matchingLabels, ranger, matches, noShuff, bestMatch, highestCost, lowestCost, dev, sorter, bestValues,
+  pairedIndices, bestLabels, matchedIndices, shuffler
+  },
+  (
+  matchingLabels = (Length[OptionValue["alistLabels"]] > 0);
+  ranger = Range[1, Length[aValues]];
+  matches = If[Not[matchingLabels], (
+      Table[(
+        shuffler = If[i == 1, ranger, RandomSample[ranger]];
+        {bestValues, matchedIndices} = 
+        GreedyMatching[aValues[[shuffler]], bValues];
+        cost = Total[Abs[#[[1]] - #[[2]]] & /@ bestValues];
+        {cost, {bestValues, matchedIndices}}
+        ), {i, 1, numShuffles}]
+      ),
+    Table[(
+      shuffler = If[i == 1, ranger, RandomSample[ranger]];
+      {bestValues, bestLabels, matchedIndices} = 
+        GreedyMatching[aValues[[shuffler]], bValues, 
+        "alistLabels" -> OptionValue["alistLabels"][[shuffler]], 
+        "blistLabels" -> OptionValue["blistLabels"]];
+      cost = Total[Abs[#[[1]] - #[[2]]] & /@ bestValues];
+      {cost, {bestValues, bestLabels, matchedIndices}}
+      ), {i, 1, numShuffles}]
+    ];
+  noShuff = matches[[1, 1]];
+  matches = SortBy[matches, First];
+  bestMatch = matches[[1, 2]];
+  highestCost = matches[[-1, 1]];
+  lowestCost = matches[[1, 1]];
+  dev = StandardDeviation[First /@ matches];
+  Print[lowestCost, " <-> ", highestCost, " | \[Sigma]=", dev, 
+    " | N=", numShuffles, " | null=", noShuff];
+  If[matchingLabels,
+    (
+    {bestValues, bestLabels, matchedIndices} = bestMatch;
+    sorter = Ordering[First /@ bestValues];
+    bestValues = bestValues[[sorter]];
+    bestLabels = bestLabels[[sorter]];
+    pairedIndices = 
+      MapIndexed[{#2[[1]], Position[bValues, #1[[2]]][[1, 1]]} &, 
+      bestValues];
+    Return[{bestValues, bestLabels, pairedIndices}]
+    ),
+    (
+    {bestValues, matchedIndices} = bestMatch;
+    sorter = Ordering[First /@ bestValues];
+    bestValues = bestValues[[sorter]];
+    pairedIndices = 
+      MapIndexed[{#2[[1]], Position[bValues, #1[[2]]][[1, 1]]} &, 
+      bestValues];
+    Return[{bestValues, pairedIndices}]
+    )
+    ];
+  )
+  ];
 
 MagneticDipoleTransitionsLaF3Carnall::usage = "MagneticDipoleTransitionsLaF3Carnall[numE] calculates the magnetic dipole transitions for the lanthanide ion numE in LaF3, using the output files from FastIonSolverLaF3Carnall stored in the examples folder. The output is a tabular file, a raw data file, and a CSV file. The tabular file contains the following columns: 
     \[Psi]i:simple, (* main contribution to the wavefuction |i>*)
@@ -1310,7 +1483,10 @@ parameters used here."
   )
 ];
 
-FitLaF3[]:=(
+Options[FitLaF3] = {
+  "fitOrder" -> "Pr Nd Dy Ce Sm Ho Er Tm Yb Tb Eu Gd Pm",
+  "notify" -> False};  
+FitLaF3[OptionsPattern[]]:=(
     If[
         Not[ValueQ[PrintToOutputNb]],
         PrintToOutputNb = HelperNotebook["Lanthanides : OUT"];
@@ -1327,9 +1503,10 @@ FitLaF3[]:=(
         "pathfinder-constraints-with-spinspin-and-no-truncation",
         "pathfinder-constraints-without-spinspin-and-no-truncation"
     ];
+    filePrefix = "variant-" <> filePrefix;
     \[Sigma]exp = 1.0;
     trunEnergy = Infinity;
-    fitOrder = "Pr Nd Dy Ce Sm Ho Er Tm Yb Tb Eu Gd Pm";
+    fitOrder = OptionValue["fitOrder"];
     fitOrder = Position[theLanthanides, #][[1, 1]] & /@ StringSplit[fitOrder, " "];
     doThese = fitOrder;
     
@@ -1405,7 +1582,7 @@ FitLaF3[]:=(
             ];
         independentVars = Variables[pVars /. constraints];
         startValues = AssociationThread[independentVars, 
-            independentVars /. LoadLaF3Parameters[ln]];
+            independentVars /. LoadLaF3Parameters[ln, "Vintage" -> "Carnall", "With Uncertainties" -> False]];
         thisSolution = ClassicalFit[numE,
             expData,
             excludedDataIndices,
@@ -1438,22 +1615,31 @@ FitLaF3[]:=(
             ];
         
         PrintAndDefine[">> Computing energies with full diagonalization ..."];
-        params = thisSolution["bestParamsWithConstraints"];
-        eigenEnergies = FastIonSolver[params,
-            "EnergiesOnly" -> True,
-            "MakeNotebook" -> False,
-            "PrintFun" -> PrintAndDefine,
-            "Append to Filename" -> "fitting-" <> ln,
-            "Remove Kramers" -> False,
-            "Energy Uncertainty in K" -> \[Sigma]exp,
-            "Explorer" -> False
-            ];
-        
-        PrintAndDefine[">> Calculating full diagonalization RMS ..."];
-        fullDiffs = (eigenEnergies[[;; Length[expData]]] - 
-            First /@ expData)[[
-            Complement[presentDataIndices, excludedDataIndices]]];
-        fullRMSsquared = Sqrt[Total[fullDiffs^2]/thisSolution["degreesOfFreedom"]];
+        If[
+          Not[truncationEnergy == Infinity],
+        (
+          params = thisSolution["bestParamsWithConstraints"];
+          eigenEnergies = FastIonSolver[params,
+              "EnergiesOnly" -> True,
+              "MakeNotebook" -> False,
+              "PrintFun" -> PrintAndDefine,
+              "Append to Filename" -> "fitting-" <> ln,
+              "Remove Kramers" -> False,
+              "Energy Uncertainty in K" -> \[Sigma]exp,
+              "Explorer" -> False
+              ];
+          
+          PrintAndDefine[">> Calculating full diagonalization RMS ..."];
+          fullDiffs = (eigenEnergies[[;; Length[expData]]] - 
+              First /@ expData)[[
+              Complement[presentDataIndices, excludedDataIndices]]];
+          fullRMSsquared = Sqrt[Total[fullDiffs^2]/thisSolution["degreesOfFreedom"]];
+        ),
+        (
+          eigenEnergies = thisSolution["energies"];
+          fullRMSsquared = thisSolution["bestRMS"];
+        )
+        ];
         thisSolution["bestRMSwithTruncation"] = thisSolution["bestRMS"];
         thisSolution["energiesWithTruncation"] = thisSolution["energies"];
         thisSolution["excludedDataIndices"] = excludedDataIndices;
@@ -1497,13 +1683,80 @@ FitLaF3[]:=(
         {pVar, pVars}
         ];
         varModels[ln] = varModel; 
-        Run["~/Scripts/pushover \"finished fitting " <> ln <> "\""];
+        If[OptionValue["notify"],
+          Run["~/Scripts/pushover \"finished fitting " <> ln <> "\""];
+        ]
     ),
     {numE0, doThese}];
     Return[{varModels, truncatedSols}];
 );
 
-FitLiYF4[]:=(
+LoadLiYF4Parameters::usage="Data from Cheng, Jun, Wen Jun, Chen Yonghu, Yin Min, and Duan Changkui. Crystal-Field Analyses for Trivalent Lanthanide Ions in LiYF4. Journal of Rare Earths 34, no. 10 (2016): 1048-52.";
+LoadLiYF4Parameters[ln_] := (
+  paramsChengLiYF4 = <|"Ce" -> <|\[Zeta] -> 630., B02 -> 354., B04 -> -1043., 
+    B44 -> -1249., B06 -> -65., B46 -> -1069.|>, 
+  "Pr" -> <|F0 -> 0., F2 -> 68955., F4 -> 50505., 
+    F6 -> 33098., \[Zeta] -> 748., \[Alpha] -> 
+      23.3, \[Beta] -> -644., \[Gamma] -> 1413., M0 -> 1.88, P2 -> 244.,
+      B02 -> 512., B04 -> -1127., B44 -> -1239., B06 -> -85., 
+    B46 -> -1205.|>, 
+  "Nd" -> <|F0 -> 0., F2 -> 72952., F4 -> 52681., 
+    F6 -> 35476., \[Zeta] -> 877., \[Alpha] -> 
+      21., \[Beta] -> -579., \[Gamma] -> 1446., T2 -> 210., T3 -> 41., 
+    T4 -> 74., T6 -> -293., T7 -> 321., T8 -> 205., M0 -> 1.85, 
+    P2 -> 304., B02 -> 391., B04 -> -1031., B44 -> -1271., B06 -> -28.,
+      B46 -> -1046.|>, 
+  "Sm" -> <|F0 -> 0., F2 -> 79515., F4 -> 56766., 
+    F6 -> 40078., \[Zeta] -> 1168., \[Alpha] -> 
+      20.5, \[Beta] -> -616., \[Gamma] -> 1565., T2 -> 282., T3 -> 26., 
+    T4 -> 71., T6 -> -257., T7 -> 314., T8 -> 328., M0 -> 2.38, 
+    P2 -> 336., B02 -> 370., B04 -> -757., B44 -> -941., B06 -> -67., 
+    B46 -> -895.|>, 
+  "Eu" -> <|F0 -> 0., F2 -> 82573., F4 -> 59646., 
+    F6 -> 43203., \[Zeta] -> 1329., \[Alpha] -> 
+      21.6, \[Beta] -> -482., \[Gamma] -> 1140., T2 -> 370., T3 -> 40., 
+    T4 -> 40., T6 -> -300., T7 -> 380., T8 -> 370., M0 -> 2.41, 
+    P2 -> 332., B02 -> 339., B04 -> -733., B44 -> -1067., B06 -> -36., 
+    B46 -> -764.|>, 
+  "Tb" -> <|F0 -> 0., F2 -> 90972., F4 -> 64499., 
+    F6 -> 45759., \[Zeta] -> 1702., \[Alpha] -> 
+      17.6, \[Beta] -> -581., \[Gamma] -> 1792., T2 -> 330., T3 -> 40., 
+    T4 -> 45., T6 -> -365., T7 -> 320., T8 -> 349., M0 -> 2.7, 
+    P2 -> 482., B02 -> 413., B04 -> -867., B44 -> -1114., B06 -> -41., 
+    B46 -> -736.|>, 
+  "Dy" -> <|F0 -> 0, F2 -> 90421., F4 -> 63928., 
+    F6 -> 46657., \[Zeta] -> 1895., \[Alpha] -> 
+      17.9, \[Beta] -> -628., \[Gamma] -> 1790., T2 -> 326., T3 -> 23., 
+    T4 -> 83., T6 -> -294., T7 -> 403., T8 -> 340., M0 -> 4.46, 
+    P2 -> 610., B02 -> 360., B04 -> -737., B44 -> -943., B06 -> -35., 
+    B46 -> -700.|>, 
+  "Ho" -> <|F0 -> 0., F2 -> 93512., F4 -> 66084., 
+    F6 -> 49765., \[Zeta] -> 2126., \[Alpha] -> 
+      17.2, \[Beta] -> -596., \[Gamma] -> 1839., T2 -> 365., T3 -> 37., 
+    T4 -> 95., T6 -> -274., T7 -> 331., T8 -> 343., M0 -> 3.92, 
+    P2 -> 582., B02 -> 386., B04 -> -629., B44 -> -841., B06 -> -33., 
+    B46 -> -687.|>, 
+  "Er" -> <|F0 -> 0., F2 -> 97326., F4 -> 67987., 
+    F6 -> 53651., \[Zeta] -> 2377., \[Alpha] -> 
+      18.1, \[Beta] -> -599., \[Gamma] -> 1870., T2 -> 380., T3 -> 41., 
+    T4 -> 69., T6 -> -356., T7 -> 239., T8 -> 390., M0 -> 4.41, 
+    P2 -> 795., B02 -> 325., B04 -> -749., B44 -> -1014., B06 -> -19., 
+    B46 -> -635.|>, 
+  "Tm" -> <|F0 -> 0., T2 -> 0., F2 -> 101938., F4 -> 71553., 
+    F6 -> 51359., \[Zeta] -> 2632., \[Alpha] -> 
+      17.3, \[Beta] -> -665., \[Gamma] -> 1936., M0 -> 4.93, P2 -> 730.,
+      B02 -> 339., B04 -> -627., B44 -> -913., B06 -> -39., 
+    B46 -> -584.|>, 
+  "Yb" -> <|\[Zeta] -> 2916., B02 -> 446., B04 -> -560., B44 -> -843., 
+    B06 -> -23., B46 -> -512.|>
+    |>;
+  Return[paramsChengLiYF4[ln]];
+);
+
+Options[FitLiYF4] = {
+  "fitOrder" -> "Er Nd Eu Ho Sm Pr Tm Yb Ce Tb Dy Gd Pm",
+  "notify" -> False};
+FitLiYF4[OptionsPattern[]]:=(
     If[
         Not[ValueQ[PrintToOutputNb]],
         PrintToOutputNb = HelperNotebook["Lanthanides : OUT"];
@@ -1525,6 +1778,7 @@ FitLiYF4[]:=(
                 "-truncation-nominal-sigma-",
                 If[withSpinSin == 1, "with-spinspin", "without-spinspin"]
                 }];
+    filePrefix = "variant-" <> filePrefix;
     (* This according to Cheng probably following Gorller-Walrand *)
     magSimplifier = {
         M2 -> 56/100 M0,
@@ -1532,8 +1786,7 @@ FitLiYF4[]:=(
         P4 -> 3/4 P2,
         P6 -> 1/2 P2};
     fitOrder = "Er Nd Eu Ho Sm Pr Tm Yb Ce Tb Dy Gd Pm";
-    fitOrder = Position[theLanthanides, #][[1, 1]] & /@ 
-    StringSplit[fitOrder, " "];
+    fitOrder = Position[theLanthanides, #][[1, 1]] & /@ StringSplit[fitOrder, " "];
     doThese = fitOrder;
     
     linearParams       = Join[casimirSymbols, cfSymbols, TSymbols, pseudoMagneticSymbols, marvinSymbols];
@@ -1718,7 +1971,9 @@ FitLiYF4[]:=(
         {pVar, pVars}
         ];
         
-        Run["~/Scripts/pushover \"finished fitting " <> ln <> "\""];
+        If[OptionValue["notify"],
+            Run["~/Scripts/pushover \"finished fitting " <> ln <> "\""];
+        ];
         varModels[ln] = varModel;
     ),
     {numE0, doThese}];
@@ -1829,7 +2084,7 @@ FitLaF3RestrictedOrthogonal[]:=(
             ];
         independentVars = Variables[pVars /. constraints];
         startValues = AssociationThread[independentVars, 
-            independentVars /. LoadLaF3Parameters[ln]];
+            independentVars /. LoadLaF3Parameters[ln, "Vintage" -> "Carnall", "With Uncertainties" -> False]];
         thisSolution = ClassicalFit[numE,
             expData,
             excludedDataIndices,
@@ -2109,7 +2364,7 @@ FitLaF3MostlyOrthogonal[OptionsPattern[]]:=Module[
             ];
         independentVars = Variables[pVars /. constraints];
         startValues = AssociationThread[independentVars, 
-            independentVars /. FromNonOrthogonalToMostlyOrthogonal[LoadLaF3Parameters[ln], numE]];
+            independentVars /. FromNonOrthogonalToMostlyOrthogonal[LoadLaF3Parameters[ln, "Vintage" -> "Carnall", "With Uncertainties" -> False], numE]];
         thisSolution = MostlyOrthogonalFit[numE,
             expData,
             excludedDataIndices,

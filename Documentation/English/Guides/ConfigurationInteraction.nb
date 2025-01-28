@@ -1,0 +1,386 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     15436,        378]
+NotebookOptionsPosition[     11465,        293]
+NotebookOutlinePosition[     11990,        311]
+CellTagsIndexPosition[     11947,        308]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Configuration Interaction", "GuideTitle",
+ CellID->1333372029,ExpressionUUID->"dabf3613-e656-4e5e-8b83-c02bfcda4613"],
+
+Cell[TextData[{
+ "A single configuration description may be improved by approximating the \
+effects of having omitted other configurations.\nThis addition is what is \
+usually termed ",
+ StyleBox["configuration interaction.",
+  FontSlant->"Italic"],
+ "\nGiven a fundamental interaction, the configuration interaction analysis \
+considers the effects that matrix elements including the additional \
+interactions would have on the single configuration description.\nThe \
+resulting expressions for perturbation theory are carried out to a given \
+order, and perhaps with additional simplifications or approximations, what \
+results are corrections that can be represented as intra-configuration \
+operators.\nUsually these operators are preceded by coefficients that \
+condensate the effective effect of the other configurations. In the \
+semi-empirical approach these coefficients are taken as parameters to be \
+informed by the description of actual experimental data.\nIn the description \
+of the ",
+ Cell[BoxData[
+  SuperscriptBox["f", "n"]], "InlineFormula",
+  FormatType->StandardForm,ExpressionUUID->
+  "8919ce6f-c75c-4d0c-af9a-f13749466dfb"],
+ " configurations (which already assume the single-configuration description) \
+the electrostatic interaction is usually represented by three operators. \
+These operators being the Casimir operators of groups SO(3), G2, and SO(7)."
+}], "GuideAbstract",
+ CellChangeTimes->{{3.945525954245428*^9, 3.945526053225347*^9}, {
+  3.945526192930368*^9, 3.94552641856526*^9}, {3.945526460730731*^9, 
+  3.945526545736672*^9}, {3.945526764245792*^9, 3.9455267657408743`*^9}},
+ CellID->991834958,ExpressionUUID->"01ead9e2-8b81-44b8-9e1d-e56d59d7db50"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["", "GuideFunctionsSection",
+ CellID->1002071092,ExpressionUUID->"a5f97af8-df3f-4e9c-8a35-094a735905d0"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["GG2U",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/GG2U"]], "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c40ac8e4-27e1-4161-a8df-4d4f38357a23",ExpressionUUID->
+  "b0161911-930a-41aa-af71-218d0b0e8366"],
+ " \[LongDash] an association whose keys are labels for the irreducible \
+representations of group G2 and whose values are the eigenvalues of the \
+corresponding Casimir operator."
+}], "GuideText",
+ CellChangeTimes->{{3.945526612292094*^9, 3.9455266330768023`*^9}, {
+  3.945526951115719*^9, 3.9455269511157637`*^9}},
+ CellID->1242083470,ExpressionUUID->"e24be276-ed3a-4169-b3ce-d1410709b9ff"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["GSO7W",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/GSO7W"]], 
+  "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c5c6736a-1ff4-4e4e-8fcf-2d9846cbae62",ExpressionUUID->
+  "57c94d8d-2582-4f70-826e-58da47ea74de"],
+ " \[LongDash] an association whose keys are labels for the irreducible \
+representations of group R7 and whose values are the eigenvalues of the \
+corresponding Casimir operator."
+}], "GuideText",
+ CellChangeTimes->{{3.9455266395430307`*^9, 3.945526652429984*^9}, {
+  3.945526965427486*^9, 3.945526965427526*^9}},
+ CellID->8347803,ExpressionUUID->"5823aa4f-35f3-4892-925b-c8f4852e083c"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["CasimirSO3",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/CasimirSO3"]], 
+  "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c5c6736a-1ff4-4e4e-8fcf-2d9846cbae62",ExpressionUUID->
+  "c8d01015-e0f8-4fb2-8cdc-987aa1dffe29"],
+ " \[LongDash] returns LS reduced matrix element of the configuration \
+interaction term corresponding to the Casimir operator of group SO(3)."
+}], "GuideText",
+ CellChangeTimes->{{3.9455266395430307`*^9, 3.945526664943489*^9}, 
+   3.94552674221727*^9, {3.945526968532889*^9, 3.945526968532906*^9}, {
+   3.9455290055062637`*^9, 3.945529010390794*^9}},
+ CellID->29334622,ExpressionUUID->"d9467c32-7b0d-442e-9ad3-f3722f79cd16"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["CasimirG2",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/CasimirG2"]], "InlineFormula",
+  
+  FontWeight->"Bold",ExpressionUUID->"2549b50f-0d91-4203-9b31-d33193a3aa52"],
+ " \[LongDash] returns the LS reduced matrix element of the configuration \
+interaction term corresponding to the Casimir operator of group G2."
+}], "GuideText",
+ CellChangeTimes->{{3.945528978063995*^9, 3.945529003975687*^9}, {
+  3.94552908713547*^9, 3.945529097482079*^9}},
+ CellID->1283374582,ExpressionUUID->"738890b1-2fd9-493d-bf3c-5491950f035f"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["CasimirSO7",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/CasimirSO7"]], 
+  "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c5c6736a-1ff4-4e4e-8fcf-2d9846cbae62",ExpressionUUID->
+  "548bfe05-a2e6-4fe7-883c-1cffbaf74ff3"],
+ " \[LongDash] returns the LS reduced matrix element of the configuration \
+interaction term corresponding to the Casimir operator of SO(7)."
+}], "GuideText",
+ CellChangeTimes->{{3.9455266395430307`*^9, 3.945526670104968*^9}, {
+  3.945526717966743*^9, 3.9455267331808567`*^9}, {3.9455269706040077`*^9, 
+  3.945526970604035*^9}, {3.94552901222514*^9, 3.945529016870102*^9}},
+ CellID->1253236791,ExpressionUUID->"fb45dd86-6414-48ed-82ba-926d4e18f366"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["ElectrostaticConfigInteraction",
+   BaseStyle->"Link",
+   ButtonData->
+    "paclet:DavidLizarazo/qlanth/ref/ElectrostaticConfigInteraction"]], 
+  "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c5c6736a-1ff4-4e4e-8fcf-2d9846cbae62",ExpressionUUID->
+  "c9823e6e-7ecb-42a5-b354-683116aa5253"],
+ " \[LongDash] returns the matrix element for configuration interaction as \
+approximated by the Casimir operators of the groups R3, G2, and R7."
+}], "GuideText",
+ CellChangeTimes->{{3.9455266395430307`*^9, 3.9455267070197763`*^9}, {
+   3.945526975603826*^9, 3.945526975603847*^9}, 3.945528957035746*^9},
+ CellID->1090448194,ExpressionUUID->"5a0202e3-a262-48a3-b450-8f33bea52a53"],
+
+Cell[CellGroupData[{
+
+Cell["\t", "GuideDelimiter",
+ CellID->715087966,ExpressionUUID->"264f19db-c994-4a24-80b5-16bac2ec39fd"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  TagBox[
+   FrameBox["\<\"XXXX\"\>"],
+   "FunctionPlaceholder"]], "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},ExpressionUUID->
+  "58559cdc-6624-47aa-ab2d-9d4b2eb8f323"],
+ Cell[BoxData[
+  RowBox[{
+  Cell[TextData[StyleBox[
+   " \[FilledVerySmallSquare] ", "InlineSeparator"]],ExpressionUUID->
+    "27573703-28b9-4324-8bc6-7967bdeb3ecb"], 
+   DynamicModuleBox[{$CellContext`nbobj$$ = NotebookObject[
+    "339a1f97-81a1-4b24-bb05-17dd718e43b9", 
+     "870f739e-d0a5-44ea-80e0-93b82e6d8c65"], $CellContext`cellobj$$ = 
+    CellObject[
+    "340ac701-c660-4f00-b3f6-5a23567b7e4f", 
+     "4e20a5bd-062d-49b0-9053-d83b454afbd9"]}, 
+    TemplateBox[{
+      GraphicsBox[{{
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         CircleBox[{0, 0}]}, {
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         LineBox[{{0, 0.62}, {0, -0.62}}]}, {
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         LineBox[{{-0.62, 0}, {0.62, 0}}]}}, 
+       ImagePadding -> {{1., 1.}, {2.4, 1.}}, ImageSize -> 16, 
+       PlotRange -> {{-1.06, 1.06}, {-1.06, 1.06}}, 
+       BaselinePosition -> (Center -> 
+        Center)], $CellContext`nbobj$$, $CellContext`cellobj$$},
+     "InlineListingAddButton"],
+    Initialization:>($CellContext`nbobj$$ = 
+      EvaluationNotebook[]; $CellContext`cellobj$$ = EvaluationCell[])]}]], 
+  "InlineListingAddButton",ExpressionUUID->
+  "340ac701-c660-4f00-b3f6-5a23567b7e4f"]
+}], "InlineGuideFunctionListing",
+ CellID->1164955950,ExpressionUUID->"cd05b9b9-700a-42c5-92a7-45a13b8fafa8"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Tech Notes", "GuideTutorialsSection",
+ CellID->806241951,ExpressionUUID->"627fcec3-b7eb-4439-90cf-9397c5350569"],
+
+Cell["XXXX", "GuideTutorial",
+ CellID->2034141534,ExpressionUUID->"5a024f29-6e22-4786-aa38-8d520e37d942"],
+
+Cell["XXXX", "GuideTutorial",
+ CellID->2024585345,ExpressionUUID->"7c5eaf7e-9b94-44ba-8310-c11b8d48bf28"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Related Guides", "GuideMoreAboutSection",
+ CellChangeTimes->{{3.8430423939366693`*^9, 3.843042395176153*^9}},
+ CellID->327506700,ExpressionUUID->"9a1880af-994c-4bfb-9021-bc3981e1a4e5"],
+
+Cell[TextData[ButtonBox["qlanth",
+ BaseStyle->"Link",
+ ButtonData->"paclet:DavidLizarazo/qlanth/guide/qlanth"]], "GuideMoreAbout",
+ CellChangeTimes->{{3.946986741998259*^9, 3.946986744957456*^9}},
+ CellID->404519639,ExpressionUUID->"958b6cae-c31c-43bc-9874-04556b458ffd"],
+
+Cell["XXXX", "GuideMoreAbout",
+ CellID->1975829918,ExpressionUUID->"7f2d2a7c-7e71-4711-8c7c-65b00439c99b"]
+}, Open  ]],
+
+Cell["Related Links", "GuideRelatedLinksSection",
+ CellID->1233798265,ExpressionUUID->"f243d298-cd6e-4b87-ab0e-566c6743c835"],
+
+Cell[CellGroupData[{
+
+Cell["Metadata", "MetadataSection",
+ CellID->345344423,ExpressionUUID->"8652c6cf-70ee-4c1b-9815-986a8acf323e"],
+
+Cell[TextData[{
+ "New in: ",
+ Cell["1.0.0", "HistoryData",
+  CellTags->"New",ExpressionUUID->"e08b6f1e-a08a-444e-9078-9c385ea7a1c2"],
+ " | Modified in: ",
+ Cell[" ", "HistoryData",
+  CellTags->"Modified",ExpressionUUID->"81272a09-cfec-4b3d-afdc-854bba2f3dfa"],
+ " | Obsolete in: ",
+ Cell[" ", "HistoryData",
+  CellTags->"Obsolete",ExpressionUUID->
+  "be547352-f8d0-4a96-9aaf-df3865874157"]
+}], "History",
+ CellChangeTimes->{{3.945526853713376*^9, 3.945526855677251*^9}},
+ CellID->1702903167,ExpressionUUID->"238931ef-69ea-47c4-b8ce-a7bd0199ac72"],
+
+Cell[CellGroupData[{
+
+Cell["Categorization", "CategorizationSection",
+ CellID->1178964200,ExpressionUUID->"5e6dd009-ad8c-432b-b748-f4d689383c1c"],
+
+Cell["Guide", "Categorization",
+ CellLabel->"Entity Type",
+ CellID->19698531,ExpressionUUID->"10218748-024b-45e0-8faf-7ea0aebeb98c"],
+
+Cell["DavidLizarazo/qlanth", "Categorization",
+ CellLabel->"Paclet Name",
+ CellID->360728879,ExpressionUUID->"0efffe52-4dca-46a4-ba59-443f76c34fc0"],
+
+Cell["DavidLizarazo`qlanth`", "Categorization",
+ CellLabel->"Context",
+ CellID->423933872,ExpressionUUID->"9492cb93-28db-4130-b03d-51fd69dac638"],
+
+Cell["DavidLizarazo/qlanth/guide/ConfigurationInteraction", "Categorization",
+ CellLabel->"URI",
+ CellID->1853329605,ExpressionUUID->"38908321-2762-4caf-ab32-a71ab1777f95"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Keywords", "KeywordsSection",
+ CellID->1807855147,ExpressionUUID->"8243d861-80b1-4d10-92bc-0cd6266135dd"],
+
+Cell["XXXX", "Keywords",
+ CellID->2022817873,ExpressionUUID->"50ea8da8-c56b-49b1-a63e-b6bf0a8ccb89"]
+}, Closed]]
+}, Open  ]]
+},
+WindowSize->{700, 770},
+WindowMargins->{{Automatic, 398}, {Automatic, 122}},
+TaggingRules-><|"Paclet" -> "DavidLizarazo/qlanth"|>,
+FrontEndVersion->"14.1 for Mac OS X ARM (64-bit) (July 16, 2024)",
+StyleDefinitions->FrontEnd`FileName[{"Wolfram"}, "GuidePageStylesExt.nb", 
+  CharacterEncoding -> "UTF-8"],
+ExpressionUUID->"339a1f97-81a1-4b24-bb05-17dd718e43b9"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[576, 22, 123, 1, 86, "GuideTitle",ExpressionUUID->"dabf3613-e656-4e5e-8b83-c02bfcda4613",
+ CellID->1333372029],
+Cell[702, 25, 1687, 28, 328, "GuideAbstract",ExpressionUUID->"01ead9e2-8b81-44b8-9e1d-e56d59d7db50",
+ CellID->991834958]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2426, 58, 109, 1, 71, "GuideFunctionsSection",ExpressionUUID->"a5f97af8-df3f-4e9c-8a35-094a735905d0",
+ CellID->1002071092],
+Cell[2538, 61, 700, 14, 40, "GuideText",ExpressionUUID->"e24be276-ed3a-4169-b3ce-d1410709b9ff",
+ CellID->1242083470],
+Cell[3241, 77, 700, 15, 40, "GuideText",ExpressionUUID->"5823aa4f-35f3-4892-925b-c8f4852e083c",
+ CellID->8347803],
+Cell[3944, 94, 748, 15, 40, "GuideText",ExpressionUUID->"d9467c32-7b0d-442e-9ad3-f3722f79cd16",
+ CellID->29334622],
+Cell[4695, 111, 589, 12, 38, "GuideText",ExpressionUUID->"738890b1-2fd9-493d-bf3c-5491950f035f",
+ CellID->1283374582],
+Cell[5287, 125, 772, 15, 40, "GuideText",ExpressionUUID->"fb45dd86-6414-48ed-82ba-926d4e18f366",
+ CellID->1253236791],
+Cell[6062, 142, 748, 15, 40, "GuideText",ExpressionUUID->"5a0202e3-a262-48a3-b450-8f33bea52a53",
+ CellID->1090448194],
+Cell[CellGroupData[{
+Cell[6835, 161, 103, 1, 26, "GuideDelimiter",ExpressionUUID->"264f19db-c994-4a24-80b5-16bac2ec39fd",
+ CellID->715087966],
+Cell[6941, 164, 1671, 42, 25, "InlineGuideFunctionListing",ExpressionUUID->"cd05b9b9-700a-42c5-92a7-45a13b8fafa8",
+ CellID->1164955950]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[8661, 212, 118, 1, 73, "GuideTutorialsSection",ExpressionUUID->"627fcec3-b7eb-4439-90cf-9397c5350569",
+ CellID->806241951],
+Cell[8782, 215, 105, 1, 23, "GuideTutorial",ExpressionUUID->"5a024f29-6e22-4786-aa38-8d520e37d942",
+ CellID->2034141534],
+Cell[8890, 218, 105, 1, 23, "GuideTutorial",ExpressionUUID->"7c5eaf7e-9b94-44ba-8310-c11b8d48bf28",
+ CellID->2024585345]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[9032, 224, 190, 2, 73, "GuideMoreAboutSection",ExpressionUUID->"9a1880af-994c-4bfb-9021-bc3981e1a4e5",
+ CellID->327506700],
+Cell[9225, 228, 271, 4, 23, "GuideMoreAbout",ExpressionUUID->"958b6cae-c31c-43bc-9874-04556b458ffd",
+ CellID->404519639],
+Cell[9499, 234, 106, 1, 23, "GuideMoreAbout",ExpressionUUID->"7f2d2a7c-7e71-4711-8c7c-65b00439c99b",
+ CellID->1975829918]
+}, Open  ]],
+Cell[9620, 238, 125, 1, 73, "GuideRelatedLinksSection",ExpressionUUID->"f243d298-cd6e-4b87-ab0e-566c6743c835",
+ CellID->1233798265],
+Cell[CellGroupData[{
+Cell[9770, 243, 110, 1, 71, "MetadataSection",ExpressionUUID->"8652c6cf-70ee-4c1b-9815-986a8acf323e",
+ CellID->345344423],
+Cell[9883, 246, 546, 13, 25, "History",ExpressionUUID->"238931ef-69ea-47c4-b8ce-a7bd0199ac72",
+ CellID->1702903167],
+Cell[CellGroupData[{
+Cell[10454, 263, 123, 1, 20, "CategorizationSection",ExpressionUUID->"5e6dd009-ad8c-432b-b748-f4d689383c1c",
+ CellID->1178964200],
+Cell[10580, 266, 132, 2, 70, "Categorization",ExpressionUUID->"10218748-024b-45e0-8faf-7ea0aebeb98c",
+ CellID->19698531],
+Cell[10715, 270, 148, 2, 70, "Categorization",ExpressionUUID->"0efffe52-4dca-46a4-ba59-443f76c34fc0",
+ CellID->360728879],
+Cell[10866, 274, 145, 2, 70, "Categorization",ExpressionUUID->"9492cb93-28db-4130-b03d-51fd69dac638",
+ CellID->423933872],
+Cell[11014, 278, 172, 2, 70, "Categorization",ExpressionUUID->"38908321-2762-4caf-ab32-a71ab1777f95",
+ CellID->1853329605]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[11223, 285, 111, 1, 20, "KeywordsSection",ExpressionUUID->"8243d861-80b1-4d10-92bc-0cd6266135dd",
+ CellID->1807855147],
+Cell[11337, 288, 100, 1, 70, "Keywords",ExpressionUUID->"50ea8da8-c56b-49b1-a63e-b6bf0a8ccb89",
+ CellID->2022817873]
+}, Closed]]
+}, Open  ]]
+}
+]
+*)
+

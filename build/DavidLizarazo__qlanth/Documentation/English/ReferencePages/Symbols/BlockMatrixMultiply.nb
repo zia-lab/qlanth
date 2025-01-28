@@ -1,0 +1,400 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     14788,        390]
+NotebookOptionsPosition[     11198,        315]
+NotebookOutlinePosition[     13307,        365]
+CellTagsIndexPosition[     13222,        360]
+WindowTitle->BlockMatrixMultiply
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[GridBox[{
+   {GridBox[{
+      {
+       ItemBox[Cell[BoxData[
+         RowBox[{
+          TemplateBox[{12},
+           "Spacer1"], Cell["DAVID LIZARAZO/QLANTH SYMBOL", "PacletNameCell",
+           TextAlignment->Center,ExpressionUUID->
+           "7b87d28e-b23d-42a8-a0eb-de54166700b9"], 
+          TemplateBox[{8},
+           "Spacer1"]}]],
+         TextAlignment->Center,ExpressionUUID->
+         "05155c96-4f29-4005-9c7a-d9933195abf7"],
+        Background->RGBColor[0.490196, 0.576471, 0.690196],
+        ItemSize->Full], ""}
+     },
+     GridBoxAlignment->{"Rows" -> {{Center}}},
+     GridBoxItemSize->{"Columns" -> {Full, 
+         Scaled[0.02]}, "Rows" -> {{2.5}}}], Cell[TextData[Cell[BoxData[
+     TagBox[
+      ActionMenuBox[
+       FrameBox[Cell[TextData[{
+         "URL",
+         " ",
+         Cell[BoxData[
+          GraphicsBox[
+           {GrayLevel[0.66667], Thickness[0.13], 
+            LineBox[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]},
+           AspectRatio->1,
+           ImageSize->20,
+           PlotRange->{{-3, 4}, {-1, 1}}]],ExpressionUUID->
+          "9e026a21-78c4-4be2-b312-f106c45017fc"]
+        }],ExpressionUUID->"61326175-21c9-4643-a250-76f1c647bfa4"],
+        StripOnInput->False],{
+       "\"DavidLizarazo/qlanth/ref/BlockMatrixMultiply\"" :> None, 
+        "\"Copy Wolfram Documentation Center URL\"" :> 
+        Module[{DocumentationSearch`Private`nb$}, 
+          DocumentationSearch`Private`nb$ = 
+           NotebookPut[
+            Notebook[{Cell["DavidLizarazo/qlanth/ref/BlockMatrixMultiply"]}, 
+              Visible -> DocumentationBuild`Make`Private`visible$23662]]; 
+          SelectionMove[DocumentationSearch`Private`nb$, All, Notebook]; 
+          FrontEndTokenExecute[DocumentationSearch`Private`nb$, "Copy"]; 
+          NotebookClose[DocumentationSearch`Private`nb$]; Null], Delimiter, 
+        "\"Copy web URL\"" :> 
+        Module[{DocumentationSearch`Private`nb$}, 
+          DocumentationSearch`Private`nb$ = 
+           NotebookPut[
+            Notebook[{
+              Cell[BoxData[
+                MakeBoxes[
+                 Hyperlink[
+                  "http://reference.wolfram.com/language/DavidLizarazo/qlanth/\
+ref/BlockMatrixMultiply.html"], StandardForm]], "Input", TextClipboardType -> 
+                "PlainText"]}, Visible -> 
+              DocumentationBuild`Make`Private`visible$23662]]; 
+          SelectionMove[DocumentationSearch`Private`nb$, All, Notebook]; 
+          FrontEndTokenExecute[DocumentationSearch`Private`nb$, "Copy"]; 
+          NotebookClose[DocumentationSearch`Private`nb$]; Null], 
+        "\"Go to web URL\"" :> 
+        FrontEndExecute[{
+          NotebookLocate[{
+            URL[If[TrueQ[False], 
+                "http://reference.wolfram.com/system-modeler/", 
+                "http://reference.wolfram.com/language/"] <> 
+              "DavidLizarazo/qlanth/ref/BlockMatrixMultiply" <> ".html"], 
+             None}]}]},
+       Appearance->None,
+       MenuAppearance->Automatic,
+       MenuStyle->"URLMenu"],
+      MouseAppearanceTag["LinkHand"]]],
+     LineSpacing->{1.4, 0},ExpressionUUID->
+     "64d04881-4e3d-4d04-995c-dd62e9f3c41a"]], "AnchorBar",
+     CacheGraphics->False,ExpressionUUID->
+     "f5ea01f5-e28f-4a88-bd51-1446462c566b"]}
+  }]], "AnchorBarGrid",
+ GridBoxOptions->{GridBoxItemSize->{"Columns" -> {
+     Scaled[0.65], {
+      Scaled[0.34]}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}}, 
+   "RowsIndexed" -> {}}},
+ CellID->1,ExpressionUUID->"bc14a02a-36f2-4d84-a0fd-ab9fcaa077e2"],
+
+Cell["DavidLizarazo`qlanth`", "ContextNameCell",ExpressionUUID->"9f9071f6-96ff-43a3-ad6d-22289c48d126"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[GridBox[{
+   {Cell[TextData[{
+     Cell[
+     "BlockMatrixMultiply", "ObjectName",ExpressionUUID->
+      "310e25d3-61c3-4c3f-b1d1-a2821c4e8f1e"],
+     Cell[BoxData[
+      TemplateBox[{8},
+       "Spacer1"]],ExpressionUUID->"ae2c1204-cb34-49e7-8aa5-ae9c542fdbf2"],
+     Cell[BoxData[
+     ""], "ObjectNameTranslation",ExpressionUUID->
+      "ba6c3190-82f0-4a50-8986-745f4d4995b6"]
+    }],ExpressionUUID->"8df1398c-d8d9-4eb5-bd72-59b687a4e5c8"], 
+    "\[SpanFromLeft]"}
+  }]], "ObjectNameGrid",ExpressionUUID->"1ec5f2c1-a6ec-441d-81ea-\
+54e75c1a1805"],
+
+Cell[BoxData[GridBox[{
+   {"", Cell[TextData[{
+     Cell[BoxData[
+      RowBox[{"BlockMatrixMultiply", "[", 
+       RowBox[{"A", ",", "B"}], "]"}]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "a233e94b-adee-4d0d-8354-aa5822e9f11a"],
+     " \[LineSeparator]gives the matrix multiplication of A and B, with A and \
+B having a compatible block structure that allows for matrix multiplication. \
+The block structure being preserved."
+    }],ExpressionUUID->"402f4f69-e957-4a57-8c23-90dc5a95e0df"]}
+  }]], "Usage",
+ CellID->1972878769,ExpressionUUID->"7e8bee1a-8786-4929-a2db-23aa88c0be44"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  DynamicBox[ToBoxes[
+    If[
+     MatchQ[
+      CurrentValue[
+       EvaluationNotebook[], {
+       TaggingRules, "Openers", "PrimaryExamplesSection"}, Open], 
+      Alternatives[True, Open]], 
+     Style[
+      Graphics[{
+        Thickness[0.18], 
+        RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+        Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+       PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+      0.68 Inherited], 
+     Rotate[
+      Style[
+       Graphics[{
+         Thickness[0.18], 
+         RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+         Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+        PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+       0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+   ImageSizeCache->{
+    13.600000000000001`, {4.251494140625001, 9.348505859375}}]],
+  ExpressionUUID->"6ddd3b4f-b95a-476f-a808-35759a0d9317"],
+ Cell[BoxData[
+  TemplateBox[{1},
+   "Spacer1"]],ExpressionUUID->"569b57dd-5281-4505-aa5b-c652556ce520"],
+ "Examples",
+ "\[NonBreakingSpace]\[NonBreakingSpace]",
+ Cell["(1)", "ExampleCount",ExpressionUUID->
+  "e277163f-3d99-4d41-8b25-dab534bb82ed"]
+}], "PrimaryExamplesSection",
+ WholeCellGroupOpener->True,
+ CacheGraphics->False,
+ CellTags->"PrimaryExamplesSection",
+ CellID->901331848,ExpressionUUID->"0463d37f-e6a6-4d4c-96f6-83696571be78"],
+
+Cell[BoxData[
+ RowBox[{"Needs", "[", "\"\<DavidLizarazo`misc`\>\"", "]"}]], "Input", \
+"ExampleInitialization",
+ CellLabel->"In[1]:=",
+ CellID->1174966778,ExpressionUUID->"45bd8423-315c-4234-9509-abb60211ee91"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  DynamicBox[ToBoxes[
+    If[
+     MatchQ[
+      CurrentValue[
+       EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"},
+        Closed], 
+      Alternatives[Open, True]], 
+     Style[
+      Graphics[{
+        Thickness[0.18], 
+        RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+        Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+       PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+      0.68 Inherited], 
+     Rotate[
+      Style[
+       Graphics[{
+         Thickness[0.18], 
+         RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+         Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+        PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+       0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+   ImageSizeCache->{
+    13.600000000000001`, {4.551318359375001, 9.048681640625}}]],
+  ExpressionUUID->"401ab7e2-7b33-42f6-ba94-9ef61d436835"],
+ Cell[BoxData[
+  TemplateBox[{1},
+   "Spacer1"]],ExpressionUUID->"64d47a4b-7b97-43f4-b063-64ee706c1632"],
+ "Basic Examples",
+ "\[NonBreakingSpace]\[NonBreakingSpace]",
+ Cell["(1)", "ExampleCount",ExpressionUUID->
+  "e2dc5ff4-d2fe-4d7e-a712-7f6cc234ac4e"]
+}], "ExampleSection", "ExampleSection",
+ WholeCellGroupOpener->True,
+ CacheGraphics->False,
+ CellID->334723398,ExpressionUUID->"ba749dda-af68-43a1-9189-a6d85aff5598"],
+
+Cell["\<\
+Two matrices with a congruent block structure, multiplied with their block \
+structure preserved .\
+\>", "ExampleText",
+ CellID->2088447332,ExpressionUUID->"23a41f95-d4aa-44b8-8175-3d16e723c507"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"sizes", "=", 
+   RowBox[{"{", 
+    RowBox[{"2", ",", "3", ",", "1"}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"array", "=", 
+   RowBox[{"Partition", "[", 
+    RowBox[{
+     RowBox[{"Range", "[", 
+      SuperscriptBox["6", "2"], "]"}], ",", "6"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"A", "=", 
+   RowBox[{"ArrayBlocker", "[", 
+    RowBox[{"array", ",", "sizes"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"array", "=", 
+   RowBox[{"Partition", "[", 
+    RowBox[{
+     RowBox[{"Range", "[", 
+      RowBox[{
+       RowBox[{
+        SuperscriptBox["6", "2"], "+", "1"}], ",", 
+       RowBox[{
+        SuperscriptBox["6", "2"], "+", 
+        SuperscriptBox["6", "2"]}]}], "]"}], ",", "6"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"B", "=", 
+   RowBox[{"ArrayBlocker", "[", 
+    RowBox[{"array", ",", "sizes"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"AB", "=", 
+   RowBox[{"BlockMatrixMultiply", "[", 
+    RowBox[{"A", ",", "B"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"AB", "[", 
+   RowBox[{"[", 
+    RowBox[{"1", ",", "1"}], "]"}], "]"}], "==", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"A", "[", 
+     RowBox[{"[", 
+      RowBox[{"1", ",", "1"}], "]"}], "]"}], ".", 
+    RowBox[{"B", "[", 
+     RowBox[{"[", 
+      RowBox[{"1", ",", "1"}], "]"}], "]"}]}], "+", 
+   RowBox[{
+    RowBox[{"A", "[", 
+     RowBox[{"[", 
+      RowBox[{"1", ",", "2"}], "]"}], "]"}], ".", 
+    RowBox[{"B", "[", 
+     RowBox[{"[", 
+      RowBox[{"2", ",", "1"}], "]"}], "]"}]}], "+", 
+   RowBox[{
+    RowBox[{"A", "[", 
+     RowBox[{"[", 
+      RowBox[{"1", ",", "3"}], "]"}], "]"}], ".", 
+    RowBox[{"B", "[", 
+     RowBox[{"[", 
+      RowBox[{"3", ",", "1"}], "]"}], "]"}]}]}]}]}], "Input",
+ CellProlog:>Needs["DavidLizarazo`misc`"],
+ CellLabel->"In[1]:=",
+ CellID->2061582356,ExpressionUUID->"702f55cd-5c60-4dbd-bacc-6869750eb06e"],
+
+Cell[BoxData["True"], "Output",
+ CellLabel->"Out[1]=",
+ CellID->1513496594,ExpressionUUID->"d325a1e0-bf01-440c-90ec-06151af8352f"]
+}, Open  ]]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"}, 
+  Closed]]]]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "PrimaryExamplesSection"}, 
+  Closed]]]],
+
+Cell[" ", "FooterCell",ExpressionUUID->"462d9da8-65af-46b6-b622-26007bf1fd99"]
+},
+Saveable->False,
+ScreenStyleEnvironment->"Working",
+WindowSize->{900, 830},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+WindowTitle->"BlockMatrixMultiply",
+TaggingRules->{
+ "ModificationHighlight" -> False, "ColorType" -> "", "LinkTrails" -> "", 
+  "ExampleCounter" -> 1, 
+  "Openers" -> {
+   "PrimaryExamplesSection" -> Open, "ExampleSection" -> {"0" -> Open}, 
+    "AllOptsTable" -> Closed}, "NewStyles" -> True, 
+  "CitationPopupData" -> $Failed, "ShowCitation" -> False, "HasOptions" -> 
+  True, "RootCaptions" -> "", "HeaderCoreAreaLink" -> {}, 
+  "Metadata" -> {
+   "built" -> "{2025, 1, 24, 17, 34, 57.334350}", 
+    "history" -> {"1,0,0", "", "", ""}, "context" -> "DavidLizarazo`qlanth`", 
+    "keywords" -> {}, "specialkeywords" -> {}, 
+    "tutorialcollectionlinks" -> {}, "index" -> True, "label" -> 
+    "David Lizarazo/qlanth Symbol", "language" -> "en", "paclet" -> 
+    "DavidLizarazo/qlanth", "status" -> "None", "summary" -> 
+    "BlockMatrixMultiply[A, B] gives the matrix multiplication of A and B, \
+with A and B having a compatible block structure that allows for matrix \
+multiplication. The block structure being preserved.", "synonyms" -> {}, 
+    "tabletags" -> {}, "title" -> "BlockMatrixMultiply", "titlemodifier" -> 
+    "", "metadescription" -> "", "windowtitle" -> "BlockMatrixMultiply", 
+    "type" -> "Symbol", "uri" -> 
+    "DavidLizarazo/qlanth/ref/BlockMatrixMultiply", "WorkflowDockedCell" -> 
+    ""}, "SearchTextTranslated" -> ""},
+FrontEndVersion->"14.1 for Mac OS X ARM (64-bit) (July 16, 2024)",
+StyleDefinitions->FrontEnd`FileName[{"Wolfram"}, "Reference.nb", 
+  CharacterEncoding -> "UTF-8"],
+ExpressionUUID->"74973cfe-c6cd-4f06-88ad-f2c3459d0553"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "PrimaryExamplesSection"->{
+  Cell[5441, 140, 1437, 38, 34, "PrimaryExamplesSection",ExpressionUUID->"0463d37f-e6a6-4d4c-96f6-83696571be78",
+   CellTags->"PrimaryExamplesSection",
+   CellID->901331848]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"PrimaryExamplesSection", 13023, 353}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[587, 21, 3503, 80, 50, "AnchorBarGrid",ExpressionUUID->"bc14a02a-36f2-4d84-a0fd-ab9fcaa077e2",
+ CellID->1],
+Cell[4093, 103, 103, 0, 22, "ContextNameCell",ExpressionUUID->"9f9071f6-96ff-43a3-ad6d-22289c48d126"],
+Cell[CellGroupData[{
+Cell[4221, 107, 562, 14, 57, "ObjectNameGrid",ExpressionUUID->"1ec5f2c1-a6ec-441d-81ea-54e75c1a1805"],
+Cell[4786, 123, 618, 12, 127, "Usage",ExpressionUUID->"7e8bee1a-8786-4929-a2db-23aa88c0be44",
+ CellID->1972878769]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5441, 140, 1437, 38, 34, "PrimaryExamplesSection",ExpressionUUID->"0463d37f-e6a6-4d4c-96f6-83696571be78",
+ CellTags->"PrimaryExamplesSection",
+ CellID->901331848],
+Cell[6881, 180, 210, 4, 29, "Input",ExpressionUUID->"45bd8423-315c-4234-9509-abb60211ee91",
+ CellID->1174966778],
+Cell[CellGroupData[{
+Cell[7116, 188, 1415, 37, 29, "ExampleSection",ExpressionUUID->"ba749dda-af68-43a1-9189-a6d85aff5598",
+ CellID->334723398],
+Cell[8534, 227, 205, 4, 37, "ExampleText",ExpressionUUID->"23a41f95-d4aa-44b8-8175-3d16e723c507",
+ CellID->2088447332],
+Cell[CellGroupData[{
+Cell[8764, 235, 1977, 65, 138, "Input",ExpressionUUID->"702f55cd-5c60-4dbd-bacc-6869750eb06e",
+ CellID->2061582356],
+Cell[10744, 302, 130, 2, 36, "Output",ExpressionUUID->"d325a1e0-bf01-440c-90ec-06151af8352f",
+ CellID->1513496594]
+}, Open  ]]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"}, Closed]]]]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "PrimaryExamplesSection"}, Closed]]]],
+Cell[11116, 313, 78, 0, 40, "FooterCell",ExpressionUUID->"462d9da8-65af-46b6-b622-26007bf1fd99"]
+}
+]
+*)
+
+(* End of internal cache information *)
+

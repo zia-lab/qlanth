@@ -1,0 +1,405 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     15621,        397]
+NotebookOptionsPosition[     11883,        316]
+NotebookOutlinePosition[     12406,        334]
+CellTagsIndexPosition[     12363,        331]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Crystal Field", "GuideTitle",
+ CellID->1214629358,ExpressionUUID->"b8013cb1-7d33-4743-8714-71361649549e"],
+
+Cell[TextData[{
+ "The crystal field describes the interaction between a central ion, \
+typically a lanthanide or transition metal, and its surrounding lattice or \
+ligands. In the semi-empirical Hamiltonian this interaction is modeled using \
+the crystal field Hamiltonian, ",
+ Cell[BoxData[
+  SubscriptBox["H", "CF"]], "InlineFormula",
+  FormatType->StandardForm,ExpressionUUID->
+  "1f5e7d88-f8ed-45d0-b9ff-d5be37140035"],
+ ", which is expressed as a sum of spherical harmonics ",
+ Cell[BoxData[
+  SubscriptBox[
+   RowBox[{"(", 
+    SuperscriptBox["C", 
+     RowBox[{"(", "k", ")"}]], ")"}], "q"]], "InlineFormula",
+  FormatType->StandardForm,ExpressionUUID->
+  "f65adcb7-31b4-4468-9c04-65b24442088e"],
+ " multiplied by crystal field parameters ",
+ Cell[BoxData[
+  ButtonBox["Bkq",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/Bkq"]], "InlineFormula",
+  ExpressionUUID->"32c72b4e-0d13-40eb-a35b-c46e237abc27"],
+ " and ",
+ Cell[BoxData[
+  ButtonBox["Skq",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/Skq"]], "InlineFormula",
+  ExpressionUUID->"27ceafff-e983-487a-906a-8c944244888b"],
+ ". These parameters encode the radial and angular dependence of the \
+electrostatic potential experienced by the ion due to the surrounding \
+environment. The Hamiltonian formulation accounts for contributions up to \
+k=6, consistent with the symmetry and parity constraints of lanthanide 4f \
+orbitals.\nThe crystal field Hamiltonian is implemented in ",
+ StyleBox["qlanth",
+  FontWeight->"Bold"],
+ " through the function ",
+ Cell[BoxData[
+  ButtonBox["CrystalField",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/CrystalField"]], 
+  "InlineFormula",ExpressionUUID->"d27432d7-0e73-45d6-adde-a620ef4bf4ff"],
+ ", which computes matrix elements of ",
+ Cell[BoxData[
+  SubscriptBox["H", "CF"]], "InlineFormula",ExpressionUUID->
+  "557e48ab-510e-44cf-b7ce-41c941f173ff"],
+ " in the |LSJM>  basis. These computations rely on irreducible tensor \
+operators and use Wigner-Racah algebra, including 3-j and 6-j symbols, to \
+separate geometric and dynamic contributions. Precomputed reduced matrix \
+elements, stored in ",
+ Cell[BoxData[
+  ButtonBox["ReducedUkTable",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/ReducedUkTable"]], 
+  "InlineFormula",ExpressionUUID->"d253efbf-59e5-4fdc-a21e-a3d1a856e0a3"],
+ ", are used to simplify calculations and improve computational efficiency. \
+The parameters ",
+ Cell[BoxData[
+  ButtonBox["Bkq",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/Bkq"]], "InlineFormula",
+  ExpressionUUID->"657f701d-f52e-486a-a3f1-99d1d5f1479e"],
+ " and ",
+ Cell[BoxData[
+  ButtonBox["Skq",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/Skq"]], "InlineFormula",
+  ExpressionUUID->"21b6ad1b-9974-4136-982c-c828a8605bb3"],
+ " are defined in such a form that the crystal field operator has a patently \
+Hermitian form.\nThe ",
+ Cell[BoxData[
+  ButtonBox["CrystalFieldForm",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/CrystalFieldForm"]], 
+  "InlineFormula",ExpressionUUID->"b5463be7-c911-43e2-819f-bf0f630b8dd7"],
+ " function provides a programmatic interface for querying nonzero crystal \
+field parameters for specific crystallographic point groups, expressed in \
+Schoenflies notation. These point-group-specific parameters, along with \
+symmetry constraints and simplifications, allow one to tailor the crystal \
+field model to systems with different lattice symmetries. "
+}], "GuideAbstract",
+ CellChangeTimes->{{3.946663029069561*^9, 3.9466630369599867`*^9}, {
+  3.946663383135581*^9, 3.9466634036686363`*^9}, {3.9466634339693947`*^9, 
+  3.946663710127028*^9}},
+ CellID->296071524,ExpressionUUID->"e1c3f9ae-e917-45f5-a725-3f9b42e5372c"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["", "GuideFunctionsSection",
+ CellID->354493769,ExpressionUUID->"779a50c4-48cf-4e2d-a503-b14fb6f68ef3"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["Bqk",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/Bqk"]], "InlineGuideFunction",
+  
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c40ac8e4-27e1-4161-a8df-4d4f38357a23",ExpressionUUID->
+  "bea60c1c-68b7-4915-aaed-b673ff7b54bf"],
+ " \[LongDash] symbols used to represent the real part of the crystal field \
+parameters."
+}], "GuideText",
+ CellChangeTimes->{{3.9460524024202547`*^9, 3.9460524101432743`*^9}, {
+  3.946663969056407*^9, 3.946663974054797*^9}},
+ CellID->857138805,ExpressionUUID->"7ab90fc8-22e4-4be7-9454-391572b909ae"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["Sqk",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/Sqk"]], "InlineGuideFunction",
+  
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c5c6736a-1ff4-4e4e-8fcf-2d9846cbae62",ExpressionUUID->
+  "d32b108f-8ff5-4de9-b196-873b24dc8bd0"],
+ " \[LongDash] symbols used to represent the imaginary part of the crystal \
+field parameters."
+}], "GuideText",
+ CellChangeTimes->{{3.94605240578088*^9, 3.946052413142527*^9}, {
+  3.9466640733088512`*^9, 3.946664076930183*^9}},
+ CellID->611591559,ExpressionUUID->"2b812c7b-6e9d-417c-a520-7027242c698e"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["CrystalField",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/CrystalField"]], 
+  "InlineGuideFunction",
+  CellTags->"c5c6736a-1ff4-4e4e-8fcf-2d9846cbae62",ExpressionUUID->
+  "c373d40c-a647-48df-a240-7b895dcdee9b"],
+ " \[LongDash] calculates the matrix elements of the crystal field \
+contribution to the semi-empirical Hamiltonian."
+}], "GuideText",
+ CellChangeTimes->{{3.94605240578088*^9, 3.946052413142527*^9}, {
+  3.9466640733088512`*^9, 3.946664119156682*^9}, {3.9466641505720387`*^9, 
+  3.946664165338498*^9}},
+ CellID->300666873,ExpressionUUID->"a69c471c-c12b-4ea8-afda-acd68bed6a3b"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  ButtonBox["CrystalFieldForm",
+   BaseStyle->"Link",
+   ButtonData->"paclet:DavidLizarazo/qlanth/ref/CrystalFieldForm"]], 
+  "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},
+  CellTags->"c5c6736a-1ff4-4e4e-8fcf-2d9846cbae62",ExpressionUUID->
+  "d20a9526-53c9-49eb-a515-cbbe940001e2"],
+ " \[LongDash] provides the specific non-zero parameters for the crystal \
+field in different symmetries."
+}], "GuideText",
+ CellChangeTimes->{{3.94605240578088*^9, 3.946052413142527*^9}, {
+  3.9466640733088512`*^9, 3.946664076930183*^9}, {3.946664121806259*^9, 
+  3.946664191084737*^9}},
+ CellID->279113120,ExpressionUUID->"f6c7c916-e4df-4adb-91d2-890faa901e46"],
+
+Cell[CellGroupData[{
+
+Cell["\t", "GuideDelimiter",
+ CellID->1162597571,ExpressionUUID->"6ca0d4b5-cd5d-4f9b-b75a-27d9fe000bbd"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  TagBox[
+   FrameBox["\<\"XXXX\"\>"],
+   "FunctionPlaceholder"]], "InlineGuideFunction",
+  TaggingRules->{"PageType" -> "Function"},ExpressionUUID->
+  "50008c5a-ccb7-4558-8415-7c5e160f22b2"],
+ Cell[BoxData[
+  RowBox[{
+  Cell[TextData[StyleBox[
+   " \[FilledVerySmallSquare] ", "InlineSeparator"]],ExpressionUUID->
+    "213ff6ee-937d-4b94-a90a-6331e8961edd"], 
+   DynamicModuleBox[{$CellContext`nbobj$$ = NotebookObject[
+    "ec4e8a23-86e3-463a-a343-f22201d5ef1b", 
+     "d68222c3-b6e2-42f7-99b6-0474397bcbc4"], $CellContext`cellobj$$ = 
+    CellObject[
+    "cf7b075b-b015-4955-afc5-a1ada65714db", 
+     "83f6f576-0b79-4c27-a396-2f9dc668edc7"]}, 
+    TemplateBox[{
+      GraphicsBox[{{
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         CircleBox[{0, 0}]}, {
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         LineBox[{{0, 0.62}, {0, -0.62}}]}, {
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         LineBox[{{-0.62, 0}, {0.62, 0}}]}}, 
+       ImagePadding -> {{1., 1.}, {2.4, 1.}}, ImageSize -> 16, 
+       PlotRange -> {{-1.06, 1.06}, {-1.06, 1.06}}, 
+       BaselinePosition -> (Center -> 
+        Center)], $CellContext`nbobj$$, $CellContext`cellobj$$},
+     "InlineListingAddButton"],
+    Initialization:>($CellContext`nbobj$$ = 
+      EvaluationNotebook[]; $CellContext`cellobj$$ = EvaluationCell[])]}]], 
+  "InlineListingAddButton",ExpressionUUID->
+  "cf7b075b-b015-4955-afc5-a1ada65714db"]
+}], "InlineGuideFunctionListing",
+ CellID->1971155391,ExpressionUUID->"b5c60dbe-f1c6-4801-bcf0-31a7d13c6082"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Tech Notes", "GuideTutorialsSection",
+ CellID->2125917915,ExpressionUUID->"5b60d0bd-b25f-4b17-85a3-4cdfb9cd2e6c"],
+
+Cell["XXXX", "GuideTutorial",
+ CellID->469478619,ExpressionUUID->"602ef90e-77cb-4b21-a2df-a12ede8c7e4a"],
+
+Cell["XXXX", "GuideTutorial",
+ CellID->672230455,ExpressionUUID->"2de4a4d0-d2f7-4006-a658-9ef15e835512"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Related Guides", "GuideMoreAboutSection",
+ CellChangeTimes->{{3.8430423939366693`*^9, 3.843042395176153*^9}},
+ CellID->265790318,ExpressionUUID->"6d0d3358-921a-47bb-8f93-6b327c97f61e"],
+
+Cell[TextData[ButtonBox["qlanth",
+ BaseStyle->"Link",
+ ButtonData->"paclet:DavidLizarazo/qlanth/guide/qlanth"]], "GuideMoreAbout",
+ CellChangeTimes->{{3.9469868594055557`*^9, 3.946986862796083*^9}},
+ CellID->371888866,ExpressionUUID->"1010635f-421a-40a1-ba67-f302a91ccc15"],
+
+Cell["XXXX", "GuideMoreAbout",
+ CellID->1158758092,ExpressionUUID->"c779408e-57f8-402c-848a-ae9f45d83a83"]
+}, Open  ]],
+
+Cell["Related Links", "GuideRelatedLinksSection",
+ CellID->1865541248,ExpressionUUID->"c34495f5-c831-4b28-8dd2-c92c12d60ebe"],
+
+Cell[CellGroupData[{
+
+Cell["Metadata", "MetadataSection",
+ CellID->890508936,ExpressionUUID->"0d0621db-006e-4f63-abdc-9ca10e8547ca"],
+
+Cell[TextData[{
+ "New in: ",
+ Cell["1.0.0", "HistoryData",
+  CellTags->"New",ExpressionUUID->"46788bde-2849-46c3-b6c2-9016acc8e985"],
+ " | Modified in: ",
+ Cell[" ", "HistoryData",
+  CellTags->"Modified",ExpressionUUID->"57a7cf12-0d66-4717-b759-0895df50064d"],
+ " | Obsolete in: ",
+ Cell[" ", "HistoryData",
+  CellTags->"Obsolete",ExpressionUUID->
+  "c91d9286-33a6-4cd1-a81d-0758bbe861a2"]
+}], "History",
+ CellChangeTimes->{{3.946052416821704*^9, 3.946052417379697*^9}},
+ CellID->970151409,ExpressionUUID->"107bcac9-f2d4-454f-8dc0-615721150f84"],
+
+Cell[CellGroupData[{
+
+Cell["Categorization", "CategorizationSection",
+ CellID->1638883039,ExpressionUUID->"1a0e4cc6-5b7b-4ef9-ac96-4181b259af4a"],
+
+Cell["Guide", "Categorization",
+ CellLabel->"Entity Type",
+ CellID->1081980051,ExpressionUUID->"3406a550-3516-46cd-a0eb-312cb4b3238b"],
+
+Cell["DavidLizarazo/qlanth", "Categorization",
+ CellLabel->"Paclet Name",
+ CellID->2094678008,ExpressionUUID->"7715b5fe-9cb7-4f4e-b8d3-566da6a43101"],
+
+Cell["DavidLizarazo`qlanth`", "Categorization",
+ CellLabel->"Context",
+ CellID->1553855185,ExpressionUUID->"04fbb3d2-1a03-4ddc-9fb8-63eef9fe6bef"],
+
+Cell["DavidLizarazo/qlanth/guide/CrystalField", "Categorization",
+ CellLabel->"URI",
+ CellID->95463128,ExpressionUUID->"6c15977b-19fa-428a-91bd-ee8808d605fe"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Keywords", "KeywordsSection",
+ CellID->278507987,ExpressionUUID->"13662ecd-b0a6-4ef5-a6cb-9106bbb2e59c"],
+
+Cell["XXXX", "Keywords",
+ CellID->1516870696,ExpressionUUID->"49cac36b-d1e2-4626-944f-e8aef2db41cd"]
+}, Closed]]
+}, Open  ]]
+},
+WindowSize->{700, 770},
+WindowMargins->{{47, Automatic}, {86, Automatic}},
+TaggingRules-><|"Paclet" -> "DavidLizarazo/qlanth"|>,
+FrontEndVersion->"14.1 for Mac OS X ARM (64-bit) (July 16, 2024)",
+StyleDefinitions->FrontEnd`FileName[{"Wolfram"}, "GuidePageStylesExt.nb", 
+  CharacterEncoding -> "UTF-8"],
+ExpressionUUID->"ec4e8a23-86e3-463a-a343-f22201d5ef1b"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[576, 22, 111, 1, 86, "GuideTitle",ExpressionUUID->"b8013cb1-7d33-4743-8714-71361649549e",
+ CellID->1214629358],
+Cell[690, 25, 3812, 84, 381, "GuideAbstract",ExpressionUUID->"e1c3f9ae-e917-45f5-a725-3f9b42e5372c",
+ CellID->296071524]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4539, 114, 108, 1, 71, "GuideFunctionsSection",ExpressionUUID->"779a50c4-48cf-4e2d-a503-b14fb6f68ef3",
+ CellID->354493769],
+Cell[4650, 117, 610, 14, 24, "GuideText",ExpressionUUID->"7ab90fc8-22e4-4be7-9454-391572b909ae",
+ CellID->857138805],
+Cell[5263, 133, 612, 14, 24, "GuideText",ExpressionUUID->"2b812c7b-6e9d-417c-a520-7027242c698e",
+ CellID->611591559],
+Cell[5878, 149, 659, 14, 40, "GuideText",ExpressionUUID->"a69c471c-c12b-4ea8-afda-acd68bed6a3b",
+ CellID->300666873],
+Cell[6540, 165, 698, 15, 40, "GuideText",ExpressionUUID->"f6c7c916-e4df-4adb-91d2-890faa901e46",
+ CellID->279113120],
+Cell[CellGroupData[{
+Cell[7263, 184, 104, 1, 26, "GuideDelimiter",ExpressionUUID->"6ca0d4b5-cd5d-4f9b-b75a-27d9fe000bbd",
+ CellID->1162597571],
+Cell[7370, 187, 1671, 42, 25, "InlineGuideFunctionListing",ExpressionUUID->"b5c60dbe-f1c6-4801-bcf0-31a7d13c6082",
+ CellID->1971155391]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[9090, 235, 119, 1, 73, "GuideTutorialsSection",ExpressionUUID->"5b60d0bd-b25f-4b17-85a3-4cdfb9cd2e6c",
+ CellID->2125917915],
+Cell[9212, 238, 104, 1, 23, "GuideTutorial",ExpressionUUID->"602ef90e-77cb-4b21-a2df-a12ede8c7e4a",
+ CellID->469478619],
+Cell[9319, 241, 104, 1, 23, "GuideTutorial",ExpressionUUID->"2de4a4d0-d2f7-4006-a658-9ef15e835512",
+ CellID->672230455]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[9460, 247, 190, 2, 73, "GuideMoreAboutSection",ExpressionUUID->"6d0d3358-921a-47bb-8f93-6b327c97f61e",
+ CellID->265790318],
+Cell[9653, 251, 273, 4, 23, "GuideMoreAbout",ExpressionUUID->"1010635f-421a-40a1-ba67-f302a91ccc15",
+ CellID->371888866],
+Cell[9929, 257, 106, 1, 23, "GuideMoreAbout",ExpressionUUID->"c779408e-57f8-402c-848a-ae9f45d83a83",
+ CellID->1158758092]
+}, Open  ]],
+Cell[10050, 261, 125, 1, 73, "GuideRelatedLinksSection",ExpressionUUID->"c34495f5-c831-4b28-8dd2-c92c12d60ebe",
+ CellID->1865541248],
+Cell[CellGroupData[{
+Cell[10200, 266, 110, 1, 71, "MetadataSection",ExpressionUUID->"0d0621db-006e-4f63-abdc-9ca10e8547ca",
+ CellID->890508936],
+Cell[10313, 269, 545, 13, 25, "History",ExpressionUUID->"107bcac9-f2d4-454f-8dc0-615721150f84",
+ CellID->970151409],
+Cell[CellGroupData[{
+Cell[10883, 286, 123, 1, 20, "CategorizationSection",ExpressionUUID->"1a0e4cc6-5b7b-4ef9-ac96-4181b259af4a",
+ CellID->1638883039],
+Cell[11009, 289, 134, 2, 70, "Categorization",ExpressionUUID->"3406a550-3516-46cd-a0eb-312cb4b3238b",
+ CellID->1081980051],
+Cell[11146, 293, 149, 2, 70, "Categorization",ExpressionUUID->"7715b5fe-9cb7-4f4e-b8d3-566da6a43101",
+ CellID->2094678008],
+Cell[11298, 297, 146, 2, 70, "Categorization",ExpressionUUID->"04fbb3d2-1a03-4ddc-9fb8-63eef9fe6bef",
+ CellID->1553855185],
+Cell[11447, 301, 158, 2, 70, "Categorization",ExpressionUUID->"6c15977b-19fa-428a-91bd-ee8808d605fe",
+ CellID->95463128]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[11642, 308, 110, 1, 20, "KeywordsSection",ExpressionUUID->"13662ecd-b0a6-4ef5-a6cb-9106bbb2e59c",
+ CellID->278507987],
+Cell[11755, 311, 100, 1, 70, "Keywords",ExpressionUUID->"49cac36b-d1e2-4626-944f-e8aef2db41cd",
+ CellID->1516870696]
+}, Closed]]
+}, Open  ]]
+}
+]
+*)
+

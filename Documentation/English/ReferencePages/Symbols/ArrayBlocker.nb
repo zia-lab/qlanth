@@ -1,0 +1,1515 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     63428,       1507]
+NotebookOptionsPosition[     56390,       1358]
+NotebookOutlinePosition[     57151,       1383]
+CellTagsIndexPosition[     57071,       1378]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ArrayBlocker", "ObjectName",
+ CellID->1443907848,ExpressionUUID->"93c82907-1b9e-486d-a6f4-9e81a11886d4"],
+
+Cell[TextData[{
+ Cell["   ", "ModInfo",ExpressionUUID->"e2689ec0-39b8-4869-a6d5-c1d79f442a47"],
+ Cell[BoxData[
+  RowBox[{
+   RowBox[{
+    RowBox[{"ArrayBlocker", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          SubscriptBox["m", "11"], ",", 
+          SubscriptBox["m", "12"], ",", "..."}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{
+          SubscriptBox["m", "21"], ",", 
+          SubscriptBox["m", "22"], ",", "..."}], "}"}], ",", "..."}], "}"}], 
+      ",", " ", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+            SubscriptBox["s", "1"], ",", 
+            SubscriptBox["s", "1"]}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{
+            SubscriptBox["s", "1"], ",", 
+            SubscriptBox["s", "2"]}], "}"}], ",", "..."}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{
+          SubscriptBox["s", "2"], ",", 
+          SubscriptBox["s", "1"]}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{
+          SubscriptBox["s", "2"], ",", 
+          SubscriptBox["s", "2"]}], "}"}], ",", "..."}], "}"}]}]}], "}"}], 
+   "]"}]], "InlineFormula",ExpressionUUID->
+  "efc112b4-34a8-4f8a-b4f1-d17d9c3938a3"],
+ " \[LineSeparator]takes a 2D array ",
+ Cell[BoxData[
+  SubscriptBox["m", "ij"]], "InlineFormula",
+  FormatType->StandardForm,ExpressionUUID->
+  "6f47ab91-a309-48d9-b4f8-f6043fc4fae4"],
+ " and a \"congruent\" 2D array of block ",
+ StyleBox["{width, height}",
+  FontSlant->"Italic"],
+ ", and with them it returns the original array in a block structure as \
+imposed by ",
+ Cell[BoxData[
+  SubscriptBox["s", "ij"]], "InlineFormula",
+  FormatType->StandardForm,ExpressionUUID->
+  "f8a5da08-f1b3-4cfb-829a-ca9ac4176c3c"],
+ ". \n",
+ Cell["   ", "ModInfo",ExpressionUUID->"d1cccb18-aff9-49c1-9f2a-f539ff9b9272"],
+ Cell[BoxData[
+  RowBox[{"ArrayBlocker", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        SubscriptBox["m", "11"], ",", 
+        SubscriptBox["m", "12"], ",", "..."}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{
+        SubscriptBox["m", "21"], ",", 
+        SubscriptBox["m", "22"], ",", "..."}], "}"}], ",", "..."}], "}"}], 
+    ",", " ", 
+    RowBox[{"{", 
+     RowBox[{
+      SubscriptBox["s", "1"], ",", 
+      SubscriptBox["s", "2"], ",", "..."}], "}"}]}], "]"}]], "InlineFormula",
+  ExpressionUUID->"4184929c-4b63-4578-b215-ba71154827db"],
+ " \[LineSeparator]takes a flat 2d array and a list of block sizes, and with \
+them it returns the original array with the block structure imposed by the \
+block sizes ",
+ Cell[BoxData[
+  SubscriptBox["s", "i"]], "InlineFormula",
+  FormatType->StandardForm,ExpressionUUID->
+  "2b9492d0-a2d2-40f1-b15d-d58de1a86053"],
+ ". "
+}], "Usage",
+ CellChangeTimes->{{3.9464821283552113`*^9, 3.9464821358446493`*^9}, {
+  3.946482457300189*^9, 3.946482617323718*^9}, {3.946482689632351*^9, 
+  3.946482735152549*^9}, {3.9464830226333933`*^9, 3.946483023467297*^9}, {
+  3.946483772201706*^9, 3.946483773045329*^9}, {3.946483830045917*^9, 
+  3.9464838449044933`*^9}, {3.946484440998568*^9, 3.946484534840543*^9}},
+ CellID->1193990236,ExpressionUUID->"1f00eaf1-a9ae-4134-871e-0d63a138a801"],
+
+Cell["\<\
+The resulting array satisfies ArrayFlatten[blockedArray] == anArray, and also \
+Map[Dimensions, blockedArray,{2}] == blockSizes.\
+\>", "Notes",
+ CellChangeTimes->{3.946482459103343*^9},
+ CellID->1306698884,ExpressionUUID->"5d75e3bc-aed8-4585-9cae-74a4d2e94e81"],
+
+Cell["\<\
+An array of block sizes is \"congruent\" if it represents a partition of the \
+original array where all  blocks in a given blocked-column have the same \
+width, and all blocks in a given blocked-row have the same height. \
+\>", "Notes",
+ CellChangeTimes->{{3.946482631720872*^9, 3.9464826768518143`*^9}, {
+  3.946482751699609*^9, 3.946482804793869*^9}, {3.946483776845676*^9, 
+  3.946483778752572*^9}},
+ CellID->2118138280,ExpressionUUID->"0cd2065a-6410-4de7-ac02-53a2748ab385"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "See Also",
+ Cell[BoxData[
+  TemplateBox[{"SeeAlso", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell[
+       "Insert links to any related reference (function) pages.", 
+        "MoreInfoText"], BaseStyle -> "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "05188521-257d-4396-8622-1547808d4646"]
+}], "SeeAlsoSection",
+ CellID->1520369166,ExpressionUUID->"ceec723a-be65-4120-8be1-1f8d11126278"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  TagBox[
+   FrameBox["\<\"XXXX\"\>"],
+   "FunctionPlaceholder"]], "InlineSeeAlsoFunction",
+  TaggingRules->{"PageType" -> "Function"},ExpressionUUID->
+  "80658fef-e16b-41c8-a925-646ae886bfc5"],
+ Cell[BoxData[
+  RowBox[{
+  Cell[TextData[StyleBox[
+   " \[FilledVerySmallSquare] ", "InlineSeparator"]],ExpressionUUID->
+    "62fee46e-5730-4f35-891d-4462364420ce"], 
+   DynamicModuleBox[{$CellContext`nbobj$$ = NotebookObject[
+    "e9b55541-43f7-45cc-b7ae-667b949d61e1", 
+     "5f13d396-36aa-40bb-8eb1-d502e3aca183"], $CellContext`cellobj$$ = 
+    CellObject[
+    "838a733a-a8d3-4504-9893-8b0c643b8723", 
+     "c9ee35ec-1b3f-4d05-8ce7-ec20edc14ba6"]}, 
+    TemplateBox[{
+      GraphicsBox[{{
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         CircleBox[{0, 0}]}, {
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         LineBox[{{0, 0.62}, {0, -0.62}}]}, {
+         Thickness[0.06], 
+         StrokeForm[
+          Hue[0.4167, 0.406, 0.502]], 
+         LineBox[{{-0.62, 0}, {0.62, 0}}]}}, 
+       ImagePadding -> {{1., 1.}, {2.4, 1.}}, ImageSize -> 16, 
+       PlotRange -> {{-1.06, 1.06}, {-1.06, 1.06}}, 
+       BaselinePosition -> (Center -> 
+        Center)], $CellContext`nbobj$$, $CellContext`cellobj$$},
+     "InlineListingAddButton"],
+    Initialization:>($CellContext`nbobj$$ = 
+      EvaluationNotebook[]; $CellContext`cellobj$$ = EvaluationCell[])]}]], 
+  "InlineListingAddButton",ExpressionUUID->
+  "838a733a-a8d3-4504-9893-8b0c643b8723"]
+}], "SeeAlso",
+ CellID->2084140956,ExpressionUUID->"bcd2c580-b1a1-45b2-8488-460fe101099b"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Tech Notes",
+ Cell[BoxData[
+  TemplateBox[{"TechNotes", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell["Insert links to related tech notes.", "MoreInfoText"], BaseStyle -> 
+       "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "747f98f2-c91d-45cb-9aaa-01c119f7faf2"]
+}], "TechNotesSection",
+ CellID->551281275,ExpressionUUID->"ab429d32-e3dd-4437-8fe9-4f5b61fcfb89"],
+
+Cell["XXXX", "Tutorials",
+ CellID->1139935767,ExpressionUUID->"b2f9ecf2-877e-466b-a697-b5b69f75595c"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Related Guides", "MoreAboutSection",
+ CellID->1198821082,ExpressionUUID->"3995797d-adee-4b01-8fef-8cf9b2486b2c"],
+
+Cell["XXXX", "MoreAbout",
+ CellID->894349020,ExpressionUUID->"3c8ff66d-cc99-469b-b123-e98b83c9e8ee"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Related Links",
+ Cell[BoxData[
+  TemplateBox[{"RelatedLinks", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell[
+       "Insert links to any related page, including web pages.", 
+        "MoreInfoText"], BaseStyle -> "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "606a08f2-3d98-4eec-9227-bc4716e18386"]
+}], "RelatedLinksSection",
+ CellID->1085933787,ExpressionUUID->"dbd60be8-7f6c-46d7-a643-e6f0968865bf"],
+
+Cell["XXXX", "RelatedLinks",
+ CellID->1973125903,ExpressionUUID->"b05089ba-5743-420a-93b1-45d85f2760a8"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Examples Initialization",
+ Cell[BoxData[
+  TemplateBox[{"ExamplesInitialization", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell[
+       "Input that is to be evaluated before any examples are run, e.g. \
+Needs[\[Ellipsis]].", "MoreInfoText"], BaseStyle -> "IFrameBox"]], 
+     "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "64049f35-4303-499e-9c74-61d8f284f55a"]
+}], "ExamplesInitializationSection",
+ CellID->884574747,ExpressionUUID->"bba05abb-79d8-47c2-966e-bdbb4271acf2"],
+
+Cell[BoxData[
+ RowBox[{"Needs", "[", "\"\<DavidLizarazo`misc`\>\"", 
+  "]"}]], "ExampleInitialization",
+ CellChangeTimes->{{3.946482124541644*^9, 3.946482124986988*^9}},
+ CellID->18484648,ExpressionUUID->"601140cf-8182-429e-82cb-192b8d8ea93a"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[GridBox[{
+    {
+     StyleBox[
+      RowBox[{"Basic", " ", "Examples"}], "PrimaryExamplesSection"], 
+     ButtonBox[
+      RowBox[{
+       RowBox[{"More", " ", "Examples"}], " ", "\[RightTriangle]"}],
+      BaseStyle->"ExtendedExamplesLink",
+      ButtonData:>"ExtendedExamples"]}
+   }],
+  $Line = 0; Null]], "PrimaryExamplesSection",
+ CellID->1433833768,ExpressionUUID->"062b62d4-04ad-43e2-b11c-4021e5a4000f"],
+
+Cell["\<\
+A 7 x 7 array blocked in three columns of widths 2, 4, and 1, and three rows \
+of height 2, 4, and 1.\
+\>", "ExampleText",
+ CellChangeTimes->{{3.946482936943095*^9, 3.9464829810456343`*^9}, {
+  3.9464850659446383`*^9, 3.946485087630989*^9}},
+ CellID->532319707,ExpressionUUID->"47949168-df4e-42a4-b745-3a9355a6adda"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"sizes", "=", 
+   RowBox[{"{", 
+    RowBox[{"2", ",", "4", ",", "1"}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"anArray", "=", 
+   RowBox[{"Partition", "[", 
+    RowBox[{
+     RowBox[{"Range", "[", 
+      SuperscriptBox["7", "2"], "]"}], ",", "7"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"MatrixPlot", "[", "anArray", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"blocks", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"sizes", "[", 
+        RowBox[{"[", "i", "]"}], "]"}], ",", 
+       RowBox[{"sizes", "[", 
+        RowBox[{"[", "j", "]"}], "]"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "1", ",", 
+       RowBox[{"Length", "[", "sizes", "]"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"j", ",", "1", ",", 
+       RowBox[{"Length", "[", "sizes", "]"}]}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"blocked", "=", 
+   RowBox[{"ArrayBlocker", "[", 
+    RowBox[{"anArray", ",", "blocks"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Map", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"MatrixPlot", "[", 
+     RowBox[{"#", ",", 
+      RowBox[{"PlotRange", "->", 
+       RowBox[{"{", 
+        RowBox[{"All", ",", "All", ",", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "10"}], ",", "10"}], "}"}]}], "}"}]}]}], "]"}], "&"}],
+    ",", "blocked", ",", 
+   RowBox[{"{", "2", "}"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.946482159784855*^9, 3.946482181962484*^9}, {
+  3.946482242612306*^9, 3.946482355698867*^9}, {3.946482410418167*^9, 
+  3.946482413837243*^9}, {3.9464828346570997`*^9, 3.9464828961500463`*^9}, {
+  3.946483045048663*^9, 3.946483082608506*^9}, {3.9464831164030323`*^9, 
+  3.9464831734480257`*^9}, {3.946483207785357*^9, 3.946483298116248*^9}, {
+  3.946483352371923*^9, 3.946483369409711*^9}, {3.946483404631501*^9, 
+  3.946483466454837*^9}, {3.946483525650013*^9, 3.946483539293886*^9}, {
+  3.946483752943578*^9, 3.9464837570201263`*^9}, {3.946483867031782*^9, 
+  3.9464839152234573`*^9}, {3.946484422752236*^9, 3.946484424962686*^9}, {
+  3.946484856228298*^9, 3.946484876937088*^9}, {3.946484921314405*^9, 
+  3.94648499752709*^9}, {3.9464850312496653`*^9, 3.9464850313781776`*^9}},
+ CellLabel->"In[94]:=",
+ CellID->458835742,ExpressionUUID->"77c06e83-c698-407a-b75a-f289921f0e2d"],
+
+Cell[BoxData[
+ GraphicsBox[RasterBox[CompressedData["
+1:eJwtjwdQ0wcUxgMoVGUISAArLasOKtNRvEA/lUMUW/ECQSiCIKBRRIhwFFMF
+atAicoC1GqVoWVZ7IkOEyKpaRzVEEcoywZgQRsJ/MM8BUdvmfHff3Xvvvnvf
+7znsTmLHGzAYDKOP+r8/U2ioSoygEfeGteK5sxwlGgdG/Hgcljp5+J4opeFo
+Go1zF15gRsjrfn8oBrfqw4WXRmionLI5waYv0JV3jONJRCBws2CiwXUMpeuu
+JiwU9CNPdycE/dLKre0pY9gdJPnxyWsZ+nT+rTiY2HN5pHEMjvHjwtwDMih0
+exYYuhqHkr+oKkAp/TgzGGfzVQn3kklY1nz+d89bBfZa8K1sqtOw3MHkoayB
+xGSTJ3vNTQWKdLmpaKpbaz+tJdH5wO/FmYMKSO48Hq31TME3m6L5xn4Ubjzj
+cCeXK/BB9xcP8r6TXc4nKTiJ2odLH75EnNwrS8hNQnJCnZtvOwWVZEobxXoJ
+sY4zAfrv+3M4VjTKBqwtl9TI4cHqdGlL5MJ08RH/82oCz1YI5mzIUyHP6Z3P
++Ewzis/tXKD/lMDXh6/maK1VCDEUbPmr+yZcLH07EuoIVD56YnyrfAAeneaV
+y2OuobHATth9nsASm6nCFPcBPHNn5V5wLYKiZ08k/xKBQwWaL5rFSjzW8fwA
+3r5C0c+DBIKLZmtsjyuhF+eyPmMlH3O0jebXXEh4XTbxSYcS7jrOdLjcCOuv
+KyMhfnd0r33T8H++kMOSzH9wy21dmV0OCe9vywmZ/zAaUtO0WQ0d2HTNlvtT
+IokrxY+ShB1DeCp1/7Bf2o7uZTOuE2wSTJKaYkcOwUdyaG5XgASxFdKp77xJ
+CFiW6aaaQfzSWr/At/4RJuybG+/bkZjK9dY+Th2EfvUb898dHyDr4q+ZbgYk
+YqSRWccZg4grYdmYFd5FR3iP4nkohV3HTmm4LRo0B9QZ9Q68BDW9/Unzegon
+dwzFdHM12DHv+zYzDzli/V69L1tGoTz5XmfaBzXyS65r/A/2Y+J2z31jEwrm
+d9ShXqfUgG37gZkKKTJ9RLlpkyQyzUxlFFON8dPjY1WyPpg0CrcreknQUat2
+/VE2grL5FimxFr0oXpPODGwlsbMqTBXnNoJgwapX1lu6sXDJkX2VExRQxfyN
+N5fE9ozKHmfVEL4UveLkyyhwBcnW8loCi3fle9+dN4QANm9j8gMKp8PEBYFR
+BIaRXBTpMYjdFOHGrqbQ5Or8iWg+gVp7tvZtqAoZOXs+XX2BwqB+RpaTaBRH
+9FZHnTs6gCInpRFTQMGkr/dNQewoNg9Y3fGqUKL+z4jp1wcofHXdk6c1G4XV
+vdcO7WIFtskdJjPyaHwmLQ3hb6NxOyxzhbyLwP7DxfLoNBoB1bOS4RkKueti
+TvFnR3F8kXXbxmgavGyOf/AVCpzFfhTTcRSl1adFzoE0isKrW28HU7CfdQ6q
+26xBa6BxheFqGvfd5q1dyaBAywxrg5LU6Bs6Uai2o0EZxFadryTR2KK2IM+O
+YDpL76jYiAbzecvSueEksi+KU3NahvEvmYBXmQ==
+   "], {{0, 0}, {7, 7}}, {0, 1}],
+  BaseStyle->{FontFamily -> "Arial"},
+  Frame->True,
+  FrameLabel->{None, None},
+  FrameTicks->{{{{6.5, 
+       FormBox["1", TraditionalForm]}, {5.5, 
+       FormBox["2", TraditionalForm]}, {4.5, 
+       FormBox["3", TraditionalForm]}, {3.5, 
+       FormBox["4", TraditionalForm]}, {2.5, 
+       FormBox["5", TraditionalForm]}, {1.5, 
+       FormBox["6", TraditionalForm]}, {0.5, 
+       FormBox["7", TraditionalForm]}}, {{6.5, 
+       FormBox["1", TraditionalForm]}, {5.5, 
+       FormBox["2", TraditionalForm]}, {4.5, 
+       FormBox["3", TraditionalForm]}, {3.5, 
+       FormBox["4", TraditionalForm]}, {2.5, 
+       FormBox["5", TraditionalForm]}, {1.5, 
+       FormBox["6", TraditionalForm]}, {0.5, 
+       FormBox["7", TraditionalForm]}}}, {{{0.5, 
+       FormBox["1", TraditionalForm]}, {1.5, 
+       FormBox["2", TraditionalForm]}, {2.5, 
+       FormBox["3", TraditionalForm]}, {3.5, 
+       FormBox["4", TraditionalForm]}, {4.5, 
+       FormBox["5", TraditionalForm]}, {5.5, 
+       FormBox["6", TraditionalForm]}, {6.5, 
+       FormBox["7", TraditionalForm]}}, {{0.5, 
+       FormBox["1", TraditionalForm]}, {1.5, 
+       FormBox["2", TraditionalForm]}, {2.5, 
+       FormBox["3", TraditionalForm]}, {3.5, 
+       FormBox["4", TraditionalForm]}, {4.5, 
+       FormBox["5", TraditionalForm]}, {5.5, 
+       FormBox["6", TraditionalForm]}, {6.5, 
+       FormBox["7", TraditionalForm]}}}},
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]],
+  Method->{
+   "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+    "DefaultBoundaryStyle" -> Automatic, 
+    "DefaultGraphicsInteraction" -> {
+     "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+      "Effects" -> {
+       "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+        "Droplines" -> {
+         "freeformCursorMode" -> True, 
+          "placement" -> {"x" -> "All", "y" -> "None"}}}}, "DefaultPlotStyle" -> 
+    Automatic, "DomainPadding" -> Scaled[0.02], "RangePadding" -> 
+    Scaled[0.05]}]], "Output",
+ CellChangeTimes->{{3.946482267369751*^9, 3.946482356111083*^9}, 
+   3.946482414626433*^9, {3.946482827156452*^9, 3.9464828965383472`*^9}, {
+   3.946483134704637*^9, 3.9464831738248053`*^9}, {3.946483212960822*^9, 
+   3.946483271864457*^9}, {3.9464833629798307`*^9, 3.946483369856875*^9}, {
+   3.946483405873901*^9, 3.946483434644519*^9}, 3.946483467431724*^9, {
+   3.9464835293183928`*^9, 3.946483539942678*^9}, 3.946483588341852*^9, 
+   3.946483757457315*^9, {3.94648389677531*^9, 3.946483915647243*^9}, {
+   3.946484173309314*^9, 3.946484179984997*^9}, 3.9464842796086903`*^9, 
+   3.9464843434282084`*^9, {3.946484412385518*^9, 3.946484425406293*^9}, 
+   3.946484816209347*^9, {3.946484857105467*^9, 3.946484877591898*^9}, {
+   3.946484910326386*^9, 3.9464849980734386`*^9}, 3.9464850322055597`*^9},
+ CellLabel->"Out[96]=",
+ CellID->38539417,ExpressionUUID->"64e5f0b3-ef37-4ca2-a631-a4700b1362a4"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     GraphicsBox[
+      RasterBox[{{{0.9242984430697805, 0.4951999746000508, 
+       0.0037689687120625766`}, {1., 0.42, 0.}}, {{0.9334637523763428, 
+       0.8670210137700551, 0.6614949948293126}, {0.90883467168202, 
+       0.771328469693212, 0.42484785230118915`}}}, {{0, 0}, {2, 2}}, {0, 1}],
+      BaseStyle->{FontFamily -> "Arial"},
+      Frame->True,
+      FrameLabel->{None, None},
+      FrameTicks->{{{{1.5, 
+           FormBox["1", TraditionalForm]}, {0.5, 
+           FormBox["2", TraditionalForm]}}, {{1.5, 
+           FormBox["1", TraditionalForm]}, {0.5, 
+           FormBox["2", TraditionalForm]}}}, {{{0.5, 
+           FormBox["1", TraditionalForm]}, {1.5, 
+           FormBox["2", TraditionalForm]}}, {{0.5, 
+           FormBox["1", TraditionalForm]}, {1.5, 
+           FormBox["2", TraditionalForm]}}}},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      Method->{
+       "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+        "DefaultBoundaryStyle" -> Automatic, 
+        "DefaultGraphicsInteraction" -> {
+         "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+          "Effects" -> {
+           "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+            "Droplines" -> {
+             "freeformCursorMode" -> True, 
+              "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+        "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+        "RangePadding" -> Scaled[0.05]}], ",", 
+     GraphicsBox[
+      RasterBox[{{{1., 0.42, 0., 1.}, {1., 0., 0.3873197528038453, 1.}, {1., 
+       0., 0.3873197528038453, 1.}, {1., 0., 0.3873197528038453, 1.}}, {{
+       0.9242766322945292, 0.8323052499069996, 0.5711963003012013, 1.}, {
+       0.9026502636110544, 0.7442832781791128, 0.3716617690568564, 1.}, {
+       0.8787961181944728, 0.6399661109104435, 0.1665154479715718, 1.}, {
+       0.8742189515620968, 0.5449476501046998, 0.00626228647542705, 1.}}}, {{
+       0, 0}, {4, 2}}, {0, 1}],
+      BaseStyle->{FontFamily -> "Arial"},
+      Frame->True,
+      FrameLabel->{None, None},
+      FrameTicks->{{{{1.5, 
+           FormBox["1", TraditionalForm]}, {0.5, 
+           FormBox["2", TraditionalForm]}}, {{1.5, 
+           FormBox["1", TraditionalForm]}, {0.5, 
+           FormBox["2", TraditionalForm]}}}, {{{0.5, 
+           FormBox["1", TraditionalForm]}, {1.5, 
+           FormBox["2", TraditionalForm]}, {2.5, 
+           FormBox["3", TraditionalForm]}, {3.5, 
+           FormBox["4", TraditionalForm]}}, {{0.5, 
+           FormBox["1", TraditionalForm]}, {1.5, 
+           FormBox["2", TraditionalForm]}, {2.5, 
+           FormBox["3", TraditionalForm]}, {3.5, 
+           FormBox["4", TraditionalForm]}}}},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      Method->{
+       "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+        "DefaultBoundaryStyle" -> Automatic, 
+        "DefaultGraphicsInteraction" -> {
+         "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+          "Effects" -> {
+           "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+            "Droplines" -> {
+             "freeformCursorMode" -> True, 
+              "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+        "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+        "RangePadding" -> Scaled[0.05]}], ",", 
+     GraphicsBox[
+      RasterBox[{{{1., 0., 0.3873197528038453, 1.}}, {{1., 0.42, 0., 1.}}}, {{
+       0, 0}, {1, 2}}, {0, 1}],
+      BaseStyle->{FontFamily -> "Arial"},
+      Frame->True,
+      FrameLabel->{None, None},
+      FrameTicks->{{{{1.5, 
+           FormBox["1", TraditionalForm]}, {0.5, 
+           FormBox["2", TraditionalForm]}}, {{1.5, 
+           FormBox["1", TraditionalForm]}, {0.5, 
+           FormBox["2", TraditionalForm]}}}, {{{0.5, 
+           FormBox["1", TraditionalForm]}}, {{0.5, 
+           FormBox["1", TraditionalForm]}}}},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      Method->{
+       "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+        "DefaultBoundaryStyle" -> Automatic, 
+        "DefaultGraphicsInteraction" -> {
+         "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+          "Effects" -> {
+           "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+            "Droplines" -> {
+             "freeformCursorMode" -> True, 
+              "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+        "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+        "RangePadding" -> Scaled[0.05]}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     GraphicsBox[
+      RasterBox[{{{1., 0., 0.3873197528038453, 1.}, {1., 0., 
+       0.3873197528038453, 1.}}, {{1., 0., 0.3873197528038453, 1.}, {1., 0., 
+       0.3873197528038453, 1.}}, {{1., 0., 0.3873197528038453, 1.}, {1., 0., 
+       0.3873197528038453, 1.}}, {{1., 0., 0.3873197528038453, 1.}, {1., 0., 
+       0.3873197528038453, 1.}}}, {{0, 0}, {2, 4}}, {0, 1}],
+      BaseStyle->{FontFamily -> "Arial"},
+      Frame->True,
+      FrameLabel->{None, None},
+      FrameTicks->{{{{3.5, 
+           FormBox["1", TraditionalForm]}, {2.5, 
+           FormBox["2", TraditionalForm]}, {1.5, 
+           FormBox["3", TraditionalForm]}, {0.5, 
+           FormBox["4", TraditionalForm]}}, {{3.5, 
+           FormBox["1", TraditionalForm]}, {2.5, 
+           FormBox["2", TraditionalForm]}, {1.5, 
+           FormBox["3", TraditionalForm]}, {0.5, 
+           FormBox["4", TraditionalForm]}}}, {{{0.5, 
+           FormBox["1", TraditionalForm]}, {1.5, 
+           FormBox["2", TraditionalForm]}}, {{0.5, 
+           FormBox["1", TraditionalForm]}, {1.5, 
+           FormBox["2", TraditionalForm]}}}},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      Method->{
+       "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+        "DefaultBoundaryStyle" -> Automatic, 
+        "DefaultGraphicsInteraction" -> {
+         "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+          "Effects" -> {
+           "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+            "Droplines" -> {
+             "freeformCursorMode" -> True, 
+              "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+        "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+        "RangePadding" -> Scaled[0.05]}], ",", 
+     GraphicsBox[RasterBox[CompressedData["
+1:eJxTTMoPSmVmYGBgQcIQ8MEexrp58gYI2qOKj8oPV3kAp2GHSQ==
+       "], {{0, 0}, {4, 4}}, {0, 1}],
+      BaseStyle->{FontFamily -> "Arial"},
+      Frame->True,
+      FrameLabel->{None, None},
+      FrameTicks->{{{{3.5, 
+           FormBox["1", TraditionalForm]}, {2.5, 
+           FormBox["2", TraditionalForm]}, {1.5, 
+           FormBox["3", TraditionalForm]}, {0.5, 
+           FormBox["4", TraditionalForm]}}, {{3.5, 
+           FormBox["1", TraditionalForm]}, {2.5, 
+           FormBox["2", TraditionalForm]}, {1.5, 
+           FormBox["3", TraditionalForm]}, {0.5, 
+           FormBox["4", TraditionalForm]}}}, {{{0.5, 
+           FormBox["1", TraditionalForm]}, {1.5, 
+           FormBox["2", TraditionalForm]}, {2.5, 
+           FormBox["3", TraditionalForm]}, {3.5, 
+           FormBox["4", TraditionalForm]}}, {{0.5, 
+           FormBox["1", TraditionalForm]}, {1.5, 
+           FormBox["2", TraditionalForm]}, {2.5, 
+           FormBox["3", TraditionalForm]}, {3.5, 
+           FormBox["4", TraditionalForm]}}}},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      Method->{
+       "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+        "DefaultBoundaryStyle" -> Automatic, 
+        "DefaultGraphicsInteraction" -> {
+         "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+          "Effects" -> {
+           "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+            "Droplines" -> {
+             "freeformCursorMode" -> True, 
+              "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+        "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+        "RangePadding" -> Scaled[0.05]}], ",", 
+     GraphicsBox[
+      RasterBox[{{{1., 0., 0.3873197528038453, 1.}}, {{1., 0., 
+       0.3873197528038453, 1.}}, {{1., 0., 0.3873197528038453, 1.}}, {{1., 0.,
+        0.3873197528038453, 1.}}}, {{0, 0}, {1, 4}}, {0, 1}],
+      BaseStyle->{FontFamily -> "Arial"},
+      Frame->True,
+      FrameLabel->{None, None},
+      FrameTicks->{{{{3.5, 
+           FormBox["1", TraditionalForm]}, {2.5, 
+           FormBox["2", TraditionalForm]}, {1.5, 
+           FormBox["3", TraditionalForm]}, {0.5, 
+           FormBox["4", TraditionalForm]}}, {{3.5, 
+           FormBox["1", TraditionalForm]}, {2.5, 
+           FormBox["2", TraditionalForm]}, {1.5, 
+           FormBox["3", TraditionalForm]}, {0.5, 
+           FormBox["4", TraditionalForm]}}}, {{{0.5, 
+           FormBox["1", TraditionalForm]}}, {{0.5, 
+           FormBox["1", TraditionalForm]}}}},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      Method->{
+       "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+        "DefaultBoundaryStyle" -> Automatic, 
+        "DefaultGraphicsInteraction" -> {
+         "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+          "Effects" -> {
+           "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+            "Droplines" -> {
+             "freeformCursorMode" -> True, 
+              "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+        "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+        "RangePadding" -> Scaled[0.05]}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     GraphicsBox[
+      RasterBox[{{{1., 0., 0.3873197528038453, 1.}, {1., 0., 
+       0.3873197528038453, 1.}}}, {{0, 0}, {2, 1}}, {0, 1}],
+      BaseStyle->{FontFamily -> "Arial"},
+      Frame->True,
+      FrameLabel->{None, None},
+      FrameTicks->{{{{0.5, 
+           FormBox["1", TraditionalForm]}}, {{0.5, 
+           FormBox["1", TraditionalForm]}}}, {{{0.5, 
+           FormBox["1", TraditionalForm]}, {1.5, 
+           FormBox["2", TraditionalForm]}}, {{0.5, 
+           FormBox["1", TraditionalForm]}, {1.5, 
+           FormBox["2", TraditionalForm]}}}},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      Method->{
+       "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+        "DefaultBoundaryStyle" -> Automatic, 
+        "DefaultGraphicsInteraction" -> {
+         "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+          "Effects" -> {
+           "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+            "Droplines" -> {
+             "freeformCursorMode" -> True, 
+              "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+        "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+        "RangePadding" -> Scaled[0.05]}], ",", 
+     GraphicsBox[
+      RasterBox[{{{1., 0., 0.3873197528038453, 1.}, {1., 0., 
+       0.3873197528038453, 1.}, {1., 0., 0.3873197528038453, 1.}, {1., 0., 
+       0.3873197528038453, 1.}}}, {{0, 0}, {4, 1}}, {0, 1}],
+      BaseStyle->{FontFamily -> "Arial"},
+      Frame->True,
+      FrameLabel->{None, None},
+      FrameTicks->{{{{0.5, 
+           FormBox["1", TraditionalForm]}}, {{0.5, 
+           FormBox["1", TraditionalForm]}}}, {{{0.5, 
+           FormBox["1", TraditionalForm]}, {1.5, 
+           FormBox["2", TraditionalForm]}, {2.5, 
+           FormBox["3", TraditionalForm]}, {3.5, 
+           FormBox["4", TraditionalForm]}}, {{0.5, 
+           FormBox["1", TraditionalForm]}, {1.5, 
+           FormBox["2", TraditionalForm]}, {2.5, 
+           FormBox["3", TraditionalForm]}, {3.5, 
+           FormBox["4", TraditionalForm]}}}},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      Method->{
+       "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+        "DefaultBoundaryStyle" -> Automatic, 
+        "DefaultGraphicsInteraction" -> {
+         "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+          "Effects" -> {
+           "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+            "Droplines" -> {
+             "freeformCursorMode" -> True, 
+              "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+        "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+        "RangePadding" -> Scaled[0.05]}], ",", 
+     GraphicsBox[
+      RasterBox[{{{1., 0., 0.3873197528038453, 1.}}}, {{0, 0}, {1, 1}}, {0, 
+       1}],
+      BaseStyle->{FontFamily -> "Arial"},
+      Frame->True,
+      FrameLabel->{None, None},
+      FrameTicks->{{{{0.5, 
+           FormBox["1", TraditionalForm]}}, {{0.5, 
+           FormBox["1", TraditionalForm]}}}, {{{0.5, 
+           FormBox["1", TraditionalForm]}}, {{0.5, 
+           FormBox["1", TraditionalForm]}}}},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      Method->{
+       "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+        "DefaultBoundaryStyle" -> Automatic, 
+        "DefaultGraphicsInteraction" -> {
+         "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+          "Effects" -> {
+           "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+            "Droplines" -> {
+             "freeformCursorMode" -> True, 
+              "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+        "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+        "RangePadding" -> Scaled[0.05]}]}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{{3.946482267369751*^9, 3.946482356111083*^9}, 
+   3.946482414626433*^9, {3.946482827156452*^9, 3.9464828965383472`*^9}, {
+   3.946483134704637*^9, 3.9464831738248053`*^9}, {3.946483212960822*^9, 
+   3.946483271864457*^9}, {3.9464833629798307`*^9, 3.946483369856875*^9}, {
+   3.946483405873901*^9, 3.946483434644519*^9}, 3.946483467431724*^9, {
+   3.9464835293183928`*^9, 3.946483539942678*^9}, 3.946483588341852*^9, 
+   3.946483757457315*^9, {3.94648389677531*^9, 3.946483915647243*^9}, {
+   3.946484173309314*^9, 3.946484179984997*^9}, 3.9464842796086903`*^9, 
+   3.9464843434282084`*^9, {3.946484412385518*^9, 3.946484425406293*^9}, 
+   3.946484816209347*^9, {3.946484857105467*^9, 3.946484877591898*^9}, {
+   3.946484910326386*^9, 3.9464849980734386`*^9}, 3.946485032267406*^9},
+ CellLabel->"Out[99]=",
+ CellID->1339403772,ExpressionUUID->"74aa54e1-9eeb-4f57-941c-9337cbe249c8"]
+}, Open  ]],
+
+Cell["\<\
+Equivalently one may just provide one list for the sizes of the blocks .\
+\>", "ExampleText",
+ CellChangeTimes->{{3.946484608937915*^9, 3.946484623853924*^9}},
+ CellID->1581452995,ExpressionUUID->"54ba6184-8dfe-40ee-b2de-faefe34e279b"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"sizes", "=", 
+   RowBox[{"{", 
+    RowBox[{"2", ",", "4", ",", "1"}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"anArray", "=", 
+   RowBox[{"Partition", "[", 
+    RowBox[{
+     RowBox[{"Range", "[", 
+      SuperscriptBox["7", "2"], "]"}], ",", "7"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"MatrixPlot", "[", "anArray", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"blocked", "=", 
+   RowBox[{"ArrayBlocker", "[", 
+    RowBox[{"anArray", ",", "sizes"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Map", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"MatrixPlot", "[", 
+     RowBox[{"#", ",", 
+      RowBox[{"PlotRange", "->", 
+       RowBox[{"{", 
+        RowBox[{"All", ",", "All", ",", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "10"}], ",", "10"}], "}"}]}], "}"}]}]}], "]"}], "&"}],
+    ",", "blocked", ",", 
+   RowBox[{"{", "2", "}"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.946485038870907*^9, 3.946485044650318*^9}},
+ CellLabel->"In[100]:=",
+ CellID->527939751,ExpressionUUID->"38742ffc-84c0-4e50-95f8-16fa3dc3968b"],
+
+Cell[BoxData[
+ GraphicsBox[RasterBox[CompressedData["
+1:eJwtjwdQ0wcUxgMoVGUISAArLasOKtNRvEA/lUMUW/ECQSiCIKBRRIhwFFMF
+atAicoC1GqVoWVZ7IkOEyKpaRzVEEcoywZgQRsJ/MM8BUdvmfHff3Xvvvnvf
+7znsTmLHGzAYDKOP+r8/U2ioSoygEfeGteK5sxwlGgdG/Hgcljp5+J4opeFo
+Go1zF15gRsjrfn8oBrfqw4WXRmionLI5waYv0JV3jONJRCBws2CiwXUMpeuu
+JiwU9CNPdycE/dLKre0pY9gdJPnxyWsZ+nT+rTiY2HN5pHEMjvHjwtwDMih0
+exYYuhqHkr+oKkAp/TgzGGfzVQn3kklY1nz+d89bBfZa8K1sqtOw3MHkoayB
+xGSTJ3vNTQWKdLmpaKpbaz+tJdH5wO/FmYMKSO48Hq31TME3m6L5xn4Ubjzj
+cCeXK/BB9xcP8r6TXc4nKTiJ2odLH75EnNwrS8hNQnJCnZtvOwWVZEobxXoJ
+sY4zAfrv+3M4VjTKBqwtl9TI4cHqdGlL5MJ08RH/82oCz1YI5mzIUyHP6Z3P
++Ewzis/tXKD/lMDXh6/maK1VCDEUbPmr+yZcLH07EuoIVD56YnyrfAAeneaV
+y2OuobHATth9nsASm6nCFPcBPHNn5V5wLYKiZ08k/xKBQwWaL5rFSjzW8fwA
+3r5C0c+DBIKLZmtsjyuhF+eyPmMlH3O0jebXXEh4XTbxSYcS7jrOdLjcCOuv
+KyMhfnd0r33T8H++kMOSzH9wy21dmV0OCe9vywmZ/zAaUtO0WQ0d2HTNlvtT
+IokrxY+ShB1DeCp1/7Bf2o7uZTOuE2wSTJKaYkcOwUdyaG5XgASxFdKp77xJ
+CFiW6aaaQfzSWr/At/4RJuybG+/bkZjK9dY+Th2EfvUb898dHyDr4q+ZbgYk
+YqSRWccZg4grYdmYFd5FR3iP4nkohV3HTmm4LRo0B9QZ9Q68BDW9/Unzegon
+dwzFdHM12DHv+zYzDzli/V69L1tGoTz5XmfaBzXyS65r/A/2Y+J2z31jEwrm
+d9ShXqfUgG37gZkKKTJ9RLlpkyQyzUxlFFON8dPjY1WyPpg0CrcreknQUat2
+/VE2grL5FimxFr0oXpPODGwlsbMqTBXnNoJgwapX1lu6sXDJkX2VExRQxfyN
+N5fE9ozKHmfVEL4UveLkyyhwBcnW8loCi3fle9+dN4QANm9j8gMKp8PEBYFR
+BIaRXBTpMYjdFOHGrqbQ5Or8iWg+gVp7tvZtqAoZOXs+XX2BwqB+RpaTaBRH
+9FZHnTs6gCInpRFTQMGkr/dNQewoNg9Y3fGqUKL+z4jp1wcofHXdk6c1G4XV
+vdcO7WIFtskdJjPyaHwmLQ3hb6NxOyxzhbyLwP7DxfLoNBoB1bOS4RkKueti
+TvFnR3F8kXXbxmgavGyOf/AVCpzFfhTTcRSl1adFzoE0isKrW28HU7CfdQ6q
+26xBa6BxheFqGvfd5q1dyaBAywxrg5LU6Bs6Uai2o0EZxFadryTR2KK2IM+O
+YDpL76jYiAbzecvSueEksi+KU3NahvEvmYBXmQ==
+   "], {{0, 0}, {7, 7}}, {0, 1}],
+  BaseStyle->{FontFamily -> "Arial"},
+  Frame->True,
+  FrameLabel->{None, None},
+  FrameTicks->{{{{6.5, 
+       FormBox["1", TraditionalForm]}, {5.5, 
+       FormBox["2", TraditionalForm]}, {4.5, 
+       FormBox["3", TraditionalForm]}, {3.5, 
+       FormBox["4", TraditionalForm]}, {2.5, 
+       FormBox["5", TraditionalForm]}, {1.5, 
+       FormBox["6", TraditionalForm]}, {0.5, 
+       FormBox["7", TraditionalForm]}}, {{6.5, 
+       FormBox["1", TraditionalForm]}, {5.5, 
+       FormBox["2", TraditionalForm]}, {4.5, 
+       FormBox["3", TraditionalForm]}, {3.5, 
+       FormBox["4", TraditionalForm]}, {2.5, 
+       FormBox["5", TraditionalForm]}, {1.5, 
+       FormBox["6", TraditionalForm]}, {0.5, 
+       FormBox["7", TraditionalForm]}}}, {{{0.5, 
+       FormBox["1", TraditionalForm]}, {1.5, 
+       FormBox["2", TraditionalForm]}, {2.5, 
+       FormBox["3", TraditionalForm]}, {3.5, 
+       FormBox["4", TraditionalForm]}, {4.5, 
+       FormBox["5", TraditionalForm]}, {5.5, 
+       FormBox["6", TraditionalForm]}, {6.5, 
+       FormBox["7", TraditionalForm]}}, {{0.5, 
+       FormBox["1", TraditionalForm]}, {1.5, 
+       FormBox["2", TraditionalForm]}, {2.5, 
+       FormBox["3", TraditionalForm]}, {3.5, 
+       FormBox["4", TraditionalForm]}, {4.5, 
+       FormBox["5", TraditionalForm]}, {5.5, 
+       FormBox["6", TraditionalForm]}, {6.5, 
+       FormBox["7", TraditionalForm]}}}},
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]],
+  Method->{
+   "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+    "DefaultBoundaryStyle" -> Automatic, 
+    "DefaultGraphicsInteraction" -> {
+     "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+      "Effects" -> {
+       "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+        "Droplines" -> {
+         "freeformCursorMode" -> True, 
+          "placement" -> {"x" -> "All", "y" -> "None"}}}}, "DefaultPlotStyle" -> 
+    Automatic, "DomainPadding" -> Scaled[0.02], "RangePadding" -> 
+    Scaled[0.05]}]], "Output",
+ CellChangeTimes->{3.946485045182966*^9},
+ CellLabel->"Out[102]=",
+ CellID->1828449300,ExpressionUUID->"e5b1fce7-eb63-489b-a7c4-40404170ffee"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     GraphicsBox[
+      RasterBox[{{{0.9242984430697805, 0.4951999746000508, 
+       0.0037689687120625766`}, {1., 0.42, 0.}}, {{0.9334637523763428, 
+       0.8670210137700551, 0.6614949948293126}, {0.90883467168202, 
+       0.771328469693212, 0.42484785230118915`}}}, {{0, 0}, {2, 2}}, {0, 1}],
+      BaseStyle->{FontFamily -> "Arial"},
+      Frame->True,
+      FrameLabel->{None, None},
+      FrameTicks->{{{{1.5, 
+           FormBox["1", TraditionalForm]}, {0.5, 
+           FormBox["2", TraditionalForm]}}, {{1.5, 
+           FormBox["1", TraditionalForm]}, {0.5, 
+           FormBox["2", TraditionalForm]}}}, {{{0.5, 
+           FormBox["1", TraditionalForm]}, {1.5, 
+           FormBox["2", TraditionalForm]}}, {{0.5, 
+           FormBox["1", TraditionalForm]}, {1.5, 
+           FormBox["2", TraditionalForm]}}}},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      Method->{
+       "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+        "DefaultBoundaryStyle" -> Automatic, 
+        "DefaultGraphicsInteraction" -> {
+         "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+          "Effects" -> {
+           "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+            "Droplines" -> {
+             "freeformCursorMode" -> True, 
+              "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+        "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+        "RangePadding" -> Scaled[0.05]}], ",", 
+     GraphicsBox[
+      RasterBox[{{{1., 0.42, 0., 1.}, {1., 0., 0.3873197528038453, 1.}, {1., 
+       0., 0.3873197528038453, 1.}, {1., 0., 0.3873197528038453, 1.}}, {{
+       0.9242766322945292, 0.8323052499069996, 0.5711963003012013, 1.}, {
+       0.9026502636110544, 0.7442832781791128, 0.3716617690568564, 1.}, {
+       0.8787961181944728, 0.6399661109104435, 0.1665154479715718, 1.}, {
+       0.8742189515620968, 0.5449476501046998, 0.00626228647542705, 1.}}}, {{
+       0, 0}, {4, 2}}, {0, 1}],
+      BaseStyle->{FontFamily -> "Arial"},
+      Frame->True,
+      FrameLabel->{None, None},
+      FrameTicks->{{{{1.5, 
+           FormBox["1", TraditionalForm]}, {0.5, 
+           FormBox["2", TraditionalForm]}}, {{1.5, 
+           FormBox["1", TraditionalForm]}, {0.5, 
+           FormBox["2", TraditionalForm]}}}, {{{0.5, 
+           FormBox["1", TraditionalForm]}, {1.5, 
+           FormBox["2", TraditionalForm]}, {2.5, 
+           FormBox["3", TraditionalForm]}, {3.5, 
+           FormBox["4", TraditionalForm]}}, {{0.5, 
+           FormBox["1", TraditionalForm]}, {1.5, 
+           FormBox["2", TraditionalForm]}, {2.5, 
+           FormBox["3", TraditionalForm]}, {3.5, 
+           FormBox["4", TraditionalForm]}}}},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      Method->{
+       "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+        "DefaultBoundaryStyle" -> Automatic, 
+        "DefaultGraphicsInteraction" -> {
+         "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+          "Effects" -> {
+           "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+            "Droplines" -> {
+             "freeformCursorMode" -> True, 
+              "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+        "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+        "RangePadding" -> Scaled[0.05]}], ",", 
+     GraphicsBox[
+      RasterBox[{{{1., 0., 0.3873197528038453, 1.}}, {{1., 0.42, 0., 1.}}}, {{
+       0, 0}, {1, 2}}, {0, 1}],
+      BaseStyle->{FontFamily -> "Arial"},
+      Frame->True,
+      FrameLabel->{None, None},
+      FrameTicks->{{{{1.5, 
+           FormBox["1", TraditionalForm]}, {0.5, 
+           FormBox["2", TraditionalForm]}}, {{1.5, 
+           FormBox["1", TraditionalForm]}, {0.5, 
+           FormBox["2", TraditionalForm]}}}, {{{0.5, 
+           FormBox["1", TraditionalForm]}}, {{0.5, 
+           FormBox["1", TraditionalForm]}}}},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      Method->{
+       "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+        "DefaultBoundaryStyle" -> Automatic, 
+        "DefaultGraphicsInteraction" -> {
+         "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+          "Effects" -> {
+           "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+            "Droplines" -> {
+             "freeformCursorMode" -> True, 
+              "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+        "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+        "RangePadding" -> Scaled[0.05]}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     GraphicsBox[
+      RasterBox[{{{1., 0., 0.3873197528038453, 1.}, {1., 0., 
+       0.3873197528038453, 1.}}, {{1., 0., 0.3873197528038453, 1.}, {1., 0., 
+       0.3873197528038453, 1.}}, {{1., 0., 0.3873197528038453, 1.}, {1., 0., 
+       0.3873197528038453, 1.}}, {{1., 0., 0.3873197528038453, 1.}, {1., 0., 
+       0.3873197528038453, 1.}}}, {{0, 0}, {2, 4}}, {0, 1}],
+      BaseStyle->{FontFamily -> "Arial"},
+      Frame->True,
+      FrameLabel->{None, None},
+      FrameTicks->{{{{3.5, 
+           FormBox["1", TraditionalForm]}, {2.5, 
+           FormBox["2", TraditionalForm]}, {1.5, 
+           FormBox["3", TraditionalForm]}, {0.5, 
+           FormBox["4", TraditionalForm]}}, {{3.5, 
+           FormBox["1", TraditionalForm]}, {2.5, 
+           FormBox["2", TraditionalForm]}, {1.5, 
+           FormBox["3", TraditionalForm]}, {0.5, 
+           FormBox["4", TraditionalForm]}}}, {{{0.5, 
+           FormBox["1", TraditionalForm]}, {1.5, 
+           FormBox["2", TraditionalForm]}}, {{0.5, 
+           FormBox["1", TraditionalForm]}, {1.5, 
+           FormBox["2", TraditionalForm]}}}},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      Method->{
+       "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+        "DefaultBoundaryStyle" -> Automatic, 
+        "DefaultGraphicsInteraction" -> {
+         "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+          "Effects" -> {
+           "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+            "Droplines" -> {
+             "freeformCursorMode" -> True, 
+              "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+        "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+        "RangePadding" -> Scaled[0.05]}], ",", 
+     GraphicsBox[RasterBox[CompressedData["
+1:eJxTTMoPSmVmYGBgQcIQ8MEexrp58gYI2qOKj8oPV3kAp2GHSQ==
+       "], {{0, 0}, {4, 4}}, {0, 1}],
+      BaseStyle->{FontFamily -> "Arial"},
+      Frame->True,
+      FrameLabel->{None, None},
+      FrameTicks->{{{{3.5, 
+           FormBox["1", TraditionalForm]}, {2.5, 
+           FormBox["2", TraditionalForm]}, {1.5, 
+           FormBox["3", TraditionalForm]}, {0.5, 
+           FormBox["4", TraditionalForm]}}, {{3.5, 
+           FormBox["1", TraditionalForm]}, {2.5, 
+           FormBox["2", TraditionalForm]}, {1.5, 
+           FormBox["3", TraditionalForm]}, {0.5, 
+           FormBox["4", TraditionalForm]}}}, {{{0.5, 
+           FormBox["1", TraditionalForm]}, {1.5, 
+           FormBox["2", TraditionalForm]}, {2.5, 
+           FormBox["3", TraditionalForm]}, {3.5, 
+           FormBox["4", TraditionalForm]}}, {{0.5, 
+           FormBox["1", TraditionalForm]}, {1.5, 
+           FormBox["2", TraditionalForm]}, {2.5, 
+           FormBox["3", TraditionalForm]}, {3.5, 
+           FormBox["4", TraditionalForm]}}}},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      Method->{
+       "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+        "DefaultBoundaryStyle" -> Automatic, 
+        "DefaultGraphicsInteraction" -> {
+         "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+          "Effects" -> {
+           "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+            "Droplines" -> {
+             "freeformCursorMode" -> True, 
+              "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+        "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+        "RangePadding" -> Scaled[0.05]}], ",", 
+     GraphicsBox[
+      RasterBox[{{{1., 0., 0.3873197528038453, 1.}}, {{1., 0., 
+       0.3873197528038453, 1.}}, {{1., 0., 0.3873197528038453, 1.}}, {{1., 0.,
+        0.3873197528038453, 1.}}}, {{0, 0}, {1, 4}}, {0, 1}],
+      BaseStyle->{FontFamily -> "Arial"},
+      Frame->True,
+      FrameLabel->{None, None},
+      FrameTicks->{{{{3.5, 
+           FormBox["1", TraditionalForm]}, {2.5, 
+           FormBox["2", TraditionalForm]}, {1.5, 
+           FormBox["3", TraditionalForm]}, {0.5, 
+           FormBox["4", TraditionalForm]}}, {{3.5, 
+           FormBox["1", TraditionalForm]}, {2.5, 
+           FormBox["2", TraditionalForm]}, {1.5, 
+           FormBox["3", TraditionalForm]}, {0.5, 
+           FormBox["4", TraditionalForm]}}}, {{{0.5, 
+           FormBox["1", TraditionalForm]}}, {{0.5, 
+           FormBox["1", TraditionalForm]}}}},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      Method->{
+       "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+        "DefaultBoundaryStyle" -> Automatic, 
+        "DefaultGraphicsInteraction" -> {
+         "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+          "Effects" -> {
+           "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+            "Droplines" -> {
+             "freeformCursorMode" -> True, 
+              "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+        "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+        "RangePadding" -> Scaled[0.05]}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     GraphicsBox[
+      RasterBox[{{{1., 0., 0.3873197528038453, 1.}, {1., 0., 
+       0.3873197528038453, 1.}}}, {{0, 0}, {2, 1}}, {0, 1}],
+      BaseStyle->{FontFamily -> "Arial"},
+      Frame->True,
+      FrameLabel->{None, None},
+      FrameTicks->{{{{0.5, 
+           FormBox["1", TraditionalForm]}}, {{0.5, 
+           FormBox["1", TraditionalForm]}}}, {{{0.5, 
+           FormBox["1", TraditionalForm]}, {1.5, 
+           FormBox["2", TraditionalForm]}}, {{0.5, 
+           FormBox["1", TraditionalForm]}, {1.5, 
+           FormBox["2", TraditionalForm]}}}},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      Method->{
+       "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+        "DefaultBoundaryStyle" -> Automatic, 
+        "DefaultGraphicsInteraction" -> {
+         "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+          "Effects" -> {
+           "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+            "Droplines" -> {
+             "freeformCursorMode" -> True, 
+              "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+        "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+        "RangePadding" -> Scaled[0.05]}], ",", 
+     GraphicsBox[
+      RasterBox[{{{1., 0., 0.3873197528038453, 1.}, {1., 0., 
+       0.3873197528038453, 1.}, {1., 0., 0.3873197528038453, 1.}, {1., 0., 
+       0.3873197528038453, 1.}}}, {{0, 0}, {4, 1}}, {0, 1}],
+      BaseStyle->{FontFamily -> "Arial"},
+      Frame->True,
+      FrameLabel->{None, None},
+      FrameTicks->{{{{0.5, 
+           FormBox["1", TraditionalForm]}}, {{0.5, 
+           FormBox["1", TraditionalForm]}}}, {{{0.5, 
+           FormBox["1", TraditionalForm]}, {1.5, 
+           FormBox["2", TraditionalForm]}, {2.5, 
+           FormBox["3", TraditionalForm]}, {3.5, 
+           FormBox["4", TraditionalForm]}}, {{0.5, 
+           FormBox["1", TraditionalForm]}, {1.5, 
+           FormBox["2", TraditionalForm]}, {2.5, 
+           FormBox["3", TraditionalForm]}, {3.5, 
+           FormBox["4", TraditionalForm]}}}},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      Method->{
+       "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+        "DefaultBoundaryStyle" -> Automatic, 
+        "DefaultGraphicsInteraction" -> {
+         "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+          "Effects" -> {
+           "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+            "Droplines" -> {
+             "freeformCursorMode" -> True, 
+              "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+        "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+        "RangePadding" -> Scaled[0.05]}], ",", 
+     GraphicsBox[
+      RasterBox[{{{1., 0., 0.3873197528038453, 1.}}}, {{0, 0}, {1, 1}}, {0, 
+       1}],
+      BaseStyle->{FontFamily -> "Arial"},
+      Frame->True,
+      FrameLabel->{None, None},
+      FrameTicks->{{{{0.5, 
+           FormBox["1", TraditionalForm]}}, {{0.5, 
+           FormBox["1", TraditionalForm]}}}, {{{0.5, 
+           FormBox["1", TraditionalForm]}}, {{0.5, 
+           FormBox["1", TraditionalForm]}}}},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      Method->{
+       "GridLinesInFront" -> True, "AxisPadding" -> Scaled[0.02], 
+        "DefaultBoundaryStyle" -> Automatic, 
+        "DefaultGraphicsInteraction" -> {
+         "Version" -> 1.2, "TrackMousePosition" -> {True, False}, 
+          "Effects" -> {
+           "Highlight" -> {"ratio" -> 2}, "HighlightPoint" -> {"ratio" -> 2}, 
+            "Droplines" -> {
+             "freeformCursorMode" -> True, 
+              "placement" -> {"x" -> "All", "y" -> "None"}}}}, 
+        "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+        "RangePadding" -> Scaled[0.05]}]}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{3.946485045232953*^9},
+ CellLabel->"Out[104]=",
+ CellID->256396530,ExpressionUUID->"20f175ed-de4c-4ea0-8abc-72bcdab11d34"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "More Examples",
+ Cell[BoxData[
+  TemplateBox[{"MoreExamples", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell["Extended examples in standardized sections.", "MoreInfoText"], 
+       BaseStyle -> "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "84633c22-a368-4bb7-b056-f0e78514cf0b"]
+}], "ExtendedExamplesSection",
+ CellTags->"ExtendedExamples",
+ CellID->1530135789,ExpressionUUID->"b4c593fa-8e46-48d2-84c4-2b2b818b947c"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Scope", "ExampleSection",ExpressionUUID->
+   "dafc7caa-58d0-4c5b-a6ec-b698a30b2b12"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->875532898,ExpressionUUID->"bb2450e5-d2ae-4b8b-8dd5-3a956f6d2e5a"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Generalizations & Extensions", "ExampleSection",ExpressionUUID->
+   "80177669-22ef-42b9-bb0d-38b8c48bafa6"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->523467442,ExpressionUUID->"f11b7aa9-7fdb-4b2f-99b2-050df9ca588e"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Options", "ExampleSection",ExpressionUUID->
+   "a1513f00-9be0-4aa4-9680-faf057412753"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->1824279582,ExpressionUUID->"a70b14b0-4a54-4546-be74-1123fcfe1d96"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "XXXX", "ExampleSubsection",ExpressionUUID->
+   "56ed16f0-23fd-4ac1-b929-c6461fe64c81"],
+  $Line = 0; Null]], "ExampleSubsection",
+ CellID->1042906455,ExpressionUUID->"92b3d057-50ef-4d32-801f-83e28184c951"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "XXXX", "ExampleSubsection",ExpressionUUID->
+   "3701221b-a6a8-4002-b0b4-6b3e920ab786"],
+  $Line = 0; Null]], "ExampleSubsection",
+ CellID->367262371,ExpressionUUID->"23d6c148-cc86-434c-9015-e5d62d772e90"]
+}, Open  ]],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Applications", "ExampleSection",ExpressionUUID->
+   "6d903e6e-13d1-414c-830b-3e39692ef94e"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->710667919,ExpressionUUID->"c9ae15b0-baf0-4757-9cac-debf4b9bbe69"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Properties & Relations", "ExampleSection",ExpressionUUID->
+   "a3660251-0cc3-4ae8-888f-9cb4065de036"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->2039153666,ExpressionUUID->"8e68b43d-ddfc-452d-961e-b0e31d728535"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Possible Issues", "ExampleSection",ExpressionUUID->
+   "08c361c2-14c5-4b5b-b54f-dfe1ae89d362"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->364141989,ExpressionUUID->"188dd36c-f916-4cbf-9ff4-f37215487458"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Interactive Examples", "ExampleSection",ExpressionUUID->
+   "8200e85f-d07e-4c6c-a6eb-062f62dfb7bc"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->1953498820,ExpressionUUID->"8c0d5fdd-5483-479e-8bd4-683bde90ee16"],
+
+Cell[BoxData[
+ InterpretationBox[Cell[
+  "Neat Examples", "ExampleSection",ExpressionUUID->
+   "f8774499-75d4-48a1-b6b9-26199a2e3031"],
+  $Line = 0; Null]], "ExampleSection",
+ CellID->1724672404,ExpressionUUID->"b7760ae2-5b62-41e8-88ed-5a204b2b64e0"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Metadata", "MetadataSection",
+ CellID->1982310469,ExpressionUUID->"9a7c6cf9-8e28-400b-8aee-dfb9829a7a1f"],
+
+Cell[TextData[{
+ "New in: ",
+ Cell["1.0.0", "HistoryData",
+  CellTags->"New",ExpressionUUID->"2f91ca72-2ddd-4b52-86ab-15dd80faafee"],
+ " | Modified in: ",
+ Cell[" ", "HistoryData",
+  CellTags->"Modified",ExpressionUUID->"35e2c798-c1de-458b-a073-97a59eb85860"],
+ " | Obsolete in: ",
+ Cell[" ", "HistoryData",
+  CellTags->"Obsolete",ExpressionUUID->
+  "0ee3c8a4-eeae-4ef6-9f4e-c91cf9629afe"]
+}], "History",
+ CellChangeTimes->{{3.864923683926749*^9, 3.864923685610183*^9}, {
+  3.9464829288310413`*^9, 3.946482929294541*^9}},
+ CellID->630752925,ExpressionUUID->"167f2755-550c-400b-a85f-a1906138dad5"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Categorization",
+ Cell[BoxData[
+  TemplateBox[{"Metadata", 
+    Cell[
+     BoxData[
+      FrameBox[
+       Cell[
+       "Metadata such as page URI, context, and type of documentation page.", 
+        "MoreInfoText"], BaseStyle -> "IFrameBox"]], "MoreInfoTextOuter"]},
+   "MoreInfoOpenerButtonTemplate"]],ExpressionUUID->
+  "96e9e4c2-d099-4301-8df8-079f1c0de0ad"]
+}], "CategorizationSection",
+ CellID->1085128883,ExpressionUUID->"5b70f677-32e6-435a-9c3d-f1ec4f584331"],
+
+Cell["Symbol", "Categorization",
+ CellLabel->"Entity Type",
+ CellID->1330006257,ExpressionUUID->"1662f64e-e0c9-4bff-90da-e7dcb46a6442"],
+
+Cell["DavidLizarazo/qlanth", "Categorization",
+ CellLabel->"Paclet Name",
+ CellID->257879776,ExpressionUUID->"516c1aa0-1006-4f69-bf94-1e8be6bc0283"],
+
+Cell["DavidLizarazo`qlanth`", "Categorization",
+ CellLabel->"Context",
+ CellID->563395586,ExpressionUUID->"0c27194f-c761-4a91-87e4-067f065581d1"],
+
+Cell["DavidLizarazo/qlanth/ref/ArrayBlocker", "Categorization",
+ CellLabel->"URI",
+ CellID->734214279,ExpressionUUID->"28e8847b-60bc-4e21-9b15-850caf597108"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Keywords", "KeywordsSection",
+ CellID->498351491,ExpressionUUID->"924f6079-c2c6-48ca-958e-b5849a5a0839"],
+
+Cell["XXXX", "Keywords",
+ CellID->607285937,ExpressionUUID->"c8b38f1f-3e7d-4d60-9032-642fd5e30ede"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Syntax Templates", "TemplatesSection",
+ CellID->1812452615,ExpressionUUID->"5d30fa59-872b-4be2-9851-9586a5ebf80e"],
+
+Cell[BoxData[""], "Template",
+ CellLabel->"Additional Function Template",
+ CellID->1983051257,ExpressionUUID->"7281afee-aac4-40ae-9ebe-5e53a2ea42d5"],
+
+Cell[BoxData[""], "Template",
+ CellLabel->"Arguments Pattern",
+ CellID->196274959,ExpressionUUID->"109e1a4b-0ed1-4ed1-83e3-01ce698f954b"],
+
+Cell[BoxData[""], "Template",
+ CellLabel->"Local Variables",
+ CellID->258354121,ExpressionUUID->"1bf39d32-a158-4050-a327-57c1060a12f5"],
+
+Cell[BoxData[""], "Template",
+ CellLabel->"Color Equal Signs",
+ CellID->2093261060,ExpressionUUID->"9e2f6abe-4f77-41ee-b357-28c8d643c92c"]
+}, Closed]]
+}, Open  ]]
+},
+WindowSize->{700, 770},
+WindowMargins->{{Automatic, 454}, {Automatic, 89}},
+TaggingRules-><|"Paclet" -> "DavidLizarazo/qlanth"|>,
+FrontEndVersion->"14.1 for Mac OS X ARM (64-bit) (July 16, 2024)",
+StyleDefinitions->FrontEnd`FileName[{"Wolfram"}, "FunctionPageStylesExt.nb", 
+  CharacterEncoding -> "UTF-8"],
+ExpressionUUID->"e9b55541-43f7-45cc-b7ae-667b949d61e1"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "ExtendedExamples"->{
+  Cell[50472, 1182, 488, 13, 56, "ExtendedExamplesSection",ExpressionUUID->"b4c593fa-8e46-48d2-84c4-2b2b818b947c",
+   CellTags->"ExtendedExamples",
+   CellID->1530135789]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"ExtendedExamples", 56875, 1371}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[576, 22, 110, 1, 72, "ObjectName",ExpressionUUID->"93c82907-1b9e-486d-a6f4-9e81a11886d4",
+ CellID->1443907848],
+Cell[689, 25, 3257, 89, 173, "Usage",ExpressionUUID->"1f00eaf1-a9ae-4134-871e-0d63a138a801",
+ CellID->1193990236],
+Cell[3949, 116, 271, 5, 43, "Notes",ExpressionUUID->"5d75e3bc-aed8-4585-9cae-74a4d2e94e81",
+ CellID->1306698884],
+Cell[4223, 123, 488, 8, 43, "Notes",ExpressionUUID->"0cd2065a-6410-4de7-ac02-53a2748ab385",
+ CellID->2118138280]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4748, 136, 459, 13, 38, "SeeAlsoSection",ExpressionUUID->"ceec723a-be65-4120-8be1-1f8d11126278",
+ CellID->1520369166],
+Cell[5210, 151, 1654, 42, 21, "SeeAlso",ExpressionUUID->"bcd2c580-b1a1-45b2-8488-460fe101099b",
+ CellID->2084140956]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[6901, 198, 435, 12, 39, "TechNotesSection",ExpressionUUID->"ab429d32-e3dd-4437-8fe9-4f5b61fcfb89",
+ CellID->551281275],
+Cell[7339, 212, 101, 1, 17, "Tutorials",ExpressionUUID->"b2f9ecf2-877e-466b-a697-b5b69f75595c",
+ CellID->1139935767]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7477, 218, 118, 1, 37, "MoreAboutSection",ExpressionUUID->"3995797d-adee-4b01-8fef-8cf9b2486b2c",
+ CellID->1198821082],
+Cell[7598, 221, 100, 1, 17, "MoreAbout",ExpressionUUID->"3c8ff66d-cc99-469b-b123-e98b83c9e8ee",
+ CellID->894349020]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7735, 227, 473, 13, 38, "RelatedLinksSection",ExpressionUUID->"dbd60be8-7f6c-46d7-a643-e6f0968865bf",
+ CellID->1085933787],
+Cell[8211, 242, 104, 1, 17, "RelatedLinks",ExpressionUUID->"b05089ba-5743-420a-93b1-45d85f2760a8",
+ CellID->1973125903]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[8352, 248, 530, 14, 68, "ExamplesInitializationSection",ExpressionUUID->"bba05abb-79d8-47c2-966e-bdbb4271acf2",
+ CellID->884574747],
+Cell[8885, 264, 243, 4, 46, "ExampleInitialization",ExpressionUUID->"601140cf-8182-429e-82cb-192b8d8ea93a",
+ CellID->18484648]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[9165, 273, 443, 12, 70, "PrimaryExamplesSection",ExpressionUUID->"062b62d4-04ad-43e2-b11c-4021e5a4000f",
+ CellID->1433833768],
+Cell[9611, 287, 326, 6, 23, "ExampleText",ExpressionUUID->"47949168-df4e-42a4-b745-3a9355a6adda",
+ CellID->532319707],
+Cell[CellGroupData[{
+Cell[9962, 297, 2401, 60, 160, "Input",ExpressionUUID->"77c06e83-c698-407a-b75a-f289921f0e2d",
+ CellID->458835742],
+Cell[12366, 359, 4567, 87, 250, "Output",ExpressionUUID->"64e5f0b3-ef37-4ca2-a631-a4700b1362a4",
+ CellID->38539417],
+Cell[16936, 448, 14508, 306, 430, "Output",ExpressionUUID->"74aa54e1-9eeb-4f57-941c-9337cbe249c8",
+ CellID->1339403772]
+}, Open  ]],
+Cell[31459, 757, 245, 4, 23, "ExampleText",ExpressionUUID->"54ba6184-8dfe-40ee-b2de-faefe34e279b",
+ CellID->1581452995],
+Cell[CellGroupData[{
+Cell[31729, 765, 1130, 34, 122, "Input",ExpressionUUID->"38742ffc-84c0-4e50-95f8-16fa3dc3968b",
+ CellID->527939751],
+Cell[32862, 801, 3809, 77, 250, "Output",ExpressionUUID->"e5b1fce7-eb63-489b-a7c4-40404170ffee",
+ CellID->1828449300],
+Cell[36674, 880, 13749, 296, 430, "Output",ExpressionUUID->"20f175ed-de4c-4ea0-8abc-72bcdab11d34",
+ CellID->256396530]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[50472, 1182, 488, 13, 56, "ExtendedExamplesSection",ExpressionUUID->"b4c593fa-8e46-48d2-84c4-2b2b818b947c",
+ CellTags->"ExtendedExamples",
+ CellID->1530135789],
+Cell[50963, 1197, 241, 5, 32, "ExampleSection",ExpressionUUID->"bb2450e5-d2ae-4b8b-8dd5-3a956f6d2e5a",
+ CellID->875532898],
+Cell[51207, 1204, 264, 5, 20, "ExampleSection",ExpressionUUID->"f11b7aa9-7fdb-4b2f-99b2-050df9ca588e",
+ CellID->523467442],
+Cell[CellGroupData[{
+Cell[51496, 1213, 244, 5, 20, "ExampleSection",ExpressionUUID->"a70b14b0-4a54-4546-be74-1123fcfe1d96",
+ CellID->1824279582],
+Cell[51743, 1220, 247, 5, 23, "ExampleSubsection",ExpressionUUID->"92b3d057-50ef-4d32-801f-83e28184c951",
+ CellID->1042906455],
+Cell[51993, 1227, 246, 5, 19, "ExampleSubsection",ExpressionUUID->"23d6c148-cc86-434c-9015-e5d62d772e90",
+ CellID->367262371]
+}, Open  ]],
+Cell[52254, 1235, 248, 5, 32, "ExampleSection",ExpressionUUID->"c9ae15b0-baf0-4757-9cac-debf4b9bbe69",
+ CellID->710667919],
+Cell[52505, 1242, 259, 5, 20, "ExampleSection",ExpressionUUID->"8e68b43d-ddfc-452d-961e-b0e31d728535",
+ CellID->2039153666],
+Cell[52767, 1249, 251, 5, 20, "ExampleSection",ExpressionUUID->"188dd36c-f916-4cbf-9ff4-f37215487458",
+ CellID->364141989],
+Cell[53021, 1256, 257, 5, 20, "ExampleSection",ExpressionUUID->"8c0d5fdd-5483-479e-8bd4-683bde90ee16",
+ CellID->1953498820],
+Cell[53281, 1263, 250, 5, 20, "ExampleSection",ExpressionUUID->"b7760ae2-5b62-41e8-88ed-5a204b2b64e0",
+ CellID->1724672404]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[53568, 1273, 111, 1, 71, "MetadataSection",ExpressionUUID->"9a7c6cf9-8e28-400b-8aee-dfb9829a7a1f",
+ CellID->1982310469],
+Cell[53682, 1276, 596, 14, 25, "History",ExpressionUUID->"167f2755-550c-400b-a85f-a1906138dad5",
+ CellID->630752925],
+Cell[CellGroupData[{
+Cell[54303, 1294, 485, 13, 20, "CategorizationSection",ExpressionUUID->"5b70f677-32e6-435a-9c3d-f1ec4f584331",
+ CellID->1085128883],
+Cell[54791, 1309, 135, 2, 70, "Categorization",ExpressionUUID->"1662f64e-e0c9-4bff-90da-e7dcb46a6442",
+ CellID->1330006257],
+Cell[54929, 1313, 148, 2, 70, "Categorization",ExpressionUUID->"516c1aa0-1006-4f69-bf94-1e8be6bc0283",
+ CellID->257879776],
+Cell[55080, 1317, 145, 2, 70, "Categorization",ExpressionUUID->"0c27194f-c761-4a91-87e4-067f065581d1",
+ CellID->563395586],
+Cell[55228, 1321, 157, 2, 70, "Categorization",ExpressionUUID->"28e8847b-60bc-4e21-9b15-850caf597108",
+ CellID->734214279]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[55422, 1328, 110, 1, 20, "KeywordsSection",ExpressionUUID->"924f6079-c2c6-48ca-958e-b5849a5a0839",
+ CellID->498351491],
+Cell[55535, 1331, 99, 1, 70, "Keywords",ExpressionUUID->"c8b38f1f-3e7d-4d60-9032-642fd5e30ede",
+ CellID->607285937]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[55671, 1337, 120, 1, 20, "TemplatesSection",ExpressionUUID->"5d30fa59-872b-4be2-9851-9586a5ebf80e",
+ CellID->1812452615],
+Cell[55794, 1340, 149, 2, 70, "Template",ExpressionUUID->"7281afee-aac4-40ae-9ebe-5e53a2ea42d5",
+ CellID->1983051257],
+Cell[55946, 1344, 137, 2, 70, "Template",ExpressionUUID->"109e1a4b-0ed1-4ed1-83e3-01ce698f954b",
+ CellID->196274959],
+Cell[56086, 1348, 135, 2, 70, "Template",ExpressionUUID->"1bf39d32-a158-4050-a327-57c1060a12f5",
+ CellID->258354121],
+Cell[56224, 1352, 138, 2, 70, "Template",ExpressionUUID->"9e2f6abe-4f77-41ee-b357-28c8d643c92c",
+ CellID->2093261060]
+}, Closed]]
+}, Open  ]]
+}
+]
+*)
+

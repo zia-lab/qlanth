@@ -1,0 +1,994 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     38091,        984]
+NotebookOptionsPosition[     34088,        903]
+NotebookOutlinePosition[     36094,        951]
+CellTagsIndexPosition[     36009,        946]
+WindowTitle->paramSymbols
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[GridBox[{
+   {GridBox[{
+      {
+       ItemBox[Cell[BoxData[
+         RowBox[{
+          TemplateBox[{12},
+           "Spacer1"], Cell["DAVID LIZARAZO/QLANTH SYMBOL", "PacletNameCell",
+           TextAlignment->Center,ExpressionUUID->
+           "4b433a32-bfab-4998-9ff9-8c5d14d850c1"], 
+          TemplateBox[{8},
+           "Spacer1"]}]],
+         TextAlignment->Center,ExpressionUUID->
+         "86fa8f79-3ec0-48f2-b14a-be5c7f6707b0"],
+        Background->RGBColor[0.490196, 0.576471, 0.690196],
+        ItemSize->Full], ""}
+     },
+     GridBoxAlignment->{"Rows" -> {{Center}}},
+     GridBoxItemSize->{"Columns" -> {Full, 
+         Scaled[0.02]}, "Rows" -> {{2.5}}}], Cell[TextData[{
+     Cell[BoxData[
+      TagBox[
+       ActionMenuBox[
+        FrameBox[Cell[TextData[{
+          "See Also",
+          " ",
+          Cell[BoxData[
+           GraphicsBox[
+            {GrayLevel[0.66667], Thickness[0.13], 
+             LineBox[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]},
+            AspectRatio->1,
+            ImageSize->20,
+            PlotRange->{{-3, 4}, {-1, 1}}]],ExpressionUUID->
+           "be63232e-096c-45f0-8e5e-9fee3a29c814"]
+         }],ExpressionUUID->"083a826d-24e1-4fdf-aa5c-6f6209ad9582"],
+         StripOnInput->False],{
+        StyleBox["\"paramAtlas\"", "SeeAlsoRelated", StripOnInput -> False] :> 
+         Documentation`HelpLookup[
+          "paclet:DavidLizarazo/qlanth/ref/paramAtlas"], 
+         StyleBox["\"ParamPad\"", "SeeAlsoRelated", StripOnInput -> False] :> 
+         Documentation`HelpLookup["paclet:DavidLizarazo/qlanth/ref/ParamPad"]},
+        Appearance->None,
+        MenuAppearance->Automatic,
+        MenuStyle->"SeeAlso"],
+       MouseAppearanceTag["LinkHand"]]],
+      LineSpacing->{1.4, 0},ExpressionUUID->
+      "a722ddb6-81cf-4129-a8ea-ec48613cf747"],
+     "\[ThickSpace]\[ThickSpace]\[ThickSpace]\[ThickSpace]\[ThickSpace]\
+\[ThickSpace]",
+     Cell[BoxData[
+      TagBox[
+       ActionMenuBox[
+        FrameBox[Cell[TextData[{
+          "URL",
+          " ",
+          Cell[BoxData[
+           GraphicsBox[
+            {GrayLevel[0.66667], Thickness[0.13], 
+             LineBox[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]},
+            AspectRatio->1,
+            ImageSize->20,
+            PlotRange->{{-3, 4}, {-1, 1}}]],ExpressionUUID->
+           "a3554eba-f691-4c0c-a38e-af87d6189cb3"]
+         }],ExpressionUUID->"37e90562-b1e8-4c3e-9ce4-20e425786297"],
+         StripOnInput->False],{
+        "\"DavidLizarazo/qlanth/ref/paramSymbols\"" :> None, 
+         "\"Copy Wolfram Documentation Center URL\"" :> 
+         Module[{DocumentationSearch`Private`nb$}, 
+           DocumentationSearch`Private`nb$ = 
+            NotebookPut[
+             Notebook[{Cell["DavidLizarazo/qlanth/ref/paramSymbols"]}, 
+               Visible -> DocumentationBuild`Make`Private`visible$76662]]; 
+           SelectionMove[DocumentationSearch`Private`nb$, All, Notebook]; 
+           FrontEndTokenExecute[DocumentationSearch`Private`nb$, "Copy"]; 
+           NotebookClose[DocumentationSearch`Private`nb$]; Null], Delimiter, 
+         "\"Copy web URL\"" :> 
+         Module[{DocumentationSearch`Private`nb$}, 
+           DocumentationSearch`Private`nb$ = 
+            NotebookPut[
+             Notebook[{
+               Cell[BoxData[
+                 MakeBoxes[
+                  Hyperlink[
+                   "http://reference.wolfram.com/language/DavidLizarazo/\
+qlanth/ref/paramSymbols.html"], StandardForm]], "Input", TextClipboardType -> 
+                 "PlainText"]}, Visible -> 
+               DocumentationBuild`Make`Private`visible$76662]]; 
+           SelectionMove[DocumentationSearch`Private`nb$, All, Notebook]; 
+           FrontEndTokenExecute[DocumentationSearch`Private`nb$, "Copy"]; 
+           NotebookClose[DocumentationSearch`Private`nb$]; Null], 
+         "\"Go to web URL\"" :> 
+         FrontEndExecute[{
+           NotebookLocate[{
+             URL[If[TrueQ[False], 
+                 "http://reference.wolfram.com/system-modeler/", 
+                 "http://reference.wolfram.com/language/"] <> 
+               "DavidLizarazo/qlanth/ref/paramSymbols" <> ".html"], None}]}]},
+        
+        Appearance->None,
+        MenuAppearance->Automatic,
+        MenuStyle->"URLMenu"],
+       MouseAppearanceTag["LinkHand"]]],
+      LineSpacing->{1.4, 0},ExpressionUUID->
+      "ec6c6140-a8e7-46eb-a7aa-1b9628d4f6c3"]
+    }], "AnchorBar",
+     CacheGraphics->False,ExpressionUUID->
+     "8cb25f64-f559-457d-a56c-671c273e4b5b"]}
+  }]], "AnchorBarGrid",
+ GridBoxOptions->{GridBoxItemSize->{"Columns" -> {
+     Scaled[0.65], {
+      Scaled[0.34]}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}}, 
+   "RowsIndexed" -> {}}},
+ CellID->1,ExpressionUUID->"6145b196-290d-44e6-8e6a-69b198385c14"],
+
+Cell["DavidLizarazo`qlanth`", "ContextNameCell",ExpressionUUID->"5223895a-3b0a-42d9-8a66-852013ff1ee0"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[GridBox[{
+   {Cell[TextData[{
+     Cell[
+     "paramSymbols", "ObjectName",ExpressionUUID->
+      "f1a0c183-3f93-4348-afb0-082a62dcf886"],
+     Cell[BoxData[
+      TemplateBox[{8},
+       "Spacer1"]],ExpressionUUID->"f337391f-f388-451d-b41c-947746328121"],
+     Cell[BoxData[
+     ""], "ObjectNameTranslation",ExpressionUUID->
+      "6fe77156-b170-41dc-bc85-98debf7c2a15"]
+    }],ExpressionUUID->"f96f87da-e091-4b5a-bd09-21ae464da4ca"], 
+    "\[SpanFromLeft]"}
+  }]], "ObjectNameGrid",ExpressionUUID->"df42f12e-5f1e-4307-b14b-\
+081b51ea7705"],
+
+Cell[BoxData[GridBox[{
+   {"", Cell[TextData[{
+     Cell[BoxData[
+      TemplateBox[{
+        Cell[
+         TextData["paramSymbols"]], 
+        "paclet:DavidLizarazo/qlanth/ref/paramSymbols", 
+        "DavidLizarazo Package Symbol"},
+       "PackageLink",
+       BaseStyle->"InlineFormula"]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "ae44b04f-e49d-436c-8c53-f25c1eeaa5a2"],
+     "\[LineSeparator]is a list containing all they symbols that might be \
+present in a semi-empirical Hamiltonian."
+    }],ExpressionUUID->"1562b35b-8468-48ff-a0a1-45c38221df27"]}
+  }]], "Usage",
+ CellID->1578376670,ExpressionUUID->"4064f6c0-301c-4dd9-9fb1-9f2c4fe77b4d"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[Cell[BoxData[
+ ButtonBox[Cell[TextData[{
+   Cell[BoxData[
+    DynamicBox[ToBoxes[
+      If[
+       MatchQ[
+        CurrentValue[
+         EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, 
+         Closed], 
+        Alternatives[Open, True]], 
+       Style[
+        Graphics[{
+          Thickness[0.18], 
+          RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+          Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+         PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+        0.68 Inherited], 
+       Rotate[
+        Style[
+         Graphics[{
+           Thickness[0.18], 
+           RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+           Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+          PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+         0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+     ImageSizeCache->{
+      13.600000000000001`, {-0.1685058593749993, 13.768505859375}}]],
+    ExpressionUUID->"2ae9bc5e-d1d4-45a7-b753-b6995d71a49c"],
+   Cell[BoxData[
+    TemplateBox[{1},
+     "Spacer1"]],ExpressionUUID->"aa2cbb7e-7eed-4454-9fc2-66fe9135b6f5"],
+   "Details and Options"
+  }], "NotesFrameText",ExpressionUUID->"8b055995-b729-4eca-9f95-61bf39cec303"],
+  Appearance->{Automatic, None, "Normal", Automatic},
+  BaseStyle->None,
+  ButtonFunction:>(FrontEndExecute[{
+     FrontEnd`SelectionMove[
+      FrontEnd`SelectedNotebook[], All, ButtonCell], 
+     FrontEndToken["OpenCloseGroup"], 
+     FrontEnd`SelectionMove[
+      FrontEnd`SelectedNotebook[], After, CellContents]}]& ),
+  Evaluator->None,
+  Method->
+   "Preemptive"]],ExpressionUUID->"d4d1485e-1114-4022-82c8-aade423e6617"]], \
+"NotesSection",
+ WholeCellGroupOpener->True,
+ CellGroupingRules->{"SectionGrouping", 50},
+ CacheGraphics->False,
+ CellID->357297233,ExpressionUUID->"d48d144d-6329-4d47-9619-d55010847bd0"],
+
+Cell[TextData[{
+ "All of these symbols are ",
+ Cell[BoxData[
+  TemplateBox[{
+    Cell[
+     TextData["Protected"]], "paclet:ref/Protected"},
+   "RefLink",
+   BaseStyle->{"InlineFormula"}]], "InlineFormula",
+  FontFamily->"Source Sans Pro",ExpressionUUID->
+  "6badd7ac-7f63-479c-94f2-0bac030b55df"],
+ "."
+}], "Notes",
+ CellID->2058684946,ExpressionUUID->"d695fa5d-86e1-4ebf-bd70-172fa3650701"]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, Closed]]]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  DynamicBox[ToBoxes[
+    If[
+     MatchQ[
+      CurrentValue[
+       EvaluationNotebook[], {
+       TaggingRules, "Openers", "PrimaryExamplesSection"}, Open], 
+      Alternatives[True, Open]], 
+     Style[
+      Graphics[{
+        Thickness[0.18], 
+        RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+        Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+       PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+      0.68 Inherited], 
+     Rotate[
+      Style[
+       Graphics[{
+         Thickness[0.18], 
+         RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+         Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+        PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+       0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+   ImageSizeCache->{
+    13.600000000000001`, {4.251494140625001, 9.348505859375}}]],
+  ExpressionUUID->"91426115-9e9f-425a-b221-491addfed5d5"],
+ Cell[BoxData[
+  TemplateBox[{1},
+   "Spacer1"]],ExpressionUUID->"38b06561-84e5-4ba0-8255-73a7ec7dda78"],
+ "Examples",
+ "\[NonBreakingSpace]\[NonBreakingSpace]",
+ Cell["(1)", "ExampleCount",ExpressionUUID->
+  "d55a993c-e254-40a3-a1dd-2325eba37781"]
+}], "PrimaryExamplesSection",
+ WholeCellGroupOpener->True,
+ CacheGraphics->False,
+ CellTags->"PrimaryExamplesSection",
+ CellID->730318019,ExpressionUUID->"23657b24-ccd6-469d-835c-165325bce1b4"],
+
+Cell[BoxData[
+ RowBox[{"Needs", "[", "\"\<DavidLizarazo`qlanth`\>\"", "]"}]], "Input", \
+"ExampleInitialization",
+ CellLabel->"In[1]:=",
+ CellID->14015196,ExpressionUUID->"155021dc-df1f-453f-abe9-9e5d3a6e9397"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  DynamicBox[ToBoxes[
+    If[
+     MatchQ[
+      CurrentValue[
+       EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"},
+        Closed], 
+      Alternatives[Open, True]], 
+     Style[
+      Graphics[{
+        Thickness[0.18], 
+        RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+        Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+       PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+      0.68 Inherited], 
+     Rotate[
+      Style[
+       Graphics[{
+         Thickness[0.18], 
+         RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+         Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+        PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+       0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+   ImageSizeCache->{
+    13.600000000000001`, {4.551318359375001, 9.048681640625}}]],
+  ExpressionUUID->"e751a856-a73f-4464-bef8-2d4bddc51af5"],
+ Cell[BoxData[
+  TemplateBox[{1},
+   "Spacer1"]],ExpressionUUID->"bffc13bb-914a-41a2-bb5d-02b620f13901"],
+ "Basic Examples",
+ "\[NonBreakingSpace]\[NonBreakingSpace]",
+ Cell["(1)", "ExampleCount",ExpressionUUID->
+  "b5e5d252-2bca-45f2-9936-49900adfc0a8"]
+}], "ExampleSection", "ExampleSection",
+ WholeCellGroupOpener->True,
+ CacheGraphics->False,
+ CellID->1585902728,ExpressionUUID->"76263565-2c0a-4377-af65-9edbfad85ab4"],
+
+Cell["\<\
+The symbols for the model parameters . Hover over name to see description .\
+\>", "ExampleText",
+ CellID->1401697119,ExpressionUUID->"f6c3266f-22eb-4a25-83cc-359c26816f1b"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"paramLines", "=", 
+   RowBox[{"Select", "[", 
+    RowBox[{
+     RowBox[{"StringSplit", "[", 
+      RowBox[{"paramAtlas", ",", "\"\<\\n\>\""}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"#", "!=", "\"\<\>\""}], "&"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"paramAssoc", "=", 
+   RowBox[{"<|", "|>"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Do", "[", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"paramString", ",", "paramUsage"}], "}"}], "=", 
+       RowBox[{"StringSplit", "[", 
+        RowBox[{"paramLine", ",", "\"\<:\>\""}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"paramUsage", "=", 
+       RowBox[{"StringTrim", "[", "paramUsage", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"paramAssoc", "[", "paramString", "]"}], "=", 
+       RowBox[{"Tooltip", "[", 
+        RowBox[{"paramString", ",", "paramUsage"}], "]"}]}]}], 
+     "\[IndentingNewLine]", ")"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"paramLine", ",", "paramLines"}], "}"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Grid", "[", 
+  RowBox[{
+   RowBox[{"Partition", "[", 
+    RowBox[{
+     RowBox[{"Values", "[", "paramAssoc", "]"}], ",", 
+     RowBox[{"UpTo", "[", "10", "]"}]}], "]"}], ",", 
+   RowBox[{"Frame", "->", "All"}]}], "]"}]}], "Input",
+ CellProlog:>Needs["DavidLizarazo`qlanth`"],
+ CellLabel->"In[1]:=",
+ CellID->427871443,ExpressionUUID->"e22798bf-db87-4353-a178-c94b653e74b5"],
+
+Cell[BoxData[
+ TagBox[GridBox[{
+    {
+     TagBox[
+      TooltipBox["\<\"E0\"\>",
+       "\"linear combination of F_k, see eqn. (2-80) in Wybourne 1965\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, 
+       "linear combination of F_k, see eqn. (2-80) in Wybourne 1965", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"E1\"\>",
+       "\"linear combination of F_k, see eqn. (2-80) in Wybourne 1965\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, 
+       "linear combination of F_k, see eqn. (2-80) in Wybourne 1965", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"E2\"\>",
+       "\"linear combination of F_k, see eqn. (2-80) in Wybourne 1965\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, 
+       "linear combination of F_k, see eqn. (2-80) in Wybourne 1965", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"E3\"\>",
+       "\"linear combination of F_k, see eqn. (2-80) in Wybourne 1965\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, 
+       "linear combination of F_k, see eqn. (2-80) in Wybourne 1965", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"\[Zeta]\"\>",
+       "\"spin-orbit strength parameter.\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "spin-orbit strength parameter.", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"F0\"\>",
+       "\"Direct Slater integral F^0, produces an overall shift of all energy \
+levels.\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, 
+       "Direct Slater integral F^0, produces an overall shift of all energy \
+levels.", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"F2\"\>",
+       "\"Direct Slater integral F^2\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "Direct Slater integral F^2", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"F4\"\>",
+       "\"Direct Slater integral F^4, possibly constrained by ratio to F^2\"",
+       
+       TooltipStyle->"TextStyling"],
+      Annotation[#, 
+       "Direct Slater integral F^4, possibly constrained by ratio to F^2", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"F6\"\>",
+       "\"Direct Slater integral F^6, possibly constrained by ratio to F^2\"",
+       
+       TooltipStyle->"TextStyling"],
+      Annotation[#, 
+       "Direct Slater integral F^6, possibly constrained by ratio to F^2", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"M0\"\>",
+       "\"0th Marvin integral\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "0th Marvin integral", "Tooltip"]& ]},
+    {
+     TagBox[
+      TooltipBox["\<\"M2\"\>",
+       "\"2nd Marvin integral\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "2nd Marvin integral", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"M4\"\>",
+       "\"4th Marvin integral\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "4th Marvin integral", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"\[Sigma]SS\"\>",
+       "\"spin-spin override, if 0 spin-spin is omitted, if 1 then spin-spin \
+is included\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, 
+       "spin-spin override, if 0 spin-spin is omitted, if 1 then spin-spin is \
+included", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"T2\"\>",
+       "\"three-body effective operator parameter T^2  (non-orthogonal)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, 
+       "three-body effective operator parameter T^2  (non-orthogonal)", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"T2p\"\>",
+       "\"three-body effective operator parameter T^2' (orthogonalized T2)\"",
+       
+       TooltipStyle->"TextStyling"],
+      Annotation[#, 
+       "three-body effective operator parameter T^2' (orthogonalized T2)", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"T3\"\>",
+       "\"three-body effective operator parameter T^3\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "three-body effective operator parameter T^3", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"T4\"\>",
+       "\"three-body effective operator parameter T^4\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "three-body effective operator parameter T^4", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"T6\"\>",
+       "\"three-body effective operator parameter T^6\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "three-body effective operator parameter T^6", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"T7\"\>",
+       "\"three-body effective operator parameter T^7\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "three-body effective operator parameter T^7", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"T8\"\>",
+       "\"three-body effective operator parameter T^8\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "three-body effective operator parameter T^8", 
+       "Tooltip"]& ]},
+    {
+     TagBox[
+      TooltipBox["\<\"T11p\"\>",
+       "\"three-body effective operator parameter T^11' (orthogonalized \
+T11)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, 
+       "three-body effective operator parameter T^11' (orthogonalized T11)", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"T12\"\>",
+       "\"three-body effective operator parameter T^12\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "three-body effective operator parameter T^12", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"T14\"\>",
+       "\"three-body effective operator parameter T^14\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "three-body effective operator parameter T^14", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"T15\"\>",
+       "\"three-body effective operator parameter T^15\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "three-body effective operator parameter T^15", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"T16\"\>",
+       "\"three-body effective operator parameter T^16\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "three-body effective operator parameter T^16", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"T17\"\>",
+       "\"three-body effective operator parameter T^17\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "three-body effective operator parameter T^17", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"T18\"\>",
+       "\"three-body effective operator parameter T^18\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "three-body effective operator parameter T^18", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"T19\"\>",
+       "\"three-body effective operator parameter T^19\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "three-body effective operator parameter T^19", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"P0\"\>",
+       "\"pseudo-magnetic parameter P^0\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "pseudo-magnetic parameter P^0", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"P2\"\>",
+       "\"pseudo-magnetic parameter P^2\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "pseudo-magnetic parameter P^2", "Tooltip"]& ]},
+    {
+     TagBox[
+      TooltipBox["\<\"P4\"\>",
+       "\"pseudo-magnetic parameter P^4\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "pseudo-magnetic parameter P^4", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"P6\"\>",
+       "\"pseudo-magnetic parameter P^6\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "pseudo-magnetic parameter P^6", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"gs\"\>",
+       "\"electronic gyromagnetic ratio\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "electronic gyromagnetic ratio", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"\[Alpha]\"\>",
+       "\"Trees' parameter \[Alpha] describing configuration interaction via \
+the Casimir operator of SO(3)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, 
+       "Trees' parameter \[Alpha] describing configuration interaction via \
+the Casimir operator of SO(3)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"\[Beta]\"\>",
+       "\"Trees' parameter \[Beta] describing configuration interaction via \
+the Casimir operator of G(2)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, 
+       "Trees' parameter \[Beta] describing configuration interaction via the \
+Casimir operator of G(2)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"\[Gamma]\"\>",
+       "\"Trees' parameter \[Gamma] describing configuration interaction via \
+the Casimir operator of SO(7)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, 
+       "Trees' parameter \[Gamma] describing configuration interaction via \
+the Casimir operator of SO(7)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"B02\"\>",
+       "\"crystal field parameter B_0^2 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter B_0^2 (real)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"B04\"\>",
+       "\"crystal field parameter B_0^4 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter B_0^4 (real)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"B06\"\>",
+       "\"crystal field parameter B_0^6 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter B_0^6 (real)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"B12\"\>",
+       "\"crystal field parameter B_1^2 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter B_1^2 (real)", "Tooltip"]& ]},
+    {
+     TagBox[
+      TooltipBox["\<\"B14\"\>",
+       "\"crystal field parameter B_1^4 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter B_1^4 (real)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"B16\"\>",
+       "\"crystal field parameter B_1^6 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter B_1^6 (real)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"B22\"\>",
+       "\"crystal field parameter B_2^2 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter B_2^2 (real)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"B24\"\>",
+       "\"crystal field parameter B_2^4 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter B_2^4 (real)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"B26\"\>",
+       "\"crystal field parameter B_2^6 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter B_2^6 (real)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"B34\"\>",
+       "\"crystal field parameter B_3^4 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter B_3^4 (real)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"B36\"\>",
+       "\"crystal field parameter B_3^6 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter B_3^6 (real)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"B44\"\>",
+       "\"crystal field parameter B_4^4 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter B_4^4 (real)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"B46\"\>",
+       "\"crystal field parameter B_4^6 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter B_4^6 (real)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"B56\"\>",
+       "\"crystal field parameter B_5^6 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter B_5^6 (real)", "Tooltip"]& ]},
+    {
+     TagBox[
+      TooltipBox["\<\"B66\"\>",
+       "\"crystal field parameter B_6^6 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter B_6^6 (real)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"S12\"\>",
+       "\"crystal field parameter S_1^2 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter S_1^2 (real)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"S14\"\>",
+       "\"crystal field parameter S_1^4 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter S_1^4 (real)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"S16\"\>",
+       "\"crystal field parameter S_1^6 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter S_1^6 (real)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"S22\"\>",
+       "\"crystal field parameter S_2^2 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter S_2^2 (real)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"S24\"\>",
+       "\"crystal field parameter S_2^4 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter S_2^4 (real)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"S26\"\>",
+       "\"crystal field parameter S_2^6 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter S_2^6 (real)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"S34\"\>",
+       "\"crystal field parameter S_3^4 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter S_3^4 (real)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"S36\"\>",
+       "\"crystal field parameter S_3^6 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter S_3^6 (real)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"S44\"\>",
+       "\"crystal field parameter S_4^4 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter S_4^4 (real)", "Tooltip"]& ]},
+    {
+     TagBox[
+      TooltipBox["\<\"S46\"\>",
+       "\"crystal field parameter S_4^6 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter S_4^6 (real)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"S56\"\>",
+       "\"crystal field parameter S_5^6 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter S_5^6 (real)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"S66\"\>",
+       "\"crystal field parameter S_6^6 (real)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "crystal field parameter S_6^6 (real)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"\[Epsilon]\"\>",
+       "\"ground level baseline shift\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "ground level baseline shift", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"t2Switch\"\>",
+       "\"controls the usage of the t2 operator beyond f7 (1 for f7 or below, \
+0 for f8 or above)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, 
+       "controls the usage of the t2 operator beyond f7 (1 for f7 or below, 0 \
+for f8 or above)", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"wChErrA\"\>",
+       "\"If 1 then the type-A errors in Chen are used, if 0 then not.\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, 
+       "If 1 then the type-A errors in Chen are used, if 0 then not.", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"wChErrB\"\>",
+       "\"If 1 then the type-B errors in Chen are used, if 0 then not.\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, 
+       "If 1 then the type-B errors in Chen are used, if 0 then not.", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"Bx\"\>",
+       "\"x component of external magnetic field (in T)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "x component of external magnetic field (in T)", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"By\"\>",
+       "\"y component of external magnetic field (in T)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "y component of external magnetic field (in T)", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"Bz\"\>",
+       "\"z component of external magnetic field (in T)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "z component of external magnetic field (in T)", 
+       "Tooltip"]& ]},
+    {
+     TagBox[
+      TooltipBox["\<\"\[CapitalOmega]2\"\>",
+       "\"Judd-Ofelt intensity parameter k=2 (in cm^2)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "Judd-Ofelt intensity parameter k=2 (in cm^2)", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"\[CapitalOmega]4\"\>",
+       "\"Judd-Ofelt intensity parameter k=4 (in cm^2)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "Judd-Ofelt intensity parameter k=4 (in cm^2)", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"\[CapitalOmega]6\"\>",
+       "\"Judd-Ofelt intensity parameter k=6 (in cm^2)\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "Judd-Ofelt intensity parameter k=6 (in cm^2)", 
+       "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"nE\"\>",
+       "\"number of electrons in a configuration\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "number of electrons in a configuration", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"E0p\"\>",
+       "\"orthogonalized E0\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "orthogonalized E0", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"E1p\"\>",
+       "\"orthogonalized E1\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "orthogonalized E1", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"E2p\"\>",
+       "\"orthogonalized E2\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "orthogonalized E2", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"E3p\"\>",
+       "\"orthogonalized E3\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "orthogonalized E3", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"\[Alpha]p\"\>",
+       "\"orthogonalized \[Alpha]\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "orthogonalized \[Alpha]", "Tooltip"]& ], 
+     TagBox[
+      TooltipBox["\<\"\[Beta]p\"\>",
+       "\"orthogonalized \[Beta]\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "orthogonalized \[Beta]", "Tooltip"]& ]},
+    {
+     TagBox[
+      TooltipBox["\<\"\[Gamma]p\"\>",
+       "\"orthogonalized \[Gamma]\"",
+       TooltipStyle->"TextStyling"],
+      Annotation[#, "orthogonalized \[Gamma]", "Tooltip"]& ], "", "", "", "", 
+     "", "", "", "", ""}
+   },
+   AutoDelete->False,
+   GridBoxFrame->{"Columns" -> {{True}}, "Rows" -> {{True}}},
+   GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+  "Grid"]], "Output",
+ CellLabel->"Out[1]=",
+ CellID->1460092345,ExpressionUUID->"8449f8b5-2dba-48db-a0e6-d69ca0b94a4d"]
+}, Open  ]]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"}, 
+  Closed]]]]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "PrimaryExamplesSection"}, 
+  Closed]]]],
+
+Cell[BoxData[GridBox[{
+   {
+    DynamicBox[FEPrivate`ImportImage[
+      FrontEnd`FileName[{"Documentation", "FooterIcons"}, 
+       "RelatedFunction.png"]],
+     ImageSizeCache->{50., {26.47265625, 33.52734375}}], GridBox[{
+      {
+       StyleBox[
+        RowBox[{"See", " ", "Also"}], "SeeAlsoSection"]},
+      {Cell[TextData[Cell[BoxData[
+        TemplateBox[{
+          Cell[
+           TextData["ParamPad"]], "paclet:DavidLizarazo/qlanth/ref/ParamPad", 
+          "DavidLizarazo Package Symbol"},
+         "PackageLink",
+         BaseStyle->"InlineFormula"]], "InlineFormula",
+        FontFamily->"Source Sans Pro",
+        CellTags->"97f38c24-f080-45d2-9539-9c1425c4e265",ExpressionUUID->
+        "39fdb2db-e09c-4462-a2cb-48464918d6be"]], "SeeAlso",ExpressionUUID->
+        "d59beff1-dfb0-4922-9ffc-19ec4f6248ad"]}
+     }]}
+  }]], "SeeAlsoSection",ExpressionUUID->"5ba2a8e0-9d1f-4e04-bea6-\
+295ae5ed6d86"],
+
+Cell[" ", "FooterCell",ExpressionUUID->"b52bb7a8-290d-4e4e-b6f3-3fdf975be40e"]
+},
+Saveable->False,
+ScreenStyleEnvironment->"Working",
+WindowSize->{900, 830},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+WindowTitle->"paramSymbols",
+TaggingRules->{
+ "ModificationHighlight" -> False, "ColorType" -> "", "LinkTrails" -> "", 
+  "ExampleCounter" -> 1, 
+  "Openers" -> {
+   "PrimaryExamplesSection" -> Open, "ExampleSection" -> {"0" -> Open}, 
+    "AllOptsTable" -> Closed, "NotesSection" -> Closed}, "NewStyles" -> True, 
+  "CitationPopupData" -> $Failed, "ShowCitation" -> False, "HasOptions" -> 
+  True, "RootCaptions" -> "", "HeaderCoreAreaLink" -> {}, 
+  "Metadata" -> {
+   "built" -> "{2025, 1, 24, 17, 35, 42.702576}", 
+    "history" -> {"XX", "", "", ""}, "context" -> "DavidLizarazo`qlanth`", 
+    "keywords" -> {}, "specialkeywords" -> {}, 
+    "tutorialcollectionlinks" -> {}, "index" -> True, "label" -> 
+    "David Lizarazo/qlanth Symbol", "language" -> "en", "paclet" -> 
+    "DavidLizarazo/qlanth", "status" -> "None", "summary" -> 
+    "paramSymbols is a list containing all they symbols that might be present \
+in a semi-empirical Hamiltonian.", "synonyms" -> {}, "tabletags" -> {}, 
+    "title" -> "paramSymbols", "titlemodifier" -> "", "metadescription" -> "",
+     "windowtitle" -> "paramSymbols", "type" -> "Symbol", "uri" -> 
+    "DavidLizarazo/qlanth/ref/paramSymbols", "WorkflowDockedCell" -> ""}, 
+  "SearchTextTranslated" -> ""},
+FrontEndVersion->"14.1 for Mac OS X ARM (64-bit) (July 16, 2024)",
+StyleDefinitions->FrontEnd`FileName[{"Wolfram"}, "Reference.nb", 
+  CharacterEncoding -> "UTF-8"],
+ExpressionUUID->"11a9b7ad-1e05-4278-8458-4587830b0057"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "PrimaryExamplesSection"->{
+  Cell[9159, 243, 1437, 38, 34, "PrimaryExamplesSection",ExpressionUUID->"23657b24-ccd6-469d-835c-165325bce1b4",
+   CellTags->"PrimaryExamplesSection",
+   CellID->730318019]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"PrimaryExamplesSection", 35810, 939}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[580, 21, 4731, 111, 50, "AnchorBarGrid",ExpressionUUID->"6145b196-290d-44e6-8e6a-69b198385c14",
+ CellID->1],
+Cell[5314, 134, 103, 0, 22, "ContextNameCell",ExpressionUUID->"5223895a-3b0a-42d9-8a66-852013ff1ee0"],
+Cell[CellGroupData[{
+Cell[5442, 138, 555, 14, 57, "ObjectNameGrid",ExpressionUUID->"df42f12e-5f1e-4307-b14b-081b51ea7705"],
+Cell[6000, 154, 684, 16, 106, "Usage",ExpressionUUID->"4064f6c0-301c-4dd9-9fb1-9f2c4fe77b4d",
+ CellID->1578376670]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[6721, 175, 1916, 48, 34, "NotesSection",ExpressionUUID->"d48d144d-6329-4d47-9619-d55010847bd0",
+ CellGroupingRules->{"SectionGrouping", 50},
+ CellID->357297233],
+Cell[8640, 225, 392, 12, 70, "Notes",ExpressionUUID->"d695fa5d-86e1-4ebf-bd70-172fa3650701",
+ CellID->2058684946]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, Closed]]]],
+Cell[CellGroupData[{
+Cell[9159, 243, 1437, 38, 34, "PrimaryExamplesSection",ExpressionUUID->"23657b24-ccd6-469d-835c-165325bce1b4",
+ CellTags->"PrimaryExamplesSection",
+ CellID->730318019],
+Cell[10599, 283, 210, 4, 29, "Input",ExpressionUUID->"155021dc-df1f-453f-abe9-9e5d3a6e9397",
+ CellID->14015196],
+Cell[CellGroupData[{
+Cell[10834, 291, 1416, 37, 29, "ExampleSection",ExpressionUUID->"76263565-2c0a-4377-af65-9edbfad85ab4",
+ CellID->1585902728],
+Cell[12253, 330, 182, 3, 37, "ExampleText",ExpressionUUID->"f6c3266f-22eb-4a25-83cc-359c26816f1b",
+ CellID->1401697119],
+Cell[CellGroupData[{
+Cell[12460, 337, 1541, 44, 134, "Input",ExpressionUUID->"e22798bf-db87-4353-a178-c94b653e74b5",
+ CellID->427871443],
+Cell[14004, 383, 18846, 485, 173, "Output",ExpressionUUID->"8449f8b5-2dba-48db-a0e6-d69ca0b94a4d",
+ CellID->1460092345]
+}, Open  ]]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"}, Closed]]]]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "PrimaryExamplesSection"}, Closed]]]],
+Cell[33092, 877, 911, 22, 112, "SeeAlsoSection",ExpressionUUID->"5ba2a8e0-9d1f-4e04-bea6-295ae5ed6d86"],
+Cell[34006, 901, 78, 0, 24, "FooterCell",ExpressionUUID->"b52bb7a8-290d-4e4e-b6f3-3fdf975be40e"]
+}
+]
+*)
+
+(* End of internal cache information *)
+

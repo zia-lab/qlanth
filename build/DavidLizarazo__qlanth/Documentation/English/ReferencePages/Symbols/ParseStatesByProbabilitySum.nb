@@ -1,0 +1,1027 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     35809,       1017]
+NotebookOptionsPosition[     31695,        935]
+NotebookOutlinePosition[     33937,        986]
+CellTagsIndexPosition[     33852,        981]
+WindowTitle->ParseStatesByProbabilitySum
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[GridBox[{
+   {GridBox[{
+      {
+       ItemBox[Cell[BoxData[
+         RowBox[{
+          TemplateBox[{12},
+           "Spacer1"], Cell["DAVID LIZARAZO/QLANTH SYMBOL", "PacletNameCell",
+           TextAlignment->Center,ExpressionUUID->
+           "6a13c78e-6074-4a10-8b03-290aba9c2b4e"], 
+          TemplateBox[{8},
+           "Spacer1"]}]],
+         TextAlignment->Center,ExpressionUUID->
+         "36866e88-34b8-450f-a00e-e5dab755dc85"],
+        Background->RGBColor[0.490196, 0.576471, 0.690196],
+        ItemSize->Full], ""}
+     },
+     GridBoxAlignment->{"Rows" -> {{Center}}},
+     GridBoxItemSize->{"Columns" -> {Full, 
+         Scaled[0.02]}, "Rows" -> {{2.5}}}], Cell[TextData[{
+     Cell[BoxData[
+      TagBox[
+       ActionMenuBox[
+        FrameBox[Cell[TextData[{
+          "See Also",
+          " ",
+          Cell[BoxData[
+           GraphicsBox[
+            {GrayLevel[0.66667], Thickness[0.13], 
+             LineBox[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]},
+            AspectRatio->1,
+            ImageSize->20,
+            PlotRange->{{-3, 4}, {-1, 1}}]],ExpressionUUID->
+           "a092c9c2-37f5-486e-9492-6e2f2578ac01"]
+         }],ExpressionUUID->"11f2e7a1-eb58-4605-99b9-f28ef2918849"],
+         StripOnInput->False],{
+        StyleBox[
+          "\"ParseStatesByNumBasisVecs\"", "SeeAlsoRelated", StripOnInput -> 
+           False] :> Documentation`HelpLookup[
+          "paclet:DavidLizarazo/qlanth/ref/ParseStatesByNumBasisVecs"], 
+         StyleBox["\"ParseStates\"", "SeeAlsoRelated", StripOnInput -> False] :> 
+         Documentation`HelpLookup[
+          "paclet:DavidLizarazo/qlanth/ref/ParseStates"]},
+        Appearance->None,
+        MenuAppearance->Automatic,
+        MenuStyle->"SeeAlso"],
+       MouseAppearanceTag["LinkHand"]]],
+      LineSpacing->{1.4, 0},ExpressionUUID->
+      "a6c8f960-1f44-4203-a19a-a0a9167e6863"],
+     "\[ThickSpace]\[ThickSpace]\[ThickSpace]\[ThickSpace]\[ThickSpace]\
+\[ThickSpace]",
+     Cell[BoxData[
+      TagBox[
+       ActionMenuBox[
+        FrameBox[Cell[TextData[{
+          "URL",
+          " ",
+          Cell[BoxData[
+           GraphicsBox[
+            {GrayLevel[0.66667], Thickness[0.13], 
+             LineBox[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]},
+            AspectRatio->1,
+            ImageSize->20,
+            PlotRange->{{-3, 4}, {-1, 1}}]],ExpressionUUID->
+           "23c46b31-65fc-4a9d-a6df-7e2eeb120cfe"]
+         }],ExpressionUUID->"c85326c3-fa6f-4cf9-b0be-f2ebadc76e58"],
+         StripOnInput->False],{
+        "\"DavidLizarazo/qlanth/ref/ParseStatesByProbabilitySum\"" :> None, 
+         "\"Copy Wolfram Documentation Center URL\"" :> 
+         Module[{DocumentationSearch`Private`nb$}, 
+           DocumentationSearch`Private`nb$ = 
+            NotebookPut[
+             Notebook[{
+               Cell["DavidLizarazo/qlanth/ref/ParseStatesByProbabilitySum"]}, 
+               Visible -> DocumentationBuild`Make`Private`visible$78164]]; 
+           SelectionMove[DocumentationSearch`Private`nb$, All, Notebook]; 
+           FrontEndTokenExecute[DocumentationSearch`Private`nb$, "Copy"]; 
+           NotebookClose[DocumentationSearch`Private`nb$]; Null], Delimiter, 
+         "\"Copy web URL\"" :> 
+         Module[{DocumentationSearch`Private`nb$}, 
+           DocumentationSearch`Private`nb$ = 
+            NotebookPut[
+             Notebook[{
+               Cell[BoxData[
+                 MakeBoxes[
+                  Hyperlink[
+                   "http://reference.wolfram.com/language/DavidLizarazo/\
+qlanth/ref/ParseStatesByProbabilitySum.html"], StandardForm]], "Input", 
+                 TextClipboardType -> "PlainText"]}, Visible -> 
+               DocumentationBuild`Make`Private`visible$78164]]; 
+           SelectionMove[DocumentationSearch`Private`nb$, All, Notebook]; 
+           FrontEndTokenExecute[DocumentationSearch`Private`nb$, "Copy"]; 
+           NotebookClose[DocumentationSearch`Private`nb$]; Null], 
+         "\"Go to web URL\"" :> 
+         FrontEndExecute[{
+           NotebookLocate[{
+             URL[If[TrueQ[False], 
+                 "http://reference.wolfram.com/system-modeler/", 
+                 "http://reference.wolfram.com/language/"] <> 
+               "DavidLizarazo/qlanth/ref/ParseStatesByProbabilitySum" <> 
+               ".html"], None}]}]},
+        Appearance->None,
+        MenuAppearance->Automatic,
+        MenuStyle->"URLMenu"],
+       MouseAppearanceTag["LinkHand"]]],
+      LineSpacing->{1.4, 0},ExpressionUUID->
+      "94bd190f-4106-4592-ac76-9af1692a5142"]
+    }], "AnchorBar",
+     CacheGraphics->False,ExpressionUUID->
+     "2623870e-5a82-4719-957d-07697374cd5b"]}
+  }]], "AnchorBarGrid",
+ GridBoxOptions->{GridBoxItemSize->{"Columns" -> {
+     Scaled[0.65], {
+      Scaled[0.34]}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}}, 
+   "RowsIndexed" -> {}}},
+ CellID->1,ExpressionUUID->"d0b20db3-4988-463e-9e09-37ce09a0f295"],
+
+Cell["DavidLizarazo`qlanth`", "ContextNameCell",ExpressionUUID->"49214643-ae17-4ec8-a1bf-af2c6d1e657c"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[GridBox[{
+   {Cell[TextData[{
+     Cell[
+     "ParseStatesByProbabilitySum", "ObjectName",ExpressionUUID->
+      "8904d7da-3c5a-4b28-88a4-9dc33938db5e"],
+     Cell[BoxData[
+      TemplateBox[{8},
+       "Spacer1"]],ExpressionUUID->"06605be1-4a3b-40e1-84c2-4fbff5107b8b"],
+     Cell[BoxData[
+     ""], "ObjectNameTranslation",ExpressionUUID->
+      "c1d40d19-4b2c-4fe2-b11e-1047ee54f03d"]
+    }],ExpressionUUID->"0bd4d1cc-0a8b-4cd9-ae7d-47ac0add8d54"], 
+    "\[SpanFromLeft]"}
+  }]], "ObjectNameGrid",ExpressionUUID->"b855715f-dd6f-422b-9bb8-\
+f789b44fab09"],
+
+Cell[BoxData[GridBox[{
+   {"", Cell[TextData[{
+     Cell[BoxData[
+      RowBox[{
+       TemplateBox[{
+         Cell[
+          TextData["ParseStatesByProbabilitySum"]], 
+         "paclet:DavidLizarazo/qlanth/ref/ParseStatesByProbabilitySum", 
+         "DavidLizarazo Package Symbol"},
+        "PackageLink",
+        BaseStyle->"InlineFormula"], "[", 
+       StyleBox[
+        RowBox[{"eigensys", ",", "basis", ",", "probSum"}],
+        FontSlant->"Italic"], "]"}]], "InlineFormula",
+      FontFamily->"Source Sans Pro",ExpressionUUID->
+      "d766708e-ea37-4d0b-ac23-580c50850780"],
+     " \[LineSeparator]takes a list of eigenstates in terms of their \
+coefficients in the given basis and returns a list of the same states in \
+terms of their energy and the coefficients of the basis vectors that sum to \
+at least ",
+     StyleBox["probSum",
+      FontSlant->"Italic"],
+     "."
+    }],ExpressionUUID->"3db15808-e2e8-44f2-a11d-bd82b60f5e77"]}
+  }]], "Usage",
+ CellID->840882889,ExpressionUUID->"1314b898-9bbc-46fe-b3be-690a5175c0ea"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[Cell[BoxData[
+ ButtonBox[Cell[TextData[{
+   Cell[BoxData[
+    DynamicBox[ToBoxes[
+      If[
+       MatchQ[
+        CurrentValue[
+         EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, 
+         Closed], 
+        Alternatives[Open, True]], 
+       Style[
+        Graphics[{
+          Thickness[0.18], 
+          RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+          Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+         PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+        0.68 Inherited], 
+       Rotate[
+        Style[
+         Graphics[{
+           Thickness[0.18], 
+           RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+           Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+          PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+         0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+     ImageSizeCache->{
+      13.600000000000001`, {-0.1685058593749993, 13.768505859375}}]],
+    ExpressionUUID->"c0487b46-aff2-41d2-bb72-826ed1a61bfc"],
+   Cell[BoxData[
+    TemplateBox[{1},
+     "Spacer1"]],ExpressionUUID->"5366f824-4317-465a-9daa-3f4dc5e5ccaa"],
+   "Details and Options"
+  }], "NotesFrameText",ExpressionUUID->"9035264e-663c-4cab-b345-d1198eb1b045"],
+  Appearance->{Automatic, None, "Normal", Automatic},
+  BaseStyle->None,
+  ButtonFunction:>(FrontEndExecute[{
+     FrontEnd`SelectionMove[
+      FrontEnd`SelectedNotebook[], All, ButtonCell], 
+     FrontEndToken["OpenCloseGroup"], 
+     FrontEnd`SelectionMove[
+      FrontEnd`SelectedNotebook[], After, CellContents]}]& ),
+  Evaluator->None,
+  Method->
+   "Preemptive"]],ExpressionUUID->"5099a26d-e4a1-432e-8c2f-2fcd1109d580"]], \
+"NotesSection",
+ WholeCellGroupOpener->True,
+ CellGroupingRules->{"SectionGrouping", 50},
+ CacheGraphics->False,
+ CellID->1767820,ExpressionUUID->"ef5c052c-ee4c-430b-99db-013e5814c53d"],
+
+Cell["\<\
+This function is useful to obtain truncated version of given eigenstates.\
+\>", "Notes",
+ CellID->128834516,ExpressionUUID->"13f03b18-2538-44d1-8041-b89e9a23ee5d"]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, Closed]]]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  DynamicBox[ToBoxes[
+    If[
+     MatchQ[
+      CurrentValue[
+       EvaluationNotebook[], {
+       TaggingRules, "Openers", "PrimaryExamplesSection"}, Open], 
+      Alternatives[True, Open]], 
+     Style[
+      Graphics[{
+        Thickness[0.18], 
+        RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+        Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+       PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+      0.68 Inherited], 
+     Rotate[
+      Style[
+       Graphics[{
+         Thickness[0.18], 
+         RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+         Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+        PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+       0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+   ImageSizeCache->{
+    13.600000000000001`, {4.251494140625001, 9.348505859375}}]],
+  ExpressionUUID->"330203a6-dad7-44e9-b619-ecafe36172f5"],
+ Cell[BoxData[
+  TemplateBox[{1},
+   "Spacer1"]],ExpressionUUID->"4ecd60d7-0727-45c7-b34a-abcb124deb2c"],
+ "Examples",
+ "\[NonBreakingSpace]\[NonBreakingSpace]",
+ Cell["(1)", "ExampleCount",ExpressionUUID->
+  "d63a86e7-f131-429a-ad2f-dbb722708089"]
+}], "PrimaryExamplesSection",
+ WholeCellGroupOpener->True,
+ CacheGraphics->False,
+ CellTags->"PrimaryExamplesSection",
+ CellID->1794463329,ExpressionUUID->"362b6f76-9f6b-49b9-9e3a-3eb8ed873256"],
+
+Cell[BoxData[
+ RowBox[{"Needs", "[", "\"\<DavidLizarazo`qlanth`\>\"", "]"}]], "Input", \
+"ExampleInitialization",
+ CellLabel->"In[1]:=",
+ CellID->1840769062,ExpressionUUID->"73981181-3648-45e4-b31a-434bf2519032"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  DynamicBox[ToBoxes[
+    If[
+     MatchQ[
+      CurrentValue[
+       EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"},
+        Closed], 
+      Alternatives[Open, True]], 
+     Style[
+      Graphics[{
+        Thickness[0.18], 
+        RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+        Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+       PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+      0.68 Inherited], 
+     Rotate[
+      Style[
+       Graphics[{
+         Thickness[0.18], 
+         RGBColor[0.8509803921568627, 0.396078431372549, 0], 
+         Line[{{-1.8, 0.5}, {0, 0}, {1.8, 0.5}}]}, AspectRatio -> 1, 
+        PlotRange -> {{-3, 4}, {-1, 1}}, ImageSize -> 20], Magnification -> 
+       0.68 Inherited], Rational[1, 2] Pi, {-1.65, -1}]]],
+   ImageSizeCache->{
+    13.600000000000001`, {4.551318359375001, 9.048681640625}}]],
+  ExpressionUUID->"b7d40800-e65f-4603-b3de-248fc5a4880c"],
+ Cell[BoxData[
+  TemplateBox[{1},
+   "Spacer1"]],ExpressionUUID->"2c74b28f-72cd-415b-b0b0-fe93aff1d0c7"],
+ "Basic Examples",
+ "\[NonBreakingSpace]\[NonBreakingSpace]",
+ Cell["(1)", "ExampleCount",ExpressionUUID->
+  "1f00c8d1-2639-4639-b5d8-2f0e54bfff65"]
+}], "ExampleSection", "ExampleSection",
+ WholeCellGroupOpener->True,
+ CacheGraphics->False,
+ CellID->284832035,ExpressionUUID->"3d1133a5-7096-475a-8e45-6a851fb78532"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"vec", "=", 
+   RowBox[{"RandomReal", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"0", ",", "1"}], "}"}], ",", "91"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"vec", "=", 
+   RowBox[{"vec", "/", 
+    RowBox[{"Norm", "[", "vec", "]"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"ParseStatesByProbabilitySum", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"{", 
+     RowBox[{"0", ",", "vec"}], "}"}], "}"}], ",", 
+   RowBox[{"BasisLSJMJ", "[", "2", "]"}], ",", "0.9"}], "]"}]}], "Input",
+ CellProlog:>Needs["DavidLizarazo`qlanth`"],
+ CellLabel->"In[1]:=",
+ CellID->206882850,ExpressionUUID->"7325a9bd-df1a-4ce4-9e56-7058624c9daf"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"{", 
+   RowBox[{"0", ",", 
+    RowBox[{
+     RowBox[{"0.16`", " ", 
+      RowBox[{"Ket", "[", 
+       TagBox[
+        RowBox[{
+         StyleBox[
+          AdjustmentBox["1",
+           BoxBaselineShift->-1,
+           BoxMargins->0],
+          StripOnInput->False,
+          FontSize->Smaller], 
+         AdjustmentBox["D",
+          BoxMargins->-0.2], 
+         StyleBox[
+          AdjustmentBox[
+           TemplateBox[{
+             InterpretationBox[
+              StyleBox[
+              "2", ShowStringCharacters -> True, NumberMarks -> True], 
+              InputForm[2], Editable -> True, AutoDelete -> True], "\",\"", 
+             "2"},
+            "RowDefault"],
+           BoxBaselineShift->1,
+           BoxMargins->{{0.7, 0}, {0.4, 0.4}}],
+          StripOnInput->False,
+          FontSize->Small]}],
+        DisplayForm], "]"}]}], "+", 
+     RowBox[{"0.15`", " ", 
+      RowBox[{"Ket", "[", 
+       TagBox[
+        RowBox[{
+         StyleBox[
+          AdjustmentBox["1",
+           BoxBaselineShift->-1,
+           BoxMargins->0],
+          StripOnInput->False,
+          FontSize->Smaller], 
+         AdjustmentBox["G",
+          BoxMargins->-0.2], 
+         StyleBox[
+          AdjustmentBox[
+           TemplateBox[{
+             InterpretationBox[
+              StyleBox[
+              "4", ShowStringCharacters -> True, NumberMarks -> True], 
+              InputForm[4], Editable -> True, AutoDelete -> True], "\",\"", 
+             RowBox[{"-", "4"}]},
+            "RowDefault"],
+           BoxBaselineShift->1,
+           BoxMargins->{{0.7, 0}, {0.4, 0.4}}],
+          StripOnInput->False,
+          FontSize->Small]}],
+        DisplayForm], "]"}]}], "+", 
+     RowBox[{"0.16`", " ", 
+      RowBox[{"Ket", "[", 
+       TagBox[
+        RowBox[{
+         StyleBox[
+          AdjustmentBox["1",
+           BoxBaselineShift->-1,
+           BoxMargins->0],
+          StripOnInput->False,
+          FontSize->Smaller], 
+         AdjustmentBox["G",
+          BoxMargins->-0.2], 
+         StyleBox[
+          AdjustmentBox[
+           TemplateBox[{
+             InterpretationBox[
+              StyleBox[
+              "4", ShowStringCharacters -> True, NumberMarks -> True], 
+              InputForm[4], Editable -> True, AutoDelete -> True], "\",\"", 
+             "0"},
+            "RowDefault"],
+           BoxBaselineShift->1,
+           BoxMargins->{{0.7, 0}, {0.4, 0.4}}],
+          StripOnInput->False,
+          FontSize->Small]}],
+        DisplayForm], "]"}]}], "+", 
+     RowBox[{"0.16`", " ", 
+      RowBox[{"Ket", "[", 
+       TagBox[
+        RowBox[{
+         StyleBox[
+          AdjustmentBox["1",
+           BoxBaselineShift->-1,
+           BoxMargins->0],
+          StripOnInput->False,
+          FontSize->Smaller], 
+         AdjustmentBox["I",
+          BoxMargins->-0.2], 
+         StyleBox[
+          AdjustmentBox[
+           TemplateBox[{
+             InterpretationBox[
+              StyleBox[
+              "6", ShowStringCharacters -> True, NumberMarks -> True], 
+              InputForm[6], Editable -> True, AutoDelete -> True], "\",\"", 
+             RowBox[{"-", "5"}]},
+            "RowDefault"],
+           BoxBaselineShift->1,
+           BoxMargins->{{0.7, 0}, {0.4, 0.4}}],
+          StripOnInput->False,
+          FontSize->Small]}],
+        DisplayForm], "]"}]}], "+", 
+     RowBox[{"0.13`", " ", 
+      RowBox[{"Ket", "[", 
+       TagBox[
+        RowBox[{
+         StyleBox[
+          AdjustmentBox["1",
+           BoxBaselineShift->-1,
+           BoxMargins->0],
+          StripOnInput->False,
+          FontSize->Smaller], 
+         AdjustmentBox["I",
+          BoxMargins->-0.2], 
+         StyleBox[
+          AdjustmentBox[
+           TemplateBox[{
+             InterpretationBox[
+              StyleBox[
+              "6", ShowStringCharacters -> True, NumberMarks -> True], 
+              InputForm[6], Editable -> True, AutoDelete -> True], "\",\"", 
+             "1"},
+            "RowDefault"],
+           BoxBaselineShift->1,
+           BoxMargins->{{0.7, 0}, {0.4, 0.4}}],
+          StripOnInput->False,
+          FontSize->Small]}],
+        DisplayForm], "]"}]}], "+", 
+     RowBox[{"0.16`", " ", 
+      RowBox[{"Ket", "[", 
+       TagBox[
+        RowBox[{
+         StyleBox[
+          AdjustmentBox["1",
+           BoxBaselineShift->-1,
+           BoxMargins->0],
+          StripOnInput->False,
+          FontSize->Smaller], 
+         AdjustmentBox["I",
+          BoxMargins->-0.2], 
+         StyleBox[
+          AdjustmentBox[
+           TemplateBox[{
+             InterpretationBox[
+              StyleBox[
+              "6", ShowStringCharacters -> True, NumberMarks -> True], 
+              InputForm[6], Editable -> True, AutoDelete -> True], "\",\"", 
+             "2"},
+            "RowDefault"],
+           BoxBaselineShift->1,
+           BoxMargins->{{0.7, 0}, {0.4, 0.4}}],
+          StripOnInput->False,
+          FontSize->Small]}],
+        DisplayForm], "]"}]}], "+", 
+     RowBox[{"0.16`", " ", 
+      RowBox[{"Ket", "[", 
+       TagBox[
+        RowBox[{
+         StyleBox[
+          AdjustmentBox["1",
+           BoxBaselineShift->-1,
+           BoxMargins->0],
+          StripOnInput->False,
+          FontSize->Smaller], 
+         AdjustmentBox["I",
+          BoxMargins->-0.2], 
+         StyleBox[
+          AdjustmentBox[
+           TemplateBox[{
+             InterpretationBox[
+              StyleBox[
+              "6", ShowStringCharacters -> True, NumberMarks -> True], 
+              InputForm[6], Editable -> True, AutoDelete -> True], "\",\"", 
+             "3"},
+            "RowDefault"],
+           BoxBaselineShift->1,
+           BoxMargins->{{0.7, 0}, {0.4, 0.4}}],
+          StripOnInput->False,
+          FontSize->Small]}],
+        DisplayForm], "]"}]}], "+", 
+     RowBox[{"0.14`", " ", 
+      RowBox[{"Ket", "[", 
+       TagBox[
+        RowBox[{
+         StyleBox[
+          AdjustmentBox["1",
+           BoxBaselineShift->-1,
+           BoxMargins->0],
+          StripOnInput->False,
+          FontSize->Smaller], 
+         AdjustmentBox["I",
+          BoxMargins->-0.2], 
+         StyleBox[
+          AdjustmentBox[
+           TemplateBox[{
+             InterpretationBox[
+              StyleBox[
+              "6", ShowStringCharacters -> True, NumberMarks -> True], 
+              InputForm[6], Editable -> True, AutoDelete -> True], "\",\"", 
+             "4"},
+            "RowDefault"],
+           BoxBaselineShift->1,
+           BoxMargins->{{0.7, 0}, {0.4, 0.4}}],
+          StripOnInput->False,
+          FontSize->Small]}],
+        DisplayForm], "]"}]}], "+", 
+     RowBox[{"0.17`", " ", 
+      RowBox[{"Ket", "[", 
+       TagBox[
+        RowBox[{
+         StyleBox[
+          AdjustmentBox["1",
+           BoxBaselineShift->-1,
+           BoxMargins->0],
+          StripOnInput->False,
+          FontSize->Smaller], 
+         AdjustmentBox["I",
+          BoxMargins->-0.2], 
+         StyleBox[
+          AdjustmentBox[
+           TemplateBox[{
+             InterpretationBox[
+              StyleBox[
+              "6", ShowStringCharacters -> True, NumberMarks -> True], 
+              InputForm[6], Editable -> True, AutoDelete -> True], "\",\"", 
+             "6"},
+            "RowDefault"],
+           BoxBaselineShift->1,
+           BoxMargins->{{0.7, 0}, {0.4, 0.4}}],
+          StripOnInput->False,
+          FontSize->Small]}],
+        DisplayForm], "]"}]}], "+", 
+     RowBox[{"0.16`", " ", 
+      RowBox[{"Ket", "[", 
+       TagBox[
+        RowBox[{
+         StyleBox[
+          AdjustmentBox["1",
+           BoxBaselineShift->-1,
+           BoxMargins->0],
+          StripOnInput->False,
+          FontSize->Smaller], 
+         AdjustmentBox["S",
+          BoxMargins->-0.2], 
+         StyleBox[
+          AdjustmentBox[
+           TemplateBox[{
+             InterpretationBox[
+              StyleBox[
+              "0", ShowStringCharacters -> True, NumberMarks -> True], 
+              InputForm[0], Editable -> True, AutoDelete -> True], "\",\"", 
+             "0"},
+            "RowDefault"],
+           BoxBaselineShift->1,
+           BoxMargins->{{0.7, 0}, {0.4, 0.4}}],
+          StripOnInput->False,
+          FontSize->Small]}],
+        DisplayForm], "]"}]}], "+", 
+     RowBox[{"0.17`", " ", 
+      RowBox[{"Ket", "[", 
+       TagBox[
+        RowBox[{
+         StyleBox[
+          AdjustmentBox["3",
+           BoxBaselineShift->-1,
+           BoxMargins->0],
+          StripOnInput->False,
+          FontSize->Smaller], 
+         AdjustmentBox["F",
+          BoxMargins->-0.2], 
+         StyleBox[
+          AdjustmentBox[
+           TemplateBox[{
+             InterpretationBox[
+              StyleBox[
+              "3", ShowStringCharacters -> True, NumberMarks -> True], 
+              InputForm[3], Editable -> True, AutoDelete -> True], "\",\"", 
+             "3"},
+            "RowDefault"],
+           BoxBaselineShift->1,
+           BoxMargins->{{0.7, 0}, {0.4, 0.4}}],
+          StripOnInput->False,
+          FontSize->Small]}],
+        DisplayForm], "]"}]}], "+", 
+     RowBox[{"0.15`", " ", 
+      RowBox[{"Ket", "[", 
+       TagBox[
+        RowBox[{
+         StyleBox[
+          AdjustmentBox["3",
+           BoxBaselineShift->-1,
+           BoxMargins->0],
+          StripOnInput->False,
+          FontSize->Smaller], 
+         AdjustmentBox["H",
+          BoxMargins->-0.2], 
+         StyleBox[
+          AdjustmentBox[
+           TemplateBox[{
+             InterpretationBox[
+              StyleBox[
+              "4", ShowStringCharacters -> True, NumberMarks -> True], 
+              InputForm[4], Editable -> True, AutoDelete -> True], "\",\"", 
+             RowBox[{"-", "3"}]},
+            "RowDefault"],
+           BoxBaselineShift->1,
+           BoxMargins->{{0.7, 0}, {0.4, 0.4}}],
+          StripOnInput->False,
+          FontSize->Small]}],
+        DisplayForm], "]"}]}], "+", 
+     RowBox[{"0.17`", " ", 
+      RowBox[{"Ket", "[", 
+       TagBox[
+        RowBox[{
+         StyleBox[
+          AdjustmentBox["3",
+           BoxBaselineShift->-1,
+           BoxMargins->0],
+          StripOnInput->False,
+          FontSize->Smaller], 
+         AdjustmentBox["H",
+          BoxMargins->-0.2], 
+         StyleBox[
+          AdjustmentBox[
+           TemplateBox[{
+             InterpretationBox[
+              StyleBox[
+              "4", ShowStringCharacters -> True, NumberMarks -> True], 
+              InputForm[4], Editable -> True, AutoDelete -> True], "\",\"", 
+             "0"},
+            "RowDefault"],
+           BoxBaselineShift->1,
+           BoxMargins->{{0.7, 0}, {0.4, 0.4}}],
+          StripOnInput->False,
+          FontSize->Small]}],
+        DisplayForm], "]"}]}], "+", 
+     RowBox[{"0.17`", " ", 
+      RowBox[{"Ket", "[", 
+       TagBox[
+        RowBox[{
+         StyleBox[
+          AdjustmentBox["3",
+           BoxBaselineShift->-1,
+           BoxMargins->0],
+          StripOnInput->False,
+          FontSize->Smaller], 
+         AdjustmentBox["H",
+          BoxMargins->-0.2], 
+         StyleBox[
+          AdjustmentBox[
+           TemplateBox[{
+             InterpretationBox[
+              StyleBox[
+              "5", ShowStringCharacters -> True, NumberMarks -> True], 
+              InputForm[5], Editable -> True, AutoDelete -> True], "\",\"", 
+             RowBox[{"-", "1"}]},
+            "RowDefault"],
+           BoxBaselineShift->1,
+           BoxMargins->{{0.7, 0}, {0.4, 0.4}}],
+          StripOnInput->False,
+          FontSize->Small]}],
+        DisplayForm], "]"}]}], "+", 
+     RowBox[{"0.13`", " ", 
+      RowBox[{"Ket", "[", 
+       TagBox[
+        RowBox[{
+         StyleBox[
+          AdjustmentBox["3",
+           BoxBaselineShift->-1,
+           BoxMargins->0],
+          StripOnInput->False,
+          FontSize->Smaller], 
+         AdjustmentBox["H",
+          BoxMargins->-0.2], 
+         StyleBox[
+          AdjustmentBox[
+           TemplateBox[{
+             InterpretationBox[
+              StyleBox[
+              "5", ShowStringCharacters -> True, NumberMarks -> True], 
+              InputForm[5], Editable -> True, AutoDelete -> True], "\",\"", 
+             "3"},
+            "RowDefault"],
+           BoxBaselineShift->1,
+           BoxMargins->{{0.7, 0}, {0.4, 0.4}}],
+          StripOnInput->False,
+          FontSize->Small]}],
+        DisplayForm], "]"}]}], "+", 
+     RowBox[{"0.13`", " ", 
+      RowBox[{"Ket", "[", 
+       TagBox[
+        RowBox[{
+         StyleBox[
+          AdjustmentBox["3",
+           BoxBaselineShift->-1,
+           BoxMargins->0],
+          StripOnInput->False,
+          FontSize->Smaller], 
+         AdjustmentBox["H",
+          BoxMargins->-0.2], 
+         StyleBox[
+          AdjustmentBox[
+           TemplateBox[{
+             InterpretationBox[
+              StyleBox[
+              "6", ShowStringCharacters -> True, NumberMarks -> True], 
+              InputForm[6], Editable -> True, AutoDelete -> True], "\",\"", 
+             RowBox[{"-", "5"}]},
+            "RowDefault"],
+           BoxBaselineShift->1,
+           BoxMargins->{{0.7, 0}, {0.4, 0.4}}],
+          StripOnInput->False,
+          FontSize->Small]}],
+        DisplayForm], "]"}]}], "+", 
+     RowBox[{"0.13`", " ", 
+      RowBox[{"Ket", "[", 
+       TagBox[
+        RowBox[{
+         StyleBox[
+          AdjustmentBox["3",
+           BoxBaselineShift->-1,
+           BoxMargins->0],
+          StripOnInput->False,
+          FontSize->Smaller], 
+         AdjustmentBox["H",
+          BoxMargins->-0.2], 
+         StyleBox[
+          AdjustmentBox[
+           TemplateBox[{
+             InterpretationBox[
+              StyleBox[
+              "6", ShowStringCharacters -> True, NumberMarks -> True], 
+              InputForm[6], Editable -> True, AutoDelete -> True], "\",\"", 
+             RowBox[{"-", "1"}]},
+            "RowDefault"],
+           BoxBaselineShift->1,
+           BoxMargins->{{0.7, 0}, {0.4, 0.4}}],
+          StripOnInput->False,
+          FontSize->Small]}],
+        DisplayForm], "]"}]}], "+", 
+     RowBox[{"0.16`", " ", 
+      RowBox[{"Ket", "[", 
+       TagBox[
+        RowBox[{
+         StyleBox[
+          AdjustmentBox["3",
+           BoxBaselineShift->-1,
+           BoxMargins->0],
+          StripOnInput->False,
+          FontSize->Smaller], 
+         AdjustmentBox["H",
+          BoxMargins->-0.2], 
+         StyleBox[
+          AdjustmentBox[
+           TemplateBox[{
+             InterpretationBox[
+              StyleBox[
+              "6", ShowStringCharacters -> True, NumberMarks -> True], 
+              InputForm[6], Editable -> True, AutoDelete -> True], "\",\"", 
+             "0"},
+            "RowDefault"],
+           BoxBaselineShift->1,
+           BoxMargins->{{0.7, 0}, {0.4, 0.4}}],
+          StripOnInput->False,
+          FontSize->Small]}],
+        DisplayForm], "]"}]}], "+", 
+     RowBox[{"0.16`", " ", 
+      RowBox[{"Ket", "[", 
+       TagBox[
+        RowBox[{
+         StyleBox[
+          AdjustmentBox["3",
+           BoxBaselineShift->-1,
+           BoxMargins->0],
+          StripOnInput->False,
+          FontSize->Smaller], 
+         AdjustmentBox["H",
+          BoxMargins->-0.2], 
+         StyleBox[
+          AdjustmentBox[
+           TemplateBox[{
+             InterpretationBox[
+              StyleBox[
+              "6", ShowStringCharacters -> True, NumberMarks -> True], 
+              InputForm[6], Editable -> True, AutoDelete -> True], "\",\"", 
+             "3"},
+            "RowDefault"],
+           BoxBaselineShift->1,
+           BoxMargins->{{0.7, 0}, {0.4, 0.4}}],
+          StripOnInput->False,
+          FontSize->Small]}],
+        DisplayForm], "]"}]}], "+", 
+     RowBox[{"0.18`", " ", 
+      RowBox[{"Ket", "[", 
+       TagBox[
+        RowBox[{
+         StyleBox[
+          AdjustmentBox["3",
+           BoxBaselineShift->-1,
+           BoxMargins->0],
+          StripOnInput->False,
+          FontSize->Smaller], 
+         AdjustmentBox["P",
+          BoxMargins->-0.2], 
+         StyleBox[
+          AdjustmentBox[
+           TemplateBox[{
+             InterpretationBox[
+              StyleBox[
+              "2", ShowStringCharacters -> True, NumberMarks -> True], 
+              InputForm[2], Editable -> True, AutoDelete -> True], "\",\"", 
+             RowBox[{"-", "2"}]},
+            "RowDefault"],
+           BoxBaselineShift->1,
+           BoxMargins->{{0.7, 0}, {0.4, 0.4}}],
+          StripOnInput->False,
+          FontSize->Small]}],
+        DisplayForm], "]"}]}]}]}], "}"}], "}"}]], "Output",
+ CellLabel->"Out[1]=",
+ CellID->304035457,ExpressionUUID->"bd9c3899-b7ef-4d75-a754-75019b1e4b04"]
+}, Open  ]]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"}, 
+  Closed]]]]
+}, Dynamic[CurrentValue[
+ EvaluationNotebook[], {TaggingRules, "Openers", "PrimaryExamplesSection"}, 
+  Closed]]]],
+
+Cell[BoxData[GridBox[{
+   {
+    DynamicBox[FEPrivate`ImportImage[
+      FrontEnd`FileName[{"Documentation", "FooterIcons"}, 
+       "RelatedFunction.png"]],
+     ImageSizeCache->{50., {26.47265625, 33.52734375}}], GridBox[{
+      {
+       StyleBox[
+        RowBox[{"See", " ", "Also"}], "SeeAlsoSection"]},
+      {Cell[TextData[{
+        Cell[BoxData[
+         TemplateBox[{
+           Cell[
+            TextData["ParseStatesByNumBasisVecs"]], 
+           "paclet:DavidLizarazo/qlanth/ref/ParseStatesByNumBasisVecs", 
+           "DavidLizarazo Package Symbol"},
+          "PackageLink",
+          BaseStyle->"InlineFormula"]], "InlineFormula",
+         FontFamily->"Source Sans Pro",ExpressionUUID->
+         "cba1c410-7c9e-4ef4-bb9c-6af131dfd47a"],
+        "\[NonBreakingSpace]",
+        StyleBox[
+        "\[MediumSpace]\[FilledVerySmallSquare]\[MediumSpace]", 
+         "InlineSeparator"],
+        " ",
+        Cell[BoxData[
+         TemplateBox[{
+           Cell[
+            TextData["ParseStates"]], 
+           "paclet:DavidLizarazo/qlanth/ref/ParseStates", 
+           "DavidLizarazo Package Symbol"},
+          "PackageLink",
+          BaseStyle->"InlineFormula"]], "InlineFormula",
+         FontFamily->"Source Sans Pro",
+         CellTags->"71e23c24-bc96-4d36-8726-f988a47498ed",ExpressionUUID->
+         "7bb42614-7114-4102-b2f6-9d1346f0a542"]
+       }], "SeeAlso",ExpressionUUID->"8fb014ed-f85c-4c94-bcd6-d1f9d020ffaf"]}
+     }]}
+  }]], "SeeAlsoSection",ExpressionUUID->"e98fa9b1-5e9f-4f5c-8fe7-\
+5f4b483a9b7d"],
+
+Cell[" ", "FooterCell",ExpressionUUID->"87ef545c-3761-4090-8ae7-62d6c20c87ee"]
+},
+Saveable->False,
+ScreenStyleEnvironment->"Working",
+WindowSize->{900, 830},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+WindowTitle->"ParseStatesByProbabilitySum",
+TaggingRules->{
+ "ModificationHighlight" -> False, "ColorType" -> "", "LinkTrails" -> "", 
+  "ExampleCounter" -> 1, 
+  "Openers" -> {
+   "PrimaryExamplesSection" -> Open, "ExampleSection" -> {"0" -> Open}, 
+    "AllOptsTable" -> Closed, "NotesSection" -> Closed}, "NewStyles" -> True, 
+  "CitationPopupData" -> $Failed, "ShowCitation" -> False, "HasOptions" -> 
+  True, "RootCaptions" -> "", "HeaderCoreAreaLink" -> {}, 
+  "Metadata" -> {
+   "built" -> "{2025, 1, 24, 17, 35, 43.993825}", 
+    "history" -> {"1.0.0", "", "", ""}, "context" -> "DavidLizarazo`qlanth`", 
+    "keywords" -> {}, "specialkeywords" -> {}, 
+    "tutorialcollectionlinks" -> {}, "index" -> True, "label" -> 
+    "David Lizarazo/qlanth Symbol", "language" -> "en", "paclet" -> 
+    "DavidLizarazo/qlanth", "status" -> "None", "summary" -> 
+    "ParseStatesByProbabilitySum[eigensys, basis, probSum] takes a list of \
+eigenstates in terms of their coefficients in the given basis and returns a \
+list of the same states in terms of their energy and the coefficients of the \
+basis vectors that sum to at least probSum.", "synonyms" -> {}, 
+    "tabletags" -> {}, "title" -> "ParseStatesByProbabilitySum", 
+    "titlemodifier" -> "", "metadescription" -> "", "windowtitle" -> 
+    "ParseStatesByProbabilitySum", "type" -> "Symbol", "uri" -> 
+    "DavidLizarazo/qlanth/ref/ParseStatesByProbabilitySum", 
+    "WorkflowDockedCell" -> ""}, "SearchTextTranslated" -> ""},
+FrontEndVersion->"14.1 for Mac OS X ARM (64-bit) (July 16, 2024)",
+StyleDefinitions->FrontEnd`FileName[{"Wolfram"}, "Reference.nb", 
+  CharacterEncoding -> "UTF-8"],
+ExpressionUUID->"a42c1b6a-0a03-4dd8-9644-420f7cf9effd"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "PrimaryExamplesSection"->{
+  Cell[9462, 246, 1438, 38, 34, "PrimaryExamplesSection",ExpressionUUID->"362b6f76-9f6b-49b9-9e3a-3eb8ed873256",
+   CellTags->"PrimaryExamplesSection",
+   CellID->1794463329]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"PrimaryExamplesSection", 33652, 974}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[595, 21, 4874, 114, 50, "AnchorBarGrid",ExpressionUUID->"d0b20db3-4988-463e-9e09-37ce09a0f295",
+ CellID->1],
+Cell[5472, 137, 103, 0, 22, "ContextNameCell",ExpressionUUID->"49214643-ae17-4ec8-a1bf-af2c6d1e657c"],
+Cell[CellGroupData[{
+Cell[5600, 141, 570, 14, 57, "ObjectNameGrid",ExpressionUUID->"b855715f-dd6f-422b-9bb8-f789b44fab09"],
+Cell[6173, 157, 1035, 25, 127, "Usage",ExpressionUUID->"1314b898-9bbc-46fe-b3be-690a5175c0ea",
+ CellID->840882889]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7245, 187, 1914, 48, 34, "NotesSection",ExpressionUUID->"ef5c052c-ee4c-430b-99db-013e5814c53d",
+ CellGroupingRules->{"SectionGrouping", 50},
+ CellID->1767820],
+Cell[9162, 237, 173, 3, 70, "Notes",ExpressionUUID->"13f03b18-2538-44d1-8041-b89e9a23ee5d",
+ CellID->128834516]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "NotesSection"}, Closed]]]],
+Cell[CellGroupData[{
+Cell[9462, 246, 1438, 38, 34, "PrimaryExamplesSection",ExpressionUUID->"362b6f76-9f6b-49b9-9e3a-3eb8ed873256",
+ CellTags->"PrimaryExamplesSection",
+ CellID->1794463329],
+Cell[10903, 286, 212, 4, 29, "Input",ExpressionUUID->"73981181-3648-45e4-b31a-434bf2519032",
+ CellID->1840769062],
+Cell[CellGroupData[{
+Cell[11140, 294, 1415, 37, 29, "ExampleSection",ExpressionUUID->"3d1133a5-7096-475a-8e45-6a851fb78532",
+ CellID->284832035],
+Cell[CellGroupData[{
+Cell[12580, 335, 696, 20, 63, "Input",ExpressionUUID->"7325a9bd-df1a-4ce4-9e56-7058624c9daf",
+ CellID->206882850],
+Cell[13279, 357, 16565, 526, 111, "Output",ExpressionUUID->"bd9c3899-b7ef-4d75-a754-75019b1e4b04",
+ CellID->304035457]
+}, Open  ]]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "ExampleSection", "0"}, Closed]]]]
+}, Dynamic[CurrentValue[EvaluationNotebook[], {TaggingRules, "Openers", "PrimaryExamplesSection"}, Closed]]]],
+Cell[30086, 892, 1524, 39, 112, "SeeAlsoSection",ExpressionUUID->"e98fa9b1-5e9f-4f5c-8fe7-5f4b483a9b7d"],
+Cell[31613, 933, 78, 0, 24, "FooterCell",ExpressionUUID->"87ef545c-3761-4090-8ae7-62d6c20c87ee"]
+}
+]
+*)
+
+(* End of internal cache information *)
+
