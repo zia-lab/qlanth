@@ -292,7 +292,7 @@ These effects can be brought within the simplified description through perturbat
 
 \begin{mdframed}
 \begin{align} 
-	\ham &= \underbracket{\hamKineticSymbol}_{\text{kinetic}}
+	& \!\!\!\!\!\!\!\!\!\!\!\! \ham = \underbracket{\hamKineticSymbol}_{\text{kinetic}}
 		 + \underbracket{\hamNuclearCoulombSymbol}_{\text{e:shielded nuc}}
 		 + \overbrace{\underbracket{\hamSpinOrbitSymbol}_{\text{spin-orbit}}
 		 + \underbracket{\hamSpinSpinSymbol}_{
@@ -308,7 +308,7 @@ These effects can be brought within the simplified description through perturbat
                 }
          }
          + \underbracket{\hamZeemanSymbol}_{\text{Zeeman}}}^{\text{magnetic interactions}}  \nonumber \\
-         & + \overbrace{\underbracket{\hamCoulombEESymbol}_{\text{e:e}} 
+         & \!\! \!\! \!\! \!\! \!\!+ \overbrace{\underbracket{\hamCoulombEESymbol}_{\text{e:e}} 
          + \underbracket{\hamTreesSymbol}_\text{Trees effective op} 
 		 + \underbracket{\hamGTwoSymbol}_\text{G${}_2$ effective op} 
 		 + \underbracket{\hamSOSevenSymbol}_\text{$\SO{7}$ effective op} 
@@ -327,10 +327,10 @@ These effects can be brought within the simplified description through perturbat
 					}}    
 			\end{cases} \\    
 	\hamSpinSpinSymbol &= \hamSpinSpin \\  
-	\hamSOOplusECSOSymbol &= \hamSOOplusECSO \\
+	& \hamSOOplusECSOSymbol = \hamSOOplusECSO \\
     \hamZeemanSymbol &= -\vec{B} \cdot \op{\mu} = \hamZeeman \text{(interaction with a magnetic field)} \\
 	\ham_\text{e:e} &= \hamCoulombEE \text{ (repulsion between valence electrons)} \\  
-	\nonumber \text{Let } \casimir{\anyGroup} &\DEF \text{The Casimir operator of group $\anyGroup$.}\\ 
+	\nonumber & \text{Let } \casimir{\anyGroup} \DEF \text{The Casimir operator of group $\anyGroup$.}\\ 
 	\hamTreesSymbol &= \casimirAlpha\casimir{\SO{3}} = \casimirAlpha \op{L}^2 \text{ (Trees effective operator)} \\
 	\hamGTwoSymbol      &= \casimirBeta\casimir{\Gtwo} \\
 	\hamSOSevenSymbol   &= \casimirGamma\casimir{\SO{7}} \\
@@ -338,7 +338,7 @@ These effects can be brought within the simplified description through perturbat
 	\hamCrystalFieldSymbol &= \hamCrystalField \,\,\, {   
 		\substack{
 			\text{ (crystal field interaction} \\
-			\text{with surroudings)}
+			\text{with surroundings)}
 			} 
 			}
 \end{align}  
@@ -350,7 +350,7 @@ Putting all of this together leads to the following effective Hamiltonian as sho
 
 
 
-Once all the parameters in this \hamilton have been fitted to experimental datal what results is a Hamiltonian such as the one for $\trion{Pr}$ in \LaFthree shown in \figuref{fig:Pr_in_LaF3}. Before we go on to explain in some detail each of the terms included in this Hamiltonian, let us continue to explain the basis used in calculations.
+Once all the parameters in this \hamilton have been fitted to experimental data what results is a Hamiltonian such as the one for $\trion{Pr}$ in \LaFthree shown in \figuref{fig:Pr_in_LaF3}. Before we go on to explain in some detail each of the terms included in this Hamiltonian, let us continue to explain the basis used in calculations.
 
 \begin{figure}[h!]
 	\begin{center}
@@ -439,7 +439,7 @@ In \qlanth the $\RacahW$ and $\RacahU$ are used in order to determine the matrix
 
 \subsection{$\LSJbasis$ levels}
 
-When the Hamiltonian only includes spherically symmetric terms (or what is the same, when the crystal field is neglected) then the $\Msub{J}$ quantum numbers in the $\LSJMbasis$ basis states are redundant. This permits a simplified description  in terms of $\LSJbasis$ levels. The following are the different $\LSJterm{2S+1}{L}{J}$ levels that span the eigenvectors that result from diagonalizing the Hamiltonian in the level description, these may also be termed \textit{mutiplets}. (In these we have excluded the indices that distinguish between degenerate LS terms)
+When the Hamiltonian only includes spherically symmetric terms (or what is the same, when the crystal field is neglected) then the $\Msub{J}$ quantum numbers in the $\LSJMbasis$ basis states are redundant. This permits a simplified description  in terms of $\LSJbasis$ levels. The following are the different $\LSJterm{2S+1}{L}{J}$ levels that span the eigenvectors that result from diagonalizing the Hamiltonian in the level description, these may also be termed \textit{multiplets}. (In these we have excluded the indices that distinguish between degenerate LS terms)
 
 \input{./extratex/LSJlevels.tex}
 
@@ -1197,7 +1197,7 @@ In \qlanth this is all implemented in the function \codetext{GenerateThreeBodyTa
         \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
     }
 
-Each of the 32 crystallographic point groups requires only a limited number of non-zero crystal field parameters. In \qlanth these can be queried programatically with the use of the function \codetext{CrystalFieldForm}. These were taken from a table in Benelli and Gatteschi \cite{benelli_introduction_2015} and their corresponding expressions (for a single electron) are in the equations below with a table linking to the corresponding equations. Note that these expressions bring with them an implicit choice for the orientation of the coordinate system (see \sectionref{section:coord-sys}).
+Each of the 32 crystallographic point groups requires only a limited number of non-zero crystal field parameters. In \qlanth these can be queried programmatically with the use of the function \codetext{CrystalFieldForm}. These were taken from a table in Benelli and Gatteschi \cite{benelli_introduction_2015} and their corresponding expressions (for a single electron) are in the equations below with a table linking to the corresponding equations. Note that these expressions bring with them an implicit choice for the orientation of the coordinate system (see \sectionref{section:coord-sys}).
 
 \begin{table}[h!]
 \begin{tabular}{|c|c|c|c|c|}
@@ -1396,7 +1396,7 @@ When the model parameters are fitted to experimental data and their uncertaintie
 
 In an alternative approach, the uncertainties are determined \textit{a posteriori}. The model parameters are fit to minimize the square differences between calculated energies and the experimental ones. Then, a single experimental uncertainty is assumed in all the energy levels, and taken equal to the minimum root mean  square error, as taken over the available degrees of freedom. This uncertainty $\sigma$ together with a chosen confidence interval $p$ is then used to determine the contours of $\chi^2$, which in turn determine the corresponding confidence interval in the model parameters. In a sense, the model is assumed to be valid, and the resulting uncertainties in the model parameters are adjusted to allow for this possibility.
 
-In this dissertation the uncertainty in the experimental data was assumed to be constant and equal to $1 \invcm$. And when the data for magnetic dipole transitions was calculated, an uncertainty equal to the $\sigma$ of the related parametric fit was assumed. 
+In the examples included in this code the uncertainty in the experimental data was assumed to be constant and equal to $1 \invcm$. And when the data for magnetic dipole transitions was calculated, an uncertainty equal to the $\sigma$ of the related parametric fit was assumed. 
 
 \section{Transitions}\label{section:transitions}
 
@@ -1696,16 +1696,16 @@ The function returns an association with the following keys.
     \item \codetext{energies}: a list of the energies of the fitted levels, adjusted if an energy shift was included in the fitting.
 \end{itemize}
 
-%\foreach \name in {ClassicalFit}{
-%    \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
-%}
+\foreach \name in {ClassicalFit}{
+    \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
+}
 
 \section{Accompanying notebooks}\label{section:notebooks}
 
-The code for this dissertation is accompanied by the following auxiliary \mathematica notebooks, which either document the  functions included in the code, or serve as aids in the  calculation of matrix elements.
+The code for this dissertation is accompanied by the following auxiliary \mathematica notebooks, which either document the  functions included in the code, or serve as aids in the  calculation of matrix elements. These notebooks assume that the \codetext{paclet} has been installed according to the instructions given in \sectionref{section:paclet}.
 
 \begin{itemize}
-	\item \faFloppyO\,\, \codetext{/notebooks/qlanth.nb}: gives an overview of functions included in \qlanth.
+%	\item \faFloppyO\,\, \codetext{/notebooks/qlanth.nb}: gives an overview of functions included in \qlanth.
 	\item \faFloppyO\,\, \codetext{/notebooks/qlanth - Table Generator.nb}: generates the basic tables on which every calculation is based. This means that LS-reduced matrix elements are used to calculate matrix elements in the $\LSJMbasis$ basis.
 	\item \faFloppyO\,\, \codetext{/notebooks/qlanth - JJBlock Calculator.nb}: can be used to generate the J-J' blocks for the different interactions. The data files produced here are necessary for \codetext{HamMatrixAssembly} to work. These blocks are creating by putting together matrix elements from different interactions.
 	\item \faFloppyO\,\, \codetext{/notebooks/The Lanthanides in LaF3.nb}: runs \qlanth over the lanthanide ions in \LaFthree and compares the results against the published values from \bill. It also calculates magnetic dipole transition rates and oscillator strengths.
@@ -1763,7 +1763,7 @@ Similarly, \cheng compiled data for \liyorite. In \qlanth model parameters for \
 
 	\begin{itemize}
 		\item Fitting the experimental data for the entire row might take about 45 minutes, if run for the first time, but takes much less time once compiled functions from the truncated (or not truncated) Hamiltonian have been saved to disk.
-		\item The code was run in \mathematica version 13.2 on MacOS Sonoma 14.5.
+		\item The code was run in \mathematica version 14.1 on MacOS Sequoia 15.2.
 	\end{itemize}
 
 
@@ -1794,7 +1794,8 @@ Some constants and conversion values are included in the file \codetext{qonstant
     \overbracket{\cfp{\lorb^{n-1}\alpha'L'S'}{\lorb^n\alpha{L}{S}}}^{\text{The coefficient of fractional parentage from the parent term }\ket{\lorb^{n-1}\alpha'{L'S'}}\text{ for the daughter term }\ket{\lorb^{n}\alpha{LS}}}  
 \end{gather}
 
-\section{Mathematica \codetext{paclet}}
+\section{Mathematica \codetext{paclet}}\label{section:paclet}
+
 
 The simplest way of adding \qlanth to \mathematica is by installing the corresponding paclet. After having cloned the repository to a local machine, execute the code below in a \mathematica session. After this, the downloaded files may be removed, and \qlanth may be loaded into a notebook by issuing the command \codetext{Needs["DavidLizarazo{\textasciigrave}qlanth{\textasciigrave}"]} .
 

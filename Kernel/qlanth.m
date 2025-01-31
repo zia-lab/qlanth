@@ -3641,7 +3641,7 @@ Begin["`Private`"]
     Return[params];
     )
   ];  
-  
+
   HoleElectronConjugation::usage = "HoleElectronConjugation[params] takes the parameters (as an association) that define a configuration and converts them so that they may be interpreted as corresponding to a complementary hole configuration. Some of this can be simply done by changing the sign of the model parameters. In the case of the effective three body interaction of T2 the relationship is more complex and is controlled by the value of the t2Switch variable.";
   HoleElectronConjugation[params_] := Module[
     {newparams = params},

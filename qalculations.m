@@ -311,7 +311,7 @@ FastIonSolverLaF3Carnall[numE_, OptionsPattern[]] := Module[
       WindowSize -> {1600, 800}];
       If[OptionValue["SaveData"],
       (
-        exportFname = FileNameJoin[{workDir,OptionValue["OutputDirectory"], ln <> " in " <> "LaF3" <> appToFname <> ".mx"}];
+        exportFname = FileNameJoin[{workDir, OptionValue["OutputDirectory"], ln <> " in " <> "LaF3" <> appToFname <> ".mx"}];
         SelectionMove[nb, After, Notebook];
         NotebookWrite[nb, Cell["Reload Data", "Section", TextAlignment -> Center]];
         NotebookWrite[nb,
@@ -568,7 +568,8 @@ Options[MagneticDipoleTransitionsLaF3Carnall] = {
   "Make Notebook" -> True, 
   "Close Notebook" -> True,
   "Wavelength Range" -> {50, 2000},
-  "Print Function" -> PrintTemporary
+  "Print Function" -> PrintTemporary,
+  "OutputDirectory" -> "calcs"
   };
 MagneticDipoleTransitionsLaF3Carnall[numE_Integer, OptionsPattern[]]:= (
   host           = OptionValue["Host"];
@@ -578,8 +579,8 @@ MagneticDipoleTransitionsLaF3Carnall[numE_Integer, OptionsPattern[]]:= (
   
   header    = {"\[Psi]i:simple","\[Psi]f:simple","\[Psi]i:idx","\[Psi]f:idx","Ei/K","Ef/K","\[Lambda]/nm","\[CapitalDelta]\[Lambda]/nm","\[Tau]/s","AMD/s^-1"};
   ln        = {"Ce","Pr","Nd","Pm","Sm","Eu","Gd","Tb","Dy","Ho","Er","Tm","Yb"}[[numE]];
-  {rmsDifference,carnallEnergies,eigenEnergies,ln,
-  carnallAssignments,simplerStateLabels,eigensys,basis,truncatedStates} = Import["./examples/"<>ln<>" in LaF3 - example.mx"];
+  fname = FileNameJoin[{workDir, OptionValue["OutputDirectory"],ln<>" in " <> host <> " - example.mx"}];
+  {rmsDifference, carnallEnergies, eigenEnergies, ln, carnallAssignments, simplerStateLabels, eigensys, basis, truncatedStates} = Import[fname];
   
   (* Some of the above are not needed here *)
   Clear[truncatedStates];
@@ -659,7 +660,7 @@ MagneticDipoleTransitionsLaF3Carnall[numE_Integer, OptionsPattern[]]:= (
   
   (* raw data output *)
   basename       = ln <> " in " <> host <> " - example - " <> "M1 - raw.zip";
-  rawexportFname = FileNameJoin[{"./examples",basename}];
+  rawexportFname = FileNameJoin[{"../laf3-examples",basename}];
   PrintFun["Exporting raw data as an association to "<>exportFname<>" ..."];
   rawexportKey   = StringReplace[basename,".zip"->".m"];
   Export[rawexportFname, <|rawexportKey->magIon|>];
@@ -672,7 +673,7 @@ MagneticDipoleTransitionsLaF3Carnall[numE_Integer, OptionsPattern[]]:= (
   ];
   csvOut      = StringJoin[Riffle[csvOut, "\n"]];
   basename    = ln <> " in " <> host <> " - example - " <> "M1.csv";
-  exportFname = FileNameJoin[{"./examples", basename}];
+  exportFname = FileNameJoin[{workDir, OptionValue["OutputDirectory"], basename}];
   PrintFun["Exporting csv data to "<>exportFname<>" ..."];
   Export[exportFname, csvOut, "Text"];
   
@@ -720,7 +721,7 @@ MagneticDipoleTransitionsLaF3Carnall[numE_Integer, OptionsPattern[]]:= (
             "magTransitions = Import[FileNameJoin[{NotebookDirectory[],\"" <> StringSplit[rawexportFname,"/"][[-1]] <> "\"}],\""<>rawexportKey<>"\"];"
             ),"Input"]];
       SelectionMove[nb, Before, Notebook];
-      nbFname = FileNameJoin[{workDir,"examples","M1 - "<>ln<>" in "<>"LaF3"<>".nb"}];
+      nbFname = FileNameJoin[{workDir,OptionValue["OutputDirectory"], "M1 - "<>ln<>" in "<>"LaF3"<>".nb"}];
       PrintFun[">> Saving notebook to ",nbFname," ..."];
       NotebookSave[nb, nbFname];
       If[OptionValue["Close Notebook"],
