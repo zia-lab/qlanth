@@ -7,6 +7,7 @@
 \usepackage{sectsty}
 \usepackage{fullwidth}
 \usepackage{placeins}
+\usepackage{subcaption}
 
 \usepackage[paperwidth=8.5in,paperheight=14.2885in]{geometry}
 \geometry{left=2.54cm, right=2.54cm, top=3.81cm, bottom=3.81cm}
@@ -117,7 +118,7 @@
     
     % Include the image
     {\Large\qlanth}\\
-    {\large doc version $\ket{\alpha}^{(16)}$} \\
+    {\large doc version $\ket{\alpha}^{(17)}$} \\
     \vspace*{0.5cm}
     \includegraphics[width=0.6\textwidth]{ion_in_lattice.jpg}  % Adjust the size as needed
     \vspace*{0.4cm} % More vertical space a
@@ -1772,7 +1773,7 @@ Following the tradition of the spectroscopic community, all the matrix elements 
 
 Some constants and conversion values are included in the file \codetext{qonstants.m}.
 
-\lstinputlisting[language=Mathematica]{../qonstants.m}
+\lstinputlisting[language=Mathematica]{../Kernel/qonstants.m}
 
 \section{Notation}\label{section:notation}
 
@@ -1793,6 +1794,52 @@ Some constants and conversion values are included in the file \codetext{qonstant
     \overbracket{\cfp{\lorb^{n-1}\alpha'L'S'}{\lorb^n\alpha{L}{S}}}^{\text{The coefficient of fractional parentage from the parent term }\ket{\lorb^{n-1}\alpha'{L'S'}}\text{ for the daughter term }\ket{\lorb^{n}\alpha{LS}}}  
 \end{gather}
 
+\section{Mathematica \codetext{paclet}}
+
+The simplest way of adding \qlanth to \mathematica is by installing the corresponding paclet. After having cloned the repository to a local machine, execute the code below in a \mathematica session. After this, the downloaded files may be removed, and \qlanth may be loaded into a notebook by issuing the command \codetext{Needs["DavidLizarazo{\textasciigrave}qlanth{\textasciigrave}"]} .
+
+\begin{verbatim}
+Needs["PacletTools`"];
+pathToRepo = "~/Downloads/qlanth/"; (* change accordingly *)
+pathToBuild = FileNameJoin[{pathToRepo,"build","DavidLizarazo__qlanth"}];
+CreatePacletArchive[pathToBuild];
+pathToPaclet = FileNames[
+	FileNameJoin[{pathToRepo, "build", "/*.paclet"}]][[1]];
+PacletInstall[pathToPaclet, ForceVersionInstall -> True];
+\end{verbatim}
+
+The paclet includes documentation in standard \mathematica format (see \figuref{fig:mathematica-docs}).
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{0.45\textwidth}
+        \centering
+		\includegraphics[width=\linewidth]{./docImages/141-qlanth.jpg}	
+		\caption{\qlanth guide in \mathematica}
+		\label{fig:mathematica-docs}
+    \end{subfigure}
+	\begin{subfigure}{0.45\textwidth}
+        \centering
+		\includegraphics[width=\linewidth]{./docImages/81-HamMatrixAssembly.jpg}	
+		\caption{Documentation for \codetext{HamMatrixAssembly}}
+		\label{fig:mathematica-docs-hammatrix}
+    \end{subfigure}
+    
+    \vspace{1cm} 
+    
+	\begin{subfigure}{0.45\textwidth}
+        \centering
+		\includegraphics[width=\linewidth]{./docImages/15-BasisLSJMJ.jpg}	
+		\caption{Doc. for \codetext{BasisLSJMJ}}
+		\label{fig:mathematica-docs-basislsjmj}
+    \end{subfigure}
+	\begin{subfigure}{0.45\textwidth}
+        \centering
+		\includegraphics[width=\linewidth]{./docImages/184-ToPythonSymPyExpression}	
+		\caption{Doc. for \codetext{ToPythonSymPyExpression}}
+		\label{fig:mathematica-docs2}
+    \end{subfigure}
+\end{figure}
 
 
 \section{Definitions}\label{section:definitions} 
@@ -1817,13 +1864,13 @@ Some constants and conversion values are included in the file \codetext{qonstant
 
 This file encapsulates the main functions in \qlanth and contains all the physics related functions.
 
-\lstinputlisting[language=Mathematica]{../qlanth.m}
+\lstinputlisting[language=Mathematica]{../Kernel/qlanth.m}
 
 \subsection{fittings.m}\label{sub:fittings.m}
 
 This file has code useful for fitting the Hamiltonian.
 
-\lstinputlisting[language=Mathematica]{../fittings.m}
+\lstinputlisting[language=Mathematica]{../Kernel/fittings.m}
 
 \subsection{qplotter.m}\label{sub:qplotter.m}
 
@@ -1835,7 +1882,7 @@ This module has a few useful plotting routines.
 
 This module includes a few functions useful for data-handling.
 
-\lstinputlisting[language=Mathematica]{../misc.m}
+\lstinputlisting[language=Mathematica]{../Kernel/misc.m}
 
 \newpage
 

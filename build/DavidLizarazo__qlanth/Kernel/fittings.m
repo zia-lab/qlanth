@@ -538,7 +538,7 @@ variedSymbolsLiYF4 = <|
     B02, B04, B44,
     \[Zeta]
     }
-  |>
+  |>;
 
 paramsChengLiYF4::usage="This association has the model parameters as fitted by Cheng et. al \"Crystal-field analyses for trivalent lanthanide ions in LiYF4\".";
 paramsChengLiYF4 = <|
@@ -645,7 +645,7 @@ paramsChengLiYF4 = <|
     B44 -> -843., B06 -> -23.,
     B46 -> -512.
     }
-  |>
+  |>;
 
 Jiggle::usage = "Jiggle[num, wiggleRoom] takes a number and randomizes it a little by adding or subtracting a random fraction of itself. The fraction is controlled by wiggleRoom.";
 Jiggle[num_, wiggleRoom_ : 0.1] := RandomReal[{1 - wiggleRoom, 1 + wiggleRoom}] * num;
@@ -893,7 +893,7 @@ Constrainer[problemVars_, ln_] := (
     crystalRanges];
   allCons = Select[allCons, MemberQ[problemVars, #[[1]]] &];
   Return[Flatten[Rest /@ allCons]]
-  )
+  );
 
 Options[LogSol] = {"PrintFun" -> PrintTemporary};
 LogSol::usage = "LogSol[expr, prefix] saves the given expression to a file. The file is named with the given prefix and a created UUID. The file is saved in the \"log\" directory under the current directory. The file is saved in the format of a .m file. The function returns the name of the file.";
@@ -2450,8 +2450,7 @@ Options[FreeIonSolver] = {
   "SubSetBounds" -> {5, 12}
   };
 FreeIonSolver[expData_, numE_, OptionsPattern[]] := Module[
-  (* {maxMultiplets, maxPercent, F4overF2, F6overF2, PrintFun, minSubSetSize, maxSubSetSize, multipletEnergies, numMultiplets, allEqns, subsetSizes, ln, solutions, subsets, subset, eqns, m, b, meritFun, sol, goodThings, bestThings, bestOfAll, finalSol, usedMultiplets, usedBaricenters}, *)
-  {},
+  {maxMultiplets, maxPercent, F4overF2, F6overF2, PrintFun, minSubSetSize, maxSubSetSize, multipletEnergies, numMultiplets, allEqns, subsetSizes, ln, solutions, subsets, subset, eqns, slope, intercept, meritFun, sol, goodThings, bestThings, bestOfAll, finalSol, usedMultiplets, usedBaricenters},
   (
     maxMultiplets = OptionValue["MaxMultiplets"];
     maxIterations = OptionValue["MaxIterations"];
@@ -2493,11 +2492,11 @@ FreeIonSolver[expData_, numE_, OptionsPattern[]] := Module[
       PrintFun["Considering ", Length[subsets], " barycenter subsets of size ", subsetSize, " ..."];
       Do[
       (
-        subset = subsets[[subsetIndex]];
-        eqns   = allEqns[[subset]];
-        m      = #[[;; 5]] & /@ eqns;
-        b      = #[[6]] & /@ eqns;
-        meritFun = Max[100 * Expand[Abs[(m . freeIonParams - b)]/b]];
+        subset    = subsets[[subsetIndex]];
+        eqns      = allEqns[[subset]];
+        slope     = #[[;; 5]] & /@ eqns;
+        intercept = #[[6]] & /@ eqns;
+        meritFun = Max[100 * Expand[Abs[(slope . freeIonParams - intercept)]/intercept]];
         sol = NMinimize[{meritFun,
           F0 > 0,
           F2 > 1000.,
@@ -2537,8 +2536,8 @@ FreeIonSolver[expData_, numE_, OptionsPattern[]] := Module[
     sol       = solutions[bestOfAll[[1]]];
     subset    = bestOfAll[[1, 2]];
     eqns      = allEqns[[subset]];
-    m         = #[[;; 5]] & /@ eqns;
-    b         = #[[6]] & /@ eqns;
+    slope     = #[[;; 5]] & /@ eqns;
+    intercept = #[[6]] & /@ eqns;
     usedMultiplets  = Keys[multipletEnergies][[subset]];
     usedBaricenters = {#, multipletEnergies[#]} & /@ usedMultiplets;
     uniqeLS = DeleteDuplicates[#[[2]] &/@ Keys[multipletEnergies]];
@@ -2555,8 +2554,7 @@ FreeIonSolver[expData_, numE_, OptionsPattern[]] := Module[
         solAssoc[F6] = laf3params[F6];
       )
     ];
-    finalSol = <|
-      "bestParams" -> solAssoc,
+    finalSol = <| "bestParams" -> solAssoc,
       "usedLaF3" -> usedLaF3,
       "worstRelativeError" -> sol[[1]],
       "SlaterRatios" -> {F4overF2, F6overF2},

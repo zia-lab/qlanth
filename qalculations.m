@@ -730,7 +730,7 @@ MagneticDipoleTransitionsLaF3Carnall[numE_Integer, OptionsPattern[]]:= (
   ];
 
   Return[magIon];
-  )
+  );
 
 FastIonSolver::usage = "FastIonSolver[params] calculates energy levels and eigenvectors for the given parameters describing a trivalent lanthanide. It can use precomputed symbolic matrices for the Hamiltonian if they have been loaded already and defined as symbols of the form symbolicHamiltonians[{symmetry, numE}].
 
@@ -790,7 +790,7 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
     startTime, numH, numEH, simpleHam, endTime, loadTime, numHam,
     basis, eigensys, eigenEnergies, titleTemplate, title, parsedStates,
     stateLabels, simplerStateLabels, truncatedStates, truncationTime,
-    energyDiagram, appToFname, statesTable, DefaultIfMissing, 
+    energyDiagram, appToFname, statesTable, DefaultIfMissing, b, 
     diffTableData, diffTable, nb, exportFname, tinyexportFname, tinyExport,
     nbFname, uncertaintySentence, sigmaRMS, energyUncertaintyTemplate, onlyEnergies, originalParams, epiThings
   },
@@ -1148,7 +1148,6 @@ parameters used here.\n"
       ];
     )
     ];
-
     Return[{eigenEnergies, ln, simplerStateLabels, eigensys, basis, truncatedStates}];
   )
 ];
@@ -1192,7 +1191,7 @@ Options[MagneticDipoleTransitions] = {
         "Wavelength Range" -> {50, 2000}};
 MagneticDipoleTransitions[params_Association, fname_String, OptionsPattern[]]:= Module[
     {numE, host, PrintFun, \[Lambda]Range,
-    header, ln, energy\[CapitalDelta]},
+    header, ln, energy\[CapitalDelta], b},
   (
     paramKeys    = Keys[params];
     Which[
@@ -2262,7 +2261,8 @@ FitLaF3MostlyOrthogonal[OptionsPattern[]]:=Module[
     numFreeVars,
     numData,
     fullRMSsquared,
-    order
+    order,
+    b
 },
 (
     If[
@@ -2638,7 +2638,7 @@ SimulatedAnnealingSolver[numE_,OptionsPattern[]]:=(
         Length[relevantDataIndices]/2 - Length[problemVars],
         Length[relevantDataIndices]   - Length[problemVars]
   ];
-  Wich[
+  Which[
     ln == "Er",
     CostFun[
       B02num_?NumericQ,B04num_?NumericQ,B06num_?NumericQ,B22num_?NumericQ,
@@ -2669,7 +2669,7 @@ SimulatedAnnealingSolver[numE_,OptionsPattern[]]:=(
       theCost     = Total[diffs^2];
       Return[theCost]
     ); 
-  ]
+  ];
 
   Options[ProgressNotebook] = {"Basic" -> True};
   ProgressNotebook[
@@ -2871,7 +2871,7 @@ SimulatedAnnealingSolver[numE_,OptionsPattern[]]:=(
 
   Return[{
     "bestSigma" -> bestSigma,
-    "bestSolution" -> AssociationThread[problemVars,bestSol]
+    "bestSolution" -> AssociationThread[problemVars,bestSol],
     "Simulated Annealing Atlas" -> atlas
     }];
 );
