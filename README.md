@@ -36,23 +36,12 @@ The folder `/pyql` includes Python versions of the symbolic arrays that represen
 
 ## Installation
 
-To install *qlanth* in Mathematica follow the following steps:
+To install *qlanth* in Wolfram/Mathematica use the following steps:
 
-- Clone the repo with the terminal command: 
-```
-git clone --depth 1 https://github.com/zia-lab/qlanth.git
-```
-- Create and install a `.paclet` for Mathematica by issuing the following commands within a notebook (replacing `pathToRepo` with the adequate directory):
-```
-Needs["PacletTools`"];
-pathToRepo = "~/Downloads/qlanth/"; (* mutatis mutandis *)
-pathToBuild = FileNameJoin[{pathToRepo,"build","DavidLizarazo__qlanth"}];
-CreatePacletArchive[pathToBuild];
-pathToPaclet = FileNames[FileNameJoin[{pathToRepo, "build", "/*.paclet"}]][[1]]
-PacletInstall[pathToPaclet, ForceVersionInstall -> True];
-Needs["DavidLizarazo`qlanth`"];
-```
+- Download the latest <a href="https://github.com/zia-lab/qlanth/releases"> release </a> and install the paclet using <a href="https://reference.wolfram.com/language/ref/PacletInstall.html.en"> PacletInstall</a>. 
 - See documentation therein. Probably going straight to `HamMatrixAssembly` and `BasisLSJMJ` are the first things to try. The first function provides the matrix representation of the Hamiltonian for f^n, and the second function provides the labels for the ordered basis in which the representation is given.
+
+To use the Python version of the resultant symbolic arrays, see the `/pyql` folder and the included scripts.
 
 ## References
 
