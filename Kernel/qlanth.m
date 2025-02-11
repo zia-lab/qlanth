@@ -2326,10 +2326,14 @@ Begin["`Private`"]
     ]
   )
 
-  ElectrostaticConfigInteraction::usage = "ElectrostaticConfigInteraction[{SL, SpLp}] returns the matrix element for configuration interaction as approximated by the Casimir operators of the groups R3, G2, and R7. SL and SpLp are strings that represent terms under LS coupling.";
-  ElectrostaticConfigInteraction[{SL_, SpLp_}] := Module[
+  ElectrostaticConfigInteraction::usage = "ElectrostaticConfigInteraction[numE, {SL, SpLp}] returns the matrix element for configuration interaction as approximated by the Casimir operators of the groups R3, G2, and R7. SL and SpLp are strings that represent terms under LS coupling.";
+  ElectrostaticConfigInteraction[numE_, {SL_, SpLp_}] := Module[
     {S, L, val},
     (
+      If[
+        Or[numE == 1, numE==13],
+        Return[0];
+      ];
       {S, L} = FindSL[SL];
       val = (
         If[SL == SpLp,
@@ -2339,7 +2343,7 @@ Begin["`Private`"]
           0
         ]
         );
-      ElectrostaticConfigInteraction[{S, L}] = val;
+      ElectrostaticConfigInteraction[numE, {S, L}] = val;
       Return[val];
     )
   ];
@@ -2376,7 +2380,7 @@ Begin["`Private`"]
               0,
                 (
                   ElectrostaticTable[{numE, SLterm, SpLpterm}] +
-                  ElectrostaticConfigInteraction[{SLterm, SpLpterm}] +
+                  ElectrostaticConfigInteraction[numE, {SLterm, SpLpterm}] +
                   SpinOrbitTable[{numE, SLterm, SpLpterm, J}] +
                   MagneticInteractions[{numE, SLterm, SpLpterm, J}, 
                     "ChenDeltas" -> OptionValue["ChenDeltas"]] +
