@@ -4401,7 +4401,7 @@ Begin["`Private`"]
   ReplaceInSparseArray::usage = "ReplaceInSparseArray[sparseArray, rules] takes a sparse array that may contain symbolic quantities and returns a sparse array in which the given rules have been used on every element.";
   ReplaceInSparseArray[sparseA_SparseArray, rules_] := (
     SparseArray[Automatic,
-      sparseA["Dimensions"],
+      Dimensions[sparseA],
       sparseA["Background"] /. rules,
       {
         1,
@@ -4418,7 +4418,7 @@ Begin["`Private`"]
       nonZ   = func /@ sparseA["NonzeroValues"];
       backg  = func[sparseA["Background"]];
       mapped = SparseArray[Automatic, 
-        sparseA["Dimensions"], 
+        Dimensions[sparseA], 
         backg, 
         {
           1,

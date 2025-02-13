@@ -4,8 +4,8 @@ PacletObject[
     <|
         "Name" -> "DavidLizarazo/qlanth",
         "PublisherID" -> "DavidLizarazo",
-        "Version" -> "1.2.0",
-        "WolframVersion" -> "13.+",
+        "Version" -> "1.2.1",
+        "WolframVersion" -> "12.+",
         "Extensions" ->
             {
                 {
