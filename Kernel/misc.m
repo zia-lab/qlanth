@@ -1,4 +1,4 @@
-BeginPackage["DavidLizarazo`misc`"];
+BeginPackage["misc`"];
 (* Needs["MaTeX`"]; *)
 
 ArrayBlocker;

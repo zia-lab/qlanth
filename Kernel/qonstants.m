@@ -1,4 +1,4 @@
-BeginPackage["DavidLizarazo`qonstants`"];
+BeginPackage["qonstants`"];
 
 (* Spectroscopic niceties*)
 theLanthanides = {"Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb"};

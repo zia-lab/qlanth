@@ -20,13 +20,13 @@ WindowFrame->Normal*)
 Notebook[{
 
 Cell[CellGroupData[{
-Cell["HamMatrixAssembly", "ObjectName",
+Cell["EffectiveHamiltonian", "ObjectName",
  CellID->1158808510,ExpressionUUID->"881dab3c-7694-4eea-8a6f-74dd98f53ede"],
 
 Cell[TextData[{
  Cell["   ", "ModInfo",ExpressionUUID->"529f3d9c-219d-4f09-bcef-9402b2ce82bf"],
  Cell[BoxData[
-  RowBox[{"HamMatrixAssembly", "[", "numE", "]"}]], "InlineFormula",
+  RowBox[{"EffectiveHamiltonian", "[", "numE", "]"}]], "InlineFormula",
   ExpressionUUID->"efd46ecd-504f-44c1-b1b9-b89a634c8826"],
  " \[LineSeparator]gives the Hamiltonian matrix for the ",
  Cell[BoxData[
@@ -15073,7 +15073,7 @@ from ",
  Cell[BoxData[
   ButtonBox["BasisLSJMJ",
    BaseStyle->"Link",
-   ButtonData->"paclet:DavidLizarazo/qlanth/ref/BasisLSJMJ"]], 
+   ButtonData->"paclet:qlanth/ref/BasisLSJMJ"]], 
   "InlineFormula",ExpressionUUID->"91a4fcad-e336-48fc-82ac-755f77e8d617"],
  "[numE]"
 }], "Notes",
@@ -15086,7 +15086,7 @@ from ",
 
 Cell[TextData[{
  "The data necessary for ",
- StyleBox["HamMatrixAssembly",
+ StyleBox["EffectiveHamiltonian",
   FontWeight->"Bold"],
  " is included in the compressed files: \[LineSeparator]\n\
 /data/f1_JJBlockMatrixTable-magDip.zip\n/data/ff1_JJBlockMatrixTable.zip\n\
@@ -15104,19 +15104,19 @@ hour, and can also be done with ",
  Cell[BoxData[
   ButtonBox["GenerateElectrostaticTable",
    BaseStyle->"Link",
-   ButtonData->"paclet:DavidLizarazo/qlanth/ref/GenerateElectrostaticTable"]],
+   ButtonData->"paclet:qlanth/ref/GenerateElectrostaticTable"]],
    "InlineFormula",ExpressionUUID->"5547151c-9e55-46a5-8aba-2c155a7b4efe"],
  ", ",
  Cell[BoxData[
   ButtonBox["GenerateCrystalFieldTable",
    BaseStyle->"Link",
-   ButtonData->"paclet:DavidLizarazo/qlanth/ref/GenerateCrystalFieldTable"]], 
+   ButtonData->"paclet:qlanth/ref/GenerateCrystalFieldTable"]], 
   "InlineFormula",ExpressionUUID->"3d24f9d5-b0fe-40c7-8057-002d3628bafb"],
  ", and ",
  Cell[BoxData[
   ButtonBox["GenerateRedcedUkTable",
    BaseStyle->"Link",
-   ButtonData->"paclet:DavidLizarazo/qlanth/ref/GenerateRedcedUkTable"]], 
+   ButtonData->"paclet:qlanth/ref/GenerateRedcedUkTable"]], 
   "InlineFormula",ExpressionUUID->"13529e06-5231-4ef8-9fe4-f85ed2f7b50a"],
  "."
 }], "Notes",
@@ -15199,7 +15199,7 @@ Cell[TextData[{
  Cell[BoxData[
   ButtonBox["BasisLSJMJ",
    BaseStyle->"Link",
-   ButtonData->"paclet:DavidLizarazo/qlanth/ref/BasisLSJMJ"]], 
+   ButtonData->"paclet:qlanth/ref/BasisLSJMJ"]], 
   "InlineSeeAlsoFunction",
   TaggingRules->{"PageType" -> "Function"},ExpressionUUID->
   "413d18c6-a57c-40a0-93cb-e66d06d98a70"],
@@ -15208,7 +15208,7 @@ Cell[TextData[{
   ButtonBox["LevelSimplerSymbolicHamMatrix",
    BaseStyle->"Link",
    ButtonData->
-    "paclet:DavidLizarazo/qlanth/ref/LevelSimplerSymbolicHamMatrix"]], 
+    "paclet:qlanth/ref/LevelSimplerSymbolicHamMatrix"]], 
   "InlineSeeAlsoFunction",
   TaggingRules->{"PageType" -> "Function"},
   CellTags->"4f6a1230-350e-4529-9985-1f1749f032a4",ExpressionUUID->
@@ -15280,7 +15280,7 @@ Cell["Related Guides", "MoreAboutSection",
 
 Cell[TextData[ButtonBox["Operator Bases",
  BaseStyle->"Link",
- ButtonData->"paclet:DavidLizarazo/qlanth/guide/OperatorBases"]], "MoreAbout",\
+ ButtonData->"paclet:qlanth/guide/OperatorBases"]], "MoreAbout",\
 
  CellChangeTimes->{{3.945864933976048*^9, 3.945864948676523*^9}},
  CellID->98244263,ExpressionUUID->"30b1c8f9-628e-4ae4-a486-2d506d9deacc"]
@@ -15326,7 +15326,7 @@ Needs[\[Ellipsis]].", "MoreInfoText"], BaseStyle -> "IFrameBox"]],
  CellID->2143035310,ExpressionUUID->"fc401e86-3868-4337-866a-40354cb7e87f"],
 
 Cell[BoxData[
- RowBox[{"Needs", "[", "\"\<DavidLizarazo`qlanth`\>\"", 
+ RowBox[{"Needs", "[", "\"\<qlanth`\>\"", 
   "]"}]], "ExampleInitialization",
  CellID->398727686,ExpressionUUID->"8d106a4a-452d-4ade-8cd2-3dd74beaee24"]
 }, Open  ]],
@@ -15362,7 +15362,7 @@ Cell[CellGroupData[{
 Cell[BoxData[{
  RowBox[{
   RowBox[{"ham", "=", 
-   RowBox[{"HamMatrixAssembly", "[", "2", "]"}]}], 
+   RowBox[{"EffectiveHamiltonian", "[", "2", "]"}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{"MatrixPlot", "[", 
   RowBox[{"ham", ",", 
@@ -29437,7 +29437,7 @@ Cell[CellGroupData[{
 Cell[BoxData[{
  RowBox[{
   RowBox[{"ham", "=", 
-   RowBox[{"HamMatrixAssembly", "[", 
+   RowBox[{"EffectiveHamiltonian", "[", 
     RowBox[{"2", ",", 
      RowBox[{"\"\<ReturnInBlocks\>\"", "->", "True"}]}], "]"}]}], 
   ";"}], "\[IndentingNewLine]", 
@@ -29940,15 +29940,15 @@ Cell["Symbol", "Categorization",
  CellLabel->"Entity Type",
  CellID->777994654,ExpressionUUID->"dd0a8d69-edc5-4ac2-8c62-5246f6bd786d"],
 
-Cell["DavidLizarazo/qlanth", "Categorization",
+Cell["qlanth", "Categorization",
  CellLabel->"Paclet Name",
  CellID->1875706842,ExpressionUUID->"61059b62-c15f-4c41-a0a3-f71fcf5f3ff7"],
 
-Cell["DavidLizarazo`qlanth`", "Categorization",
+Cell["qlanth`", "Categorization",
  CellLabel->"Context",
  CellID->2092439181,ExpressionUUID->"2dd2fd5d-93db-40d6-a623-8fdb2ea8fa71"],
 
-Cell["DavidLizarazo/qlanth/ref/HamMatrixAssembly", "Categorization",
+Cell["qlanth/ref/EffectiveHamiltonian", "Categorization",
  CellLabel->"URI",
  CellID->433111795,ExpressionUUID->"e8cec96d-e807-4160-a334-caa4186dd869"]
 }, Closed]],
@@ -29987,7 +29987,7 @@ Cell[BoxData[""], "Template",
 },
 WindowSize->{800, 1005},
 WindowMargins->{{Automatic, 406}, {21, Automatic}},
-TaggingRules-><|"Paclet" -> "DavidLizarazo/qlanth"|>,
+TaggingRules-><|"Paclet" -> "qlanth"|>,
 FrontEndVersion->"14.1 for Mac OS X ARM (64-bit) (July 16, 2024)",
 StyleDefinitions->FrontEnd`FileName[{"Wolfram"}, "FunctionPageStylesExt.nb", 
   CharacterEncoding -> "UTF-8"],

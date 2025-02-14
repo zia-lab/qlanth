@@ -1269,7 +1269,7 @@
             "File"
             ->
             File[
-                "Documentation/English/ReferencePages/Symbols/HamMatrixAssembly.nb"
+                "Documentation/English/ReferencePages/Symbols/EffectiveHamiltonian.nb"
                     
             ]
             ,

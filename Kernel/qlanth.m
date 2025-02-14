@@ -133,7 +133,7 @@ Magnetism: From Transition Metals to Lanthanides. John Wiley & Sons,
 2015.
 ----------------------------------------------------------------- *)
 
-BeginPackage["DavidLizarazo`qlanth`"];
+BeginPackage["qlanth`"];
 Get[FileNameJoin[{DirectoryName[$InputFileName], "qonstants.m"}]]
 Get[FileNameJoin[{DirectoryName[$InputFileName], "misc.m"}]]
 
@@ -348,7 +348,7 @@ GenerateT22Table;
 GenerateThreeBodyTables;
 
 GroundMagDipoleOscillatorStrength;
-HamMatrixAssembly;
+EffectiveHamiltonian;
 HamiltonianForm;
 
 HamiltonianMatrixPlot;
@@ -2484,18 +2484,18 @@ Begin["`Private`"]
     Return[fNames];
   );
 
-  HamMatrixAssembly::usage = "HamMatrixAssembly[numE] returns the Hamiltonian matrix for the f^numE configuration. The matrix is returned as a SparseArray. 
+  EffectiveHamiltonian::usage = "EffectiveHamiltonian[numE] returns the Hamiltonian matrix for the f^numE configuration. The matrix is returned as a SparseArray. 
   The function admits an optional parameter \"FilenameAppendix\" which can be used to control which variant of the JJBlocks is used to assemble the matrix.
   It also admits an optional parameter \"IncludeZeeman\" which can be used to include the Zeeman interaction. The default is False.
   The option \"Set t2Switch\" can be used to toggle on or off setting the t2 selector automatically or not, the default is True, which replaces the parameter according to numE.
   The option \"ReturnInBlocks\" can be used to return the matrix in block or flattened form. The default is to return it in flattened form.";
-  Options[HamMatrixAssembly] = {
+  Options[EffectiveHamiltonian] = {
         "FilenameAppendix" -> "",
         "IncludeZeeman"    -> False,
         "Set t2Switch"     -> True,
         "ReturnInBlocks"   -> False,
         "OperatorBasis"    -> "Legacy"};
-  HamMatrixAssembly[nf_, OptionsPattern[]] := Module[
+  EffectiveHamiltonian[nf_, OptionsPattern[]] := Module[
     {numE, ii, jj, howManyJs, Js, blockHam, opBasis},
     (
       (*#####################################*)
@@ -2512,7 +2512,7 @@ Begin["`Private`"]
       (*#####################################*)
       If[opBasis == "MostlyOrthogonal",
         (
-          blockHam = HamMatrixAssembly[nf, 
+          blockHam = EffectiveHamiltonian[nf, 
           "OperatorBasis" -> "Legacy", 
           "FilenameAppendix" -> OptionValue["FilenameAppendix"], 
           "IncludeZeeman" -> OptionValue["IncludeZeeman"], 
@@ -2668,7 +2668,7 @@ Begin["`Private`"]
     )
   ];
 
-  SimplerSymbolicHamMatrix::usage = "SimplerSymbolicHamMatrix[numE, simplifier] is a simple addition to HamMatrixAssembly that applies a given simplification to the full Hamiltonian. simplifier is a list of replacement rules. 
+  SimplerSymbolicHamMatrix::usage = "SimplerSymbolicHamMatrix[numE, simplifier] is a simple addition to EffectiveHamiltonian that applies a given simplification to the full Hamiltonian. simplifier is a list of replacement rules. 
   If the option \"Export\" is set to True, then the function also exports the resulting sparse array to the ./hams/ folder.
   The option \"PrependToFilename\" can be used to prepend a string to the filename to which the function may export to.
   The option \"Return\" can be used to choose whether the function returns the matrix or not.
@@ -2766,7 +2766,7 @@ Begin["`Private`"]
         )
       ];
       
-      thisHam = HamMatrixAssembly[numE, "Set t2Switch" -> OptionValue["Set t2Switch"], "IncludeZeeman" -> OptionValue["IncludeZeeman"], "OperatorBasis" -> opBasis];
+      thisHam = EffectiveHamiltonian[numE, "Set t2Switch" -> OptionValue["Set t2Switch"], "IncludeZeeman" -> OptionValue["IncludeZeeman"], "OperatorBasis" -> opBasis];
       If[Length[simplifier] > 0,
         thisHam = ReplaceInSparseArray[thisHam, simplifier];
       ];
@@ -2923,7 +2923,7 @@ Begin["`Private`"]
   ];
 
  
-  LevelSimplerSymbolicHamMatrix::usage = "LevelSimplerSymbolicHamMatrix[numE] is a variation of HamMatrixAssembly that returns the diagonal JJ Hamiltonian blocks applying a simplifier and with simplifications adequate for the level description. The keys of the given association correspond to the different values of J that are possible for f^numE, the values are sparse array that are meant to be interpreted in the basis provided by BasisLSJ.
+  LevelSimplerSymbolicHamMatrix::usage = "LevelSimplerSymbolicHamMatrix[numE] is a variation of EffectiveHamiltonian that returns the diagonal JJ Hamiltonian blocks applying a simplifier and with simplifications adequate for the level description. The keys of the given association correspond to the different values of J that are possible for f^numE, the values are sparse array that are meant to be interpreted in the basis provided by BasisLSJ.
   The option \"Simplifier\" is a list of symbols that are set to zero. At a minimum this has to include the crystal field parameters. By default this includes everything except the Slater parameters Fk and the spin orbit coupling \[Zeta].
   The option \"Export\" controls whether the resulting association is saved to disk, the default is True and the resulting file is saved to the ./hams/ folder. A hash is appended to the filename that corresponds to the simplifier used in the resulting expression. If the option \"Overwrite\" is set to False then these files may be used to quickly retrieve a previously computed case. The file is saved both in .m and .mx format.
   The option \"PrependToFilename\" can be used to append a string to the filename to which the function may export to.
@@ -2985,7 +2985,7 @@ Begin["`Private`"]
       )
       ];
       Js           = AllowedJ[numE];
-      thisHamAssoc = HamMatrixAssembly[numE,
+      thisHamAssoc = EffectiveHamiltonian[numE,
         "Set t2Switch"->True,
         "IncludeZeeman"->False,
         "ReturnInBlocks"->True

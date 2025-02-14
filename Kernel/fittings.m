@@ -24,7 +24,7 @@
 |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|
 +-----------------------------------------------------------------*)
 
-BeginPackage["DavidLizarazo`fittings`"];
+BeginPackage["fittings`"];
 
 Get[FileNameJoin[{DirectoryName[$InputFileName],"qlanth.m"}]];
 Get[FileNameJoin[{DirectoryName[$InputFileName],"qonstants.m"}]];
@@ -1224,7 +1224,7 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
     (
       If[truncationEnergy == Infinity,
       (
-          ham = HamMatrixAssembly[numE, "ReturnInBlocks" -> False];
+          ham = EffectiveHamiltonian[numE, "ReturnInBlocks" -> False];
           theSimplifier = simplifier;
           ham = Normal@ReplaceInSparseArray[ham, simplifier];
           PrintFun["Compiling a function for the Hamiltonian with no truncation ..."];
@@ -1238,7 +1238,7 @@ ClassicalFit[numE_Integer, expData_List, excludeDataIndices_List, problemVars_Li
       (
         (* grab the Hamiltonian preserving the block structure *)
         PrintFun["Assembling the Hamiltonian for f^",numE," keeping the block structure ..."];
-        ham          = HamMatrixAssembly[numE, "ReturnInBlocks"->True];
+        ham          = EffectiveHamiltonian[numE, "ReturnInBlocks"->True];
         (* apply the simplifier *)
         PrintFun["Simplifying using the aggregate set of simplification rules ..."];
         ham          = Map[ReplaceInSparseArray[#, simplifier]&, ham, {2}];
@@ -2034,7 +2034,7 @@ MostlyOrthogonalFit[numE_Integer, expData_List, excludeDataIndices_List, problem
     (
       If[truncationEnergy == Infinity,
       (
-          ham = HamMatrixAssembly[numE, 
+          ham = EffectiveHamiltonian[numE, 
                 "ReturnInBlocks" -> False,
                 "OperatorBasis" -> "MostlyOrthogonal"];
           theSimplifier = simplifier;
@@ -2050,7 +2050,7 @@ MostlyOrthogonalFit[numE_Integer, expData_List, excludeDataIndices_List, problem
       (
         (* grab the Hamiltonian preserving the block structure *)
         PrintFun["Assembling the Hamiltonian for f^", numE, " keeping the block structure ..."];
-        ham          = HamMatrixAssembly[numE,
+        ham          = EffectiveHamiltonian[numE,
                        "ReturnInBlocks"->True,
                        "OperatorBasis"->"MostlyOrthogonal"];
         (* apply the simplifier *)

@@ -1,7 +1,7 @@
-Needs["DavidLizarazo`qlanth`"];
-Needs["DavidLizarazo`fittings`"];
-Needs["DavidLizarazo`qonstants`"];
-Needs["DavidLizarazo`misc`"];
+Needs["qlanth`"];
+Needs["fittings`"];
+Needs["qonstants`"];
+Needs["misc`"];
 
 LoadCarnall[];
 

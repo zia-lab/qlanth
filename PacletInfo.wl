@@ -2,9 +2,9 @@
 
 PacletObject[
     <|
-        "Name" -> "DavidLizarazo/qlanth",
+        "Name" -> "qlanth",
         "PublisherID" -> "DavidLizarazo",
-        "Version" -> "1.2.1",
+        "Version" -> "1.2.2",
         "WolframVersion" -> "12.+",
         "Extensions" ->
             {
@@ -14,22 +14,22 @@ PacletObject[
                     "Context" ->
                         {
                             {
-                                "DavidLizarazo`qlanth`"
+                                "qlanth`"
                                 ,
                                 "qlanth.m"
                             },
                             {
-                                "DavidLizarazo`qonstants`"
+                                "qonstants`"
                                 ,
                                 "qonstants.m"
                             },
                             {
-                                "DavidLizarazo`misc`"
+                                "misc`"
                                 ,
                                 "misc.m"
                             },
                             {
-                                "DavidLizarazo`fittings`"
+                                "fittings`"
                                 ,
                                 "fittings.m"
                             }

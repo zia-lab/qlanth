@@ -43,6 +43,7 @@
 \usepackage[para]{footmisc}
 \usepackage{etoolbox}
 \robustify{\underbar}
+\newcommand{\qversion}{v1.2.2}
 
 % Listing configuration
 \lstset{   
@@ -118,7 +119,7 @@
     
     % Include the image
     {\Large\qlanth}\\
-    {\large doc version $\ket{\alpha}^{(17)}$} \\
+    {\large \qversion} \\
     \vspace*{0.5cm}
     \includegraphics[width=0.6\textwidth]{ion_in_lattice.jpg}  % Adjust the size as needed
     \vspace*{0.4cm} % More vertical space a
@@ -524,7 +525,7 @@ for a double tensor operator $\op{V}^{(1K)}$ of rank $1$ for spin and rank $K$ f
 
 In most cases all matrix elements in \qlanth are only calculated up to and including $\forb^7$. Beyond $\forb^7$ adequate changes of sign are enforced to take into account the equivalence that can be made between $\forb^{\numE}$ and $\forb^{14-\numE}$ as given by \eqnref{eqn:sign change double tensor op} and \eqnref{eqn:sign change tensor op}. 
 
-This is enforced when the function \codetext{HamMatrixAssembly} is called. In there \codetext{HoleElectronConjugation} is the function responsible for enforcing a global sign flip for the following operators (or alternatively, to their accompanying coefficients):
+This is enforced when the function \codetext{EffectiveHamiltonian} is called. In there \codetext{HoleElectronConjugation} is the function responsible for enforcing a global sign flip for the following operators (or alternatively, to their accompanying coefficients):
 \begin{align}
 	\nonumber \spinZeta, \Bkq{k}{q} \\
 	\nonumber \Tk{2}', \Tk{3}, \Tk{4}, \Tk{6}, \Tk{7}, \Tk{8}\\ 
@@ -557,9 +558,9 @@ In \qlanth these blocks are put together by the function \codetext{JJBlockMatrix
 
 \lstinputlisting[language=Mathematica]{./fundefs/JJBlockMatrix.tex}
 
-Once these blocks have been calculated and saved to disk (in the folder \codetext{./hams/}) the function \codetext{HamMatrixAssembly} takes them, assembles the arrays in block form, and finally flattens them to provide a sparse rank-2 array. These are the arrays that are finally diagonalized to find energies and eigenstates. Through options, this function can also return the Hamiltonian in block form, which is useful for the level description of the eigenstates.
+Once these blocks have been calculated and saved to disk (in the folder \codetext{./hams/}) the function \codetext{EffectiveHamiltonian} takes them, assembles the arrays in block form, and finally flattens them to provide a sparse rank-2 array. These are the arrays that are finally diagonalized to find energies and eigenstates. Through options, this function can also return the Hamiltonian in block form, which is useful for the level description of the eigenstates.
 
-\lstinputlisting[language=Mathematica]{./fundefs/HamMatrixAssembly.tex}
+\lstinputlisting[language=Mathematica]{./fundefs/EffectiveHamiltonian.tex}
 
 In \qlanth the reduced matrix elements of all operators, and the subsequent matrix elements of $\ham$ are calculated exactly. This is in contrast to what is done in older alternatives to \qlanth such as \codetext{linuxemp}, in which calculations of reduced matrix elements were obtained from tables calculated with finite precision. To underscore this fact, \eqnref{eqn:block-example} shows an example of a J-J block as contained in \qlanth.
 
@@ -1305,7 +1306,7 @@ The $JJ'$ blocks that are generated with this function are then put together by 
     \lstinputlisting[language=Mathematica]{./fundefs/\name.tex}
 }
 
-Using the cartesian components of the magnetic dipole operator, the matrix elements of the Zeeman term can then be evaluated. This term can be included in the Hamiltonian through an option in \codetext{HamMatrixAssembly}. Since the magnetic dipole operator is calculated in atomic units, and it seeming desirable that the input units of the magnetic field be Tesla, a conversion factor is included so that the final terms be congruent with the energy units assumed in the other terms in the Hamiltonian, namely the energy pseudo-unit \index{Kayser} Kayser ($\text{cm}^{-1}$). The conversion factor is called \codetext{teslaToKayser} in the file \codetext{qonstants.m}.
+Using the cartesian components of the magnetic dipole operator, the matrix elements of the Zeeman term can then be evaluated. This term can be included in the Hamiltonian through an option in \codetext{EffectiveHamiltonian}. Since the magnetic dipole operator is calculated in atomic units, and it seeming desirable that the input units of the magnetic field be Tesla, a conversion factor is included so that the final terms be congruent with the energy units assumed in the other terms in the Hamiltonian, namely the energy pseudo-unit \index{Kayser} Kayser ($\text{cm}^{-1}$). The conversion factor is called \codetext{teslaToKayser} in the file \codetext{qonstants.m}.
 
 \subsection{Alternative operator bases}
 
@@ -1344,9 +1345,9 @@ Using these coefficients and their accompanying operators, the \hamilton is now
 
 Some operators remain unchanged in this parametrization, specifically $\op{C}_q^k$, $\op{t}_k$ ($k\neq2$), and the spin-orbit term. However some operators are still non-orthogonal. Operators from different \textit{families} are mutually orthogonal, and all pairs within each family are orthogonal as well. Nevertheless, any two operators from either $\op{m}_k$ or $\op{p}_k$ are non-orthogonal. This residual non-orthogonality in the Hamiltonian can be resolved using the $\hat{z}_i$ operators, originally introduced by Judd in his discussion of intra-atomic magnetic interactions \cite{judd_intra-atomic_1968}. This parametrization, which leaves $\op{m}_k$ or $\op{p}_k$ as they are, is therefore not entirely orthogonal, and we refer to it as the \textit{mostly}-orthogonal Hamiltonian. \index{mostly orthogonal basis}
 
-In \qlanth the symbolic array that represents the \textit{mostly}-orthogonal Hamiltonian can be obtained with the adequate setting of the option \codetext{OperatorBasis} in \codetext{HamMatrixAssembly}. In that option, the standard operator basis (i.e. the one use by \bill) is termed the \textit{legacy} basis.
+In \qlanth the symbolic array that represents the \textit{mostly}-orthogonal Hamiltonian can be obtained with the adequate setting of the option \codetext{OperatorBasis} in \codetext{EffectiveHamiltonian}. In that option, the standard operator basis (i.e. the one use by \bill) is termed the \textit{legacy} basis.
 
-\lstinputlisting[language=Mathematica]{./fundefs/HamMatrixAssembly.tex}
+\lstinputlisting[language=Mathematica]{./fundefs/EffectiveHamiltonian.tex}
 
 \section{Coordinate system}\label{section:coord-sys}
 
@@ -1707,7 +1708,7 @@ The code for this dissertation is accompanied by the following auxiliary \mathem
 \begin{itemize}
 %	\item \faFloppyO\,\, \codetext{/notebooks/qlanth.nb}: gives an overview of functions included in \qlanth.
 	\item \faFloppyO\,\, \codetext{/notebooks/qlanth - Table Generator.nb}: generates the basic tables on which every calculation is based. This means that LS-reduced matrix elements are used to calculate matrix elements in the $\LSJMbasis$ basis.
-	\item \faFloppyO\,\, \codetext{/notebooks/qlanth - JJBlock Calculator.nb}: can be used to generate the J-J' blocks for the different interactions. The data files produced here are necessary for \codetext{HamMatrixAssembly} to work. These blocks are creating by putting together matrix elements from different interactions.
+	\item \faFloppyO\,\, \codetext{/notebooks/qlanth - JJBlock Calculator.nb}: can be used to generate the J-J' blocks for the different interactions. The data files produced here are necessary for \codetext{EffectiveHamiltonian} to work. These blocks are creating by putting together matrix elements from different interactions.
 	\item \faFloppyO\,\, \codetext{/notebooks/The Lanthanides in LaF3.nb}: runs \qlanth over the lanthanide ions in \LaFthree and compares the results against the published values from \bill. It also calculates magnetic dipole transition rates and oscillator strengths.
 \end{itemize}
 
@@ -1797,17 +1798,7 @@ Some constants and conversion values are included in the file \codetext{qonstant
 \section{Mathematica \codetext{paclet}}\label{section:paclet}
 
 
-The simplest way of adding \qlanth to \mathematica is by installing the corresponding paclet. After having cloned the repository to a local machine, execute the code below in a \mathematica session. After this, the downloaded files may be removed, and \qlanth may be loaded into a notebook by issuing the command \codetext{Needs["DavidLizarazo{\textasciigrave}qlanth{\textasciigrave}"]} .
-
-\begin{verbatim}
-Needs["PacletTools`"];
-pathToRepo = "~/Downloads/qlanth/"; (* change accordingly *)
-pathToBuild = FileNameJoin[{pathToRepo,"build","DavidLizarazo__qlanth"}];
-CreatePacletArchive[pathToBuild];
-pathToPaclet = FileNames[
-	FileNameJoin[{pathToRepo, "build", "/*.paclet"}]][[1]];
-PacletInstall[pathToPaclet, ForceVersionInstall -> True];
-\end{verbatim}
+The simplest way of adding \qlanth to \mathematica is by installing the corresponding paclet. To do this, first download the \codetext{paclet} file for the \href{https://github.com/zia-lab/qlanth/releases}{latest release} of the code on GitHub. Install the \codetext{paclet} file using \href{https://reference.wolfram.com/language/ref/PacletInstall.html.en}{PacletInstall} within a \mathematica session. After this \qlanth may be loaded into a notebook by issuing the command \codetext{Needs["qlanth{\textasciigrave}"]}.
 
 The paclet includes documentation in standard \mathematica format (see \figuref{fig:mathematica-docs}).
 
@@ -1821,8 +1812,8 @@ The paclet includes documentation in standard \mathematica format (see \figuref{
     \end{subfigure}
 	\begin{subfigure}{0.45\textwidth}
         \centering
-		\includegraphics[width=\linewidth]{./docImages/81-HamMatrixAssembly.jpg}	
-		\caption{Documentation for \codetext{HamMatrixAssembly}}
+		\includegraphics[width=\linewidth]{./docImages/39-EffectiveHamiltonian.jpg}	
+		\caption{Documentation for \codetext{EffectiveHamiltonian}}
 		\label{fig:mathematica-docs-hammatrix}
     \end{subfigure}
     
@@ -1836,7 +1827,7 @@ The paclet includes documentation in standard \mathematica format (see \figuref{
     \end{subfigure}
 	\begin{subfigure}{0.45\textwidth}
         \centering
-		\includegraphics[width=\linewidth]{./docImages/184-ToPythonSymPyExpression}	
+		\includegraphics[width=\linewidth]{./docImages/185-ToPythonSymPyExpression}	
 		\caption{Doc. for \codetext{ToPythonSymPyExpression}}
 		\label{fig:mathematica-docs2}
     \end{subfigure}

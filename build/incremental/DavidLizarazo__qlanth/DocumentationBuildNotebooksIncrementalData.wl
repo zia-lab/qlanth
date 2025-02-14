@@ -342,7 +342,7 @@
   <|"Result" -> Success["ProcessedNotebook", <|"Action" -> "Build", 
       "Time" -> Quantity[0.487639, "Seconds"]|>], 
    "FileHash" -> "2i/Asn2j/rT+ziOpzt4l+vXG6lHKK+RPsYeiPW3Ycas="|>, 
- "English/ReferencePages/Symbols/HamMatrixAssembly.nb" -> 
+ "English/ReferencePages/Symbols/EffectiveHamiltonian.nb" -> 
   <|"Result" -> Success["ProcessedNotebook", <|"Action" -> "Build", 
       "Time" -> Quantity[1.783664, "Seconds"]|>], 
    "FileHash" -> "hwFe+9qrukLFa1v04eBuozSzhNldIYxiPbQHo6aG8oc="|>, 

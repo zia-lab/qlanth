@@ -65,7 +65,7 @@ dipole operator."
 
 Cell[BoxData[{
  RowBox[{
-  RowBox[{"Needs", "[", "\"\<DavidLizarazo`qlanth`\>\"", "]"}], 
+  RowBox[{"Needs", "[", "\"\<qlanth`\>\"", "]"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"LoadElectrostatic", "[", "]"}], ";"}], "\[IndentingNewLine]", 
@@ -143,14 +143,14 @@ Cell[BoxData[
               BaseStyle->"Link",
               
               ButtonData->
-               "paclet:DavidLizarazo/qlanth/ref/\
+               "paclet:qlanth/ref/\
 TabulateManyJJBlockMatrixTables",
               
               ButtonNote->
-               "paclet:DavidLizarazo/qlanth/ref/\
+               "paclet:qlanth/ref/\
 TabulateManyJJBlockMatrixTables"],
              
-             "\"paclet:DavidLizarazo/qlanth/ref/\
+             "\"paclet:qlanth/ref/\
 TabulateManyJJBlockMatrixTables\""],
             FrameMargins->{{0, 4}, {0, 2}}],
            BaseStyle->"InformationTitleBackground",
@@ -193,19 +193,19 @@ whose values are rectangular arrays given the values of \
                  GridBox[{{
                     RowBox[{
                     RowBox[{"TabulateManyJJBlockMatrixTables", "[", 
-                    RowBox[{"DavidLizarazo`qlanth`Private`ns_", ",", 
+                    RowBox[{"qlanth`Private`ns_", ",", 
                     RowBox[{"OptionsPattern", "[", "]"}]}], "]"}], ":=", 
                     RowBox[{"(", 
                     RowBox[{
-                    RowBox[{"DavidLizarazo`qlanth`Private`overwrite", "=", 
+                    RowBox[{"qlanth`Private`overwrite", "=", 
                     RowBox[{"OptionValue", "[", "\"Overwrite\"", "]"}]}], ";", 
-                    RowBox[{"DavidLizarazo`qlanth`Private`fNames", "=", 
+                    RowBox[{"qlanth`Private`fNames", "=", 
                     RowBox[{"Association", "[", "]"}]}], ";", 
-                    RowBox[{"DavidLizarazo`qlanth`Private`fileApp", "=", 
+                    RowBox[{"qlanth`Private`fileApp", "=", 
                     
                     RowBox[{"OptionValue", "[", "\"FilenameAppendix\"", 
                     "]"}]}], ";", 
-                    RowBox[{"DavidLizarazo`qlanth`Private`ExportFun", "=", 
+                    RowBox[{"qlanth`Private`ExportFun", "=", 
                     RowBox[{"If", "[", 
                     RowBox[{
                     RowBox[{"OptionValue", "[", "\"Compressed\"", "]"}], ",", 
@@ -214,7 +214,7 @@ whose values are rectangular arrays given the values of \
                     RowBox[{
                     RowBox[{
                     
-                    RowBox[{"DavidLizarazo`qlanth`Private`CFdataFilename", 
+                    RowBox[{"qlanth`Private`CFdataFilename", 
                     "=", 
                     RowBox[{"FileNameJoin", "[", 
                     RowBox[{"{", 
@@ -222,51 +222,51 @@ whose values are rectangular arrays given the values of \
                     RowBox[{"\"CrystalFieldTable_f\"", "<>", 
                     
                     RowBox[{"ToString", "[", 
-                    "DavidLizarazo`qlanth`Private`numE", "]"}], "<>", 
+                    "qlanth`Private`numE", "]"}], "<>", 
                     "\".zip\""}]}], "}"}], "]"}]}], ";", 
                     RowBox[{"PrintTemporary", "[", 
                     
                     RowBox[{"\"Importing CrystalFieldTable from \"", ",", 
-                    "DavidLizarazo`qlanth`Private`CFdataFilename", ",", 
+                    "qlanth`Private`CFdataFilename", ",", 
                     "\" ...\""}], "]"}], ";", 
                     
-                    RowBox[{"DavidLizarazo`qlanth`Private`CrystalFieldTable", 
+                    RowBox[{"qlanth`Private`CrystalFieldTable", 
                     "=", 
                     
                     RowBox[{"ImportMZip", "[", 
-                    "DavidLizarazo`qlanth`Private`CFdataFilename", "]"}]}], 
+                    "qlanth`Private`CFdataFilename", "]"}]}], 
                     ";", 
                     RowBox[{"PrintTemporary", "[", 
                     
                     RowBox[{"\"#------- numE = \"", ",", 
-                    "DavidLizarazo`qlanth`Private`numE", ",", 
+                    "qlanth`Private`numE", ",", 
                     "\" -------#\""}], "]"}], ";", 
-                    RowBox[{"DavidLizarazo`qlanth`Private`exportFname", "=", 
+                    RowBox[{"qlanth`Private`exportFname", "=", 
                     RowBox[{"JJBlockMatrixFileName", "[", 
-                    RowBox[{"DavidLizarazo`qlanth`Private`numE", ",", 
+                    RowBox[{"qlanth`Private`numE", ",", 
                     
                     RowBox[{"\"FilenameAppendix\"", "\[Rule]", 
-                    "DavidLizarazo`qlanth`Private`fileApp"}]}], "]"}]}], ";", 
+                    "qlanth`Private`fileApp"}]}], "]"}]}], ";", 
                     
                     RowBox[{
                     
-                    RowBox[{"DavidLizarazo`qlanth`Private`fNames", "[", 
-                    "DavidLizarazo`qlanth`Private`numE", "]"}], "=", 
-                    "DavidLizarazo`qlanth`Private`exportFname"}], ";", 
+                    RowBox[{"qlanth`Private`fNames", "[", 
+                    "qlanth`Private`numE", "]"}], "=", 
+                    "qlanth`Private`exportFname"}], ";", 
                     RowBox[{"If", "[", 
                     RowBox[{
                     RowBox[{
                     
                     RowBox[{"FileExistsQ", "[", 
-                    "DavidLizarazo`qlanth`Private`exportFname", "]"}], "&&", 
-                    RowBox[{"!", "DavidLizarazo`qlanth`Private`overwrite"}]}],
+                    "qlanth`Private`exportFname", "]"}], "&&", 
+                    RowBox[{"!", "qlanth`Private`overwrite"}]}],
                      ",", 
                     RowBox[{"Continue", "[", "]"}]}], "]"}], ";", 
                     RowBox[{"JJBlockMatrixTable", "=", 
                     RowBox[{"TabulateJJBlockMatrixTable", "[", 
                     
-                    RowBox[{"DavidLizarazo`qlanth`Private`numE", ",", 
-                    "DavidLizarazo`qlanth`Private`CrystalFieldTable", ",", 
+                    RowBox[{"qlanth`Private`numE", ",", 
+                    "qlanth`Private`CrystalFieldTable", ",", 
                     RowBox[{"\"Sparse\"", "\[Rule]", 
                     RowBox[{"OptionValue", "[", "\"Sparse\"", "]"}]}], ",", 
                     RowBox[{"\"ChenDeltas\"", "\[Rule]", 
@@ -277,28 +277,28 @@ whose values are rectangular arrays given the values of \
                     RowBox[{
                     
                     RowBox[{"FileExistsQ", "[", 
-                    "DavidLizarazo`qlanth`Private`exportFname", "]"}], "&&", 
-                    "DavidLizarazo`qlanth`Private`overwrite"}], ",", 
+                    "qlanth`Private`exportFname", "]"}], "&&", 
+                    "qlanth`Private`overwrite"}], ",", 
                     
                     RowBox[{"DeleteFile", "[", 
-                    "DavidLizarazo`qlanth`Private`exportFname", "]"}]}], 
+                    "qlanth`Private`exportFname", "]"}]}], 
                     "]"}], ";", 
-                    RowBox[{"DavidLizarazo`qlanth`Private`ExportFun", "[", 
+                    RowBox[{"qlanth`Private`ExportFun", "[", 
                     
-                    RowBox[{"DavidLizarazo`qlanth`Private`exportFname", ",", 
+                    RowBox[{"qlanth`Private`exportFname", ",", 
                     "JJBlockMatrixTable"}], "]"}], ";", 
                     
                     RowBox[{"ClearAll", "[", 
-                    "DavidLizarazo`qlanth`Private`CrystalFieldTable", "]"}], 
+                    "qlanth`Private`CrystalFieldTable", "]"}], 
                     ";"}], ",", 
                     RowBox[{"{", 
                     
-                    RowBox[{"DavidLizarazo`qlanth`Private`numE", ",", 
-                    "DavidLizarazo`qlanth`Private`ns"}], "}"}]}], "]"}], ";", 
+                    RowBox[{"qlanth`Private`numE", ",", 
+                    "qlanth`Private`ns"}], "}"}]}], "]"}], ";", 
                     
                     
                     RowBox[{
-                    "Return", "[", "DavidLizarazo`qlanth`Private`fNames", 
+                    "Return", "[", "qlanth`Private`fNames", 
                     "]"}], ";"}], ")"}]}]}, {" "}}, 
                   GridBoxAlignment -> {"Columns" -> {{Left}}}, 
                   DefaultBaseStyle -> "Column", 
@@ -332,9 +332,9 @@ whose values are rectangular arrays given the values of \
                     
                     TemplateBox[{
                     "\"Local \[RightGuillemet]\"", 
-                    "paclet:DavidLizarazo/qlanth/ref/\
+                    "paclet:qlanth/ref/\
 TabulateManyJJBlockMatrixTables", 
-                    "paclet:DavidLizarazo/qlanth/ref/\
+                    "paclet:qlanth/ref/\
 TabulateManyJJBlockMatrixTables", "Link", {
                     RGBColor[0.9686274509803922, 0.4666666666666667, 0.]}, 
                     BaseStyle -> {
@@ -455,7 +455,7 @@ TabulateManyJJBlockMatrixTables", "Link", {
                     
                     Annotation[#, "FullName", 
                     "Tooltip"]& ], \
-"\<\"DavidLizarazo`qlanth`TabulateManyJJBlockMatrixTables\"\>"}
+"\<\"qlanth`TabulateManyJJBlockMatrixTables\"\>"}
                  },
                  AutoDelete->False,
                  GridBoxAlignment->{"Columns" -> {Right, Left}},
@@ -563,14 +563,14 @@ TabulateManyJJBlockMatrixTables", "Link", {
               BaseStyle->"Link",
               
               ButtonData->
-               "paclet:DavidLizarazo/qlanth/ref/\
+               "paclet:qlanth/ref/\
 TabulateManyJJBlockMatrixTables",
               
               ButtonNote->
-               "paclet:DavidLizarazo/qlanth/ref/\
+               "paclet:qlanth/ref/\
 TabulateManyJJBlockMatrixTables"],
              
-             "\"paclet:DavidLizarazo/qlanth/ref/\
+             "\"paclet:qlanth/ref/\
 TabulateManyJJBlockMatrixTables\""],
             FrameMargins->{{0, 4}, {0, 2}}],
            BaseStyle->"InformationTitleBackground",
@@ -659,67 +659,67 @@ association whose keys are of the form {n, J, Jp} and whose values are \
 rectangular arrays given the values of <|LSJMJa|H|L'S'J'MJ'a'|>.", 
     "Documentation" -> <|
      "Local" -> 
-      "paclet:DavidLizarazo/qlanth/ref/TabulateManyJJBlockMatrixTables"|>, 
+      "paclet:qlanth/ref/TabulateManyJJBlockMatrixTables"|>, 
     "OwnValues" -> None, "UpValues" -> None, "DownValues" -> 
     Information`InformationValueForm[
-     DownValues, DavidLizarazo`qlanth`TabulateManyJJBlockMatrixTables, {
-      DavidLizarazo`qlanth`TabulateManyJJBlockMatrixTables[
-         Pattern[DavidLizarazo`qlanth`Private`ns, 
+     DownValues, qlanth`TabulateManyJJBlockMatrixTables, {
+      qlanth`TabulateManyJJBlockMatrixTables[
+         Pattern[qlanth`Private`ns, 
           Blank[]], 
          OptionsPattern[]] :> (
-        DavidLizarazo`qlanth`Private`overwrite = OptionValue["Overwrite"]; 
-        DavidLizarazo`qlanth`Private`fNames = <||>; 
-        DavidLizarazo`qlanth`Private`fileApp = 
+        qlanth`Private`overwrite = OptionValue["Overwrite"]; 
+        qlanth`Private`fNames = <||>; 
+        qlanth`Private`fileApp = 
          OptionValue["FilenameAppendix"]; 
-        DavidLizarazo`qlanth`Private`ExportFun = If[
-           OptionValue["Compressed"], DavidLizarazo`qlanth`ExportMZip, 
+        qlanth`Private`ExportFun = If[
+           OptionValue["Compressed"], qlanth`ExportMZip, 
            Export]; Do[
-         DavidLizarazo`qlanth`Private`CFdataFilename = 
+         qlanth`Private`CFdataFilename = 
            FileNameJoin[{
-             DavidLizarazo`qlanth`moduleDir, "data", "CrystalFieldTable_f" <> 
-              ToString[DavidLizarazo`qlanth`Private`numE] <> ".zip"}]; 
+             qlanth`moduleDir, "data", "CrystalFieldTable_f" <> 
+              ToString[qlanth`Private`numE] <> ".zip"}]; 
           PrintTemporary[
            "Importing CrystalFieldTable from ", 
-            DavidLizarazo`qlanth`Private`CFdataFilename, " ..."]; 
-          DavidLizarazo`qlanth`Private`CrystalFieldTable = 
-           DavidLizarazo`qlanth`ImportMZip[
-            DavidLizarazo`qlanth`Private`CFdataFilename]; 
+            qlanth`Private`CFdataFilename, " ..."]; 
+          qlanth`Private`CrystalFieldTable = 
+           qlanth`ImportMZip[
+            qlanth`Private`CFdataFilename]; 
           PrintTemporary[
-           "#------- numE = ", DavidLizarazo`qlanth`Private`numE, 
+           "#------- numE = ", qlanth`Private`numE, 
             " -------#"]; 
-          DavidLizarazo`qlanth`Private`exportFname = 
-           DavidLizarazo`qlanth`JJBlockMatrixFileName[
-            DavidLizarazo`qlanth`Private`numE, "FilenameAppendix" -> 
-             DavidLizarazo`qlanth`Private`fileApp]; 
-          DavidLizarazo`qlanth`Private`fNames[
-            DavidLizarazo`qlanth`Private`numE] = 
-           DavidLizarazo`qlanth`Private`exportFname; If[
+          qlanth`Private`exportFname = 
+           qlanth`JJBlockMatrixFileName[
+            qlanth`Private`numE, "FilenameAppendix" -> 
+             qlanth`Private`fileApp]; 
+          qlanth`Private`fNames[
+            qlanth`Private`numE] = 
+           qlanth`Private`exportFname; If[
             And[
-             FileExistsQ[DavidLizarazo`qlanth`Private`exportFname], 
-             Not[DavidLizarazo`qlanth`Private`overwrite]], 
+             FileExistsQ[qlanth`Private`exportFname], 
+             Not[qlanth`Private`overwrite]], 
             Continue[]]; 
-          DavidLizarazo`qlanth`JJBlockMatrixTable = 
-           DavidLizarazo`qlanth`TabulateJJBlockMatrixTable[
-            DavidLizarazo`qlanth`Private`numE, 
-             DavidLizarazo`qlanth`Private`CrystalFieldTable, "Sparse" -> 
+          qlanth`JJBlockMatrixTable = 
+           qlanth`TabulateJJBlockMatrixTable[
+            qlanth`Private`numE, 
+             qlanth`Private`CrystalFieldTable, "Sparse" -> 
              OptionValue["Sparse"], "ChenDeltas" -> 
              OptionValue["ChenDeltas"]]; If[
             And[
-             FileExistsQ[DavidLizarazo`qlanth`Private`exportFname], 
-             DavidLizarazo`qlanth`Private`overwrite], 
-            DeleteFile[DavidLizarazo`qlanth`Private`exportFname]]; 
-          DavidLizarazo`qlanth`Private`ExportFun[
-           DavidLizarazo`qlanth`Private`exportFname, 
-            DavidLizarazo`qlanth`JJBlockMatrixTable]; 
-          ClearAll[DavidLizarazo`qlanth`Private`CrystalFieldTable]; Null, {
-          DavidLizarazo`qlanth`Private`numE, 
-           DavidLizarazo`qlanth`Private`ns}]; 
-        Return[DavidLizarazo`qlanth`Private`fNames]; Null)}], "SubValues" -> 
+             FileExistsQ[qlanth`Private`exportFname], 
+             qlanth`Private`overwrite], 
+            DeleteFile[qlanth`Private`exportFname]]; 
+          qlanth`Private`ExportFun[
+           qlanth`Private`exportFname, 
+            qlanth`JJBlockMatrixTable]; 
+          ClearAll[qlanth`Private`CrystalFieldTable]; Null, {
+          qlanth`Private`numE, 
+           qlanth`Private`ns}]; 
+        Return[qlanth`Private`fNames]; Null)}], "SubValues" -> 
     None, "DefaultValues" -> None, "NValues" -> None, "FormatValues" -> None, 
     "Options" -> {
      "Overwrite" -> False, "Sparse" -> True, "ChenDeltas" -> False, 
       "FilenameAppendix" -> "", "Compressed" -> False}, "Attributes" -> {}, 
-    "FullName" -> "DavidLizarazo`qlanth`TabulateManyJJBlockMatrixTables"|>, 
+    "FullName" -> "qlanth`TabulateManyJJBlockMatrixTables"|>, 
    False]]], "Output",
  CellChangeTimes->{
   3.873904145877635*^9, 3.875697444802656*^9, 3.875697516087777*^9, 
@@ -860,7 +860,7 @@ Cell[BoxData[
   RowBox[{
    RowBox[{"(", "\[IndentingNewLine]", 
     RowBox[{
-     RowBox[{"Needs", "[", "\"\<DavidLizarazo`qlanth`\>\"", "]"}], ";", 
+     RowBox[{"Needs", "[", "\"\<qlanth`\>\"", "]"}], ";", 
      "\[IndentingNewLine]", 
      RowBox[{"TabulateManyJJBlockMagDipTables", "[", 
       RowBox[{
