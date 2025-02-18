@@ -312,10 +312,11 @@ CrystalFieldForm;
 
 Dk;
 EigenLever;
+EffectiveHamiltonian;
 Electrostatic;
 ElectrostaticConfigInteraction;
-ElectrostaticTable;
 
+ElectrostaticTable;
 EnergyLevelDiagram;
 EnergyStates;
 EtoF;
@@ -348,7 +349,6 @@ GenerateT22Table;
 GenerateThreeBodyTables;
 
 GroundMagDipoleOscillatorStrength;
-EffectiveHamiltonian;
 HamiltonianForm;
 
 HamiltonianMatrixPlot;
@@ -372,7 +372,7 @@ LevelMagDipoleMatrixAssembly;
 LevelMagDipoleOscillatorStrength;
 
 LevelMagDipoleSpontaneousDecayRates;
-LevelSimplerSymbolicHamMatrix;
+LevelSimplerEffectiveHamiltonian;
 LevelSolver;
 LoadAll;
 
@@ -440,7 +440,7 @@ SOOandECSOLSTable;
 SOOandECSOTable;
 Seniority;
 ShiftedLevels;
-SimplerSymbolicHamMatrix;
+SimplerEffectiveHamiltonian;
 
 SixJay;
 SpinOrbit;
@@ -678,7 +678,7 @@ Begin["`Private`"]
   Options[GenerateReducedUkTable] = {"Export" -> True, "Progress" -> True};
   GenerateReducedUkTable[numEmax_Integer:7, OptionsPattern[]] := (
     numValues = Total[Length[AllowedNKSLTerms[#]]*Length[AllowedNKSLTerms[#]]&/@Range[1, numEmax]] * 4;
-    Print["Calculating " <> ToString[numValues] <> " values for Uk k=0,2,4,6."];
+    Echo["Calculating " <> ToString[numValues] <> " values for Uk k=0,2,4,6."];
     counter = 1;
     If[And[OptionValue["Progress"], frontEndAvailable],
     progBar = PrintTemporary[
@@ -702,7 +702,7 @@ Begin["`Private`"]
     ];
     If[OptionValue["Export"],
       (
-        Print["Exporting to file " <> ToString[ReducedUkTableFname]];
+        Echo["Exporting to file " <> ToString[ReducedUkTableFname]];
         Export[ReducedUkTableFname, ReducedUkTable];
       )
     ];
@@ -713,7 +713,7 @@ Begin["`Private`"]
   Options[GenerateReducedV1kTable] = {"Export" -> True, "Progress" -> True};
   GenerateReducedV1kTable[numEmax_Integer:7, OptionsPattern[]] := (
     numValues = Total[Length[AllowedNKSLTerms[#]]*Length[AllowedNKSLTerms[#]]&/@Range[1, numEmax]];
-    Print["Calculating " <> ToString[numValues] <> " values for Vk1."];
+    Echo["Calculating " <> ToString[numValues] <> " values for Vk1."];
     counter = 1;
     If[And[OptionValue["Progress"], frontEndAvailable],
     progBar = PrintTemporary[
@@ -736,7 +736,7 @@ Begin["`Private`"]
     exportFname = FileNameJoin[{moduleDir, "data", "ReducedV1kTable.m"}];
     If[OptionValue["Export"],
       (
-        Print["Exporting to file "<>ToString[exportFname]];
+        Echo["Exporting to file " <> ToString[exportFname]];
         Export[exportFname, ReducedV1kTable];
       )
     ];
@@ -1056,7 +1056,7 @@ Begin["`Private`"]
       If[OptionValue["Export"];,
       (
           exportFname = FileNameJoin[{moduleDir, "data", "CFPs_extended.m"}];
-          Print["Exporting to ", exportFname];
+          Echo["Exporting to " <> exportFname];
           Export[exportFname, extendedCFPs];
       )
       ];
@@ -1244,7 +1244,7 @@ Begin["`Private`"]
       exportFname = FileNameJoin[{moduleDir, "data", "SpinOrbitTable.m"}];
       If[OptionValue["Export"],
         (
-          Print["Exporting to file "<>ToString[exportFname]];
+          Echo["Exporting to file " <> ToString[exportFname]];
           Export[exportFname, SpinOrbitTable];
         )
       ];
@@ -2134,7 +2134,7 @@ Begin["`Private`"]
       (
         exportFname = FileNameJoin[{moduleDir, "data", "CrystalFieldTable_f"<>ToString[numE]<>".m"}];
         If[And[FileExistsQ[exportFname],Not[OptionValue["Overwrite"]]],
-          Print["File exists, skipping ..."];
+          Echo["File exists, skipping ..."];
           numiter+=  TotalCFIters[numE, numE];
           freebies+= TotalCFIters[numE, numE];
           Continue[];
@@ -2167,7 +2167,7 @@ Begin["`Private`"]
         ];
         If[OptionValue["Export"],
           (
-            Print["Exporting to file "<>ToString[exportFname]];
+            Echo["Exporting to file " <> ToString[exportFname]];
             ExportFun[exportFname, CrystalFieldTable];
           )
         ];
@@ -2209,7 +2209,7 @@ Begin["`Private`"]
       groupNum  = Round@ToExpression@row[[1]];
       groupName = row[[2]];
       family    = row[[3]];
-      params    = Select[row[[4;;]],#=!=""&];
+      params    = Select[row[[4;;]],And[FreeQ[#,Missing],#=!=""]&];
       params    = parseFun/@params;
       params    = <|"BqkSqk"->Sort@Flatten[params],
         "aliases"->{groupNum},
@@ -2240,7 +2240,7 @@ Begin["`Private`"]
     ];
     Return[crystalSymmetries];
   )
-  ] 
+  ]; 
 
   CrystalFieldForm::usage = "CrystalFieldForm[symmetryGroup] returns an association that describes the crystal field parameters that are necessary to describe a crystal field for the given symmetry group.
   
@@ -2502,11 +2502,11 @@ Begin["`Private`"]
       ImportFun = ImportMZip;
       opBasis = OptionValue["OperatorBasis"];
       If[Not[MemberQ[{"Legacy", "MostlyOrthogonal", "Orthogonal"}, opBasis]],
-        Print["Operator basis ", opBasis, " not recognized, using \"Legacy\" basis."];
+        Echo["Operator basis " <> opBasis <> " not recognized, using \"Legacy\" basis."];
         opBasis = "Legacy";
       ];
       If[opBasis == "Orthogonal",
-        Print["Operator basis \"Orthogonal\" not implemented yet, aborting ..."];
+        Echo["Operator basis \"Orthogonal\" not implemented yet, aborting ..."];
         Return[Null];
       ];
       (*#####################################*)
@@ -2668,14 +2668,14 @@ Begin["`Private`"]
     )
   ];
 
-  SimplerSymbolicHamMatrix::usage = "SimplerSymbolicHamMatrix[numE, simplifier] is a simple addition to EffectiveHamiltonian that applies a given simplification to the full Hamiltonian. simplifier is a list of replacement rules. 
+  SimplerEffectiveHamiltonian::usage = "SimplerEffectiveHamiltonian[numE, simplifier] is a simple addition to EffectiveHamiltonian that applies a given simplification to the full Hamiltonian. simplifier is a list of replacement rules. 
   If the option \"Export\" is set to True, then the function also exports the resulting sparse array to the ./hams/ folder.
   The option \"PrependToFilename\" can be used to prepend a string to the filename to which the function may export to.
   The option \"Return\" can be used to choose whether the function returns the matrix or not.
   The option \"Overwrite\" can be used to overwrite the file if it already exists, if this options is set to False then this function simply reloads a file that it assumed to be present already in the ./hams folder.
   The option \"IncludeZeeman\" can be used to toggle the inclusion of the Zeeman interaction with an external magnetic field.
   The option \"OperatorBasis\" can be used to choose the basis in which the operator is expressed. The default is the \"Legacy\" basis. Order alternatives being: \"MostlyOrthogonal\" and \"Orthogonal\". In the \"Legacy\" alternative the operators used are the same as in Carnall's work. In the \"MostlyOrthogonal\"  all operators are orthogonal except those corresponding to the Mk and Pk parameters. In the \"Orthogonal\" basis all operators are orthogonal, with the operators corresponding to the Mk and Pk parameters replaced by zi operators and accompanying ai coefficients. The \"Orthogonal\" option has not been implemented yet.";
-  Options[SimplerSymbolicHamMatrix] = {
+  Options[SimplerEffectiveHamiltonian] = {
     "Export"->True, 
     "PrependToFilename"->"", 
     "EorF"->"F",
@@ -2685,7 +2685,7 @@ Begin["`Private`"]
     "IncludeZeeman" -> False,
     "OperatorBasis" -> "Legacy"
     };
-  SimplerSymbolicHamMatrix[numE_, simplifier_, OptionsPattern[]] := Module[
+  SimplerEffectiveHamiltonian[numE_, simplifier_, OptionsPattern[]] := Module[
     {thisHam,fname, fnamemx},
     (
       If[Not[ValueQ[ElectrostaticTable]],
@@ -2706,11 +2706,11 @@ Begin["`Private`"]
       
       opBasis = OptionValue["OperatorBasis"];
       If[Not[MemberQ[{"Legacy", "MostlyOrthogonal", "Orthogonal"}, opBasis]],
-        Print["Operator basis ", opBasis, " not recognized, using \"Legacy\" basis."];
+        Echo["Operator basis " <> opBasis <> " not recognized, using \"Legacy\" basis."];
         opBasis = "Legacy";
       ];
       If[opBasis == "Orthogonal",
-        Print["Operator basis \"Orthogonal\" not implemented yet, aborting ..."];
+        Echo["Operator basis \"Orthogonal\" not implemented yet, aborting ..."];
         Return[Null];
       ];
       
@@ -2738,28 +2738,28 @@ Begin["`Private`"]
               Which[
                 FileExistsQ[fnamezip],
                 (
-                  Print["File ", fnamezip, " already exists, and option \"Overwrite\" is set to False, loading file ..."];
+                  Echo["File " <> fnamezip <> " already exists, and option \"Overwrite\" is set to False, loading file ..."];
                   thisHam = ImportMZip[fnamezip];
                   Return[thisHam];
                 ),
                 FileExistsQ[fnamemx],
                 (
-                  Print["File ", fnamemx, " already exists, and option \"Overwrite\" is set to False, loading file ..."];
+                  Echo["File " <> fnamemx <> " already exists, and option \"Overwrite\" is set to False, loading file ..."];
                   thisHam = Import[fnamemx];
                   Return[thisHam];
                 ),
                 FileExistsQ[fname],
                 (
-                  Print["File ", fname, " already exists, and option \"Overwrite\" is set to False, loading file ..."];
+                  Echo["File " <> fname <> " already exists, and option \"Overwrite\" is set to False, loading file ..."];
                   thisHam = Import[fname];
-                  Print["Exporting to file ", fnamemx, " for quicker loading."];
+                  Echo["Exporting to file " <> fnamemx <> " for quicker loading."];
                   Export[fnamemx, thisHam];
                   Return[thisHam];
                 )
               ]
             ),
             (
-              Print["File ", fname, " already exists, skipping ..."];
+              Echo["File " <> fname <> " already exists, skipping ..."];
               Return[Null];
             )
           ]
@@ -2776,13 +2776,13 @@ Begin["`Private`"]
       (
         If[Not@FileExistsQ[fname],
         (
-          Print["Exporting to file ", fname];
+          Echo["Exporting to file " <> fname];
           Export[fname,   thisHam];
         )
         ];
         If[Not@FileExistsQ[fnamemx],
         (
-          Print["Exporting to file ", fnamemx];
+          Echo["Exporting to file " <> fnamemx];
           Export[fnamemx, thisHam];
         )
         ];
@@ -2923,13 +2923,13 @@ Begin["`Private`"]
   ];
 
  
-  LevelSimplerSymbolicHamMatrix::usage = "LevelSimplerSymbolicHamMatrix[numE] is a variation of EffectiveHamiltonian that returns the diagonal JJ Hamiltonian blocks applying a simplifier and with simplifications adequate for the level description. The keys of the given association correspond to the different values of J that are possible for f^numE, the values are sparse array that are meant to be interpreted in the basis provided by BasisLSJ.
+  LevelSimplerEffectiveHamiltonian::usage = "LevelSimplerEffectiveHamiltonian[numE] is a variation of EffectiveHamiltonian that returns the diagonal JJ Hamiltonian blocks applying a simplifier and with simplifications adequate for the level description. The keys of the given association correspond to the different values of J that are possible for f^numE, the values are sparse array that are meant to be interpreted in the basis provided by BasisLSJ.
   The option \"Simplifier\" is a list of symbols that are set to zero. At a minimum this has to include the crystal field parameters. By default this includes everything except the Slater parameters Fk and the spin orbit coupling \[Zeta].
   The option \"Export\" controls whether the resulting association is saved to disk, the default is True and the resulting file is saved to the ./hams/ folder. A hash is appended to the filename that corresponds to the simplifier used in the resulting expression. If the option \"Overwrite\" is set to False then these files may be used to quickly retrieve a previously computed case. The file is saved both in .m and .mx format.
   The option \"PrependToFilename\" can be used to append a string to the filename to which the function may export to.
   The option \"Return\" can be used to choose whether the function returns the matrix or not.
   The option \"Overwrite\" can be used to overwrite the file if it already exists.";
-  Options[LevelSimplerSymbolicHamMatrix] = {
+  Options[LevelSimplerEffectiveHamiltonian] = {
     "Export" -> True,
     "PrependToFilename" -> "",
     "Overwrite" -> False,
@@ -2944,7 +2944,7 @@ Begin["`Private`"]
       DeleteCases[magneticSymbols,\[Zeta]]
     ]
   };
-  LevelSimplerSymbolicHamMatrix[numE_Integer, OptionsPattern[]] := Module[
+  LevelSimplerEffectiveHamiltonian[numE_Integer, OptionsPattern[]] := Module[
     {thisHamAssoc, Js, fname,
     fnamemx, hash, simplifier},
     (
@@ -2963,22 +2963,22 @@ Begin["`Private`"]
         (
           Which[FileExistsQ[fnamemx],
           (
-            Print["File ",fnamemx," already exists, and option \"Overwrite\" is set to False, loading file ..."];
+            Echo["File " <> fnamemx <> " already exists, and option \"Overwrite\" is set to False, loading file ..."];
             thisHamAssoc=Import[fnamemx];
             Return[thisHamAssoc];
           ),
           FileExistsQ[fname],
           (
-            Print["File ",fname," already exists, and option \"Overwrite\" is set to False, loading file ..."];
+            Echo["File " <> fname <> " already exists, and option \"Overwrite\" is set to False, loading file ..."];
             thisHamAssoc=Import[fname];
-            Print["Exporting to file ",fnamemx," for quicker loading."];
+            Echo["Exporting to file " <> fnamemx <> " for quicker loading."];
             Export[fnamemx,thisHamAssoc];
             Return[thisHamAssoc];
           )
           ]
         ),
         (
-          Print["File ",fname," already exists, skipping ..."];
+          Echo["File " <> fname <> " already exists, skipping ..."];
           Return[Null];
         )
         ]
@@ -2996,7 +2996,7 @@ Begin["`Private`"]
       thisHamAssoc = AssociationThread[Js->thisHamAssoc];
       If[OptionValue["Export"],
         (
-          Print["Exporting to file ",fname," and to ",fnamemx];
+          Echo["Exporting to file " <> fname <> " and to " <> fnamemx];
           Export[fname,thisHamAssoc];
           Export[fnamemx,thisHamAssoc];
         )
@@ -3042,7 +3042,7 @@ Begin["`Private`"]
       PrintFun   = OptionValue["PrintFun"];
       PrintFun["> LevelSolver for ",ln," with ",numE," f-electrons."];
       PrintFun["> Loading the symbolic level Hamiltonian ..."];
-      simpleHam  = LevelSimplerSymbolicHamMatrix[numE,
+      simpleHam  = LevelSimplerEffectiveHamiltonian[numE,
         "Simplifier" -> simplifier,
         "Overwrite"  -> OptionValue["Overwrite Hamiltonian"]
       ];
@@ -3276,7 +3276,7 @@ Begin["`Private`"]
           Return[Stot],
         True,
         (
-          Print["Invalid option for \"Units\". Options are \"SI\" and \"Hartree\"."];
+          Echo["Invalid option for \"Units\". Options are \"SI\" and \"Hartree\"."];
           Abort[];
         )
       ];
@@ -3315,7 +3315,7 @@ Begin["`Private`"]
       ),
       True,
       (
-        Print["Invalid option for \"Units\". Options are \"SI\" and \"Hartree\"."];
+        Echo["Invalid option for \"Units\". Options are \"SI\" and \"Hartree\"."];
         Abort[];
       )
       ];
@@ -3693,14 +3693,14 @@ Begin["`Private`"]
       
       (* This could be done when replacing values, but this produces smaller saved arrays. *)
       simplifier = (#-> 0) & /@ OptionValue["Zeroes"];
-      simpleHam = SimplerSymbolicHamMatrix[numE, 
+      simpleHam = SimplerEffectiveHamiltonian[numE, 
         simplifier,
         "PrependToFilename" -> host,
         "Overwrite" -> OptionValue["Overwrite Hamiltonian"]
       ];
       
       (* Note that we don't have to flip signs of parameters for fn beyond f7 since the matrix produced
-      by SimplerSymbolicHamMatrix has already accounted for this. *)
+      by SimplerEffectiveHamiltonian has already accounted for this. *)
       
       (* Everything that is not given is set to zero *)
       params = ParamPad[params];
@@ -3878,7 +3878,7 @@ Begin["`Private`"]
         (
           wavelengthsInNM = Abs[1 / energyDiffs] * 10^7;
           nRefs           = Map[nRef, wavelengthsInNM];
-          Print["Calculating the oscillator strengths for the given refractive index ..."];
+          Echo["Calculating the oscillator strengths for the given refractive index ..."];
           \[Chi] = Which[
             fieldCorrectionType == "VirtualCavity",
             (
@@ -4964,7 +4964,7 @@ Begin["`Private`"]
     If[OptionValue["Export"],
       (
         carnallFname = FileNameJoin[{moduleDir, "data", "Carnall.m"}];
-        Print["Exporting to "<>carnallFname];
+        Echo["Exporting to " <> carnallFname];
         Export[carnallFname, Carnall];
       )
       ];

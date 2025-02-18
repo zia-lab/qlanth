@@ -3,17 +3,17 @@
 (*** Wolfram Notebook File ***)
 (* http://www.wolfram.com/nb *)
 
-(* CreatedBy='Wolfram 14.1' *)
+(* CreatedBy='Wolfram 14.2' *)
 
 (*CacheID: 234*)
 (* Internal cache information:
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       154,          7]
-NotebookDataLength[    531361,      12648]
-NotebookOptionsPosition[    524777,      12509]
-NotebookOutlinePosition[    525542,      12534]
-CellTagsIndexPosition[    525460,      12529]
+NotebookDataLength[    530295,      12614]
+NotebookOptionsPosition[    523721,      12475]
+NotebookOutlinePosition[    524476,      12500]
+CellTagsIndexPosition[    524394,      12495]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -29,8 +29,7 @@ Cell[TextData[{
   RowBox[{
    ButtonBox["LevelMagDipoleLineStrength",
     BaseStyle->"Link",
-    ButtonData->"paclet:qlanth/ref/LevelMagDipoleLineStrength"],
-    "[", 
+    ButtonData->"paclet:qlanth/ref/LevelMagDipoleLineStrength"], "[", 
    StyleBox[
     RowBox[{"eigenSys", ",", "numE"}],
     FontSlant->"Italic"], "]"}]], "InlineFormula",ExpressionUUID->
@@ -41,8 +40,7 @@ with energies and eigenstates as provided in ",
   FontSlant->"Italic"],
  "for configuration ",
  Cell[BoxData[
-  SuperscriptBox["f", "numE"]], "InlineFormula",
-  FormatType->StandardForm,ExpressionUUID->
+  SuperscriptBox["f", "numE"]], "InlineFormula",ExpressionUUID->
   "e823801f-0dd6-4ab1-ac24-ac71fd28ea2e"],
  ". The function returns a square array whose elements represent the magnetic \
 dipole line strengths between the levels given in ",
@@ -51,13 +49,11 @@ dipole line strengths between the levels given in ",
  " such that the element magDipoleLineStrength[[i,j]] is the magnetic dipole \
 line strength between the levels  ",
  Cell[BoxData[
-  SubscriptBox["\[Psi]", "i"]], "InlineFormula",
-  FormatType->StandardForm,ExpressionUUID->
+  SubscriptBox["\[Psi]", "i"]], "InlineFormula",ExpressionUUID->
   "12c77483-42b9-49ee-83a2-b42aba4e7a23"],
  " and ",
  Cell[BoxData[
-  SubscriptBox["\[Psi]", "j"]], "InlineFormula",
-  FormatType->StandardForm,ExpressionUUID->
+  SubscriptBox["\[Psi]", "j"]], "InlineFormula",ExpressionUUID->
   "fdd315cb-23ea-4673-a88a-67bd20247403"],
  "."
 }], "Usage",
@@ -146,8 +142,7 @@ Cell[TextData[{
  Cell[BoxData[
   ButtonBox["LevelMagDipoleOscillatorStrength",
    BaseStyle->"Link",
-   ButtonData->
-    "paclet:qlanth/ref/LevelMagDipoleOscillatorStrength"]], 
+   ButtonData->"paclet:qlanth/ref/LevelMagDipoleOscillatorStrength"]], 
   "InlineSeeAlsoFunction",
   TaggingRules->{"PageType" -> "Function"},ExpressionUUID->
   "aa447dda-8f18-4d0a-a4f9-e7146976e555"],
@@ -155,8 +150,7 @@ Cell[TextData[{
  Cell[BoxData[
   ButtonBox["LevelSolver",
    BaseStyle->"Link",
-   ButtonData->"paclet:qlanth/ref/LevelSolver"]], 
-  "InlineSeeAlsoFunction",
+   ButtonData->"paclet:qlanth/ref/LevelSolver"]], "InlineSeeAlsoFunction",
   TaggingRules->{"PageType" -> "Function"},
   CellTags->"adf24c77-365d-4a7e-9424-331a9b11cc7c",ExpressionUUID->
   "5bf49908-4991-4fc0-957c-3d8644d5f2e1"],
@@ -167,10 +161,10 @@ Cell[TextData[{
     "f7d709d5-79a2-40cb-ac51-0038e6735aef"], 
    DynamicModuleBox[{$CellContext`nbobj$$ = NotebookObject[
     "b44c9940-3136-421d-8058-0618832c751f", 
-     "66c9aaf9-0f87-4212-ae60-34d85d21114b"], $CellContext`cellobj$$ = 
+     "b0d97454-242e-4088-882d-5dd89024bb1b"], $CellContext`cellobj$$ = 
     CellObject[
     "44667822-7cae-480f-8031-ab4eb59a42be", 
-     "00f6a370-52ae-49c8-8588-1c0d5941f8c9"]}, 
+     "be1100f4-2f3d-46bd-b806-ddd357b1adae"]}, 
     TemplateBox[{
       GraphicsBox[{{
          Thickness[0.06], 
@@ -269,8 +263,11 @@ Needs[\[Ellipsis]].", "MoreInfoText"], BaseStyle -> "IFrameBox"]],
  CellID->251162839,ExpressionUUID->"e379caec-9a1f-4ee6-a775-c6de887d6751"],
 
 Cell[BoxData[
- RowBox[{"Needs", "[", "\"\<qlanth`\>\"", 
-  "]"}]], "ExampleInitialization",
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<qlanth`\>\"", "]"}], 
+  ";"}]], "ExampleInitialization",
+ CellChangeTimes->{{3.948882248669148*^9, 3.948882255512994*^9}, {
+  3.9488986752778463`*^9, 3.9488986754302053`*^9}},
  CellID->1488468718,ExpressionUUID->"6876a64c-88da-4675-8b31-ad53058ee5a2"]
 }, Open  ]],
 
@@ -307,34 +304,31 @@ Cell[BoxData[{
   RowBox[{"numE", "=", "2"}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"ln", "=", 
-   RowBox[{"theLanthanides", "[", 
+   RowBox[{"qlanth`theLanthanides", "[", 
     RowBox[{"[", "numE", "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"params", "=", 
-   RowBox[{"LoadLaF3Parameters", "[", "ln", "]"}]}], 
-  ";"}], "\[IndentingNewLine]", 
+   RowBox[{"LoadLaF3Parameters", "[", "ln", "]"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"{", 
     RowBox[{"intermediateBasis", ",", "simpleStateLabels", ",", "eigensys"}], 
     "}"}], "=", 
-   RowBox[{"LevelSolver", "[", 
-    RowBox[{
-    "numE", ",", "\[IndentingNewLine]", "params", ",", "\[IndentingNewLine]", 
-     
-     RowBox[{"\"\<Overwrite Hamiltonian\>\"", "->", "False"}], ",", 
-     "\[IndentingNewLine]", 
-     RowBox[{"\"\<Return as states\>\"", "->", "True"}]}], "]"}]}], 
+   RowBox[{"QuietEcho", "@", 
+    RowBox[{"LevelSolver", "[", 
+     RowBox[{
+     "numE", ",", "\[IndentingNewLine]", "params", ",", "\[IndentingNewLine]", 
+      RowBox[{"\"\<Overwrite Hamiltonian\>\"", "->", "False"}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"\"\<Return as states\>\"", "->", "True"}]}], "]"}]}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{
-   RowBox[{"{", 
-    RowBox[{"basis", ",", "eigenSys", ",", "magDipoleOstrength"}], "}"}], "=", 
-   RowBox[{"LevelMagDipoleOscillatorStrength", "[", 
+  RowBox[{"magDipoleLinestrength", "=", 
+   RowBox[{"LevelMagDipoleLineStrength", "[", 
     RowBox[{"eigensys", ",", "numE"}], "]"}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{"HamiltonianMatrixPlot", "[", 
-  RowBox[{"magDipoleOstrength", ",", 
+  RowBox[{"magDipoleLinestrength", ",", 
    RowBox[{
     RowBox[{
      RowBox[{"PrettySaundersSLJ", "[", 
@@ -342,54 +336,40 @@ Cell[BoxData[{
        RowBox[{"\"\<Representation\>\"", "->", "\"\<Symbol\>\""}]}], "]"}], 
      "&"}], "/@", "basis"}], ",", 
    RowBox[{"\"\<OverlayValues\>\"", "->", "False"}]}], "]"}]}], "Input",
- CellChangeTimes->{{3.916511861475267*^9, 3.916511903471019*^9}, {
-   3.918228361401075*^9, 3.918228365987666*^9}, {3.922355999325748*^9, 
-   3.922356032420403*^9}, {3.922356073853716*^9, 3.922356079318578*^9}, {
-   3.9223562648964787`*^9, 3.922356287248433*^9}, {3.922356335712696*^9, 
-   3.92235634156546*^9}, {3.922356999583438*^9, 3.922356999680449*^9}, {
-   3.9223573176811743`*^9, 3.9223573185073557`*^9}, {3.922820470704796*^9, 
-   3.922820472315054*^9}, {3.9253109083762836`*^9, 3.925310920822859*^9}, {
-   3.9253109662807817`*^9, 3.9253109737564287`*^9}, {3.929786963186171*^9, 
-   3.929786966509289*^9}, 3.9463196430355*^9, {3.946319739482771*^9, 
-   3.9463197399243603`*^9}, {3.946320272702368*^9, 3.94632027284006*^9}, {
-   3.946320350470582*^9, 3.9463203789230957`*^9}, {3.946403548977172*^9, 
-   3.946403563622026*^9}, 3.9464036606855917`*^9, {3.946403727555912*^9, 
-   3.9464037277398853`*^9}, 3.946403903077991*^9, {3.9464092933485518`*^9, 
-   3.9464094024378147`*^9}, {3.9464094422590837`*^9, 3.946409450390856*^9}},
- CellLabel->"In[35]:=",
- CellID->1772966535,ExpressionUUID->"f2d647cf-c22c-418b-acb6-b91fa7427b15"],
+ CellChangeTimes->{{3.948882618829318*^9, 3.948882637949448*^9}, {
+  3.948882674775065*^9, 3.948882680070466*^9}, {3.948882743014449*^9, 
+  3.948882747127843*^9}, {3.948898679984112*^9, 3.948898680699485*^9}},
+ CellLabel->"In[149]:=",
+ CellID->395310442,ExpressionUUID->"82deac3d-867a-4af3-bff0-0ad8b2f12069"],
 
 Cell[BoxData[
  GraphicsBox[RasterBox[CompressedData["
-1:eJzllXtMU1ccxyswqBNBV2Q8K+DQscEKCF3U4leIiAhjhIcDZOAQeXSADkFQ
-5zZ0ikznEFF8QJ3KFkFA66PlWcGyKXHRuglOoEBLS+njlkI2kSlzLHP/mDTZ
-TWTNspOcfO5Jzv2ec773/L7XOWlTxEZjCoUy+1n/8/mvpsP/hTpZ8MNZ8k7k
-GNWmexcMYqimwf8DU5XB9sPJGjdpaSSQyz0TXtihRW3bnfITa0awPqlnVpCT
-CjFJLeH2rRoYRTeJmqy0pPUbBV8r+oU/oTjKLTVqqxQc+86q9HXkz2sdsf7E
-L+J7yJl/bXk6ZRAjrxxYy2YYzrd2m3sheYc0yHrbWfCJsxbM49nXBEPk/dHH
-2pAEr1VhD+D8eKf5dhc5dhsViuwPKvXOz11u5VY79z4m0r/grrOSIe5xSfDO
-+/rnv0zjPfrUVIOaeZ/HUS1lKHHym+NrdB3f3mrxvbqHQNTuPEZ+pgqNY2Pn
-xlskBq+bf5vvZPL9eZfUuHik+fBpngQpswcdwd7xwvTrRqvLF1UM483Xf6UE
-y9WIrm5bzS0hsFy8xqbPZwgRKyWniX0qZGTT754Xagzux3+VpZd8Z4aY9SH0
-zEcuHvlDmAhuzXWPVaH9G6qLa8LPKO3x6rXjyxDg2DjjzFn99TLdnOR9vOB6
-BoGlI7p5XpYqWP4WzxDcHMAep8iLh77SQHSbMy8nZQg+ojmVl5k/6tVhlk+k
-LkxUQAGPxH1eaowUXN7ft4gAx8Nj/GrIIOi7HIMbB4dhLK33i+9Qk96njlI0
-uNlXBFZM762q+gGIzze1spUqlLzvyY1l3YU/v849fokE8uxubVqr4fKZLEcv
-mpk7qyUovqNiZjkMIyBfaKmJUGPvwlOjFnUy7BcGSV+qUUKwc8uq5BXk65Ex
-M8m8OnUAZ3W+aWx/BToUfMd2kX5/fGyax667aiCtKEsUlMnAqvCOL/f93uA+
-PU93R2VURrIacXK7Q1F5BDYmbqjkFJD/D/b5pUxyjW/jWOy25ghuHxa3mU5e
-WKv/fm7sCXucySTA9IvuWLRCiRy3piBehhhHQwqW5BxWw2JDprvmVSkoAdaB
-RHIpHDn026ttCPzehZORzcMoWmyWzkzpeWE+eBXvSKSt0iK5/0n7+pUEfojV
-2dc7GS5PJJFuvdxzBNLN7AbGCvtBta3dm9uVSVqnuuytyqTIqVzinwsMv6BE
-d2qxCY/TT1rnONtvU0KuFiaezX7W4wTON93MPDiqgjxcbmd6YMq33Kgr3FAt
-XMMWbF4qIp9LLQdXVy8ruoMYHqPrGK0HnnnzWW9IyetMN98TEYKqqfN7840v
-0Rw0KGnOajCmD037ultmxC6j0kUInOBPnmQ/AM3zyFZvF/05trS6wq1KrIX7
-7NA0BxcxWKxOnbkynvS6X8L56jYxgRsLFD30BjVuvBbYyXGQo3TuzVZLIQEh
-g+b+brQaFcINXIqtTK/Osu9i0qxdtaD7PGA33NCAejRDu6NXYfDvKdluVRck
-6X42/rv98/d3PTzxISthymfTp/k1pwhQ2z7TMCxUsFU12NieJRBmc9yksFeF
-R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
+1:eJzllntMU1ccx8tDKc5OjLBsIBUiIyiPuY6HrMovyqBThFmQkcGUdFCEgG3Y
+EHnMDZKORjsZC2JlEwIICht2CCNs4FRQGVWwpisgj1FKaaHtPZenA12BuWzu
+D5ObeRNYTXaSm++9uTffe87n/H6/83P+gB/OtaBQKLS/rz/v/xqT8H/RI1ML
+sWw2DuXWdUsDPATmE6UCvy90JpvPIrVnSiDEIefsdp9aJg78g7d8Z88bYFt8
+rDE5BYeQz3L8Wd0IwjNeMpYU60n7pwsZH/aVIfjoUFyHlUIPM5zElisdI6R9
+trhPmqvTEYhbq0bSffSg2BroEOKhAsrpxnpFMQZr+KERBwq1UJ255z3vMfmK
+cxMcZw/NZ+Ig43N2ZlNx6KSNreuiG5bN/+43LwawehHItAaL78sNENX/bnOj
+cpTwe5tIrxSJAIEr3egpTtKDyOh+c7hBBdGv++XvmMPAI0Kr7HIfB27xpkqp
+Zx8hz+ctPk2lRDyXy/+XsLzstkAcaLyCuDImgr3s6u9mrXXwg5NId9ENB7+H
+L7B9ujGg/3y4NH9pzGQc7N6XpOjX4eDAleuUzUPQWlp6rr8+0eT786xaSwte
+XFhCYN83N/45E4PTunmmiq8Fbp/46/ujCNYKYX5eYQCaY/mvNlwNaf+3qv0b
+Je0Y3D2qEmdEjYFLnHfBRX33suX7sdWVKaGFCJLEoat6y/RwvqXN8Uwgcf08
+EJRdlU/DgWUe4SHjYRDZsS3W54EWijfLzA5PI/htcF8Tg4qB5cG6vjA9+fWi
+gduKl5MQ1Dr/vjPGTA/3ZuJErZXDUKMxctWhCAo/bao5+ZUOamhTmgsMJRyV
+U0qkagO4J61iMI+pwW3xnIRR12zyuHhaXXexrnpdQbBvRHtzP9MAqQUxlvHd
+amBIO8MrJAgS3pbk0KmP94U1+bH/fjVp/+w2RlAiINgd4MSRx+kg8XZk/ILd
+EPiiopmp6wYQXxZyB4dGwEptMW0VcRmqE0TJ/BgEJcFdKS1dOnDxLLXJog+b
+nNPTmkN9rU55CIc16wXJdhUIhAE+1Wm25PsEqe2pou1eCByjqzbu3qgDJF3v
+lKcchAVs9lFaMgZbi3rvCTs0kDvICXIplBHyJIrP5cp3Il2ufomsan9cspZr
+MWjwZl+1GB0D2U+Om3gb7hPyJOtPVD/J+hD1Swsn4udsinAQxYbND/JwaLVI
+VthvwUj75zVSJtXWj8/rC5gf5/g4dF6SZlXw+v95r8qylbBUT56fjP8+X5rK
+X5l4wxeHXdedbROoCHhHaDsaBeMr/l/PS1+2pNkj6Ende01+axyM7W7cAtEA
+nFir0dzZjMFDy0fXQoJVcCr4nemi4ox/5fmsSlQ/yZ5HRP3SSnOrzNzgujoE
+g5AH7p/Uv6mBPQ25eKrfHUKeZP2J6uerbd03mqUIomqMwlyeAW74mlWcjB6F
+iHbrb+0dcGBLEyeWyjGo5PUYY7JM1x8S6R9G/FCX
    "], {{0, 0}, {13, 13}}, {0, 1}],
-  BaseStyle->{FontFamily -> "Arial"},
   Epilog->{
     TagBox[
      TooltipBox[{
@@ -430,7 +410,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "0.`"}, "RowDefault"]], Annotation[#, 
+        "1.0062059596701704`*^-44"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -457,7 +437,8 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[0], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 0.}], "Tooltip"]& ], 
+           "\[RightAngleBracket]"}]], "=", 1.0062059596701704`*^-44}], 
+      "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
        GrayLevel[0, 0], 
@@ -497,7 +478,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "9.935807274540295`*^-8"}, "RowDefault"]], Annotation[#, 
+        "9.012386819920258`*^-46"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -524,7 +505,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[0], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 9.935807274540295*^-8}], 
+           "\[RightAngleBracket]"}]], "=", 9.012386819920258*^-46}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -699,7 +680,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "1.8609698157395293`*^-10"}, "RowDefault"]], Annotation[#, 
+        "5.640836833204326`*^-49"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -726,7 +707,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[2], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 1.8609698157395293`*^-10}], 
+           "\[RightAngleBracket]"}]], "=", 5.640836833204326*^-49}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -767,7 +748,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "5.449384777464541`*^-9"}, "RowDefault"]], Annotation[#, 
+        "1.5610371606413571`*^-47"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -794,7 +775,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[2], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 5.449384777464541*^-9}], 
+           "\[RightAngleBracket]"}]], "=", 1.5610371606413571`*^-47}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -835,7 +816,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "2.335475099173298`*^-9"}, "RowDefault"]], Annotation[#, 
+        "4.6665228233182405`*^-48"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -862,7 +843,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[3], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 2.335475099173298*^-9}], 
+           "\[RightAngleBracket]"}]], "=", 4.6665228233182405`*^-48}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -1305,8 +1286,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        RowBox[{"-", "8.129296860987515`*^-8"}]}, "RowDefault"]], 
-     Annotation[#, 
+        "9.012386819920258`*^-46"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -1333,7 +1313,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[0], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", -8.129296860987515*^-8}], 
+           "\[RightAngleBracket]"}]], "=", 9.012386819920258*^-46}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -1374,7 +1354,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "0.`"}, "RowDefault"]], Annotation[#, 
+        "3.030609254861686`*^-44"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -1401,7 +1381,8 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[0], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 0.}], "Tooltip"]& ], 
+           "\[RightAngleBracket]"}]], "=", 3.030609254861686*^-44}], 
+      "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
        GrayLevel[0, 0], 
@@ -1441,7 +1422,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "8.725091195613659`*^-8"}, "RowDefault"]], Annotation[#, 
+        "9.288048069701962`*^-46"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -1468,7 +1449,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[1], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 8.725091195613659*^-8}], 
+           "\[RightAngleBracket]"}]], "=", 9.288048069701962*^-46}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -1643,7 +1624,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "3.08632630297667`*^-9"}, "RowDefault"]], Annotation[#, 
+        "1.579365145207782`*^-47"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -1670,7 +1651,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[2], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 3.08632630297667*^-9}], 
+           "\[RightAngleBracket]"}]], "=", 1.579365145207782*^-47}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -1711,7 +1692,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "3.7821970732723836`*^-9"}, "RowDefault"]], Annotation[#, 
+        "1.18461062259235`*^-47"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -1738,7 +1719,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[3], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 3.7821970732723836`*^-9}], 
+           "\[RightAngleBracket]"}]], "=", 1.18461062259235*^-47}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -1846,7 +1827,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "2.3340684176726616`*^-9"}, "RowDefault"]], Annotation[#, 
+        "2.940541464245415`*^-48"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -1873,7 +1854,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[4], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 2.3340684176726616`*^-9}], 
+           "\[RightAngleBracket]"}]], "=", 2.940541464245415*^-48}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -2249,8 +2230,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        RowBox[{"-", "7.382769473211558`*^-8"}]}, "RowDefault"]], 
-     Annotation[#, 
+        "9.288048069701962`*^-46"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -2277,7 +2257,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[0], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", -7.382769473211558*^-8}], 
+           "\[RightAngleBracket]"}]], "=", 9.288048069701962*^-46}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -2318,7 +2298,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "0.`"}, "RowDefault"]], Annotation[#, 
+        "6.386010928218487`*^-44"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -2345,7 +2325,8 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[1], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 0.}], "Tooltip"]& ], 
+           "\[RightAngleBracket]"}]], "=", 6.386010928218487*^-44}], 
+      "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
        GrayLevel[0, 0], 
@@ -2720,7 +2701,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "2.4300521507315653`*^-9"}, "RowDefault"]], Annotation[#, 
+        "4.103765768560621`*^-48"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -2747,7 +2728,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[4], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 2.4300521507315653`*^-9}], 
+           "\[RightAngleBracket]"}]], "=", 4.103765768560621*^-48}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -3257,7 +3238,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "0.`"}, "RowDefault"]], Annotation[#, 
+        "1.1740048342269999`*^-45"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -3284,7 +3265,8 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[2], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 0.}], "Tooltip"]& ], 
+           "\[RightAngleBracket]"}]], "=", 1.1740048342269999`*^-45}], 
+      "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
        GrayLevel[0, 0], 
@@ -3324,7 +3306,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "7.411506117668368`*^-8"}, "RowDefault"]], Annotation[#, 
+        "5.600040606281733`*^-46"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -3351,7 +3333,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[2], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 7.411506117668368*^-8}], 
+           "\[RightAngleBracket]"}]], "=", 5.600040606281733*^-46}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -3526,7 +3508,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "7.619444253776747`*^-9"}, "RowDefault"]], Annotation[#, 
+        "6.798609459390044`*^-48"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -3553,7 +3535,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[4], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 7.619444253776747*^-9}], 
+           "\[RightAngleBracket]"}]], "=", 6.798609459390044*^-48}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -3728,7 +3710,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "6.44833297578528`*^-11"}, "RowDefault"]], Annotation[#, 
+        "4.075727620220412`*^-50"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -3755,7 +3737,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[5], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 6.44833297578528*^-11}], 
+           "\[RightAngleBracket]"}]], "=", 4.075727620220412*^-50}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -3796,7 +3778,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "2.651457818787827`*^-11"}, "RowDefault"]], Annotation[#, 
+        "1.5651858508032462`*^-50"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -3823,7 +3805,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[6], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 2.651457818787827*^-11}], 
+           "\[RightAngleBracket]"}]], "=", 1.5651858508032462`*^-50}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -3931,8 +3913,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        RowBox[{"-", "2.392675477379395`*^-10"}]}, "RowDefault"]], 
-     Annotation[#, 
+        "5.640836833204326`*^-49"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -3959,7 +3940,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[0], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", -2.392675477379395*^-10}], 
+           "\[RightAngleBracket]"}]], "=", 5.640836833204326*^-49}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -4134,8 +4115,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        RowBox[{"-", "5.293932941191691`*^-8"}]}, "RowDefault"]], 
-     Annotation[#, 
+        "5.600040606281733`*^-46"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -4162,7 +4142,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[2], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", -5.293932941191691*^-8}], 
+           "\[RightAngleBracket]"}]], "=", 5.600040606281733*^-46}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -4203,7 +4183,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "0.`"}, "RowDefault"]], Annotation[#, 
+        "8.478882670753417`*^-45"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -4230,7 +4210,8 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[2], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 0.}], "Tooltip"]& ], 
+           "\[RightAngleBracket]"}]], "=", 8.478882670753417*^-45}], 
+      "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
        GrayLevel[0, 0], 
@@ -4270,7 +4251,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "8.673964792247957`*^-9"}, "RowDefault"]], Annotation[#, 
+        "3.5179344971548825`*^-46"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -4297,7 +4278,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[2], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 8.673964792247957*^-9}], 
+           "\[RightAngleBracket]"}]], "=", 3.5179344971548825`*^-46}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -4338,7 +4319,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "5.0041652581910596`*^-8"}, "RowDefault"]], Annotation[#, 
+        "2.2819149139495865`*^-46"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -4365,7 +4346,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[3], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 5.0041652581910596`*^-8}], 
+           "\[RightAngleBracket]"}]], "=", 2.2819149139495865`*^-46}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -4406,7 +4387,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "9.135971472449606`*^-9"}, "RowDefault"]], Annotation[#, 
+        "1.2940622366458845`*^-47"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -4433,7 +4414,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[4], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 9.135971472449606*^-9}], 
+           "\[RightAngleBracket]"}]], "=", 1.2940622366458845`*^-47}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -4675,7 +4656,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "4.875432532297866`*^-10"}, "RowDefault"]], Annotation[#, 
+        "4.3706988810087074`*^-49"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -4702,7 +4683,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[6], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 4.875432532297866*^-10}], 
+           "\[RightAngleBracket]"}]], "=", 4.3706988810087074`*^-49}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -4810,8 +4791,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        RowBox[{"-", "5.449384777464543`*^-9"}]}, "RowDefault"]], 
-     Annotation[#, 
+        "1.5610371606413576`*^-47"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -4838,7 +4818,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[0], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", -5.449384777464543*^-9}], 
+           "\[RightAngleBracket]"}]], "=", 1.5610371606413576`*^-47}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -4879,8 +4859,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        RowBox[{"-", "3.772176592527041`*^-9"}]}, "RowDefault"]], 
-     Annotation[#, 
+        "1.579365145207782`*^-47"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -4907,7 +4886,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[0], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", -3.772176592527041*^-9}], 
+           "\[RightAngleBracket]"}]], "=", 1.579365145207782*^-47}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -5082,8 +5061,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        RowBox[{"-", "6.746417060637299`*^-9"}]}, "RowDefault"]], 
-     Annotation[#, 
+        "3.5179344971548825`*^-46"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -5110,7 +5088,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[2], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", -6.746417060637299*^-9}], 
+           "\[RightAngleBracket]"}]], "=", 3.5179344971548825`*^-46}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -5151,7 +5129,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "0.`"}, "RowDefault"]], Annotation[#, 
+        "2.040611589186588`*^-44"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -5178,7 +5156,8 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[2], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 0.}], "Tooltip"]& ], 
+           "\[RightAngleBracket]"}]], "=", 2.040611589186588*^-44}], 
+      "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
        GrayLevel[0, 0], 
@@ -5218,7 +5197,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "3.659338488821974`*^-8"}, "RowDefault"]], Annotation[#, 
+        "2.417209013813645`*^-46"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -5245,7 +5224,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[3], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 3.659338488821974*^-8}], 
+           "\[RightAngleBracket]"}]], "=", 2.417209013813645*^-46}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -5688,8 +5667,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        RowBox[{"-", "2.3354750991732987`*^-9"}]}, "RowDefault"]], 
-     Annotation[#, 
+        "4.666522823318243`*^-48"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -5716,7 +5694,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[0], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", -2.3354750991732987`*^-9}], 
+           "\[RightAngleBracket]"}]], "=", 4.666522823318243*^-48}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -5757,8 +5735,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        RowBox[{"-", "4.622685311777357`*^-9"}]}, "RowDefault"]], 
-     Annotation[#, 
+        "1.18461062259235`*^-47"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -5785,7 +5762,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[0], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", -4.622685311777357*^-9}], 
+           "\[RightAngleBracket]"}]], "=", 1.18461062259235*^-47}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -5960,8 +5937,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        RowBox[{"-", "3.892128534148602`*^-8"}]}, "RowDefault"]], 
-     Annotation[#, 
+        "2.2819149139495865`*^-46"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -5988,7 +5964,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[2], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", -3.892128534148602*^-8}], 
+           "\[RightAngleBracket]"}]], "=", 2.2819149139495865`*^-46}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -6029,8 +6005,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        RowBox[{"-", "3.6593384888219744`*^-8"}]}, "RowDefault"]], 
-     Annotation[#, 
+        "2.4172090138136457`*^-46"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -6057,7 +6032,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[2], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", -3.6593384888219744`*^-8}], 
+           "\[RightAngleBracket]"}]], "=", 2.4172090138136457`*^-46}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -6098,7 +6073,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "0.`"}, "RowDefault"]], Annotation[#, 
+        "1.8586715637197966`*^-44"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -6125,7 +6100,8 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[3], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 0.}], "Tooltip"]& ], 
+           "\[RightAngleBracket]"}]], "=", 1.8586715637197966`*^-44}], 
+      "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
        GrayLevel[0, 0], 
@@ -6768,8 +6744,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        RowBox[{"-", "7.619444253776747`*^-9"}]}, "RowDefault"]], 
-     Annotation[#, 
+        "6.798609459390044`*^-48"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -6796,7 +6771,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[2], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", -7.619444253776747*^-9}], 
+           "\[RightAngleBracket]"}]], "=", 6.798609459390044*^-48}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -6837,8 +6812,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        RowBox[{"-", "1.279036006142945`*^-8"}]}, "RowDefault"]], 
-     Annotation[#, 
+        "1.2940622366458845`*^-47"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -6865,7 +6839,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[2], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", -1.279036006142945*^-8}], 
+           "\[RightAngleBracket]"}]], "=", 1.2940622366458845`*^-47}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -7040,7 +7014,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "0.`"}, "RowDefault"]], Annotation[#, 
+        "2.7282678720872854`*^-45"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -7067,7 +7041,8 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[4], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 0.}], "Tooltip"]& ], 
+           "\[RightAngleBracket]"}]], "=", 2.7282678720872854`*^-45}], 
+      "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
        GrayLevel[0, 0], 
@@ -7241,7 +7216,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "7.1057470808263055`*^-9"}, "RowDefault"]], Annotation[#, 
+        "1.5400578662334831`*^-47"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -7268,7 +7243,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[5], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 7.1057470808263055`*^-9}], 
+           "\[RightAngleBracket]"}]], "=", 1.5400578662334831`*^-47}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -7309,7 +7284,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "2.5114790339453777`*^-8"}, "RowDefault"]], Annotation[#, 
+        "4.380853044449946`*^-47"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -7336,7 +7311,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[6], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 2.5114790339453777`*^-8}], 
+           "\[RightAngleBracket]"}]], "=", 4.380853044449946*^-47}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -7511,8 +7486,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        RowBox[{"-", "1.9749809687999443`*^-9"}]}, "RowDefault"]], 
-     Annotation[#, 
+        "2.940541464245415`*^-48"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -7539,7 +7513,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[0], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", -1.9749809687999443`*^-9}], 
+           "\[RightAngleBracket]"}]], "=", 2.940541464245415*^-48}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -7580,8 +7554,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        RowBox[{"-", "2.430052150731566`*^-9"}]}, "RowDefault"]], 
-     Annotation[#, 
+        "4.103765768560623`*^-48"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -7608,7 +7581,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[1], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", -2.430052150731566*^-9}], 
+           "\[RightAngleBracket]"}]], "=", 4.103765768560623*^-48}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -7984,7 +7957,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "0.`"}, "RowDefault"]], Annotation[#, 
+        "4.700937964997657`*^-44"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -8011,7 +7984,8 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[4], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 0.}], "Tooltip"]& ], 
+           "\[RightAngleBracket]"}]], "=", 4.700937964997657*^-44}], 
+      "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
        GrayLevel[0, 0], 
@@ -8989,7 +8963,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "5.0319608637553074`*^-8"}, "RowDefault"]], Annotation[#, 
+        "1.7039553089207256`*^-46"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -9016,7 +8990,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[5], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 5.0319608637553074`*^-8}], 
+           "\[RightAngleBracket]"}]], "=", 1.7039553089207256`*^-46}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -9392,8 +9366,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        RowBox[{"-", "1.07472216263088`*^-10"}]}, "RowDefault"]], 
-     Annotation[#, 
+        "4.075727620220412`*^-50"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -9420,7 +9393,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[2], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", -1.07472216263088*^-10}], 
+           "\[RightAngleBracket]"}]], "=", 4.075727620220412*^-50}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -9662,8 +9635,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        RowBox[{"-", "1.1842911801377175`*^-8"}]}, "RowDefault"]], 
-     Annotation[#, 
+        "1.5400578662334831`*^-47"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -9690,7 +9662,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[4], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", -1.1842911801377175`*^-8}], 
+           "\[RightAngleBracket]"}]], "=", 1.5400578662334831`*^-47}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -9798,8 +9770,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        RowBox[{"-", "1.6773202879184358`*^-8"}]}, "RowDefault"]], 
-     Annotation[#, 
+        "1.7039553089207256`*^-46"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -9826,7 +9797,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[4], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", -1.6773202879184358`*^-8}], 
+           "\[RightAngleBracket]"}]], "=", 1.7039553089207256`*^-46}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -9867,7 +9838,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "0.`"}, "RowDefault"]], Annotation[#, 
+        "1.1610980495875346`*^-45"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -9894,7 +9865,8 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[5], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 0.}], "Tooltip"]& ], 
+           "\[RightAngleBracket]"}]], "=", 1.1610980495875346`*^-45}], 
+      "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
        GrayLevel[0, 0], 
@@ -9934,7 +9906,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "3.721794258461215`*^-8"}, "RowDefault"]], Annotation[#, 
+        "1.9957682139248794`*^-46"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -9961,7 +9933,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[6], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 3.721794258461215*^-8}], 
+           "\[RightAngleBracket]"}]], "=", 1.9957682139248794`*^-46}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -10002,7 +9974,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "6.666179452395635`*^-9"}, "RowDefault"]], Annotation[#, 
+        "1.6189949727473453`*^-48"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -10029,7 +10001,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[6], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 6.666179452395635*^-9}], 
+           "\[RightAngleBracket]"}]], "=", 1.6189949727473453`*^-48}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -10271,8 +10243,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        RowBox[{"-", "2.651457818787836`*^-11"}]}, "RowDefault"]], 
-     Annotation[#, 
+        "1.5651858508032517`*^-50"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -10299,7 +10270,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[2], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", -2.651457818787836*^-11}], 
+           "\[RightAngleBracket]"}]], "=", 1.5651858508032517`*^-50}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -10340,8 +10311,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        RowBox[{"-", "6.825605545217013`*^-10"}]}, "RowDefault"]], 
-     Annotation[#, 
+        "4.3706988810087074`*^-49"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -10368,7 +10338,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[2], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", -6.825605545217013*^-10}], 
+           "\[RightAngleBracket]"}]], "=", 4.3706988810087074`*^-49}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -10543,8 +10513,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        RowBox[{"-", "2.511479033945373`*^-8"}]}, "RowDefault"]], 
-     Annotation[#, 
+        "4.380853044449938`*^-47"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -10571,7 +10540,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[4], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", -2.511479033945373*^-8}], 
+           "\[RightAngleBracket]"}]], "=", 4.380853044449938*^-47}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -10746,8 +10715,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        RowBox[{"-", "2.2330765550767293`*^-8"}]}, "RowDefault"]], 
-     Annotation[#, 
+        "1.9957682139248794`*^-46"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -10774,7 +10742,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[5], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", -2.2330765550767293`*^-8}], 
+           "\[RightAngleBracket]"}]], "=", 1.9957682139248794`*^-46}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -10815,7 +10783,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        "0.`"}, "RowDefault"]], Annotation[#, 
+        "5.5289533518363586`*^-45"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -10842,7 +10810,8 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[6], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", 0.}], "Tooltip"]& ], 
+           "\[RightAngleBracket]"}]], "=", 5.5289533518363586`*^-45}], 
+      "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
        GrayLevel[0, 0], 
@@ -11619,8 +11588,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 FontTracking -> "Narrow", StripOnInput -> False], 
                BoxBaselineShift -> 1, BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}],
              DisplayForm], "\[RightAngleBracket]"}], DisplayForm], "\"=\"", 
-        RowBox[{"-", "1.9998538357186906`*^-8"}]}, "RowDefault"]], 
-     Annotation[#, 
+        "1.6189949727473453`*^-48"}, "RowDefault"]], Annotation[#, 
       Row[{
         DisplayForm[
          RowBox[{"\[LeftAngleBracket]", 
@@ -11647,7 +11615,7 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
                 InputForm[5], Small, FontTracking -> "Narrow"], 
                BoxBaselineShift -> 1, 
                BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}]], 
-           "\[RightAngleBracket]"}]], "=", -1.9998538357186906`*^-8}], 
+           "\[RightAngleBracket]"}]], "=", 1.6189949727473453`*^-48}], 
       "Tooltip"]& ], 
     TagBox[
      TooltipBox[{
@@ -12320,12 +12288,10 @@ R0V3r3T1SbGV9oRZaaFFd1AcdThbg1k+9fvFT6f//pDlH32f04Q=
           "placement" -> {"x" -> "All", "y" -> "None"}}}}, "DefaultPlotStyle" -> 
     Automatic, "DomainPadding" -> Scaled[0.02], "RangePadding" -> 
     Scaled[0.05]}]], "Output",
- CellChangeTimes->{
-  3.946403757626659*^9, 3.946403904108348*^9, {3.9464092997315197`*^9, 
-   3.9464093087902308`*^9}, 3.946409365885767*^9, 3.946409403852476*^9, {
-   3.946409442835355*^9, 3.946409451006839*^9}},
- CellLabel->"Out[40]=",
- CellID->990230419,ExpressionUUID->"ff8213e1-b17e-4db3-8781-59ed153fa9c9"]
+ CellChangeTimes->{{3.948882623217976*^9, 3.948882638947925*^9}, 
+   3.9488826806562347`*^9, 3.948882747530012*^9},
+ CellLabel->"Out[154]=",
+ CellID->1815678523,ExpressionUUID->"1fb94cc7-0d2f-419c-b578-b9d50d25397d"]
 }, Open  ]]
 }, Open  ]],
 
@@ -12508,9 +12474,9 @@ Cell[BoxData[""], "Template",
 }, Open  ]]
 },
 WindowSize->{700, 770},
-WindowMargins->{{Automatic, 478}, {Automatic, 96}},
+WindowMargins->{{Automatic, 151}, {Automatic, 97}},
 TaggingRules-><|"Paclet" -> "qlanth"|>,
-FrontEndVersion->"14.1 for Mac OS X ARM (64-bit) (July 16, 2024)",
+FrontEndVersion->"14.2 for Mac OS X ARM (64-bit) (December 26, 2024)",
 StyleDefinitions->FrontEnd`FileName[{"Wolfram"}, "FunctionPageStylesExt.nb", 
   CharacterEncoding -> "UTF-8"],
 ExpressionUUID->"b44c9940-3136-421d-8058-0618832c751f"
@@ -12521,14 +12487,14 @@ ExpressionUUID->"b44c9940-3136-421d-8058-0618832c751f"
 (*CellTagsOutline
 CellTagsIndex->{
  "ExtendedExamples"->{
-  Cell[518847, 12333, 488, 13, 56, "ExtendedExamplesSection",ExpressionUUID->"314e7251-cd70-4ff3-9ec7-09e362e3446d",
+  Cell[517833, 12299, 488, 13, 56, "ExtendedExamplesSection",ExpressionUUID->"314e7251-cd70-4ff3-9ec7-09e362e3446d",
    CellTags->"ExtendedExamples",
    CellID->1902701128]}
  }
 *)
 (*CellTagsIndex
 CellTagsIndex->{
- {"ExtendedExamples", 525262, 12522}
+ {"ExtendedExamples", 524196, 12488}
  }
 *)
 (*NotebookFileOutline
@@ -12536,117 +12502,117 @@ Notebook[{
 Cell[CellGroupData[{
 Cell[576, 22, 123, 1, 72, "ObjectName",ExpressionUUID->"4992ffd9-d64d-4dd0-bfe8-74d515caa6aa",
  CellID->515575781],
-Cell[702, 25, 1727, 42, 128, "Usage",ExpressionUUID->"75262f7f-b254-4fad-af59-0e1a12ddcdfe",
+Cell[702, 25, 1625, 38, 129, "Usage",ExpressionUUID->"75262f7f-b254-4fad-af59-0e1a12ddcdfe",
  CellID->185635622],
-Cell[2432, 69, 606, 13, 43, "Notes",ExpressionUUID->"d9600fac-4390-4a65-9ac4-5c7550960070",
+Cell[2330, 65, 606, 13, 43, "Notes",ExpressionUUID->"d9600fac-4390-4a65-9ac4-5c7550960070",
  CellID->1831643510],
-Cell[3041, 84, 385, 10, 26, "Notes",ExpressionUUID->"d8d2c8ce-9561-4092-b451-43c2354ec230",
+Cell[2939, 80, 385, 10, 26, "Notes",ExpressionUUID->"d8d2c8ce-9561-4092-b451-43c2354ec230",
  CellID->650726085],
-Cell[3429, 96, 1492, 28, 198, "Notes",ExpressionUUID->"7e8e6d21-c418-4415-bc32-c5f864a71264",
+Cell[3327, 92, 1492, 28, 198, "Notes",ExpressionUUID->"7e8e6d21-c418-4415-bc32-c5f864a71264",
  CellID->375470712]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[4958, 129, 458, 13, 38, "SeeAlsoSection",ExpressionUUID->"08f46527-285a-4cef-a7f0-68e99fc938c4",
+Cell[4856, 125, 458, 13, 38, "SeeAlsoSection",ExpressionUUID->"08f46527-285a-4cef-a7f0-68e99fc938c4",
  CellID->254392825],
-Cell[5419, 144, 2235, 55, 21, "SeeAlso",ExpressionUUID->"2f9a7d25-6d1b-421a-a3ac-037865ad06d5",
+Cell[5317, 140, 2199, 53, 21, "SeeAlso",ExpressionUUID->"2f9a7d25-6d1b-421a-a3ac-037865ad06d5",
  CellID->2087752245]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[7691, 204, 436, 12, 39, "TechNotesSection",ExpressionUUID->"575c3280-0b0b-4383-b732-dc33ed10ca5f",
+Cell[7553, 198, 436, 12, 39, "TechNotesSection",ExpressionUUID->"575c3280-0b0b-4383-b732-dc33ed10ca5f",
  CellID->1116673382],
-Cell[8130, 218, 101, 1, 17, "Tutorials",ExpressionUUID->"43515fdb-5468-4d23-ae59-389856fa2c95",
+Cell[7992, 212, 101, 1, 17, "Tutorials",ExpressionUUID->"43515fdb-5468-4d23-ae59-389856fa2c95",
  CellID->1069940141]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[8268, 224, 118, 1, 37, "MoreAboutSection",ExpressionUUID->"d890c72a-7fd2-4fa5-9203-2a262794b9b2",
+Cell[8130, 218, 118, 1, 37, "MoreAboutSection",ExpressionUUID->"d890c72a-7fd2-4fa5-9203-2a262794b9b2",
  CellID->1603373456],
-Cell[8389, 227, 101, 1, 17, "MoreAbout",ExpressionUUID->"bef7cd88-bb71-4429-9948-01861f36b446",
+Cell[8251, 221, 101, 1, 17, "MoreAbout",ExpressionUUID->"bef7cd88-bb71-4429-9948-01861f36b446",
  CellID->1272872436]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[8527, 233, 473, 13, 38, "RelatedLinksSection",ExpressionUUID->"faa300dc-7a54-46b3-8192-b98327b07c7a",
+Cell[8389, 227, 473, 13, 38, "RelatedLinksSection",ExpressionUUID->"faa300dc-7a54-46b3-8192-b98327b07c7a",
  CellID->2082424085],
-Cell[9003, 248, 104, 1, 17, "RelatedLinks",ExpressionUUID->"d3e03c3a-404b-4f8e-90d3-07282ae688dc",
+Cell[8865, 242, 104, 1, 17, "RelatedLinks",ExpressionUUID->"d3e03c3a-404b-4f8e-90d3-07282ae688dc",
  CellID->1760601436]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[9144, 254, 530, 14, 68, "ExamplesInitializationSection",ExpressionUUID->"e379caec-9a1f-4ee6-a775-c6de887d6751",
+Cell[9006, 248, 530, 14, 68, "ExamplesInitializationSection",ExpressionUUID->"e379caec-9a1f-4ee6-a775-c6de887d6751",
  CellID->251162839],
-Cell[9677, 270, 181, 3, 46, "ExampleInitialization",ExpressionUUID->"6876a64c-88da-4675-8b31-ad53058ee5a2",
+Cell[9539, 264, 304, 6, 46, "ExampleInitialization",ExpressionUUID->"6876a64c-88da-4675-8b31-ad53058ee5a2",
  CellID->1488468718]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[9895, 278, 442, 12, 70, "PrimaryExamplesSection",ExpressionUUID->"505b4f2a-d268-4ae7-a695-f063a5c0181b",
+Cell[9880, 275, 442, 12, 70, "PrimaryExamplesSection",ExpressionUUID->"505b4f2a-d268-4ae7-a695-f063a5c0181b",
  CellID->656739523],
-Cell[10340, 292, 423, 8, 23, "ExampleText",ExpressionUUID->"ab99e3ce-010f-4354-b0e2-90d6f9c19d7f",
+Cell[10325, 289, 423, 8, 23, "ExampleText",ExpressionUUID->"ab99e3ce-010f-4354-b0e2-90d6f9c19d7f",
  CellID->890719576],
 Cell[CellGroupData[{
-Cell[10788, 304, 2551, 55, 233, "Input",ExpressionUUID->"f2d647cf-c22c-418b-acb6-b91fa7427b15",
- CellID->1772966535],
-Cell[13342, 361, 505456, 11966, 249, "Output",ExpressionUUID->"ff8213e1-b17e-4db3-8781-59ed153fa9c9",
- CellID->990230419]
+Cell[10773, 301, 1693, 41, 233, "Input",ExpressionUUID->"82deac3d-867a-4af3-bff0-0ad8b2f12069",
+ CellID->395310442],
+Cell[12469, 344, 505315, 11949, 249, "Output",ExpressionUUID->"1fb94cc7-0d2f-419c-b578-b9d50d25397d",
+ CellID->1815678523]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[518847, 12333, 488, 13, 56, "ExtendedExamplesSection",ExpressionUUID->"314e7251-cd70-4ff3-9ec7-09e362e3446d",
+Cell[517833, 12299, 488, 13, 56, "ExtendedExamplesSection",ExpressionUUID->"314e7251-cd70-4ff3-9ec7-09e362e3446d",
  CellTags->"ExtendedExamples",
  CellID->1902701128],
-Cell[519338, 12348, 241, 5, 32, "ExampleSection",ExpressionUUID->"55e3875c-bfbf-4ec6-92cf-0d2b47b27cd9",
+Cell[518324, 12314, 241, 5, 32, "ExampleSection",ExpressionUUID->"55e3875c-bfbf-4ec6-92cf-0d2b47b27cd9",
  CellID->518870819],
-Cell[519582, 12355, 265, 5, 20, "ExampleSection",ExpressionUUID->"709c36ad-ce0b-46ed-8ae3-b84f61c41272",
+Cell[518568, 12321, 265, 5, 20, "ExampleSection",ExpressionUUID->"709c36ad-ce0b-46ed-8ae3-b84f61c41272",
  CellID->1878248113],
 Cell[CellGroupData[{
-Cell[519872, 12364, 244, 5, 20, "ExampleSection",ExpressionUUID->"31232839-0f43-44a7-a536-5594d55c35a5",
+Cell[518858, 12330, 244, 5, 20, "ExampleSection",ExpressionUUID->"31232839-0f43-44a7-a536-5594d55c35a5",
  CellID->1853907938],
-Cell[520119, 12371, 246, 5, 23, "ExampleSubsection",ExpressionUUID->"9b55239d-3a0a-4f99-acb1-419078dbf69d",
+Cell[519105, 12337, 246, 5, 23, "ExampleSubsection",ExpressionUUID->"9b55239d-3a0a-4f99-acb1-419078dbf69d",
  CellID->790479643],
-Cell[520368, 12378, 247, 5, 19, "ExampleSubsection",ExpressionUUID->"add884e6-f29f-4d13-8083-191ccd0eb6f0",
+Cell[519354, 12344, 247, 5, 19, "ExampleSubsection",ExpressionUUID->"add884e6-f29f-4d13-8083-191ccd0eb6f0",
  CellID->1257519559]
 }, Open  ]],
-Cell[520630, 12386, 249, 5, 32, "ExampleSection",ExpressionUUID->"05cda3c0-ebcd-4062-a981-d61178b589f5",
+Cell[519616, 12352, 249, 5, 32, "ExampleSection",ExpressionUUID->"05cda3c0-ebcd-4062-a981-d61178b589f5",
  CellID->1744657986],
-Cell[520882, 12393, 258, 5, 20, "ExampleSection",ExpressionUUID->"fb37032b-0236-4c6c-a8fb-f94ad7e6e4f1",
+Cell[519868, 12359, 258, 5, 20, "ExampleSection",ExpressionUUID->"fb37032b-0236-4c6c-a8fb-f94ad7e6e4f1",
  CellID->725054564],
-Cell[521143, 12400, 252, 5, 20, "ExampleSection",ExpressionUUID->"1d2d7f30-c1a3-4e0d-8873-18552e7a1030",
+Cell[520129, 12366, 252, 5, 20, "ExampleSection",ExpressionUUID->"1d2d7f30-c1a3-4e0d-8873-18552e7a1030",
  CellID->1169844070],
-Cell[521398, 12407, 257, 5, 20, "ExampleSection",ExpressionUUID->"3d2874b6-56fe-4d74-a186-04d8a9c6aa8b",
+Cell[520384, 12373, 257, 5, 20, "ExampleSection",ExpressionUUID->"3d2874b6-56fe-4d74-a186-04d8a9c6aa8b",
  CellID->1356496205],
-Cell[521658, 12414, 249, 5, 20, "ExampleSection",ExpressionUUID->"1a5316c3-7ad6-4a30-b5fc-c5a8ac99746f",
+Cell[520644, 12380, 249, 5, 20, "ExampleSection",ExpressionUUID->"1a5316c3-7ad6-4a30-b5fc-c5a8ac99746f",
  CellID->945320883]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[521944, 12424, 110, 1, 71, "MetadataSection",ExpressionUUID->"a7b1ef53-e95c-4c67-beac-00b8cadfb4dc",
+Cell[520930, 12390, 110, 1, 71, "MetadataSection",ExpressionUUID->"a7b1ef53-e95c-4c67-beac-00b8cadfb4dc",
  CellID->924060075],
-Cell[522057, 12427, 593, 14, 25, "History",ExpressionUUID->"3d041dfd-3c9b-47f4-9a26-4578b5ad8db9",
+Cell[521043, 12393, 593, 14, 25, "History",ExpressionUUID->"3d041dfd-3c9b-47f4-9a26-4578b5ad8db9",
  CellID->75945421],
 Cell[CellGroupData[{
-Cell[522675, 12445, 484, 13, 20, "CategorizationSection",ExpressionUUID->"70b94a0d-b72c-49d9-81d8-7e14db637aac",
+Cell[521661, 12411, 484, 13, 20, "CategorizationSection",ExpressionUUID->"70b94a0d-b72c-49d9-81d8-7e14db637aac",
  CellID->809404429],
-Cell[523162, 12460, 135, 2, 70, "Categorization",ExpressionUUID->"cbbcbece-3f6b-424c-8eb4-b999f166d47f",
+Cell[522148, 12426, 135, 2, 70, "Categorization",ExpressionUUID->"cbbcbece-3f6b-424c-8eb4-b999f166d47f",
  CellID->1498818105],
-Cell[523300, 12464, 148, 2, 70, "Categorization",ExpressionUUID->"c3f8ebae-0583-4e98-89b7-8035fb407cb6",
+Cell[522286, 12430, 134, 2, 70, "Categorization",ExpressionUUID->"c3f8ebae-0583-4e98-89b7-8035fb407cb6",
  CellID->652711425],
-Cell[523451, 12468, 145, 2, 70, "Categorization",ExpressionUUID->"2b4de693-4c43-4af7-afd7-58609d6cdf85",
+Cell[522423, 12434, 131, 2, 70, "Categorization",ExpressionUUID->"2b4de693-4c43-4af7-afd7-58609d6cdf85",
  CellID->774451099],
-Cell[523599, 12472, 171, 2, 70, "Categorization",ExpressionUUID->"77d32062-2244-4ba8-9397-2b658b178435",
+Cell[522557, 12438, 157, 2, 70, "Categorization",ExpressionUUID->"77d32062-2244-4ba8-9397-2b658b178435",
  CellID->301236426]
 }, Closed]],
 Cell[CellGroupData[{
-Cell[523807, 12479, 111, 1, 20, "KeywordsSection",ExpressionUUID->"90a270bb-73fc-47d1-94b2-c0a990c59da2",
+Cell[522751, 12445, 111, 1, 20, "KeywordsSection",ExpressionUUID->"90a270bb-73fc-47d1-94b2-c0a990c59da2",
  CellID->1261655803],
-Cell[523921, 12482, 99, 1, 70, "Keywords",ExpressionUUID->"6e67c28b-dc89-494e-8fb6-1614b8f32785",
+Cell[522865, 12448, 99, 1, 70, "Keywords",ExpressionUUID->"6e67c28b-dc89-494e-8fb6-1614b8f32785",
  CellID->395550543]
 }, Closed]],
 Cell[CellGroupData[{
-Cell[524057, 12488, 120, 1, 20, "TemplatesSection",ExpressionUUID->"e853abe7-a77f-473a-8e09-332d6fd78264",
+Cell[523001, 12454, 120, 1, 20, "TemplatesSection",ExpressionUUID->"e853abe7-a77f-473a-8e09-332d6fd78264",
  CellID->1556088736],
-Cell[524180, 12491, 149, 2, 70, "Template",ExpressionUUID->"17b609ce-6fcd-48d3-b479-40261871fa29",
+Cell[523124, 12457, 149, 2, 70, "Template",ExpressionUUID->"17b609ce-6fcd-48d3-b479-40261871fa29",
  CellID->1127532786],
-Cell[524332, 12495, 138, 2, 70, "Template",ExpressionUUID->"9d62e3d8-9075-4c7b-8284-60a3884d56ef",
+Cell[523276, 12461, 138, 2, 70, "Template",ExpressionUUID->"9d62e3d8-9075-4c7b-8284-60a3884d56ef",
  CellID->1047833174],
-Cell[524473, 12499, 136, 2, 70, "Template",ExpressionUUID->"474c1e53-fbad-418c-8472-2a774e7348f9",
+Cell[523417, 12465, 136, 2, 70, "Template",ExpressionUUID->"474c1e53-fbad-418c-8472-2a774e7348f9",
  CellID->1566250018],
-Cell[524612, 12503, 137, 2, 70, "Template",ExpressionUUID->"07befabf-76f9-43cb-9ad5-7a7fbf07979c",
+Cell[523556, 12469, 137, 2, 70, "Template",ExpressionUUID->"07befabf-76f9-43cb-9ad5-7a7fbf07979c",
  CellID->109507600]
 }, Closed]]
 }, Open  ]]

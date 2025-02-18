@@ -106,7 +106,7 @@ FastIonSolverLaF3Carnall[numE_, OptionsPattern[]] := Module[
     simpleHam = If[
       ValueQ[symbolicHamiltonians[numEH]],
       symbolicHamiltonians[numEH],
-      SimplerSymbolicHamMatrix[numE,
+      SimplerEffectiveHamiltonian[numE,
         C2vsimplifier,
         "PrependToFilename" -> "C2v-",
         "Overwrite" -> False]
@@ -859,7 +859,7 @@ FastIonSolver[params0_, OptionsPattern[]] := Module[
     simpleHam = If[
       ValueQ[symbolicHamiltonians[{symGroup, numEH}]],
       symbolicHamiltonians[{symGroup, numEH}],
-      SimplerSymbolicHamMatrix[numE,
+      SimplerEffectiveHamiltonian[numE,
         symmetrySimplifier,
         "PrependToFilename" -> symGroup <> "-",
         "Overwrite" -> False]

@@ -43,7 +43,7 @@
 \usepackage[para]{footmisc}
 \usepackage{etoolbox}
 \robustify{\underbar}
-\newcommand{\qversion}{v1.2.2}
+\newcommand{\qversion}{v1.3.0}
 
 % Listing configuration
 \lstset{   
@@ -450,9 +450,9 @@ In \qlanth the function \codetext{BasisLSJ} can be used to retrieve the ordered 
 
 \lstinputlisting[language=Mathematica]{./fundefs/BasisLSJ.tex}
 
-To obtain the blocks (indexed by J) representing the Hamiltonian in the level description, the function \codetext{LevelSimplerSymbolicHamMatrix} is provided in \qlanth.
+To obtain the blocks (indexed by J) representing the Hamiltonian in the level description, the function \codetext{LevelSimplerEffectiveHamiltonian} is provided in \qlanth.
 
-\lstinputlisting[language=Mathematica]{./fundefs/LevelSimplerSymbolicHamMatrix.tex} 
+\lstinputlisting[language=Mathematica]{./fundefs/LevelSimplerEffectiveHamiltonian.tex} 
 
 Whereas this description may be calculated without ever making explicit reference to $\Msub{J}$, in \qlanth what is done is that the more verbose description associated with the $\LSJMbasis$ basis is ``downsized'' to obtain the description in terms of levels. For this aim the following functions in \qlanth are instrumental: \codetext{EigenLever}, \codetext{FreeHam}, \codetext{ListRepeater}, and \codetext{ListLever}.
 
@@ -1806,7 +1806,7 @@ The paclet includes documentation in standard \mathematica format (see \figuref{
 	\centering
 	\begin{subfigure}{0.45\textwidth}
         \centering
-		\includegraphics[width=\linewidth]{./docImages/141-qlanth.jpg}	
+		\includegraphics[width=\linewidth]{./docImages/143-qlanth.jpg}	
 		\caption{\qlanth guide in \mathematica}
 		\label{fig:mathematica-docs}
     \end{subfigure}
@@ -1827,7 +1827,7 @@ The paclet includes documentation in standard \mathematica format (see \figuref{
     \end{subfigure}
 	\begin{subfigure}{0.45\textwidth}
         \centering
-		\includegraphics[width=\linewidth]{./docImages/185-ToPythonSymPyExpression}	
+		\includegraphics[width=\linewidth]{./docImages/187-ToPythonSymPyExpression}	
 		\caption{Doc. for \codetext{ToPythonSymPyExpression}}
 		\label{fig:mathematica-docs2}
     \end{subfigure}
