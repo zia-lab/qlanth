@@ -43,7 +43,7 @@
 \usepackage[para]{footmisc}
 \usepackage{etoolbox}
 \robustify{\underbar}
-\newcommand{\qversion}{v1.3.0}
+\newcommand{\qversion}{v1.4.0}
 
 % Listing configuration
 \lstset{   
@@ -1403,39 +1403,6 @@ In the examples included in this code the uncertainty in the experimental data w
 
 \qlanth can also compute magnetic dipole transition rates within states and levels, as well as forced electric dipole transition rates between levels.
 
-\subsection{State description}
-
-\subsubsection{Magnetic dipole transitions}
-
-\qlanth can also calculate a few quantities related to magnetic dipole transitions. With $\op{\mu} = \{\op{\mu}_x, \op{\mu}_y, \op{\mu}_z\}$ the magnetic dipole operator, the line strength between two eigenstates $\ket{\nu}$ and $\ket{\nu'}$ is defined as (see for example equation 14.31 in \cite{cowan_theory_1981})
-\begin{equation}
-	\lineStrength(\psi,\psi') \DEF \left| \braopket{\psi}{\op{\mu}}{\psi'} \right|^2 = \left| \braopket{\psi}{\op{\mu}_x}{\psi'} \right|^2 + \left| \braopket{\psi}{\op{\mu}_y}{\psi'} \right|^2 + \left| \braopket{\psi}{\op{\mu}_z}{\psi'} \right|^2
-\end{equation}
-
-In \qlanth this is computed with the function \codetext{MagDipLineStrength}, which given a set of eigenvectors computes the sum above, and returns an array that contains all possible pairings of $\ket{\psi}$ and $\ket{\psi'}$ in $\lineStrength(\psi,\psi')$.
- 
-\lstinputlisting[language=Mathematica]{./fundefs/MagDipLineStrength.tex}
-
-Using the line strength $\lineStrength$, the transition rate $\AMD$ for the spontaneous transition $\ket{\psi_i} \rightsquigarrow \ket{\psi_f}$ is then given by (from table 7.3 of \cite{thorne_spectrophysics_1999})
-\begin{equation}
-	\tRate{MD}{\psi_i}{\psi_f} = \frac{16 \pi^3 \mu_0}{3 h} \frac{n^3}{\lambda_{if}^3} \frac{\lineStrength(\psi_i,\psi_f)}{g_i},
-\end{equation}
-where $\lambda$ is the vacuum-equivalent wavelength of the transition between $\ket{\nu}$ and $\ket{\nu'}$, $n$ the refractive index of the medium containing the ion, and $g_i$ the degeneracy of the initial state $\ket{\psi_i}$. At the state level of description, $J$ is no longer a good quantum number so the degeneracy $g_i=1$. 
-
-\lstinputlisting[language=Mathematica]{./fundefs/MagDipoleRates} 
- 
-A final quantity of interest is the oscillator strength for the transition between the ground state $\ket{\psi_g}$ and an excited state $\ket{\psi_e}$. The oscillator strength is a dimensionless quantity which is indicative of how strong absorption is. The oscillator strength may be defined for other initial states than the ground state, but since this is the state most likely to be populated in ordinary experimental conditions, this is the initial state that is of most frequent interest. The oscillator strength is given by \cite{carnall_spectral_1965}
-\begin{equation}
-	\oStrength{MD}{\psi_g}{\psi_e} = \frac{8 \pi^2 \me}{3\,hc\,e^2} 
-	\frac{n}{\lambda_{ge}}
-	\frac{\lineStrength(\psi_g,\psi_e)}{g_g}
-\end{equation}
-where $g_g$ is the degeneracy of the ground state. At the level of detail that the eigenstates are described in \qlanth where $J$ is no longer a good quantum number, $g_g = 1$. 
-
-In \qlanth the function \codetext{GroundMagDipoleOscillatorStrength} implements the calculation of the oscillator strengths from the ground state to all the excited ones.
-
-\lstinputlisting[language=Mathematica]{./fundefs/GroundMagDipoleOscillatorStrength} 
-
 \subsection{Level description}
 
 \subsubsection{Forced electric dipole transitions}
@@ -1482,7 +1449,7 @@ In \qlanth Judd-Ofelt theory is implemented with help of the functions \codetext
 
 In Hartree atomic units, the magnetic dipole line strength between levels $\ket{\alpha{LSJ}}$ and $\ket{\alpha\mathrlap{'} S\mathrlap{'} L\mathrlap{'} J\mathrlap{'}\,\,}$ is given by
 \begin{equation} 
-	\lineStrength(\ket{\alpha{LSJ}},\ket{\alpha\mathrlap{'} S\mathrlap{'} L\mathrlap{'} J\mathrlap{'}\,\,}) = 
+	\lineStrengthMD(\ket{\alpha{LSJ}},\ket{\alpha\mathrlap{'} S\mathrlap{'} L\mathrlap{'} J\mathrlap{'}\,\,}) = 
 	\left|\redbraopket{\alpha{LSJ}}{\frac{1}{2}(\op{L}+g \op{S})}{\alpha\mathrlap{'} S\mathrlap{'} L\mathrlap{'} J\mathrlap{'}\,\,} \right|^2
 \end{equation}
 
@@ -1504,7 +1471,7 @@ In atomic units, the magnetic dipole oscillator strength for a transition betwee
 		)}}
 	{2J+1}
 	\alphaFine^2
-	\lineStrength\left(\ket{\alpha{LSJ}},\ket{\alpha\mathrlap{'} S\mathrlap{'} L\mathrlap{'} J\mathrlap{'}\,\,}\right)
+	\lineStrengthMD\left(\ket{\alpha{LSJ}},\ket{\alpha\mathrlap{'} S\mathrlap{'} L\mathrlap{'} J\mathrlap{'}\,\,}\right)
 \end{equation}
 where $\mathcal{E}(\ket{\alpha{LSJ}})$ is the energy of level $\ket{\alpha{LSJ}}$, $n$ is the refractive index of the medium, and $\alphaFine$ is the fine structure constant. In obtaining this expression one considers the transition from one state of the initial level into another single state of the final level. Furthermore, here it is assumed that all the states of the initial level are equally populated.
 
@@ -1532,12 +1499,75 @@ A final quantity of interest is the spontaneous magnetic dipole decay rate from 
 				}
 				{2J+1} 
 		\alphaFine^5
-		\lineStrength\left(\ket{\alpha{LSJ}},\ket{\alpha\mathrlap{'} S\mathrlap{'} L\mathrlap{'} J\mathrlap{'}\,\,}\right).
+		\lineStrengthMD\left(\ket{\alpha{LSJ}},\ket{\alpha\mathrlap{'} S\mathrlap{'} L\mathrlap{'} J\mathrlap{'}\,\,}\right).
 \end{equation}
 
 In \qlanth the spontaneous decay rates may be calculated through the function \codetext{LevelMagDipoleSpotaneousDecayRates}.
 
 \lstinputlisting[language=Mathematica]{./fundefs/LevelMagDipoleSpotaneousDecayRates} 
+
+\subsection{State description}
+
+\subsubsection{Forced electric dipole transitions}
+
+There is an extension to Judd-Ofelt theory \cite{may_electric_1987,may_optical_1987,may_circular_1987,reid_anisotropic_1983,reid_lanthanide_1984,burdick_ambiguities_1999,newman_parametrization_1975,reid_recent_1992,reid_superposition_model_1987,reid_electric_1983,moran_measurement_1992,moran_parametric_1990,may_crystals_1989,may_parametric_1989,berry_optical_1988,burdick_energy_level_1994} in which one may estimate the line strength between states as they are split by the crystal field. In this approach, a rank-1 parametric dipole operator is defined as \cite{newman_crystal_2000} \index{effective dipole operator}
+\begin{equation}
+	\EffectiveElectricDipole_{,q} = -e \sum_{\lambda=\{2,4,6\}} \,\, \sum_{t=\{\lambda-1,\lambda,\lambda+1\}} \sum_p \Altp{\lambda}{t}{p} \braket{\lambda,(p+q);1,-q}{t,p} \SymmetricUkq{\lambda}{p+q} \label{eqn:effective-dipole}.
+\end{equation}
+Where $\SymmetricUkq{\lambda}{p+q}$ is the symmetric unit tensor operator of rank $\lambda$ and with $\Altp{\lambda}{t}{p}$ a set of empirical parameters to be fitted against extensive experimental data that witness the intensity of transitions between states (see \cite{burdick_energy_level_1994} for an example of $\trion{Nd}$ in YAG). The parameters $\Altp{\lambda}{t}{p}$ satisfy the general constraint
+\begin{equation}
+	\left( \Altp{\lambda}{t}{p} \right)^* = \phaser{t+p+1} \Altp{\lambda}{t}{-p},
+\end{equation}
+with allowed $p$ values (which defines the sum over p in the expression for $\EffectiveElectricDipole$) constrained by the point symmetry of the site occupied by the ion.
+
+In \qlanth this may be calculated with the function \codetext{EffectiveElectricDipole}.
+
+From this operator the forced electric dipole line strength $\lineStrengthED$ is calculated as
+\begin{equation} \label{eqn:forced-ED-line-strength}
+	\lineStrengthED(\psi,\psi') \DEF \left| \braopket{\psi}{\EffectiveElectricDipole}{\psi'} \right|^2 = \left| \braopket{\psi}{\EffectiveElectricDipole_{,-1}}{\psi'} \right|^2 + \left| \braopket{\psi}{\EffectiveElectricDipole_{,0}}{\psi'} \right|^2 + \left| \braopket{\psi}{\EffectiveElectricDipole_{,1}}{\psi'} \right|^2.
+\end{equation}
+
+In \qlanth this may be calculated with the function \codetext{ElectricDipLineStrength}.
+
+Together with the magnetic dipole line strength $\lineStrengthMD$, the total line strength $\lineStrengthTotal$ is then \index{total line strength}
+\begin{equation} \label{eqn:total-line-strength}
+	\lineStrengthTotal = \lineStrengthED + \frac{1}{c^2} \lineStrengthMD.
+\end{equation}
+
+\lstinputlisting[language=Mathematica]{./fundefs/EffectiveElectricDipole.tex} 
+
+\lstinputlisting[language=Mathematica]{./fundefs/ElectricDipLineStrength.tex} 
+
+\subsubsection{Magnetic dipole transitions}
+
+\qlanth can also calculate a few quantities related to magnetic dipole transitions. With $\op{\mu} = \{\op{\mu}_x, \op{\mu}_y, \op{\mu}_z\}$ the magnetic dipole operator, the line strength between two eigenstates $\ket{\nu}$ and $\ket{\nu'}$ is defined as (see for example equation 14.31 in \cite{cowan_theory_1981})
+\begin{equation}
+	\lineStrengthMD(\psi,\psi') \DEF \left| \braopket{\psi}{\op{\mu}}{\psi'} \right|^2 = \left| \braopket{\psi}{\op{\mu}_x}{\psi'} \right|^2 + \left| \braopket{\psi}{\op{\mu}_y}{\psi'} \right|^2 + \left| \braopket{\psi}{\op{\mu}_z}{\psi'} \right|^2
+\end{equation}
+
+In \qlanth this is computed with the function \codetext{MagDipLineStrength}, which given a set of eigenvectors computes the sum above, and returns an array that contains all possible pairings of $\ket{\psi}$ and $\ket{\psi'}$ in $\lineStrengthMD(\psi,\psi')$.
+ 
+\lstinputlisting[language=Mathematica]{./fundefs/MagDipLineStrength.tex}
+
+Using the line strength $\lineStrengthMD$, the transition rate $\AMD$ for the spontaneous transition $\ket{\psi_i} \rightsquigarrow \ket{\psi_f}$ is then given by (from table 7.3 of \cite{thorne_spectrophysics_1999})
+\begin{equation}
+	\tRate{MD}{\psi_i}{\psi_f} = \frac{16 \pi^3 \mu_0}{3 h} \frac{n^3}{\lambda_{if}^3} \frac{\lineStrengthMD(\psi_i,\psi_f)}{g_i},
+\end{equation}
+where $\lambda$ is the vacuum-equivalent wavelength of the transition between $\ket{\nu}$ and $\ket{\nu'}$, $n$ the refractive index of the medium containing the ion, and $g_i$ the degeneracy of the initial state $\ket{\psi_i}$. At the state level of description, $J$ is no longer a good quantum number so the degeneracy $g_i=1$. 
+
+\lstinputlisting[language=Mathematica]{./fundefs/MagDipoleRates} 
+ 
+A final quantity of interest is the oscillator strength for the transition between the ground state $\ket{\psi_g}$ and an excited state $\ket{\psi_e}$. The oscillator strength is a dimensionless quantity which is indicative of how strong absorption is. The oscillator strength may be defined for other initial states than the ground state, but since this is the state most likely to be populated in ordinary experimental conditions, this is the initial state that is of most frequent interest. The oscillator strength is given by \cite{carnall_spectral_1965}
+\begin{equation}
+	\oStrength{MD}{\psi_g}{\psi_e} = \frac{8 \pi^2 \me}{3\,hc\,e^2} 
+	\frac{n}{\lambda_{ge}}
+	\frac{\lineStrengthMD(\psi_g,\psi_e)}{g_g}
+\end{equation}
+where $g_g$ is the degeneracy of the ground state. At the level of detail that the eigenstates are described in \qlanth where $J$ is no longer a good quantum number, $g_g = 1$. 
+
+In \qlanth the function \codetext{GroundMagDipoleOscillatorStrength} implements the calculation of the oscillator strengths from the ground state to all the excited ones.
+
+\lstinputlisting[language=Mathematica]{./fundefs/GroundMagDipoleOscillatorStrength} 
 
 \section{Parameter constraints}\label{section:param-constraints}
 

@@ -131,6 +131,11 @@ the  Formalism  and  Its  Application."  Journal of Luminescence 136
 + Benelli, Cristiano, and Dante Gatteschi. Introduction to Molecular
 Magnetism: From Transition Metals to Lanthanides. John Wiley & Sons,
 2015.
+
++  Newman, DJ, and G Balasubramanian. “Parametrization of Rare-Earth
+Ion  Transition  Intensities.”  Journal  of  Physics  C: Solid State
+Physics 8, no. 1 (1975): 37.
+
 ----------------------------------------------------------------- *)
 
 BeginPackage["qlanth`"];
@@ -313,6 +318,7 @@ CrystalFieldForm;
 Dk;
 EigenLever;
 EffectiveHamiltonian;
+EffectiveElectricDipole;
 Electrostatic;
 ElectrostaticConfigInteraction;
 
@@ -326,6 +332,7 @@ FindNKLSTerm;
 FindSL;
 FreeHam;
 FreeIonTable;
+ElectricDipLineStrength;
 FromArrayToTable;
 FtoE;
 
@@ -460,6 +467,7 @@ TabulateManyJJBlockMatrixTables;
 ThreeBodyTable;
 ThreeBodyTables;
 ThreeJay;
+UkOperator;
 
 chenDeltas;
 fnTermLabels;
@@ -3353,6 +3361,166 @@ Begin["`Private`"]
     )
   ];
 
+  UkOperator::usage = "UkOperator[numE, k] provides the matrix representation of the symmetric unit tensor operator U^k in the LSJMJ basis. The function returns an association with keys of the form {k,q} where q ranges from -k to k and  values representing the different components of the tensor operator. This is computed by using the doubly reduced matrix elements provided by ReducedUkTable with adequate coupling coefficients.";
+  UkOperator[numE0_, k0_] := Module[
+    {
+      k = k0,
+      basis,
+      numE = numE0,
+      opComponents,
+      basisSize,
+      val,
+      coupling1,
+      coupling2,
+      phase,
+      braLS,
+      braJ,
+      braM,
+      ketLS,
+      ketJ,
+      ketM,
+      braS,
+      braL,
+      ketS,
+      ketL
+      },
+    (
+      If[Not@ValueQ[ReducedUkTable],
+      LoadUk[]
+      ];
+      basis = BasisLSJMJ[numE];
+      basisSize = Length[basis];
+      opComponents = <||>;
+      numE = Min[14-numE, numE];
+      Do[
+      (
+        nonZ = Reap[
+          Do[(
+            {braLS, braJ, braM} = basis[[rowIdx]];
+            {ketLS, ketJ, ketM} = basis[[colIdx]];
+            
+            redUk = ReducedUkTable[{numE, 3, braLS, ketLS, k}];
+            If[redUk == 0, Continue[]];
+            
+            coupling1 = ThreeJay[{ketJ, -ketM}, {k, q}, {braJ, braM}];
+            If[coupling1 == 0, Continue[]];
+            
+            {braS, braL} = FindSL[braLS];
+            {ketS, ketL} = FindSL[ketLS];
+            
+            coupling2 = Sqrt[TPO[braJ]*TPO[ketJ]] * SixJay[{ketL, ketJ, ketS}, {braJ, braL, k}];
+            If[coupling2 == 0, Continue[]];
+            
+            phase = Phaser[braS + k + braJ + ketL + braJ - braM];
+            val = N[phase * coupling1 * coupling2 * redUk];
+            Sow[({rowIdx, colIdx} -> val)]
+            ),
+            {rowIdx, 1, basisSize},
+            {colIdx, 1, basisSize}]
+          ][[2, 1]];
+        opComponents[{k, q}] = SparseArray[nonZ, {basisSize, basisSize}];
+        ), 
+      {q, -k, k}];
+      Return[opComponents]
+      )
+    ];
+
+  EffectiveElectricDipole::usage = "EffectiveElectricDipole[numE, Aparams] calculates the effective dipole operator in configuration f^numE for the given intensity parameters Aparams (given as an Association). The function returns an Association with three keys {-1,0,1} representing the three components of the operator and with values equal to arrays for the corresponding matrix representations in the standard LSJMJ basis. The units being equal to those of the units assumed for Aparams.";
+  EffectiveElectricDipole[numE0_, Aparams0_] := Module[
+    {
+      Aparams = Aparams0,
+      numE = numE0,
+      Deff,
+      keys,
+      key,
+      altKey,
+      Aparam,
+      qComponents
+      },
+    (
+      keys = Keys[Aparams];
+      Deff = <||>;
+      qComponents = {-1, 0, 1};
+      If[Not[ValueQ[Uks]],
+        Uks = <||>
+      ];
+      Do[
+      (
+        sumTerms = Reap[
+          Do[
+            (
+            key    = {\[Lambda], t, p};
+            altKey = {\[Lambda], t, -p};
+            (* enforce relation between conjugate values *)
+            Aparam = Which[
+              MemberQ[keys, key],
+              Aparams[key],
+              MemberQ[keys, altKey],
+              Conjugate[Phaser[t + p + 1] * Aparams[altKey]],
+              True,
+              Continue[]
+              ];
+            (* calculate the Uk operator if it has not been calculated *)
+            If[Not@MemberQ[Keys[Uks], \[Lambda]],
+              Uks[\[Lambda]] = UkOperator[numE, \[Lambda]];
+              ];
+            
+            clebscG = ClebschGordan[{\[Lambda], p + q}, {1, -q}, {t, p}];
+            If[clebscG === 0, Continue[]];
+            
+            Sow[Phaser[q]*Aparam*clebscG*Uks[\[Lambda]][{\[Lambda], p + q}]];
+            ),
+            {\[Lambda], {2, 4, 6}},
+            {t, {\[Lambda] - 1, \[Lambda], \[Lambda] + 1}},
+            {p, Range[-t, t]}]
+          ][[2, 1]];
+        Deff[q] = Total[N@sumTerms];
+        ),
+      {q, qComponents}
+      ];
+      Return[Deff]
+      )
+    ];
+
+  ElectricDipLineStrength::usage = "ElectricDipLineStrength[theEigensys, numE, Aparams] takes the eigensystem of an ion with configuration f^numE together with the intensity parameters A that define the effective electric dipole operator.
+  The option \"Units\" can be set to either \"SI\" (so that the units of the returned array are (units of A)^2 * C^2) or to \"Hartree-partial\" in which case the units of the returned array are determined by the units of Aparams and equal to (units of Aparams)^2.
+  The option \"States\" can be used to limit the states for which the line strength is calculated. The default, All, calculates the line strength for all states. A second option for this is to provide an index labelling a specific state, in which case only the line strengths between that state and all the others are computed.
+  The returned array should be interpreted in the eigenbasis of the Hamiltonian. As such the element Sed[[i,i]] corresponds to the line strength states between states |i> and |j>.
+  In what is returned no sum is made over degenerate states.
+  ";
+  Options[ElectricDipLineStrength] = {"Units" -> "SI","States" -> All}; 
+  ElectricDipLineStrength[theEigensys_List, numE0_Integer, Aparams_Association, OptionsPattern[]] := Module[
+    {
+      numE = numE0,
+      Deffcalc,
+      allEigenvecs,
+      Sed
+    },
+    (
+      numE = Min[14-numE, numE];
+      Deff = EffectiveElectricDipole[numE, Aparams];
+      allEigenvecs = Transpose[Last /@ theEigensys];
+      
+      Which[OptionValue["States"] === All,
+        (
+          Deffcalc = (ConjugateTranspose[allEigenvecs] . # . allEigenvecs) & /@ Deff;
+        ),
+        IntegerQ[OptionValue["States"]],
+        (
+          singleState  = theEigensys[[OptionValue["States"],2]];
+          Deffcalc = (ConjugateTranspose[allEigenvecs] . # . singleState) & /@ Deff; 
+        )
+      ];
+      Sed  = (Abs[Deffcalc[-1]^2] + Abs[Deffcalc[0]^2] + Abs[Deffcalc[1]^2]);
+      Which[
+        OptionValue["Units"] == "SI",
+        Return[eCharge^2 * Sed],
+        OptionValue["Units"] == "Hartree-partial",
+        Return[Sed]
+      ];
+    )
+  ];
+
   (* #################### Optical Operators #################### *)
   (* ########################################################### *)
 
@@ -4107,7 +4275,7 @@ Begin["`Private`"]
     pretty = DisplayForm[pretty];
     pretty = Which[
       OptionValue["Representation"]=="Ket",
-        Ket[pretty],
+        Ket[{pretty}],
       OptionValue["Representation"]=="Symbol",
         pretty
     ];
@@ -4131,7 +4299,7 @@ Begin["`Private`"]
         BoxMargins -> {{0.7, 0}, {0.4, 0.4}}]}];
     pretty = DisplayForm[pretty];
     If[OptionValue["Representation"] == "Ket",
-      pretty = Ket[pretty]
+      pretty = Ket[{pretty}]
     ];
     Return[pretty];
   );
@@ -4155,7 +4323,7 @@ Begin["`Private`"]
     pretty = DisplayForm[pretty];
     pretty = Which[
       OptionValue["Representation"]=="Ket",
-        Ket[pretty],
+        Ket[{pretty}],
       OptionValue["Representation"]=="Symbol",
         pretty
     ];

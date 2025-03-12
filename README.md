@@ -4,7 +4,7 @@
   <img alt="Single configuration effective Hamiltonian." src="./figs/banner-dark.png">
 </picture>
 
-`qlanth` is a Mathematica package that can be used to calculate the level structure of lanthanide ions embedded in crystals. For this purpose it uses a single configuration description (with configuration-interaction corrections) with the effective Hamiltonian shown below. This Hamiltonian aims to describe the observed properties of ions embedded in solids in a picture that imagines them as free ions, modified by the influence of the lattice in which they are embedded.
+`qlanth` is a Wolfram/Mathematica paclet that can be used to calculate the level structure of lanthanide ions embedded in crystals. For this purpose it uses a single configuration description (with configuration-interaction corrections) with the effective Hamiltonian shown below. This Hamiltonian aims to describe the observed properties of ions embedded in solids in a picture that imagines them as free ions, modified by the influence of the lattice in which they are embedded.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./figs/hamiltonian-dark.png">
@@ -14,7 +14,7 @@
 
 This picture is one that developed and mostly matured in the second half of the last century from the efforts of Brian Judd, Hannah Crosswhite, Michael Reid, Bill Carnall, Brian Wybourne, Katherine Rajnak, and others. The goal of this code is to provide a modern implementation of the calculations that resulted from their work, with the aim of fixing some small errors that might have been included at the time these calculations were made. It also aims to provide useful electronic versions of the data these Hamiltonians may produce, including energies and eigenvectors.
 
-`qlanth` also includes data that might be of use to those interested in the single-configuration description of lanthanide ions, independent of their specific use in this code. These data include the coefficients of fractional parentage (as calculated by Velkov and parsed here), and reduced matrix elements for all the operators listed above in the effective Hamiltonian. These are provided as standard Mathematica associations that should be simple to use elsewhere.
+`qlanth` also includes data that might be of use to those interested in the single-configuration description of lanthanide ions, independent of their specific use in this code. These data include the coefficients of fractional parentage (as calculated by Velkov and parsed here), and reduced matrix elements for all the operators listed above in the effective Hamiltonian. These are provided as standard Mathematica associations that should be simple to use elsewhere. In addition, `qlanth` also includes an implementation of Judd-Ofelt theory between levels and also between individual states.
 
 The `/examples` folder includes notebooks for several of the trivalent lanthanide ions in LaF₃, showing also comparisons against the published results of Carnall. LaF₃ (lanthanum trifluoride) is remarkable as one of the systems where a systematic study <a href="https://pubs.aip.org/aip/jcp/article-abstract/90/7/3443/220581"> [Carnall (1989)] </a> of most trivalent lanthanide ions was conducted.
 
@@ -51,6 +51,10 @@ To use the Python version of the resultant symbolic arrays, see the `/pyql` fold
 - Wybourne, Brian. "Spectroscopic Properties of Rare Earths", 1965.
 - Hansen, JE, BR Judd, and Hannah Crosswhite. “Matrix Elements of Scalar Three-Electron Operators for the Atomic f-Shell.” Atomic Data and Nuclear Data Tables 62, no. 1 (1996): 1–49. <a href="https://www.sciencedirect.com/science/article/pii/S0092640X96900017"> 🔗 </a>
 - Carnall, W. T., G. L. Goodman, K. Rajnak, and R. S. Rana. “A Systematic Analysis of the Spectra of the Lanthanides Doped into Single Crystal LaF₃.” The Journal of Chemical Physics 90, no. 7 (1989): 3443–57. <a href="https://pubs.aip.org/aip/jcp/article-abstract/90/7/3443/220581"> 🔗 </a>
+- Newman, DJ, and G Balasubramanian. “Parametrization of Rare-Earth Ion Transition Intensities.” Journal of Physics C: Solid State Physics 8, no. 1 (1975): 37. <a href="https://iopscience.iop.org/article/10.1088/0022-3719/8/1/008"> 🔗 </a>
+- Judd, B. R. “Optical Absorption Intensities of Rare-Earth Ions.” Physical Review 127, no. 3 (August 1, 1962): 750–61. https://doi.org/10.1103/PhysRev.127.750. <a href="https://journals.aps.org/pr/abstract/10.1103/PhysRev.127.750"> 🔗 </a> 
+
+
 
 ## Acknowledgements
 
