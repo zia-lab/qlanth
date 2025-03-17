@@ -17,7 +17,7 @@ eCharge = 1.602176634  * 10^-19;        (* elementary charge in SI *)
 \[Epsilon]0  = 8.8541878128 * 10^-12;   (* electric permittivity in vacuum in SI *)
 \[Mu]0  = 4 \[Pi] * 10^-7;              (* magnetic permeability in vacuum in SI *)
 \[Alpha]Fine = 1/137.036;               (* fine structure constant *)
-debye   = 3.33564 * 10^-30;             (* debye in C m *)
+debye   = 1 / cLight * 10^-21;         (* debye in C m *)
 
 bohrRadius    = 5.29177*10^-11;         (* Bohr radius in m *)
 hartreeEnergy = hBar^2 / (me * bohrRadius^2); (* Hartree energy in J *)

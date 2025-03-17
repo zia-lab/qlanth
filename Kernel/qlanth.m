@@ -46,7 +46,7 @@ results from this code are compared against the published results by
 Carnall  et.  al for the energy levels of lanthinde ions in crystals
 of lanthanum trifluoride.
 
-VERSION: SEPTEMBER 2024
+VERSION: MARCH 2025
 
 REFERENCES:
 
