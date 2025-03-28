@@ -132,8 +132,8 @@ the  Formalism  and  Its  Application."  Journal of Luminescence 136
 Magnetism: From Transition Metals to Lanthanides. John Wiley & Sons,
 2015.
 
-+  Newman, DJ, and G Balasubramanian. “Parametrization of Rare-Earth
-Ion  Transition  Intensities.”  Journal  of  Physics  C: Solid State
++  Newman, DJ, and G Balasubramanian. "Parametrization of Rare-Earth
+Ion  Transition  Intensities."  Journal  of  Physics  C: Solid State
 Physics 8, no. 1 (1975): 37.
 
 ----------------------------------------------------------------- *)
@@ -3382,7 +3382,8 @@ Begin["`Private`"]
       braS,
       braL,
       ketS,
-      ketL
+      ketL,
+      q
       },
     (
       If[Not@ValueQ[ReducedUkTable],
@@ -3451,6 +3452,13 @@ Begin["`Private`"]
             (
             key    = {\[Lambda], t, p};
             altKey = {\[Lambda], t, -p};
+            (* the way the iterator is carried out, some CG are non-physical, leave them out early *)
+            If[
+              Or[Abs[p] > t,
+              Abs[p + q] > \[Lambda]
+              ],
+            Continue[]
+            ];
             (* enforce relation between conjugate values *)
             Aparam = Which[
               MemberQ[keys, key],
@@ -3465,14 +3473,18 @@ Begin["`Private`"]
               Uks[\[Lambda]] = UkOperator[numE, \[Lambda]];
               ];
             
-            clebscG = ClebschGordan[{\[Lambda], p + q}, {1, -q}, {t, p}];
+            clebscG = ClebschGordan[
+              {\[Lambda], p + q}, 
+              {1, -q}, 
+              {t, p}];
             If[clebscG === 0, Continue[]];
             
             Sow[Phaser[q]*Aparam*clebscG*Uks[\[Lambda]][{\[Lambda], p + q}]];
             ),
             {\[Lambda], {2, 4, 6}},
             {t, {\[Lambda] - 1, \[Lambda], \[Lambda] + 1}},
-            {p, Range[-t, t]}]
+            {p, -t, t, 1}
+            ]
           ][[2, 1]];
         Deff[q] = Total[N@sumTerms];
         ),

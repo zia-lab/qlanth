@@ -33,7 +33,7 @@
 \usetikzlibrary{decorations.pathmorphing}
 \usepackage{lmodern}
 \usepackage{etoolbox} % for patching commands
-\usepackage[htt]{hyphenat} %Enable hythenation of TT text:
+\usepackage[htt]{hyphenat} % Enable hythenation of TT text:
 
 \usepackage[backend=bibtex,style=alphabetic,doi=false,url=false]{biblatex}
 \addbibresource{qlanth.bib} 
@@ -43,7 +43,7 @@
 \usepackage[para]{footmisc}
 \usepackage{etoolbox}
 \robustify{\underbar}
-\newcommand{\qversion}{v1.4.0}
+\newcommand{\qversion}{v1.4.1}
 
 % Listing configuration
 \lstset{   
@@ -1514,11 +1514,11 @@ There is an extension to Judd-Ofelt theory \cite{may_electric_1987,may_optical_1
 \begin{equation}
 	\EffectiveElectricDipole_{,q} = -e \sum_{\lambda=\{2,4,6\}} \,\, \sum_{t=\{\lambda-1,\lambda,\lambda+1\}} \sum_p \Altp{\lambda}{t}{p} \braket{\lambda,(p+q);1,-q}{t,p} \SymmetricUkq{\lambda}{p+q} \label{eqn:effective-dipole}.
 \end{equation}
-Where $\SymmetricUkq{\lambda}{p+q}$ is the symmetric unit tensor operator of rank $\lambda$ and with $\Altp{\lambda}{t}{p}$ a set of empirical parameters to be fitted against extensive experimental data that witness the intensity of transitions between states (see \cite{burdick_energy_level_1994} for an example of $\trion{Nd}$ in YAG). The parameters $\Altp{\lambda}{t}{p}$ satisfy the general constraint
+Where the sum over $p$ goes over all values allowed by the Clebsch-Gordan coefficients. Where $\SymmetricUkq{\lambda}{p+q}$ is the symmetric unit tensor operator of rank $\lambda$ and with $\Altp{\lambda}{t}{p}$ a set of empirical parameters to be fitted against extensive experimental data that witness the intensity of transitions between states (see \cite{burdick_energy_level_1994} for an example of $\trion{Nd}$ in YAG). The parameters $\Altp{\lambda}{t}{p}$ satisfy the general constraint
 \begin{equation}
 	\left( \Altp{\lambda}{t}{p} \right)^* = \phaser{t+p+1} \Altp{\lambda}{t}{-p},
 \end{equation}
-with allowed $p$ values (which defines the sum over p in the expression for $\EffectiveElectricDipole$) constrained by the point symmetry of the site occupied by the ion.
+with allowed $p$ values (which further defines the sum over p in the expression for $\EffectiveElectricDipole$) constrained by the point symmetry of the site occupied by the ion.
 
 In \qlanth this may be calculated with the function \codetext{EffectiveElectricDipole}.
 
