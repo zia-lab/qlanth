@@ -260,7 +260,7 @@ FastIonSolverLaF3Carnall[numE_, OptionsPattern[]] := Module[
       diffLabels = simplerStateLabels[[;;Length[notBad]]];
       diffLabels = Pick[diffLabels, notBad];
       diffPlot   = Framed[
-          ListLabelPlot[
+          qplotter`ListLabelPlot[
             diffData[[;;;;If[OddQ[numE],2,1]]],
             diffLabels[[;;;;If[OddQ[numE],2,1]]],
             Frame -> True,
@@ -1485,7 +1485,9 @@ parameters used here."
 
 Options[FitLaF3] = {
   "fitOrder" -> "Pr Nd Dy Ce Sm Ho Er Tm Yb Tb Eu Gd Pm",
-  "notify" -> False};  
+  "notify" -> False,
+  "truncationEnergy" -> Infinity
+  };  
 FitLaF3[OptionsPattern[]]:=(
     If[
         Not[ValueQ[PrintToOutputNb]],
@@ -1505,7 +1507,8 @@ FitLaF3[OptionsPattern[]]:=(
     ];
     filePrefix = "variant-" <> filePrefix;
     \[Sigma]exp = 1.0;
-    trunEnergy = Infinity;
+    trunEnergy = OptionValue["truncationEnergy"];
+    Print[trunEnergy];
     fitOrder = OptionValue["fitOrder"];
     fitOrder = Position[theLanthanides, #][[1, 1]] & /@ StringSplit[fitOrder, " "];
     doThese = fitOrder;
